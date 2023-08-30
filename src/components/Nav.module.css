@@ -1,0 +1,35 @@
+.nav {
+    display: block;
+    background-color: var(--fifthColor);
+    justify-content: center;
+    font-size: 14px;
+    position: fixed;
+    top: 133px;
+    left: 0;
+    flex-wrap: wrap;
+    transform: translateX(-100%);
+    width: calc(100% - 50px);
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    transition: transform .5s;
+    z-index: 6;
+    padding: 25px;
+    background-color: var(--firstColor);
+    overflow: hidden;
+}
+@media (min-width: 1536px) {
+    .nav {
+        display: flex;
+        position: fixed;
+        transform: none;
+        height: 43px;
+        width: auto;
+        z-index: 1;
+        top: 83px;
+        left: 0;
+        width: 100%;
+        align-items: center;
+        gap: 5px;
+        padding: 0;
+    }
+}
