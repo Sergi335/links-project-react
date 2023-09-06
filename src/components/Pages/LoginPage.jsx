@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useGoogleAuth from '../hooks/useGoogleAuth'
+import useGoogleAuth from '../../hooks/useGoogleAuth'
 
 export default function Login () {
   const [user, setUser] = useState(null)

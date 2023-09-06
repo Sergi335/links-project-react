@@ -1,9 +1,11 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
-import HomePage from './components/HomePage'
-import AppLayout from './components/applayout'
-import Login from './components/login'
+import HomePage from './components/Pages/HomePage'
+import AppLayout from './components/Pages/AppLayout'
+import Login from './components/Pages/LoginPage'
+import LinkDetails from './components/Pages/LinkDetails'
 import { useSessionStore } from '../src/store/session'
+import { Children } from 'react'
 
 function App () {
   const user = useSessionStore(state => state.user)
@@ -17,6 +19,10 @@ function App () {
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />
     },
     {
+      path: '/link/:id',
+      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />
+    },
+    {
       path: '/login',
       element: user === null ? <Login /> : <Navigate to="/desktop/inicio" replace={true} />
     }
@@ -24,6 +30,7 @@ function App () {
 
   return (
     <RouterProvider router={router}>
+      {Children}
     </RouterProvider>
   )
 }

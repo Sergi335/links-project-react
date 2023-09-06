@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import useGoogleAuth from '../hooks/useGoogleAuth'
 import { useSessionStore } from '../store/session'
 import styles from './Header.module.css'
-import GithubIcon from './icons/github'
+import GithubIcon from './Icons/icons'
 export default function Header () {
   const user = useSessionStore(state => state.user)
   const { handleGoogleLogOut } = useGoogleAuth()

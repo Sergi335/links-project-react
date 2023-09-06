@@ -1,0 +1,46 @@
+.link {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    height: 43px;
+    border-radius: 5px;
+}
+.link img {
+    width: 16px;
+    margin-left: 15px;
+    margin-top: 2px;
+}
+.link > a:first-of-type {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    text-align: left;
+    height: 43px;
+    
+}
+.link a span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
+}
+.link:hover {
+    background-color: var(--firstHvColor);
+}
+.lcontrols {
+    transition: border .5s ease-in-out;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    display: none;
+    margin-right: 10px;
+}
+.lcontrols a {
+    display: flex;
+}
+.link:hover .lcontrols {
+    display: flex;
+    cursor: pointer;
+}

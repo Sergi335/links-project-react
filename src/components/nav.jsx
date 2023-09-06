@@ -6,7 +6,14 @@ export default function Nav () {
   const [escritorios, setEscritorios] = useState([])
   useEffect(() => {
     const getEscritorios = async () => {
-      fetch('http://localhost:3003/api/escritorios')
+      fetch('http://localhost:3003/api/escritorios', {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'x-justlinks-user': 'SergioSR',
+          'x-justlinks-token': 'otroheader'
+        }
+      })
         .then(response => response.json())
         .then(data => {
           // console.log(data)

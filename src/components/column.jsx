@@ -1,10 +1,12 @@
+import styles from './column.module.css'
 export default function Columna ({ data, children }) {
-  // console.log({ data })
-  // const { name } = props
+  const { columna, handleContextMenu } = data
   return (
-        <div className="column">
-            <h2>{data.name}</h2>
-            {children}
-        </div>
+    <div className={styles.columnWrapper}>
+      <div className={styles.column} id={columna._id}>
+        <h2 onContextMenu={handleContextMenu}>{columna.name}</h2>
+          {children}
+      </div>
+    </div>
   )
 }

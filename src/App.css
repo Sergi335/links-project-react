@@ -1,18 +1,22 @@
 #root {
-  /* max-width: 1280px; */
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
   min-height: 100vh;
 }
+
 main {
   display: flex;
   flex-wrap: wrap;
   margin-top: 125px;
+  gap: 40px;
 }
+
 .column {
   width: 33%;
 }
+
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -20,6 +24,7 @@ main {
   align-items: center;
   gap: 15px;
 }
+
 .loginWrapper {
   display: flex;
   height: 960px;
@@ -28,6 +33,36 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.deskForm {
+  min-width: 525px;
+  height: auto;
+  top: 15%;
+  background-image: var(--bgSecondGradient);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: none;
+  z-index: 7;
+  padding: 50px;
+  border-radius: 15px;
+  gap: 15px;
+}
+
+.deskForm fieldset {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+  padding: 24px 24px 0 24px;
+  border: 1px solid var(--firstBorderColor);
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo:hover {
@@ -40,15 +75,11 @@ main {
 
 ul {
   list-style-type: none;
-  display: flex;
-  padding: 0;
-  gap: 8px;
-  justify-content: center;
 }
 
-li {
+/* li {
   width: fit-content;
-}
+} */
 
 @keyframes logo-spin {
   from {

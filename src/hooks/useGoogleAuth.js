@@ -63,9 +63,9 @@ export default function useGoogleAuth () {
         setUser(userInfo.displayName)
         console.log(data)
         console.log(user)
-        document.cookie = `reactToken=${token}`
-        document.cookie = `reactUser=${userInfo.displayName}`
-        document.cookie = 'authMethod=google'
+        document.cookie = `reactToken=${token}; SameSite=None; Secure`
+        document.cookie = `reactUser=${userInfo.displayName}; SameSite=None; Secure`
+        document.cookie = 'authMethod=google; SameSite=None; Secure'
         navigate('/desktop/inicio')
       })
       .catch(error => {
