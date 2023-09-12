@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styles from './Nav.module.css'
 
 export default function Nav () {
@@ -30,7 +30,7 @@ export default function Nav () {
             <ul>
                 {
                     escritorios.map(escritorio => (
-                        <li key={escritorio._id}><Link to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</Link></li>
+                        <li key={escritorio._id}><NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink></li>
                     ))
                 }
             </ul>

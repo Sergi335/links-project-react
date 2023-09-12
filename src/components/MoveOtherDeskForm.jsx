@@ -1,17 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-// import { useParams } from 'react-router-dom'
 import styles from './MoveOtherDeskForm.module.css'
 import FolderIcon from './Icons/folder'
-// import useData from '../hooks/useData'
 
-export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params }) {
+export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params, desktopLinks, setDesktopLinks }) {
   const [escritorios, setEscritorios] = useState([])
   const [columnas, setColumnas] = useState([])
   const visibleClass = moveFormVisible ? styles.flex : styles.hidden
   const moveFormRef = useRef()
-  //   const { desktopName } = useParams()
-  //   const { links, setLinks } = useData(desktopName)
-  //   console.log(links)
   useEffect(() => {
     const getEscritorios = async () => {
       fetch('http://localhost:3003/api/escritorios', {
@@ -118,12 +113,9 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
     })
       .then(res => res.json())
       .then(data => {
-        // console.log(links)
         console.log(data)
-        // const newList = links.filter(link => link._id !== params._id)
-        // console.log('🚀 ~ file: MoveOtherDeskForm.jsx:121 ~ handleMove ~ newList:', newList)
-        // setLinks(newList)
-        // console.log(links)
+        const newList = desktopLinks.filter(link => link._id !== params._id)
+        setDesktopLinks(newList)
       })
       .catch(err => {
         console.log(err)
@@ -134,7 +126,8 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
         <ul className={styles.destDeskMoveTo}>
         {
             escritorios
-              ? escritorios.map(desk => (
+              ? escritorios.map(desk => desk.name !== params.escritorio
+                ? (
                 <li key={desk._id} onClick={handleClick} className={styles.accordion} id={desk.name}>
                     <FolderIcon />
                     {desk.displayName}
@@ -153,7 +146,8 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
 
                         </ul>
                 </li>
-              ))
+                  )
+                : null)
               : null
         }
         </ul>

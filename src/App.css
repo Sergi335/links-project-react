@@ -13,10 +13,18 @@ main {
   gap: 40px;
 }
 
+.uiIcon {
+  width: 24px;
+  cursor: pointer;
+  color: var(--accentColor);
+}
+
 .column {
   width: 33%;
 }
-
+a.active {
+  background-color: var(--firstHvColor);
+}
 .loginForm {
   display: flex;
   flex-direction: column;

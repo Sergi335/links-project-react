@@ -1,0 +1,8 @@
+.reloj {
+    font-size: 25px;
+    line-height: 1;
+    color: var(--accentColor);
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-family: monospace;
+}

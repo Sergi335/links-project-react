@@ -60,7 +60,7 @@ export default function useGoogleAuth () {
     })
       .then(res => res.json())
       .then(data => {
-        setUser(userInfo.displayName)
+        setUser(userInfo)
         console.log(data)
         console.log(user)
         document.cookie = `reactToken=${token}; SameSite=None; Secure`

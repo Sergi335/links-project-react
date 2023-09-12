@@ -1,9 +1,7 @@
 import styles from './ContextualMenu.module.css'
-export default function ContextLinkMenu ({ visible, points, params, handleClick, handleDeleteClick, columnas, handleMoveFormClick }) {
+export default function ContextLinkMenu ({ visible, points, params, handleClick, handleDeleteClick, columnas, handleMoveFormClick, desktopLinks, setDesktopLinks }) {
   const handleMoveClick = (event) => {
     const orden = document.getElementById(event.target.id).childNodes.length
-    const element = document.getElementById(params._id)
-    const destCol = document.getElementById(event.target.id)
     const body = {
       id: params._id,
       idpanelOrigen: params.idpanel,
@@ -23,8 +21,14 @@ export default function ContextLinkMenu ({ visible, points, params, handleClick,
       .then(res => res.json())
       .then(data => {
         console.log(data)
-        element.remove()
-        destCol.appendChild(element)
+        const updatedDesktopLinks = desktopLinks.map(link => {
+          if (link._id === params._id) {
+            // Modifica la propiedad del elemento encontrado
+            return { ...link, idpanel: event.target.id }
+          }
+          return link
+        })
+        setDesktopLinks(updatedDesktopLinks)
       })
       .catch(err => {
         console.log(err)
@@ -41,9 +45,11 @@ export default function ContextLinkMenu ({ visible, points, params, handleClick,
           <ul className={styles.moveList}>
             <li onClick={handleMoveFormClick}>Mover a otro escritorio</li>
             {
-              columnas.map(col => (
-                <li key={col._id} id={col._id} onClick={handleMoveClick}>{col.name}</li>
-              ))
+              columnas.map(col => col._id === params.idpanel
+                ? (
+                    null
+                  )
+                : <li key={col._id} id={col._id} onClick={handleMoveClick}>{col.name}</li>)
             }
           </ul>
         </span>

@@ -1,11 +1,8 @@
 import { useEffect, useRef } from 'react'
 import styles from './DeleteLinkForm.module.css'
-// import { useNavStore } from '../store/session'
-export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params, idpanel, linkRef }) {
+export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params, idpanel, desktopLinks, setDesktopLinks }) {
   const visibleClassName = deleteFormVisible ? styles.flex : styles.hidden
   const formRef = useRef()
-  //   const setLinks = useNavStore(state => state.setLinks)
-  //   const links = useNavStore(state => state.links)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target !== formRef.current && event.target.nodeName !== 'P' && !formRef.current.contains(event.target)) {
@@ -35,17 +32,13 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
       .then(data => {
         console.log(data)
         setDeleteFormVisible(false)
-        linkRef.current.remove()
-        // eliminarElemento(params)
+        const newList = desktopLinks.filter(link => link._id !== params._id)
+        setDesktopLinks(newList)
       })
       .catch(err => {
         console.log(err)
       })
   }
-  //   const eliminarElemento = (params) => {
-  //     const nuevosElementos = links.filter((link) => link._id !== params._id)
-  //     setLinks(nuevosElementos)
-  //   }
   return (
         <form ref={formRef} className={`deskForm ${visibleClassName}`} id="deleteLinkForm">
             <h2>Seguro que quieres borrar este Link?</h2>

@@ -36,6 +36,9 @@
     text-overflow: ellipsis;
     border-radius: 5px;
 }
+.nav ul li a.active {
+    background-color: var(--firstHvColor);
+}
 .nav ul li a:hover {
     background-color: var(--firstHvColor);
     cursor: pointer;

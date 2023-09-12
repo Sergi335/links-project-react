@@ -18,3 +18,26 @@ export async function getDataForDesktops (desktop) {
     throw error // Volver a lanzar el error para propagarlo más adelante si es necesario
   }
 }
+export async function getDesktops () {
+  try {
+    const response = await fetch('http://localhost:3003/api/escritorios', {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error('Error de red al obtener datos')
+    }
+
+    const data = await response.json()
+    // console.log(data)
+    return data
+  } catch (error) {
+    console.error('Error al obtener datos:', error)
+    throw error
+  }
+}

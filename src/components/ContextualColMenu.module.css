@@ -1,0 +1,57 @@
+.hidden {
+    display: none;
+}
+.flex {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    background-color: white;
+    width: 200px;
+    padding: 15px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 30px var(--firstShadow);
+    position: absolute;
+}
+.flex p, .flex span {
+    margin: 0;
+    width: 90%;
+    text-align: left;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.flex p:first-of-type {
+    margin-top: 10px;
+}
+.flex span:first-of-type {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 91%;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+.moveList {
+    position: absolute;
+    left: 95%;
+    display: none;
+    flex-direction: column;
+    background-color: white;
+    padding: 8px;
+    border-radius: 5px;
+    top: 94px;
+    width: max-content;
+}
+.moveList li {
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.moveList li:hover {
+    background-color: var(--firstHvColor);
+}
+.flex p:hover, .flex span:hover {
+    background-color: var(--firstHvColor);
+    cursor: pointer;
+}
+.moveTo:hover .moveList {
+    display: flex;
+}

@@ -1,0 +1,70 @@
+.sideInfo {
+    gap: 2px;
+    position: fixed;
+    top: 158px;
+    left: 3%;
+    flex-direction: column;
+    padding: 17px 17px 17px 0;
+    height: 79vh;
+    border-left: 1px dashed var(--firstBorderColor);
+    width: 8%;
+}
+
+.deskInfos {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-bottom: 15px;
+    align-items: flex-start;
+}
+.deskInfos p {
+    margin: 0;
+}
+.deskControls {
+    padding: 10px;
+    background-color: var(--firstButtonColor);
+    border-radius: 5px;
+    margin-bottom: 90px;
+    margin-left: 10px;
+    gap: 15px;
+    width: fit-content;
+    display: flex;
+}
+
+.sideInfo div {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.uiIcon {
+    width: 19px;
+    cursor: pointer;
+    color: var(--accentColor);
+}
+.sect {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+    border-left: 4px solid var(--firstBorderColor);
+    padding-left: 10px;
+    position: relative;
+    left: -2px;
+    padding: 5px 15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: all 1.3s;
+}
+.sideInfo .sect a {
+    text-decoration: none;
+    color: var(--firstTextColor);
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+}
+.saludo {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+    color: var(--firstTextColor);
+}

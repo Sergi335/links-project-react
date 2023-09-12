@@ -5,7 +5,6 @@ import AppLayout from './components/Pages/AppLayout'
 import Login from './components/Pages/LoginPage'
 import LinkDetails from './components/Pages/LinkDetails'
 import { useSessionStore } from '../src/store/session'
-import { Children } from 'react'
 
 function App () {
   const user = useSessionStore(state => state.user)
@@ -29,9 +28,7 @@ function App () {
   ])
 
   return (
-    <RouterProvider router={router}>
-      {Children}
-    </RouterProvider>
+    <RouterProvider router={router} />
   )
 }
 

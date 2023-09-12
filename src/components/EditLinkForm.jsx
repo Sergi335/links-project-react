@@ -1,9 +1,7 @@
 import { useRef, useEffect } from 'react'
-// import { useLinkRefStore } from '../store/session'
 import styles from './EditLinkForm.module.css'
 
 export default function EditLinkForm ({ formVisible, setFormVisible, params, setName, setUrl }) {
-  // const link = useLinkRefStore(state => state.link)
   const visibleClassName = formVisible ? styles.flex : styles.hidden
   const formRef = useRef()
   const nameRef = useRef()
