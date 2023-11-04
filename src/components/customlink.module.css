@@ -4,13 +4,24 @@
     align-items: center;
     height: 43px;
     border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
 }
-.link img {
+.link_dragged {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    height: 43px;
+    border-radius: 5px;
+    background-color: beige;
+    border: 1px solid #ccc;
+}
+.link img, .link_dragged img {
     width: 16px;
     margin-left: 15px;
     margin-top: 2px;
 }
-.link > a:first-of-type {
+.link > a:first-of-type, .link_dragged > a:first-of-type {
     overflow: hidden;
     white-space: nowrap;
     display: flex;
@@ -21,15 +32,15 @@
     height: 43px;
     
 }
-.link a span {
+.link a span, .link_dragged a span {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 80%;
 }
-.link:hover {
+/* .link:hover {
     background-color: var(--firstHvColor);
-}
+} */
 .lcontrols {
     transition: border .5s ease-in-out;
     border: 1px solid transparent;

@@ -1,4 +1,4 @@
-export async function pasteLink ({ params, desktopLinks, setDesktopLinks }) {
+export async function pasteLink ({ params, linksStore, setLinksStore, desktopName }) {
   console.log('Ejecuto')
   // lee el contenido del portapapeles entonces ...
   // Arrow function anónima con los items de param
@@ -10,14 +10,14 @@ export async function pasteLink ({ params, desktopLinks, setDesktopLinks }) {
         // lo confirmamos
         for (const type of clipboardItem.types) {
           if (type === 'text/plain') {
-            handlePastedTextLinks(event, clipboardItem, type, params, desktopLinks, setDesktopLinks)
+            handlePastedTextLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName)
             console.log('Texto plano')
           }
         }
       } else {
         for (const type of clipboardItem.types) {
           if (type === 'text/html') {
-            handlePastedHtmlLinks(event, clipboardItem, type, params, desktopLinks, setDesktopLinks)
+            handlePastedHtmlLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName)
             console.log('html text')
           }
           if (type.startsWith('image/')) {
@@ -30,7 +30,7 @@ export async function pasteLink ({ params, desktopLinks, setDesktopLinks }) {
     }
   })
 }
-const handlePastedTextLinks = (event, clipboardItem, type, params, desktopLinks, setDesktopLinks) => {
+const handlePastedTextLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName) => {
   // Pasamos el blob a texto
   clipboardItem.getType(type).then((blob) => {
     blob.text().then(function (text) {
@@ -41,12 +41,12 @@ const handlePastedTextLinks = (event, clipboardItem, type, params, desktopLinks,
         if (urls.length > 1) {
           console.log('entramos')
           // const raiz = event.target.parentNode.childNodes[1].innerText
-          pasteMultipleLinks(urls, params, desktopLinks, setDesktopLinks)
+          pasteMultipleLinks(urls, params, linksStore, setLinksStore, desktopName)
           console.log('muchos links')
           return
         }
         console.log('Tiene un enlace')
-        processTextLinks(event, text, params, desktopLinks, setDesktopLinks)
+        processTextLinks(event, text, params, linksStore, setLinksStore, desktopName)
       } else {
         console.log('Es texto plano sin enlace')
         console.log(text)
@@ -54,7 +54,7 @@ const handlePastedTextLinks = (event, clipboardItem, type, params, desktopLinks,
     })
   })
 }
-async function processTextLinks (event, text, params, desktopLinks, setDesktopLinks) {
+async function processTextLinks (event, text, params, linksStore, setLinksStore, desktopName) {
   const nombre = await getNameByUrl(text)
   const escritorio = params.escritorio
   const url = text
@@ -86,8 +86,9 @@ async function processTextLinks (event, text, params, desktopLinks, setDesktopLi
     if (res.ok) {
       const data = await res.json()
       console.log(data)
-      const newList = [...desktopLinks, data]
-      setDesktopLinks(newList)
+      const newList = [...linksStore, data]
+      setLinksStore(newList)
+      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)
@@ -96,21 +97,21 @@ async function processTextLinks (event, text, params, desktopLinks, setDesktopLi
     console.log(error)
   }
 }
-const handlePastedHtmlLinks = (event, clipboardItem, type, params, desktopLinks, setDesktopLinks) => {
+const handlePastedHtmlLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName) => {
   clipboardItem.getType(type).then((blob) => {
     blob.text().then(function (text) {
       if (text.indexOf('<a href') === 0) {
         console.log('Es un enlace html')
         console.log(text)
         console.log(typeof (text))
-        processHtmlLink(event, text, params, desktopLinks, setDesktopLinks)
+        processHtmlLink(event, text, params, linksStore, setLinksStore, desktopName)
       } else {
         console.log('No hay enlace')
       }
     })
   })
 }
-async function processHtmlLink (event, text, params, desktopLinks, setDesktopLinks) {
+async function processHtmlLink (event, text, params, linksStore, setLinksStore, desktopName) {
   const raiz = params._id
   const range = document.createRange()
   range.selectNode(document.body)
@@ -144,8 +145,9 @@ async function processHtmlLink (event, text, params, desktopLinks, setDesktopLin
     }) // Manejo errores
     if (res.ok) {
       const data = await res.json()
-      const newList = [...desktopLinks, data]
-      setDesktopLinks(newList)
+      const newList = [...linksStore, data]
+      setLinksStore(newList)
+      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)
@@ -154,7 +156,7 @@ async function processHtmlLink (event, text, params, desktopLinks, setDesktopLin
     console.log(error)
   }
 }
-async function pasteMultipleLinks (array, params, desktopLinks, setDesktopLinks) {
+async function pasteMultipleLinks (array, params, linksStore, setLinksStore, desktopName) {
   const escritorio = params.escritorio
   const columna = params.name
   const body = {
@@ -179,8 +181,9 @@ async function pasteMultipleLinks (array, params, desktopLinks, setDesktopLinks)
     })
     if (res.ok) {
       const data = await res.json()
-      const newList = [...desktopLinks, ...data]
-      setDesktopLinks(newList)
+      const newList = [...linksStore, ...data]
+      setLinksStore(newList)
+      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)

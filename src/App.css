@@ -7,10 +7,28 @@
 }
 
 main {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 125px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  margin-top: 160px;
   gap: 40px;
+}
+
+.draggedDesk li {
+  list-style-type: none;
+  width: fit-content;
+}
+
+.draggedDesk li a {
+  font-size: 14px;
+  padding: 8px 10px;
+  color: var(--firstTextColor);
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  background-color: var(--firstHvColor);
 }
 
 .uiIcon {
@@ -22,9 +40,11 @@ main {
 .column {
   width: 33%;
 }
+
 a.active {
   background-color: var(--firstHvColor);
 }
+
 .loginForm {
   display: flex;
   flex-direction: column;

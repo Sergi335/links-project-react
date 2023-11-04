@@ -4,16 +4,22 @@ import ContextualColMenu from './ContextualColMenu'
 import AddLinkForm from './AddLinkForm'
 import { editColumn } from '../services/functions'
 import { useParams } from 'react-router-dom'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { useColumnsStore } from '../store/columns'
+import { useDesktopsStore } from '../store/desktops'
 
-export default function Columna ({ data, children, desktopColumns, setDesktopColumns, desktops, desktopLinks, setDesktopLinks }) {
-  const { columna } = data
+export default function Columna ({ data, children }) {
+  const columna = data.columna || data.activeColumn
   const [visible, setVisible] = useState(false)
   const [points, setPoints] = useState({ x: 0, y: 0 })
   const colRef = useRef(null)
   const headRef = useRef(null)
   const [formVisible, setFormVisible] = useState(false)
   const { desktopName } = useParams()
-
+  const columnsStore = useColumnsStore(state => state.columnsStore)
+  const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
+  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   // Creamos listeners para ocultar contextmenu
   useEffect(() => {
     const handleClick = (event) => {
@@ -58,17 +64,56 @@ export default function Columna ({ data, children, desktopColumns, setDesktopCol
     console.log(newName)
     console.log(columna.name)
     if (columna.name !== newName) {
+      const updatedState = [...columnsStore]
+      const elementIndex = updatedState.findIndex(element => element._id === columna._id)
+      if (elementIndex !== -1) {
+        const objeto = updatedState[elementIndex]
+        updatedState[elementIndex] = { ...objeto, name: newName }
+      }
+      setColumnsStore(updatedState)
+      localStorage.setItem(`${desktopName}Columns`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
       editColumn(newName, desktopName, columna._id)
     }
   }
+
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: columna._id,
+    data: {
+      type: 'Column',
+      columna
+    }
+  })
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform)
+  }
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={styles.dragginColumn}
+      ><h2></h2></div>
+    )
+  }
   return (
     <>
-      <div ref={colRef} className={styles.columnWrapper}>
-        <div className={styles.column} id={columna._id}>
+      <div ref={setNodeRef} style={style} className={styles.columnWrapper}>
+        <div ref={colRef} className={styles.column} id={columna._id}>
           <h2 ref={headRef}
               onContextMenu={handleContextMenu}
               onClick={handleEditable}
-              onBlur={handleHeaderBlur}>{columna.name}</h2>
+              onBlur={handleHeaderBlur}
+              {...attributes}
+              {...listeners}
+              >{columna.name}</h2>
             {children}
         </div>
       </div>
@@ -78,12 +123,10 @@ export default function Columna ({ data, children, desktopColumns, setDesktopCol
               visible={visible}
               points={points}
               params={columna}
-              desktopColumns={desktopColumns}
-              setDesktopColumns={setDesktopColumns}
-              desktops={desktops}
+              desktopColumns={columnsStore}
+              setDesktopColumns={setColumnsStore}
+              desktops={desktopsStore}
               handleClick={handleClick}
-              desktopLinks={desktopLinks}
-              setDesktopLinks={setDesktopLinks}
               handleEditable={handleEditable}/>
           : null
       }
@@ -93,8 +136,8 @@ export default function Columna ({ data, children, desktopColumns, setDesktopCol
               formVisible={formVisible}
               setFormVisible={setFormVisible}
               params={columna}
-              desktopLinks={desktopLinks}
-              setDesktopLinks={setDesktopLinks}/>
+              desktopName={desktopName}
+              />
           : null
       }
     </>

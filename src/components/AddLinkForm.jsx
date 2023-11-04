@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react'
 import styles from './AddLinkForm.module.css'
 import { constants } from '../services/constants'
+import { useLinksStore } from '../store/links'
 
-export default function AddLinkForm ({ formVisible, setFormVisible, params, desktopLinks, setDesktopLinks }) {
+export default function AddLinkForm ({ formVisible, setFormVisible, params, desktopName }) {
+  const setLinksStore = useLinksStore(state => state.setLinksStore)
+  const linksStore = useLinksStore(state => state.linksStore)
   const visibleClassName = formVisible ? styles.flex : styles.hidden
   const formRef = useRef()
   const nameRef = useRef()
@@ -42,10 +45,10 @@ export default function AddLinkForm ({ formVisible, setFormVisible, params, desk
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
-        const newList = [...desktopLinks, data]
-        setDesktopLinks(newList)
+        const newList = [...linksStore, data]
         setFormVisible(false)
+        setLinksStore(newList)
+        localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
       })
       .catch(err => {
         console.log(err)

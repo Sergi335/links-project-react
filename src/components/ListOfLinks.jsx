@@ -1,83 +1,124 @@
 import { useParams } from 'react-router-dom'
-import { useNavStore, useSessionStore } from '../store/session'
+import { useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, DragOverlay, KeyboardSensor } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable'
+import { useColumns } from '../hooks/useColumns'
 import Columna from './Column'
 import CustomLink from './customlink'
-import { getDataForDesktops, getDesktops } from '../services/dbQueries'
-import { useEffect, useState } from 'react'
 import SideInfo from './SideInfo'
+import { useLinksStore } from '../store/links'
+import { useColumnsStore } from '../store/columns'
+import { useDragItems } from '../hooks/useDragItems'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
-  const [desktopColumns, setDesktopColumns] = useState([])
-  const [desktopLinks, setDesktopLinks] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [desktops, setDesktops] = useState([])
-  const user = useSessionStore(state => state.user)
-  const desktop = desktops.find(desk => desk.name === desktopName)
-  const desktopDisplayName = desktop?.displayName
-  useEffect(() => {
-    setLoading(true)
-    const fetchData = async () => {
-      try {
-        const [columnsData, linksData] = await getDataForDesktops(desktopName)
-        setDesktopColumns(columnsData.toSorted((a, b) => (a.order - b.order)))
-        setDesktopLinks(linksData.toSorted((a, b) => (a.orden - b.orden)))
-        const data = await getDesktops()
-        setDesktops(data)
-        setLoading(false)
-      } catch (error) {
-        console.error(error)
-      }
-    }
+  const { loading } = useColumns({ desktopName })
+  const setLinksStore = useLinksStore(state => state.setLinksStore)
+  const linksStore = useLinksStore(state => state.linksStore)
+  const columnsStore = useColumnsStore(state => state.columnsStore)
+  const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
+  const storageLinks = JSON.parse(localStorage.getItem(`${desktopName}links`))
+  const storageColumns = JSON.parse(localStorage.getItem(`${desktopName}Columns`))
+  const { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn } = useDragItems({ desktopName })
 
-    fetchData()
+  useEffect(() => {
+    if (storageLinks && storageLinks?.length > 0) {
+      setLinksStore(storageLinks)
+    } else {
+      fetch(`http://localhost:3003/api/links/desktop/${desktopName}`)
+        .then(res => res.json())
+        .then(data => {
+          setLinksStore(data.toSorted((a, b) => (a.orden - b.orden)))
+          localStorage.setItem(`${desktopName}links`, JSON.stringify(data.toSorted((a, b) => (a.orden - b.orden))))
+        })
+    }
+  }, [desktopName])
+  useEffect(() => {
+    if (storageColumns && storageColumns?.length > 0) {
+      setColumnsStore(storageColumns)
+    } else {
+      fetch(`http://localhost:3003/api/columnas?escritorio=${desktopName}`)
+        .then(res => res.json())
+        .then(data => {
+          setColumnsStore(data.toSorted((a, b) => (a.order - b.order)))
+          localStorage.setItem(`${desktopName}Columns`, JSON.stringify(data.toSorted((a, b) => (a.order - b.order))))
+        })
+    }
   }, [desktopName])
 
-  const setLinks = useNavStore(state => state.setLinks)
-  const orderedLinks = desktopColumns.map(col => (
-    desktopLinks.map(link => (link.idpanel === col._id ? link : null))
-  ))
-  setLinks(orderedLinks.flat().filter(el => el !== null))
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 0
+      }
+    })
+    // useSensor(KeyboardSensor, {
+    //   coordinateGetter: sortableKeyboardCoordinates
+    // })
+  )
+  // const columnsId = useMemo(() => columnsStore.map((col) => col._id), [columnsStore])
+  const columnsId = columnsStore.map((col) => col._id)
+  console.log('🚀 ~ file: ListOfLinks.jsx:62 ~ ListOfLinks ~ columnsId:', columnsId)
+  const getLinksIds = (columna) => {
+    return linksStore.filter(link => link.idpanel === columna._id).map(link => link._id)
+  }
 
   return (
     <main>
-      <SideInfo props={{ user, desktopColumns, desktopDisplayName }} />
-      {loading
-        ? (
-        <p>Cargando ...</p>
-          )
-        : desktopColumns
+      <SideInfo />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+      >
+        <SortableContext strategy={rectSortingStrategy} items={columnsId}>
+        {loading
           ? (
-              desktopColumns.map((columna) => (
-                <Columna
-                  key={columna._id}
-                  data={{ columna }}
-                  desktopColumns={desktopColumns}
-                  setDesktopColumns={setDesktopColumns}
-                  desktops={desktops}
-                  desktopLinks={desktopLinks}
-                  setDesktopLinks={setDesktopLinks}>
-
-                  {desktopLinks.map((link) =>
-                    link.idpanel === columna._id
-                      ? (
-                      <CustomLink
-                        key={link._id}
-                        data={{ link }}
-                        idpanel={columna._id}
-                        columnas={desktopColumns}
-                        desktopLinks={desktopLinks}
-                        setDesktopLinks={setDesktopLinks}
-                      />
-                        )
-                      : null
-                  )}
-                </Columna>
-              ))
+          <p>Cargando ...</p>
             )
-          : (
-        <div>Cargando Columnas...</div>
+          : columnsStore
+            ? (
+                columnsStore.map((columna) => (
+                  <Columna key={columna._id} data={{ columna }}>
+                    <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
+                      {linksStore.map((link) =>
+                        link.idpanel === columna._id
+                          ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
+                          : null
+                      )}
+                    </SortableContext>
+                  </Columna>
+                ))
+              )
+            : (
+                <div>Cargando Columnas...</div>
+              )}
+        </SortableContext>
+        {createPortal(
+          <DragOverlay>
+            {activeColumn && (
+              <Columna data={{ activeColumn }}>
+                {
+                  linksStore.map((link) =>
+                    link.idpanel === activeColumn._id
+                      ? (<CustomLink key={link._id} data={{ link }} idpanel={activeColumn._id} />)
+                      : null
+                  )
+                }
+              </Columna>
             )}
+            {activeLink && (
+              <CustomLink
+                data={{ activeLink }}
+              />
+            )}
+          </DragOverlay>,
+          document.body
+        )}
+      </DndContext>
     </main>
   )
 }

@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './MoveOtherDeskForm.module.css'
 import FolderIcon from './Icons/folder'
+import { useLinksStore } from '../store/links'
+import { useParams } from 'react-router-dom'
 
-export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params, desktopLinks, setDesktopLinks }) {
+export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params }) {
   const [escritorios, setEscritorios] = useState([])
   const [columnas, setColumnas] = useState([])
   const visibleClass = moveFormVisible ? styles.flex : styles.hidden
   const moveFormRef = useRef()
+  const setLinksStore = useLinksStore(state => state.setLinksStore)
+  const linksStore = useLinksStore(state => state.linksStore)
+  const { desktopName } = useParams()
   useEffect(() => {
     const getEscritorios = async () => {
       fetch('http://localhost:3003/api/escritorios', {
@@ -114,8 +119,16 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       .then(res => res.json())
       .then(data => {
         console.log(data)
-        const newList = desktopLinks.filter(link => link._id !== params._id)
-        setDesktopLinks(newList)
+        const updatedDesktopLinks = linksStore.map(link => {
+          if (link._id === params._id) {
+            // Modifica la propiedad del elemento encontrado
+            return { ...link, idpanel: columnSelected.id }
+          }
+          return link
+        })
+        setLinksStore(updatedDesktopLinks)
+        localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+        // Modificar el localstorage de destino
       })
       .catch(err => {
         console.log(err)

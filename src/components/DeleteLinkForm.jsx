@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { useLinksStore } from '../store/links'
+import { useParams } from 'react-router-dom'
 import styles from './DeleteLinkForm.module.css'
-export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params, idpanel, desktopLinks, setDesktopLinks }) {
+
+export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
+  const setLinksStore = useLinksStore(state => state.setLinksStore)
+  const linksStore = useLinksStore(state => state.linksStore)
+  const { desktopName } = useParams()
   const visibleClassName = deleteFormVisible ? styles.flex : styles.hidden
   const formRef = useRef()
   useEffect(() => {
@@ -16,10 +22,9 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
   }, [])
   const handleClick = (event) => {
     event.preventDefault()
-    console.log('handle click called')
     const body = {
       linkId: params._id,
-      idpanel
+      idpanel: params.idpanel
     }
     fetch('http://localhost:3003/api/links', {
       method: 'DELETE',
@@ -30,21 +35,21 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         setDeleteFormVisible(false)
-        const newList = desktopLinks.filter(link => link._id !== params._id)
-        setDesktopLinks(newList)
+        const newList = [...linksStore].filter(link => link._id !== params._id)
+        setLinksStore(newList)
+        localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
       })
       .catch(err => {
         console.log(err)
       })
   }
   return (
-        <form ref={formRef} className={`deskForm ${visibleClassName}`} id="deleteLinkForm">
-            <h2>Seguro que quieres borrar este Link?</h2>
-            <button onClick={handleClick} id="confDeletelinkSubmit" type="submit">Si</button>
-            <button onClick={() => { setDeleteFormVisible(false) }}id="noDeletelinkSubmit" type="submit">No</button>
-            <p id="deleteLinkError"></p>
-        </form>
+      <form ref={formRef} className={`deskForm ${visibleClassName}`} id="deleteLinkForm">
+        <h2>Seguro que quieres borrar este Link?</h2>
+        <button onClick={handleClick} id="confDeletelinkSubmit" type="submit">Si</button>
+        <button onClick={() => { setDeleteFormVisible(false) }}id="noDeletelinkSubmit" type="submit">No</button>
+        <p id="deleteLinkError"></p>
+      </form>
   )
 }
