@@ -3,6 +3,7 @@ import styles from './MoveOtherDeskForm.module.css'
 import FolderIcon from './Icons/folder'
 import { useLinksStore } from '../store/links'
 import { useParams } from 'react-router-dom'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params }) {
   const [escritorios, setEscritorios] = useState([])
@@ -12,6 +13,8 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   const setLinksStore = useLinksStore(state => state.setLinksStore)
   const linksStore = useLinksStore(state => state.linksStore)
   const { desktopName } = useParams()
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
+
   useEffect(() => {
     const getEscritorios = async () => {
       fetch('http://localhost:3003/api/escritorios', {
@@ -127,7 +130,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
           return link
         })
         setLinksStore(updatedDesktopLinks)
-        localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
         // Modificar el localstorage de destino
       })
       .catch(err => {

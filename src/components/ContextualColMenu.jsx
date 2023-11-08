@@ -3,11 +3,13 @@ import { pasteLink } from '../services/pasteLinks'
 import { moveColumn, deleteColumn } from '../services/functions'
 import { useParams } from 'react-router-dom'
 import { useLinksStore } from '../store/links'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function ContextualColMenu ({ visible, points, params, desktopColumns, setDesktopColumns, desktops, handleClick, handleEditable }) {
   const { desktopName } = useParams()
   const setLinksStore = useLinksStore(state => state.setLinksStore)
   const linksStore = useLinksStore(state => state.linksStore)
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
   const handleMoveCol = (desk) => {
     moveColumn(desktopName, desk, params._id)
@@ -27,7 +29,7 @@ export default function ContextualColMenu ({ visible, points, params, desktopCol
             <strong>Opciones Columna</strong>
             <span>{params.name}</span>
             <p onClick={handleClick}>Nuevo</p>
-            <p onClick={() => { pasteLink({ params, linksStore, setLinksStore, desktopName }) }}>Pegar</p>
+            <p onClick={() => { pasteLink({ params, linksStore, setLinksStore, desktopName, activeLocalStorage }) }}>Pegar</p>
             <p onClick={handleEditable}>Renombrar</p>
             <span className={styles.moveTo}>Mover a
               <ul className={styles.moveList}>

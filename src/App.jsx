@@ -5,6 +5,8 @@ import AppLayout from './components/Pages/AppLayout'
 import Login from './components/Pages/LoginPage'
 import LinkDetails from './components/Pages/LinkDetails'
 import { useSessionStore } from '../src/store/session'
+import ListOfLinks from './components/ListOfLinks'
+import ReadingList from './components/Pages/ReadingList'
 
 function App () {
   const user = useSessionStore(state => state.user)
@@ -14,8 +16,18 @@ function App () {
       element: <HomePage />
     },
     {
-      path: '/desktop/:desktopName',
-      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />
+      path: '/desktop',
+      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      children: [
+        {
+          path: '/desktop/:desktopName',
+          element: <ListOfLinks />
+        },
+        {
+          path: '/desktop/readinglist',
+          element: <ReadingList />
+        }
+      ]
     },
     {
       path: '/link/:id',

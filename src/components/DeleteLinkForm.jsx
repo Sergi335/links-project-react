@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useLinksStore } from '../store/links'
 import { useParams } from 'react-router-dom'
+import { usePreferencesStore } from '../store/preferences'
 import styles from './DeleteLinkForm.module.css'
 
 export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
@@ -9,6 +10,8 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
   const { desktopName } = useParams()
   const visibleClassName = deleteFormVisible ? styles.flex : styles.hidden
   const formRef = useRef()
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target !== formRef.current && event.target.nodeName !== 'P' && !formRef.current.contains(event.target)) {
@@ -38,7 +41,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
         setDeleteFormVisible(false)
         const newList = [...linksStore].filter(link => link._id !== params._id)
         setLinksStore(newList)
-        localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
       })
       .catch(err => {
         console.log(err)

@@ -3,27 +3,25 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { moveColumns, moveLinks, getDataForDesktops } from '../services/dbQueries'
 import { useLinksStore } from '../store/links'
 import { useColumnsStore } from '../store/columns'
+import { usePreferencesStore } from '../store/preferences'
 
 export const useDragItems = ({ desktopName }) => {
   const [activeLink, setActiveLink] = useState()
-  console.log('🚀 ~ file: useDragItems.js:9 ~ useDragItems ~ activeLink:', activeLink)
   const [movedLink, setMovedLink] = useState()
   const [movedColumn, setMovedColumn] = useState()
   const [activeColumn, setActiveColumn] = useState()
-  console.log('🚀 ~ file: useDragItems.js:13 ~ useDragItems ~ activeColumn:', activeColumn)
   const setLinksStore = useLinksStore(state => state.setLinksStore)
   const linksStore = useLinksStore(state => state.linksStore)
   const columnsStore = useColumnsStore(state => state.columnsStore)
   const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
   function handleDragStart (event) {
     if (event.active.data.current?.type === 'Column') {
       setActiveColumn(event.active.data.current.columna)
-      // setMovedColumn(event.active.data.current.columna)
     }
     if (event.active.data.current?.type === 'link') {
       setActiveLink(event.active.data.current.link)
-      // setMovedLink(event.active.data.current.link)
     }
   }
   function handleDragEnd (event) {
@@ -41,7 +39,7 @@ export const useDragItems = ({ desktopName }) => {
       if (active.id !== over.id) {
         const oldIndex = columnsStore.findIndex((t) => t._id === active.id)
         const newIndex = columnsStore.findIndex((t) => t._id === over.id)
-        console.log('movemos')
+        console.log(active)
         setColumnsStore(arrayMove(columnsStore, oldIndex, newIndex))
         setMovedColumn(activeColumn)
       }
@@ -66,30 +64,29 @@ export const useDragItems = ({ desktopName }) => {
     }
   }
   const handleSortItems = async () => {
-    if (activeLink) {
-      const ids = linksStore.filter(link => link.idpanel === activeLink.idpanel).map(link => link._id)
-      await moveLinks(activeLink._id, ids, desktopName, activeLink.idpanel)
+    if (movedLink) {
+      const ids = linksStore.filter(link => link.idpanel === movedLink.idpanel).map(link => link._id)
+      await moveLinks(movedLink._id, ids, desktopName, movedLink.idpanel)
       const [, linksData] = await getDataForDesktops(desktopName)
-      localStorage.setItem(`${desktopName}links`, JSON.stringify(linksData.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(linksData.toSorted((a, b) => (a.orden - b.orden))))
     }
-    if (activeColumn) {
+    if (movedColumn) {
       const ids = columnsStore.map(col => col._id)
       await moveColumns(ids, desktopName)
       const [columnsData] = await getDataForDesktops(desktopName)
-      localStorage.setItem(`${desktopName}Columns`, JSON.stringify(columnsData.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}Columns`, JSON.stringify(columnsData.toSorted((a, b) => (a.orden - b.orden))))
     }
   }
   useEffect(() => {
     if (movedLink) {
-      // setActiveLink(null)
       setMovedLink(null)
       handleSortItems()
     }
     if (movedColumn) {
-      // setActiveColumn(null)
-      handleSortItems()
       setMovedColumn(null)
+      handleSortItems()
     }
   }, [movedLink, movedColumn])
+
   return { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn }
 }

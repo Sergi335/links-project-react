@@ -8,6 +8,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useColumnsStore } from '../store/columns'
 import { useDesktopsStore } from '../store/desktops'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function Columna ({ data, children }) {
   const columna = data.columna || data.activeColumn
@@ -20,6 +21,7 @@ export default function Columna ({ data, children }) {
   const columnsStore = useColumnsStore(state => state.columnsStore)
   const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   // Creamos listeners para ocultar contextmenu
   useEffect(() => {
     const handleClick = (event) => {
@@ -71,7 +73,7 @@ export default function Columna ({ data, children }) {
         updatedState[elementIndex] = { ...objeto, name: newName }
       }
       setColumnsStore(updatedState)
-      localStorage.setItem(`${desktopName}Columns`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}Columns`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
       editColumn(newName, desktopName, columna._id)
     }
   }

@@ -1,15 +1,15 @@
 import Header from '../Header'
 import Nav from '../Nav'
-import ListOfLinks from '../ListOfLinks'
-import FormsContainer from '../FormsContainer'
+import { Outlet } from 'react-router-dom'
+// import ListOfLinks from '../ListOfLinks'
 
-export default function AppLayout () {
+export default function AppLayout ({ children }) {
   return (
     <>
       <Header />
       <Nav />
-      <ListOfLinks />
-      <FormsContainer />
+      {/* <ListOfLinks /> */}
+      <Outlet />
     </>
   )
 }

@@ -2,12 +2,14 @@ import styles from './ContextualMenu.module.css'
 import { useLinksStore } from '../store/links'
 import { useColumnsStore } from '../store/columns'
 import { useParams } from 'react-router-dom'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const linksStore = useLinksStore(state => state.linksStore)
   const setLinksStore = useLinksStore(state => state.setLinksStore)
   const columnsStore = useColumnsStore(state => state.columnsStore)
   const { desktopName } = useParams()
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
   const handleMoveClick = (event) => {
     const orden = document.getElementById(event.target.id).childNodes.length
@@ -37,7 +39,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
           return link
         })
         setLinksStore(updatedDesktopLinks)
-        localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
       })
       .catch(err => {
         console.log(err)

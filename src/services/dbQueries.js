@@ -147,3 +147,23 @@ export async function createColumn (nombre, escritorio, orden) {
     throw error
   }
 }
+export async function addLink (body) {
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader'
+    },
+    body: JSON.stringify(body)
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return res.json()
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}

@@ -1,4 +1,4 @@
-export async function pasteLink ({ params, linksStore, setLinksStore, desktopName }) {
+export async function pasteLink ({ params, linksStore, setLinksStore, desktopName, activeLocalStorage }) {
   console.log('Ejecuto')
   // lee el contenido del portapapeles entonces ...
   // Arrow function anónima con los items de param
@@ -10,14 +10,14 @@ export async function pasteLink ({ params, linksStore, setLinksStore, desktopNam
         // lo confirmamos
         for (const type of clipboardItem.types) {
           if (type === 'text/plain') {
-            handlePastedTextLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName)
+            handlePastedTextLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
             console.log('Texto plano')
           }
         }
       } else {
         for (const type of clipboardItem.types) {
           if (type === 'text/html') {
-            handlePastedHtmlLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName)
+            handlePastedHtmlLinks(event, clipboardItem, type, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
             console.log('html text')
           }
           if (type.startsWith('image/')) {
@@ -30,7 +30,7 @@ export async function pasteLink ({ params, linksStore, setLinksStore, desktopNam
     }
   })
 }
-const handlePastedTextLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName) => {
+const handlePastedTextLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName, activeLocalStorage) => {
   // Pasamos el blob a texto
   clipboardItem.getType(type).then((blob) => {
     blob.text().then(function (text) {
@@ -41,12 +41,12 @@ const handlePastedTextLinks = (event, clipboardItem, type, params, linksStore, s
         if (urls.length > 1) {
           console.log('entramos')
           // const raiz = event.target.parentNode.childNodes[1].innerText
-          pasteMultipleLinks(urls, params, linksStore, setLinksStore, desktopName)
+          pasteMultipleLinks(urls, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
           console.log('muchos links')
           return
         }
         console.log('Tiene un enlace')
-        processTextLinks(event, text, params, linksStore, setLinksStore, desktopName)
+        processTextLinks(event, text, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
       } else {
         console.log('Es texto plano sin enlace')
         console.log(text)
@@ -54,7 +54,7 @@ const handlePastedTextLinks = (event, clipboardItem, type, params, linksStore, s
     })
   })
 }
-async function processTextLinks (event, text, params, linksStore, setLinksStore, desktopName) {
+async function processTextLinks (event, text, params, linksStore, setLinksStore, desktopName, activeLocalStorage) {
   const nombre = await getNameByUrl(text)
   const escritorio = params.escritorio
   const url = text
@@ -88,7 +88,7 @@ async function processTextLinks (event, text, params, linksStore, setLinksStore,
       console.log(data)
       const newList = [...linksStore, data]
       setLinksStore(newList)
-      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)
@@ -97,21 +97,21 @@ async function processTextLinks (event, text, params, linksStore, setLinksStore,
     console.log(error)
   }
 }
-const handlePastedHtmlLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName) => {
+const handlePastedHtmlLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName, activeLocalStorage) => {
   clipboardItem.getType(type).then((blob) => {
     blob.text().then(function (text) {
       if (text.indexOf('<a href') === 0) {
         console.log('Es un enlace html')
         console.log(text)
         console.log(typeof (text))
-        processHtmlLink(event, text, params, linksStore, setLinksStore, desktopName)
+        processHtmlLink(event, text, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
       } else {
         console.log('No hay enlace')
       }
     })
   })
 }
-async function processHtmlLink (event, text, params, linksStore, setLinksStore, desktopName) {
+async function processHtmlLink (event, text, params, linksStore, setLinksStore, desktopName, activeLocalStorage) {
   const raiz = params._id
   const range = document.createRange()
   range.selectNode(document.body)
@@ -147,7 +147,7 @@ async function processHtmlLink (event, text, params, linksStore, setLinksStore, 
       const data = await res.json()
       const newList = [...linksStore, data]
       setLinksStore(newList)
-      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)
@@ -156,7 +156,7 @@ async function processHtmlLink (event, text, params, linksStore, setLinksStore, 
     console.log(error)
   }
 }
-async function pasteMultipleLinks (array, params, linksStore, setLinksStore, desktopName) {
+async function pasteMultipleLinks (array, params, linksStore, setLinksStore, desktopName, activeLocalStorage) {
   const escritorio = params.escritorio
   const columna = params.name
   const body = {
@@ -183,7 +183,7 @@ async function pasteMultipleLinks (array, params, linksStore, setLinksStore, des
       const data = await res.json()
       const newList = [...linksStore, ...data]
       setLinksStore(newList)
-      localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
     } else {
       const data = await res.json()
       console.log(data)

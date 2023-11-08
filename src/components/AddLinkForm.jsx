@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import styles from './AddLinkForm.module.css'
 import { constants } from '../services/constants'
 import { useLinksStore } from '../store/links'
+import { usePreferencesStore } from '../store/preferences'
+import { addLink } from '../services/dbQueries'
 
 export default function AddLinkForm ({ formVisible, setFormVisible, params, desktopName }) {
   const setLinksStore = useLinksStore(state => state.setLinksStore)
@@ -10,20 +12,23 @@ export default function AddLinkForm ({ formVisible, setFormVisible, params, desk
   const formRef = useRef()
   const nameRef = useRef()
   const urlRef = useRef()
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
+
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const hideFormOnClickOutside = (event) => {
       if (event.target !== formRef.current && event.target.nodeName !== 'P' && !formRef.current.contains(event.target)) {
         setFormVisible(false)
       }
     }
-    window.addEventListener('click', handleClickOutside)
+    window.addEventListener('click', hideFormOnClickOutside)
     return () => {
-      window.removeEventListener('click', handleClickOutside)
+      window.removeEventListener('click', hideFormOnClickOutside)
     }
   }, [])
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    const imgURL = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${urlRef.current.value}&size=64`
+    const imgURL = constants.BASE_LINK_IMG_URL(urlRef.current.value)
     const body = {
       idpanel: params._id,
       data: [{
@@ -36,23 +41,11 @@ export default function AddLinkForm ({ formVisible, setFormVisible, params, desk
         orden: 0
       }]
     }
-    fetch(`${constants.BASE_API_URL}/links`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'Application/json'
-      },
-      body: JSON.stringify(body)
-    })
-      .then(res => res.json())
-      .then(data => {
-        const newList = [...linksStore, data]
-        setFormVisible(false)
-        setLinksStore(newList)
-        localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    const data = await addLink(body) // que pasa si data es lo que no es
+    const newList = [...linksStore, data]
+    setFormVisible(false)
+    setLinksStore(newList)
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   return (
       <form ref={formRef} className={`deskForm ${visibleClassName}`} onSubmit={handleSubmit}>

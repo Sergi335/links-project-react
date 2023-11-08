@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import { useLinksStore } from '../store/links'
 import { useParams } from 'react-router-dom'
 import styles from './EditLinkForm.module.css'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function EditLinkForm ({ formVisible, setFormVisible, params }) {
   const visibleClassName = formVisible ? styles.flex : styles.hidden
@@ -9,6 +10,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible, params }) {
   const linksStore = useLinksStore(state => state.linksStore)
   const formRef = useRef()
   const { desktopName } = useParams()
+  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -52,7 +54,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible, params }) {
           updatedState[elementIndex] = { ...objeto, ...data }
         }
         setLinksStore(updatedState)
-        localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
       })
       .catch(err => {
         console.log(err)
