@@ -7,6 +7,9 @@ import LinkDetails from './components/Pages/LinkDetails'
 import { useSessionStore } from '../src/store/session'
 import ListOfLinks from './components/ListOfLinks'
 import ReadingList from './components/Pages/ReadingList'
+import ProfilePage from './components/Pages/ProfilePage'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App () {
   const user = useSessionStore(state => state.user)
@@ -26,6 +29,14 @@ function App () {
         {
           path: '/desktop/readinglist',
           element: <ReadingList />
+        },
+        {
+          path: '/desktop/link/:id',
+          element: <LinkDetails />
+        },
+        {
+          path: '/desktop/profile',
+          element: <ProfilePage />
         }
       ]
     },
@@ -40,7 +51,21 @@ function App () {
   ])
 
   return (
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
   )
 }
 

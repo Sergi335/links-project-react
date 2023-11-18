@@ -54,13 +54,13 @@ export default function CustomLink ({ data, idpanel }) {
         <div ref={setNodeRef}
           style={style}
           {...attributes}
-          {...listeners} className={isDragging ? styles.link_dragged : styles.link} id={link._id} onContextMenu={(e) => handleContextMenu(e)}>
+          {...listeners} className={isDragging ? styles.link_dragged : styles.link} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} target='_blank' rel='noreferrer' title={link.name}>
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
           </a>
           <div className={styles.lcontrols}>
-            <Link to={`/link/${link._id}`} state={link._id}>
+            <Link to={`/desktop/link/${link._id}`} state={link._id}>
               <MaximizeIcon />
             </Link>
           </div>

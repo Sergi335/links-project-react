@@ -1,4 +1,5 @@
 import { constants } from './constants'
+
 export async function getDataForDesktops (desktop) {
   try {
     const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columnas?escritorio=${desktop}`)
@@ -157,13 +158,374 @@ export async function addLink (body) {
     },
     body: JSON.stringify(body)
   })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('Network response was not ok')
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+export const createDesktop = async ({ name, displayName, orden }) => {
+  const body = { name, displayName, orden }
+  return fetch(`${constants.BASE_API_URL}/escritorios`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'Application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+export async function editColumn (name, desk, idPanel) {
+  try {
+    const body = { nombre: name, escritorio: desk, id: idPanel }
+    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+export async function moveColumn (deskOrigen, deskDestino, idPanel) {
+  try {
+    const body = { deskOrigen, deskDestino, colId: idPanel }
+    const res = await fetch(`${constants.BASE_API_URL}/moveCols`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      return data
+    } else {
+      const data = await res.json()
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+export async function deleteColumn (idPanel) {
+  try {
+    const body = { id: idPanel }
+    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+export async function moveLink (body) {
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    headers: {
+      'Content-type': 'Application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+export async function editDesktopName (body) {
+  return fetch(`${constants.BASE_API_URL}/escritorios`, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+export async function changeBackgroundImage (event) {
+  const nombre = event.target.alt
+  if (event.target.nodeName === 'IMG') {
+    return fetch(`${constants.BASE_API_URL}/getBackground?nombre=${nombre}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
       }
-      return res.json()
     })
-    .catch((err) => {
-      console.error(err)
+      .then(res => res.text())
+      .then(data => {
+        document.body.style.backgroundImage = `url(${data})`
+        document.body.style.backgroundSize = 'cover'
+        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data}`))
+        return data
+      })
+      .catch(error => {
+        return error
+      })
+  } else {
+    document.body.style.backgroundImage = ''
+    document.body.style.backgroundSize = 'initial'
+    window.localStorage.setItem('bodyBackground', '')
+  }
+}
+export async function getBackgroundMiniatures () {
+  return fetch(`${constants.BASE_API_URL}/escritorios/backgrounds`, {
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json', // A variable global
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader'
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
     })
+    .catch(error => {
+      return error
+    })
+}
+export async function fetchImage ({ imageUrl, linkId }) {
+  try {
+    const formData = new FormData()
+    const response = await fetch(imageUrl)
+    const blob = await response.blob()
+    // eslint-disable-next-line no-undef
+    const file = new File([blob], 'image', { type: blob.type })
+    formData.append('images', file, 'image.png')
+    formData.append('linkId', linkId)
+    const res = await fetch(`${constants.BASE_API_URL}/uploadImg`, {
+      method: 'POST',
+      body: formData
+    })
+    if (res.ok) {
+      const result = await res.json()
+      return result
+    } else {
+      console.error('Error al subir las imágenes al servidor.')
+      return { error: 'Error al subir las imágenes al servidor' }
+    }
+  } catch (error) {
+    console.error('Error al obtener la imagen:', error)
+    return { error }
+  }
+}
+export async function deleteImage ({ imageUrl, linkId }) {
+  try {
+    let body = {
+      image: imageUrl,
+      id: linkId
+    }
+    body = JSON.stringify(body)
+    const res = await fetch(`${constants.BASE_API_URL}/deleteImg`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body
+    })
+    if (res.ok) {
+      const result = await res.json()
+      console.log(result)
+      const firstKey = Object.keys(result)[0]
+      const firstValue = result[firstKey]
+
+      if (firstKey === 'error' || firstKey === 'errors') {
+        if (firstKey === 'errors') {
+          return `Error, valor ${firstValue[0].path} no válido`
+        } else {
+          return `${firstKey}, ${firstValue}`
+        }
+      } else {
+        return result
+      }
+    } else {
+      const error = await res.json()
+      if (error.error === 'storage/invalid-url' || error.error === 'storage/object-not-found') {
+        return 'Referencia eliminada'
+      } else {
+        console.log(error)
+        console.error(error.error)
+        return error.error
+      }
+    }
+  } catch (error) {
+    console.error('Error al borrar la imagen:', error)
+    return error
+  }
+}
+export async function sendNotes ({ id, notes }) {
+  let body = { id, fields: { notes } }
+  body = JSON.stringify(body)
+  console.log(body)
+  const res = await fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body
+  })
+  const json = await res.json()
+  console.log(json)
+  const firstKey = Object.keys(json)[0]
+  const firstValue = json[firstKey]
+
+  if (firstKey === 'error' || firstKey === 'errors') {
+    if (firstKey === 'errors') {
+      return (`Error, valor ${firstValue[0].path} no válido`)
+    } else {
+      return (`${firstKey}, ${firstValue}`)
+    }
+  } else {
+    return json
+  }
+}
+export async function fetchLinkIconFile ({ file, linkId }) {
+  if (file) {
+    const formData = new FormData()
+    formData.append('linkImg', file)
+    formData.append('linkId', linkId)
+    console.log(formData)
+    try {
+      const response = await fetch(`${constants.BASE_API_URL}/uploadLinkImg`, {
+        method: 'POST',
+        body: formData
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        // const link = document.getElementById(linkId)
+        // link.childNodes[0].src = src
+        const firstKey = Object.keys(result)[0]
+        const firstValue = result[firstKey]
+
+        if (firstKey === 'error') {
+          return (`${firstKey}, ${firstValue}`)
+        } else {
+          return result
+        }
+      } else {
+        console.error('Error al actualizar la ruta de la imagen')
+        return ('Error al cambiar imagen')
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error)
+      return ('Error al cambiar imagen')
+    }
+  }
+}
+export async function saveLinkIcon ({ src, linkId }) {
+  const formData = new FormData()
+  formData.append('filePath', src)
+  formData.append('linkId', linkId)
+  try {
+    const response = await fetch(`${constants.BASE_API_URL}/uploadLinkImg`, {
+      method: 'POST',
+      body: formData
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      console.log(result)
+      const firstKey = Object.keys(result)[0]
+      const firstValue = result[firstKey]
+
+      if (firstKey === 'error') {
+        return (`${firstKey}, ${firstValue}`)
+      } else {
+        return result
+      }
+    } else {
+      console.error('Error al actualizar la ruta de la imagen')
+      return ('Error al cambiar imagen')
+    }
+  } catch (error) {
+    console.error('Error al realizar la solicitud:', error)
+    return ('Error al cambiar imagen')
+  }
+}
+export async function deleteLinkImage (imageId) {
+  try {
+    let body = {
+      image: imageId
+      // id
+    }
+    body = JSON.stringify(body)
+    const res = await fetch(`${constants.BASE_API_URL}/deleteLinkImg`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body
+    })
+    if (res.ok) {
+      const result = await res.json()
+      console.log(result)
+      const firstKey = Object.keys(result)[0]
+      const firstValue = result[firstKey]
+
+      if (firstKey === 'error' || firstKey === 'errors') {
+        if (firstKey === 'errors') {
+          return (`Error, valor ${firstValue[0].path} no válido`)
+        } else {
+          return (`${firstKey}, ${firstValue}`)
+        }
+      } else {
+        console.log('Borrado con éxito')
+        return { message: 'Borrado con éxito' }
+      }
+    } else {
+      console.log(await res.json())
+      return ('Error en la solicitud')
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }

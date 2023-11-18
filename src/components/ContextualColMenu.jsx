@@ -1,25 +1,39 @@
 import styles from './ContextualColMenu.module.css'
+import { toast } from 'react-toastify'
 import { pasteLink } from '../services/pasteLinks'
-import { moveColumn, deleteColumn } from '../services/functions'
+import { moveColumn } from '../services/dbQueries'
 import { useParams } from 'react-router-dom'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
+import { useFormsStore } from '../store/forms'
 
-export default function ContextualColMenu ({ visible, points, params, desktopColumns, setDesktopColumns, desktops, handleClick, handleEditable }) {
+export default function ContextualColMenu ({ visible, points, params, desktopColumns, setDesktopColumns, desktops, setAddLinkFormVisible }) {
   const { desktopName } = useParams()
   const setLinksStore = useLinksStore(state => state.setLinksStore)
   const linksStore = useLinksStore(state => state.linksStore)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
+  const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
 
-  const handleMoveCol = (desk) => {
-    moveColumn(desktopName, desk, params._id)
+  const handleMoveCol = async (desk) => {
+    const response = await moveColumn(desktopName, desk, params._id)
+    // Error de red
+    if (!response.response?.length && !response.ok && response.error === undefined) {
+      toast('Error de red')
+      return
+    }
+    // Error http
+    if (!response.response?.length && !response.ok && response.status !== undefined) {
+      toast(`${response.status}: ${response.statusText}`)
+      return
+    }
+    // Error personalizado
+    if (!response.response?.length && response.error) {
+      toast(`Error: ${response.error}`)
+      return
+    }
     const newList = [...desktopColumns].filter(col => col._id !== params._id)
     setDesktopColumns(newList)
-  }
-  const handleDeleteCol = () => {
-    deleteColumn(params._id)
-    const newList = [...desktopColumns].filter(col => col._id !== params._id)
-    setDesktopColumns(newList)
+    toast(response.response.message)
   }
 
   return (
@@ -28,9 +42,9 @@ export default function ContextualColMenu ({ visible, points, params, desktopCol
           } style={{ left: points.x, top: points.y }}>
             <strong>Opciones Columna</strong>
             <span>{params.name}</span>
-            <p onClick={handleClick}>Nuevo</p>
+            <p onClick={() => setAddLinkFormVisible(true)}>Nuevo</p>
             <p onClick={() => { pasteLink({ params, linksStore, setLinksStore, desktopName, activeLocalStorage }) }}>Pegar</p>
-            <p onClick={handleEditable}>Renombrar</p>
+            <p>Renombrar</p>
             <span className={styles.moveTo}>Mover a
               <ul className={styles.moveList}>
                 {
@@ -42,7 +56,7 @@ export default function ContextualColMenu ({ visible, points, params, desktopCol
                 }
               </ul>
             </span>
-            <p onClick={handleDeleteCol}>Borrar</p>
+            <p onClick={() => setDeleteColFormVisible(true)}>Borrar</p>
         </div>
   )
 }

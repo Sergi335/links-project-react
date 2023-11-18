@@ -3,14 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  min-height: 100vh;
-}
-
-main {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  margin-top: 160px;
-  gap: 40px;
+  /* min-height: 100vh; */
 }
 
 .draggedDesk li {
@@ -36,7 +29,11 @@ main {
   cursor: pointer;
   color: var(--accentColor);
 }
-
+.uiIcon-button {
+  width: 20px;
+  color: var(--buttonTextColor);
+  cursor: pointer;
+}
 .column {
   width: 33%;
 }
@@ -74,7 +71,7 @@ a.active {
   position: fixed;
   left: 50%;
   transform: translate(-50%, 0);
-  display: none;
+  display: flex;
   z-index: 7;
   padding: 50px;
   border-radius: 15px;

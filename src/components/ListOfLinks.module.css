@@ -1,0 +1,8 @@
+.listOfLinks {
+    min-width: 1400px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    margin-top: 160px;
+    gap: 40px;
+
+}

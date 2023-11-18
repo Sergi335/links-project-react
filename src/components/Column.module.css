@@ -19,12 +19,12 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: 5px 13px;
-    color: #787676;
-    background-color: #f1f3f4;
+    color: var(--firstTextColor);;
+    background-color: var(--secondColor);
     border-radius: 3px;
 }
 .columnWrapper {
-    width: 320px;
+    /* width: 320px; */
     margin-bottom: 45px;
 }
 .dragginColumn {

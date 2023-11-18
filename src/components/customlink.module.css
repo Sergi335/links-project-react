@@ -4,8 +4,8 @@
     align-items: center;
     height: 43px;
     border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: white;
+    /* border: 1px solid var(--firstBorderColor); */
+    background-color: var(--firstColor);
 }
 .link_dragged {
     display: flex;
@@ -38,9 +38,9 @@
     text-overflow: ellipsis;
     width: 80%;
 }
-/* .link:hover {
+.link:hover {
     background-color: var(--firstHvColor);
-} */
+}
 .lcontrols {
     transition: border .5s ease-in-out;
     border: 1px solid transparent;

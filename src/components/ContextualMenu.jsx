@@ -3,6 +3,8 @@ import { useLinksStore } from '../store/links'
 import { useColumnsStore } from '../store/columns'
 import { useParams } from 'react-router-dom'
 import { usePreferencesStore } from '../store/preferences'
+import { moveLink } from '../services/dbQueries'
+import { toast } from 'react-toastify'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const linksStore = useLinksStore(state => state.linksStore)
@@ -11,7 +13,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
   const { desktopName } = useParams()
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
-  const handleMoveClick = (event) => {
+  const handleMoveClick = async (event) => {
     const orden = document.getElementById(event.target.id).childNodes.length
     const body = {
       id: params._id,
@@ -22,28 +24,31 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
         orden
       }
     }
-    fetch('http://localhost:3003/api/links', {
-      method: 'PATCH',
-      headers: {
-        'Content-type': 'Application/json'
-      },
-      body: JSON.stringify(body)
+    const response = await moveLink(body)
+    // Error de red
+    if (!response._id && !response.ok && response.error === undefined) {
+      toast('Error de red')
+      return
+    }
+    // Error http
+    if (!response._id && !response.ok && response.status !== undefined) {
+      toast(`${response.status}: ${response.statusText}`)
+      return
+    }
+    // Error personalizado
+    if (!response._id && response.error) {
+      toast(`Error: ${response.error}`)
+      return
+    }
+    const updatedDesktopLinks = linksStore.map(link => {
+      if (link._id === params._id) {
+      // Modifica la propiedad del elemento encontrado
+        return { ...link, idpanel: event.target.id }
+      }
+      return link
     })
-      .then(res => res.json())
-      .then(data => {
-        const updatedDesktopLinks = linksStore.map(link => {
-          if (link._id === params._id) {
-          // Modifica la propiedad del elemento encontrado
-            return { ...link, idpanel: event.target.id }
-          }
-          return link
-        })
-        setLinksStore(updatedDesktopLinks)
-        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    setLinksStore(updatedDesktopLinks)
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
   }
   const handleEditClick = () => {
     setEditFormVisible(true)

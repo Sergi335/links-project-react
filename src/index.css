@@ -35,7 +35,31 @@
   --placeholderImg: url(../img/placeholderImgLight.png);
   --placeholderVid: url(../img/placeholderVidLight.png);
 }
-
+html.dark {
+  --firstColor: #292929;
+  /* --secondColor: #313131; */
+  --secondColor: #31313185;
+  --thirdColor: #414141;
+  --fourthColor: #2d2d2d;
+  --fifthColor: #292929;
+  --bgSecondGradient: radial-gradient(circle 815px at 23.4% -21.8%, rgb(64 64 64) 0.2%, rgb(33 33 33) 100.2%);
+  --bgGradient: url('/img/fondo.png');
+  --accentColor: #bf7272;
+  --neumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68), 0.3em 1em 2em rgba(0, 0, 0, 0.3);
+  --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
+  --firstTextColor: #e2e2e2;
+  --buttonTextColor: #4e4e4e;
+  --secondTextColor: #b1b1b1;
+  --firstBorder: 1px solid #323232cc;
+  --firstShadow: #0c0c0c;
+  --firstBorderColor: #575757cc;
+  --firstHvColor: #232323;
+  --sixthColor: #232323;
+  --firstButtonColor: #313131;
+  /*Third color*/
+  --placeholderImg: url('../img/placeholderImg.png');
+  --placeholderVid: url('../img/placeholderVid.png')
+}
 .textBold {
   font-weight: bold;
   color: var(--accentColor);
@@ -72,24 +96,25 @@ input:-webkit-autofill:focus {
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--firstTextColor);
   text-decoration: inherit;
 }
 
-a:hover {
+/* a:hover {
   color: #535bf2;
-}
+} */
 /* a {
   text-decoration: none;
   color: var(--firstTextColor);
 } */
 body {
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--thirdColor);
+  background: var(--bgGradient);
+  /* background-size: cover; */
+  background-attachment: fixed;
 }
 
 h1 {
@@ -117,7 +142,52 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+div.settings {
+  padding: 10px;
+  display: flex;
+  gap: 15px;
+}
 
+div.settings:hover .bodcontrols {
+  display: flex;
+}
+
+.bodcontrols {
+  position: absolute;
+  background-color: var(--fifthColor);
+  box-shadow: 0px 15px 25px var(--firstShadow);
+  border-radius: 5px;
+  top: 58px;
+  right: 7%;
+  padding: 6px 0px;
+  z-index: 12;
+  flex-direction: column;
+  align-items: center;
+  display: none;
+  color: var(--firstTextColor);
+  font-weight: 500;
+  justify-content: center;
+  gap: 2px;
+  min-width: 215px;
+}
+
+.bodcontrols span {
+
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  padding: 5px 15px;
+  border-radius: 5px;
+}
+
+.bodcontrols span:hover {
+  background-color: var(--firstHvColor);
+}
+.sideInfoSelectedCol {
+  box-shadow: 0px 0px 30px var(--accentColor);
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

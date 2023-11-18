@@ -8,11 +8,13 @@ import Columna from './Column'
 import CustomLink from './customlink'
 import SideInfo from './SideInfo'
 import FormsContainer from './FormsContainer'
-// import AppLayout from './Pages/AppLayout'
+import styles from './ListOfLinks.module.css'
 import { useLinksStore } from '../store/links'
 import { useColumnsStore } from '../store/columns'
 import { usePreferencesStore } from '../store/preferences'
 import { useDragItems } from '../hooks/useDragItems'
+// import { useNavStore } from '../store/session'
+import { useFormsStore } from '../store/forms'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
@@ -25,8 +27,12 @@ export default function ListOfLinks () {
   const storageLinks = JSON.parse(localStorage.getItem(`${desktopName}links`))
   const storageColumns = JSON.parse(localStorage.getItem(`${desktopName}Columns`))
   const { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn } = useDragItems({ desktopName })
+  const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
+  // const setLinks = useNavStore(state => state.setLinks)
+  const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 
   useEffect(() => {
+    setActualDesktop(desktopName)
     if (storageLinks && storageLinks?.length > 0) {
       setLinksStore(storageLinks)
     } else {
@@ -38,6 +44,7 @@ export default function ListOfLinks () {
         })
     }
   }, [desktopName])
+
   useEffect(() => {
     if (storageColumns && storageColumns?.length > 0) {
       setColumnsStore(storageColumns)
@@ -64,8 +71,9 @@ export default function ListOfLinks () {
   }
 
   return (
-    <main>
-      <SideInfo />
+    <main className={styles.listOfLinks}>
+      <SideInfo environment={'listoflinks'}/>
+      <div id='maincontent' style={{ display: 'grid', maxWidth: '1400px', gap: '40px', gridTemplateColumns: numberOfColumns }}>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -118,6 +126,7 @@ export default function ListOfLinks () {
           document.body
         )}
       </DndContext>
+      </div>
       <FormsContainer />
     </main>
   )

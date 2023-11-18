@@ -1,0 +1,57 @@
+.customizePanel {
+    top: 127px;
+    border-radius: 0;
+    right: 0;
+    left: initial;
+    transform: none;
+    max-width: min-content;
+    min-width: 525px;
+    height: -webkit-fill-available;
+    background-image: var(--bgSecondGradient);
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: fixed;
+    z-index: 7;
+    padding: 25px 30px;
+    gap: 15px;
+}
+.customizePanel h2 {
+    margin-top: 0;
+}
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+.hidden {
+    display: none;
+}
+.selectBackground {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 25px;
+    min-height: 426px;
+}
+.selectBackground img {
+    width: 200px;
+    cursor: pointer;
+}
+.selectInfoColor, .selectAccentColor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: -webkit-fill-available;
+    margin-bottom: 25px;
+}
+.selectInfoColor div, .selectAccentColor div {
+    height: 30px;
+    width: 30px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.formControl {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+}
