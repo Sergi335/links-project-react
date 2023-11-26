@@ -1,0 +1,221 @@
+.profileTitle {
+    padding: 25px;
+    border: 1px solid var(--firstBorderColor);
+    border-radius: 5px;
+    background-color: var(--firstColor);
+    margin-bottom: 50px;
+    margin-top: 160px;
+    color: var(--firstTextColor);
+}
+.profileTitle h2 {
+    text-align: left;
+}
+.tabcontent {
+    display: flex;
+    flex-direction: column;
+    color: var(--firstTextColor);
+    text-align: left;
+}
+.profileDeleteConfirm {
+    position: absolute;
+    background-color: var(--firstColor);
+    min-width: 320px;
+    min-height: 145px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    left: 25%;
+    display: none;
+}
+.tabcontentRow {
+    display: flex;
+    color: var(--firstTextColor);
+    text-align: left;
+    margin-top: 50px;
+    background-color: var(--firstColor);
+    border-radius: 5px;
+}
+.backupControls {
+    display: flex;
+    gap: 15px;
+}
+.preferences {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--fourthColor);
+    border-radius: 5px;
+    box-shadow: var(--neumoShadow);
+    padding: 50px;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.tabcontent h2 {
+    font-size: 1.9em;
+    margin-top: 0;
+}
+.info {
+    padding: 25px;
+    border: 1px solid var(--firstBorderColor);
+    border-radius: 5px;
+    background-color: var(--firstColor);
+}
+.wrapper {
+    display: flex;
+    gap: 35px;
+    flex-direction: column;
+}
+.aditionalInfo {
+    display: flex;
+    gap: 80px;
+}
+.profileImage {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    width: fit-content;
+    padding: 15px;
+    border: 1px solid var(--firstBorderColor);
+    border-radius: 5px;
+    box-shadow: var(--secondNeumoShadow);
+}
+.profileImage img {
+    border-radius: 5px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+.upFile {
+    width: 200px;
+    position: relative;
+}
+.upFile label {
+    position: absolute;
+    display: flex;
+    gap: 6px;
+    cursor: pointer;
+    height: 37px;
+    justify-content: center;
+    align-items: center;
+    width: 158.36px;
+}
+.upFileInput {
+    cursor: pointer;
+    opacity: 0;
+}
+.imageInput {
+    cursor: pointer;
+    opacity: 0;
+}
+.otherInfo form {
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    display: flex;
+}
+.userInfo {
+    padding: 15px;
+    box-shadow: var(--secondNeumoShadow);
+    border: 1px solid var(--firstColor);
+    border-radius: 5px;
+    text-align: left;
+}
+.userInfo p:first-child {
+    font-size: 26px;
+    margin: 0;
+}
+.statistics {
+    padding: 25px;
+    border: 1px solid var(--firstBorderColor);
+    border-radius: 5px;
+    background-color: var(--firstColor);
+    margin-top: 50px;
+}
+.duplicatesResult, .brokenLinksResult {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 50px;
+}
+.link {
+    height: auto;
+    background-color: var(--secondColor);
+    border-radius: 15px;
+    padding: 25px;
+    flex-wrap: wrap;
+    max-width: 259px;
+    display: flex;
+}
+.link a {
+    width: 100%;
+    flex-direction: row;
+    gap: 8px;
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0;
+}
+.link a img {
+    width: 16px;
+    height: 16px;
+}
+.resultsHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 25px;
+    align-items: center;
+}
+.password {
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    width: 40%;
+    background-color: var(--firstColor);
+    border-radius: 5px;
+    padding: 50px;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 15px;
+}
+.changePasswordDialog {
+    position: fixed;
+    background-color: var(--fifthColor);
+    min-width: 427px;
+    min-height: 263px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    left: 39%;
+    display: flex;
+    border-radius: 5px;
+    top: 30%;
+    box-shadow: var(--neumoShadow);
+    padding: 25px;
+}
+.backup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    background-color: var(--firstColor);
+    border-radius: 5px;
+    padding: 50px;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.flexForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.flexButtons {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}

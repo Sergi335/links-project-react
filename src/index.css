@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--firstTextColor);
+  background-color: var(--fourthColor);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,10 +14,11 @@
   -webkit-text-size-adjust: 100%;
 
   --firstColor: white;
-  --secondColor: #dee1e6;
+  --secondColor: #f9f9f9;
   --thirdColor: #f1f3f4;
   --fourthColor: #f1f1f1;
   --fifthColor: #ededed;
+  --seventhColor: #e6e6e6;
   --bgSecondGradient: radial-gradient(circle, rgba(222, 225, 230, 1) 0%, rgba(222, 225, 230, 1) 100%);
   --bgGradient: radial-gradient(circle, rgba(222, 225, 230, 1) 0%, rgba(222, 225, 230, 1) 100%);
   --accentColor: #bababa;
@@ -27,21 +28,24 @@
   --secondTextColor: #4f4f4f;
   --buttonTextColor: #4e4e4e;
   --firstBorder: 1px solid #e8e8e8cc;
-  --firstShadow: #5050501a;
+  --firstShadow: #50505057;
   --firstBorderColor: #d5d5d5cc;
   --firstHvColor: #f1f3f4;
   --sixthColor: #fcfcfc;
   --firstButtonColor: #dee1e6;
-  --placeholderImg: url(../img/placeholderImgLight.png);
-  --placeholderVid: url(../img/placeholderVidLight.png);
+  --placeholderImg: url(/img/placeholderImgLight.png);
+  --placeholderVid: url(/img/placeholderVidLight.png);
+  --linkBoxShadow: 0px 1px 0.5px #000;
 }
+
 html.dark {
   --firstColor: #292929;
   /* --secondColor: #313131; */
-  --secondColor: #31313185;
+  --secondColor: #313131;
   --thirdColor: #414141;
   --fourthColor: #2d2d2d;
   --fifthColor: #292929;
+  --seventhColor: #3f3e3e;
   --bgSecondGradient: radial-gradient(circle 815px at 23.4% -21.8%, rgb(64 64 64) 0.2%, rgb(33 33 33) 100.2%);
   --bgGradient: url('/img/fondo.png');
   --accentColor: #bf7272;
@@ -51,14 +55,22 @@ html.dark {
   --buttonTextColor: #4e4e4e;
   --secondTextColor: #b1b1b1;
   --firstBorder: 1px solid #323232cc;
-  --firstShadow: #0c0c0c;
+  --firstShadow: #0c0c0c96;
   --firstBorderColor: #575757cc;
   --firstHvColor: #232323;
   --sixthColor: #232323;
   --firstButtonColor: #313131;
   /*Third color*/
-  --placeholderImg: url('../img/placeholderImg.png');
-  --placeholderVid: url('../img/placeholderVid.png')
+  --placeholderImg: url('/img/placeholderImg.png');
+  --placeholderVid: url('/img/placeholderVid.png');
+  --linkBoxShadow: 0px 1px 0.5px #000;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--thirdColor) inset !important;
+    -webkit-text-fill-color: var(--firstTextColor) !important;
 }
 .textBold {
   font-weight: bold;
@@ -71,7 +83,10 @@ html.dark {
   position: relative;
   top: -5px;
 }
-
+.sectActive {
+  background-color: var(--firstButtonColor);
+  border-left-color: var(--accentColor) !important;
+}
 input[type='text'] {
   height: 34px;
   padding-left: 11px;
@@ -83,10 +98,13 @@ input[type='text'] {
   font-family: inherit;
   font-weight: 500;
 }
-input[type='text']:focus, input[type='text']:visited {
+
+input[type='text']:focus,
+input[type='text']:visited {
   background: var(--bgGradient);
   border: 1px solid #9a9a9a;
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   background-color: var(--thirdColor) !important;
@@ -98,6 +116,8 @@ a {
   font-weight: 500;
   color: var(--firstTextColor);
   text-decoration: inherit;
+  font-size: 14px;
+  transition: height .3s ease-in-out;
 }
 
 /* a:hover {
@@ -123,25 +143,40 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--accentColor);
+  border: 0;
+  padding: 8px 19px;
+  border-radius: 3px;
+  color: var(--buttonTextColor);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 16px;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color .6s;
 }
-
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.control_button {
+  font-size: 13px;
+  padding: 2px 12px;
+}
 button:hover {
-  border-color: #646cff;
+  background-color: var(--firstHvColor);
+  box-shadow: var(--secondNeumoShadow);
+  transition: background-color .3s;
+  color: var(--accentColor);
 }
 
-button:focus,
+/* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
+
 div.settings {
   padding: 10px;
   display: flex;
@@ -185,10 +220,12 @@ div.settings:hover .bodcontrols {
 .bodcontrols span:hover {
   background-color: var(--firstHvColor);
 }
+
 .sideInfoSelectedCol {
   box-shadow: 0px 0px 30px var(--accentColor);
 }
-@media (prefers-color-scheme: light) {
+
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -201,4 +238,4 @@ div.settings:hover .bodcontrols {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

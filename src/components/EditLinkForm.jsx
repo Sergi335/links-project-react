@@ -14,7 +14,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible, params }) {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (event.target !== formRef.current && event.target.nodeName !== 'P' && !formRef.current.contains(event.target)) {
+      if (event.target !== formRef.current && event.target.nodeName !== 'SPAN' && !formRef.current.contains(event.target)) {
         setFormVisible(false)
       }
     }

@@ -1,11 +1,48 @@
 .link {
     display: flex;
     gap: 5px;
-    align-items: center;
-    height: 43px;
+    align-items: flex-start;
+    max-height: 43px;
     border-radius: 5px;
-    /* border: 1px solid var(--firstBorderColor); */
+    border: 1px solid var(--firstBorderColor);
     background-color: var(--firstColor);
+    transition: max-height .3s ease-in-out;
+    overflow: hidden;
+    /* height: 43px; */
+}
+
+.link_open {
+    height: 140px !important;
+    align-items: flex-start !important;
+}
+.link_open span:nth-child(3) {
+    opacity: 1;
+    visibility: visible;
+    color: var(--accentColor);
+    transition: opacity .3s ease-in-out;
+}
+.div_open {
+    max-height: 300px;
+    align-items: flex-start;
+}
+.link:active {
+    box-shadow: 0px 0px 3px #4a4a4a inset;
+}
+.additionalInfo {
+    font-size: 13px;
+    font-variant: all-small-caps;
+    text-align: left;
+    padding-left: 20px;
+    gap: 15px;
+    display: flex;
+    padding-bottom: 10px;
+    height: 43px !important;
+}
+.additionalInfo span:last-child {
+    width: 33%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
 }
 .link_dragged {
     display: flex;
@@ -13,30 +50,41 @@
     align-items: center;
     height: 43px;
     border-radius: 5px;
-    background-color: beige;
-    border: 1px solid #ccc;
+    background-color: var(--accentColor);
+    border: 1px solid var(--accentColor);
 }
 .link img, .link_dragged img {
     width: 16px;
     margin-left: 15px;
-    margin-top: 2px;
+    margin-top: 0.19rem;
 }
 .link > a:first-of-type, .link_dragged > a:first-of-type {
-    overflow: hidden;
     white-space: nowrap;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 90%;
+    align-items: flex-start;
     text-align: left;
     height: 43px;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 43px;
+    text-decoration: none;
+    color: var(--firstTextColor);
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-grow: 1;
+    transition: height .3s ease-in-out;
+    position: relative;
+    top: 12px;
+    justify-content: flex-start;
+    gap: 10px;
     
 }
-.link a span, .link_dragged a span {
+.link a span:first-of-type, .link_dragged a span:first-of-type {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 80%;
+    width: 77%;
 }
 .link:hover {
     background-color: var(--firstHvColor);
@@ -44,9 +92,14 @@
 .lcontrols {
     transition: border .5s ease-in-out;
     border: 1px solid transparent;
-    border-radius: 40px;
+    border-radius: 3px;
     display: none;
     margin-right: 10px;
+    gap: 5px;
+    background-color: var(--thirdColor);
+    border: 1px solid var(--firstBorderColor);
+    position: relative;
+    top: 8px;
 }
 .lcontrols a {
     display: flex;
@@ -54,4 +107,15 @@
 .link:hover .lcontrols {
     display: flex;
     cursor: pointer;
+}
+.description {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    white-space: balance;
+    max-width: 80%;
+    position: relative;
+    top: -55px;
+    max-height: 0;
+    left: 40px;
 }

@@ -20,7 +20,10 @@ export const useDesktops = ({ desktopName }) => {
       const fetchData = async () => {
         try {
           const data = await getDesktops()
-          setDesktopsStore(data)
+          // console.log('🚀 ~ file: useDesktops.js:23 ~ fetchData ~ data:', data)
+          const state = data.filter(desk => desk.hidden !== true)
+          // console.log('🚀 ~ file: useDesktops.js:25 ~ fetchData ~ state:', state)
+          setDesktopsStore(state)
           activeLocalStorage ?? localStorage.setItem('Desktops', JSON.stringify(data.toSorted((a, b) => (a.order - b.order))))
         } catch (error) {
           console.error(error)

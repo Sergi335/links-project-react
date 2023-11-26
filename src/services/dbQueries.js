@@ -287,6 +287,24 @@ export async function editDesktopName (body) {
       return error
     })
 }
+export async function editDesktopVisible (body) {
+  return fetch(`${constants.BASE_API_URL}/escritoriosvisible`, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
@@ -529,3 +547,165 @@ export async function deleteLinkImage (imageId) {
     return error
   }
 }
+export async function editLink ({ id, name, URL, description }) {
+  const body = {
+    id,
+    fields: {
+      name,
+      URL,
+      description
+    }
+  }
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    headers: {
+      'Content-type': 'Application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    })
+}
+export async function uploadProfileImg (file) {
+  if (file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const response = await fetch(`${constants.BASE_API_URL}/uploadImgProfile`, {
+        method: 'POST',
+        body: formData
+      })
+      if (response.ok) {
+        const result = await response.json()
+        const firstKey = Object.keys(result)[0]
+        const firstValue = result[firstKey]
+
+        if (firstKey === 'error') {
+          return (`${firstKey}, ${firstValue}`)
+        } else {
+          return result.url
+        }
+      } else {
+        console.error('Error al actualizar la ruta de la imagen')
+        return ('Error al actualizar la ruta de la imagen')
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error)
+      return (`Error al realizar la solicitud:, ${error}`)
+    }
+  }
+}
+export async function editUserAditionalInfo ({ realName, aboutMe, website }) {
+  const body = {
+    realName,
+    aboutMe,
+    website
+  }
+  return fetch(`${constants.BASE_API_URL}/userAditionalInfo`, {
+    method: 'PATCH',
+    headers: {
+      'Content-type': 'Application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    })
+}
+export async function findDuplicates () {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/duplicados`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+export async function getAllLinks () {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/all/all`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+// export async function findBrokenLinks () {
+//   // try catch deberia estar en otra función y dejar un solo fetch
+//   try {
+//     const data = await fetch(`${constants.BASE_URL}/links/all/all`, {
+//       method: 'GET',
+//       headers: {
+//         'content-type': 'application/json'
+//       }
+//     })
+//     const res = await data.json()
+//     // res = res.slice(0, 50)
+//     console.log(res.length)
+//     const porcentajePorPaso = 100 / res.length
+//     console.log(porcentajePorPaso)
+//     const numeroPasos = Math.ceil(100 / porcentajePorPaso)
+//     console.log('🚀 ~ file: profile.js:325 ~ findBrokenLinks ~ numeroPasos:', numeroPasos)
+//     let count = 0
+//     const downLinks = await Promise.all(res.map(async (link) => {
+//       const response = await fetch(`${constants.BASE_API_URL}/linkStatus?url=${link.URL}`, {
+//         method: 'GET',
+//         headers: {
+//           'content-type': 'application/json'
+//         }
+//       })
+//       const data = await response.json()
+//       if (data.status !== 'success') {
+//         count += porcentajePorPaso
+//         return { data, link }
+//       }
+//       count += porcentajePorPaso
+//       $ppc.dataset.percent = count
+//       progressCircle()
+//       // console.log(count)
+//       return null
+//     }))
+//     const filteredLinks = downLinks.filter(link => link !== null)
+//     console.log(filteredLinks)
+//   } catch (error) {
+//     console.log(error)
+//     return error
+//   }
+// }

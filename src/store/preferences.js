@@ -8,9 +8,13 @@ export const usePreferencesStore = create(
       setActiveLocalStorage: (activeLocalStorage) => {
         set({ activeLocalStorage })
       },
-      numberOfColumns: constants.COLUMNS_COUNT[4],
+      numberOfColumns: localStorage.getItem('numberOfColumns') ? JSON.parse(localStorage.getItem('numberOfColumns')) : 4,
       setNumberOfColumns: (numberOfColumns) => {
         set({ numberOfColumns })
+      },
+      styleOfColumns: localStorage.getItem('styleOfColumns') ? JSON.parse(localStorage.getItem('styleOfColumns')) : constants.COLUMNS_COUNT[4],
+      setStyleOfColumns: (styleOfColumns) => {
+        set({ styleOfColumns })
       }
     }
   }

@@ -1,8 +1,14 @@
 .listOfLinks {
     min-width: 1400px;
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    /* grid-template-columns: auto auto auto auto; */
     margin-top: 160px;
     gap: 40px;
 
+}
+.mainContent {
+    display: grid;
+    max-width: 1692px;
+    gap: 40px;
+    margin-left: 16.4%;
 }

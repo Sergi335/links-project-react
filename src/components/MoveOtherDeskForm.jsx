@@ -70,10 +70,10 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
     }
   }, [])
   const handleClick = (event) => {
-    // console.log(event.currentTarget)
+    // console.log(event.target.nodeName)
     // console.log(event.currentTarget.childNodes[2])
     const panel = event.currentTarget.childNodes[2]
-    if (event.target !== event.currentTarget) {
+    if (event.target !== event.currentTarget && event.target.nodeName !== 'path') {
       event.stopPropagation()
       return
     }
@@ -89,7 +89,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
     const destinations = document.querySelectorAll('.destination')
     destinations.forEach((destination) => {
       if (destination === event.target) {
-        destination.style.backgroundColor = '#ccc'
+        destination.style.backgroundColor = 'var(--accentColor)'
         destination.classList.add('selected')
       } else {
         destination.style.backgroundColor = ''
@@ -139,13 +139,14 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   }
   return (
     <div ref={moveFormRef} id="menuMoveTo" className={visibleClass + ' ' + styles.menuMoveTo}>
+        <p>Mover {params.name}</p>
         <ul className={styles.destDeskMoveTo}>
         {
             escritorios
               ? escritorios.map(desk => desk.name !== params.escritorio
                 ? (
                 <li key={desk._id} onClick={handleClick} className={styles.accordion} id={desk.name}>
-                    <FolderIcon />
+                    <FolderIcon className='uiIcon'/>
                     {desk.displayName}
                         <ul>
 
@@ -167,7 +168,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
               : null
         }
         </ul>
-        <div id="moveToControls">
+        <div className={styles.moveToControls}>
             <button id="acceptMove" onClick={handleMove}>Aceptar </button>
             <button onClick={() => { setMoveFormVisible(false) }} id="cancelMove">Cancelar</button>
         </div>

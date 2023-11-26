@@ -4,26 +4,31 @@ import { useDesktopsStore } from '../store/desktops'
 import { constants } from '../services/constants'
 import { formatPath } from '../services/functions'
 import { usePreferencesStore } from '../store/preferences'
-import { editDesktopName, changeBackgroundImage, getBackgroundMiniatures } from '../services/dbQueries'
+import { editDesktopName, changeBackgroundImage, getBackgroundMiniatures, editDesktopVisible } from '../services/dbQueries'
 import { toast } from 'react-toastify'
 import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
-  const [columnCount, setColumnCount] = useState(4)
   const [miniatures, setMiniatures] = useState()
+  const [hiddenDesktops, setHiddenDesktops] = useState([])
   const inputRef = useRef()
   const { desktopName } = useParams()
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
+  const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const desktop = desktopsStore.filter(desk => desk.name === desktopName)
-
+  const accentColors = Object.keys(constants.ACCENT_COLORS)
+  const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
+  const visibleClassName = customizePanelVisible ? styles.slideIn : ''
+  // Debería estar montado y ocultarlo y mostrarlo mediante clases css
   const handleSubmit = async (event) => {
     event.preventDefault()
     const newName = inputRef.current.value.trim()
     const newNameFormat = formatPath(newName)
     const body = { newName, oldName: desktopName, newNameFormat }
-
+    // if new === old return
     const response = await editDesktopName(body)
     // Error de red
     if (!Array.isArray(response) && !response.ok && response.error === undefined) {
@@ -48,8 +53,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     setDesktopsStore(response)
   }
   const handleNumberColumnsChange = (event) => {
-    setColumnCount(event.target.value)
-    setNumberOfColumns(constants.COLUMNS_COUNT[event.target.value])
+    setNumberOfColumns(event.target.value)
+    setStyleOfColumns(constants.COLUMNS_COUNT[event.target.value])
+    localStorage.setItem('styleOfColumns', JSON.stringify(constants.COLUMNS_COUNT[event.target.value]))
+    localStorage.setItem('numberOfColumns', JSON.stringify(event.target.value))
   }
   const handleChangeBackgroundImage = async (event) => {
     const response = await changeBackgroundImage(event)
@@ -68,69 +75,32 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(`Error: ${response.error}`)
     }
   }
-  const handleChangePanelColor = (event) => {
+  const handleChangePanelStyles = (event) => {
     const currentStyle = event?.target.id
     const panel = document.getElementById('sideinfo')
-    switch (currentStyle) {
-      case 'theme':
-        panel.style.background = 'var(--bgGradient)'
-        panel.style.backdropFilter = 'none'
-        panel.style.borderRadius = '5px'
-        window.localStorage.setItem('infoColor', JSON.stringify('theme'))
-        break
-      case 'transparent':
-        panel.style.background = 'transparent'
-        panel.style.backdropFilter = 'none'
-        panel.style.borderRadius = '0'
-        window.localStorage.setItem('infoColor', JSON.stringify('transparent'))
-        break
-      case 'blur':
-        panel.style.background = 'transparent'
-        panel.style.backdropFilter = 'blur(15px)'
-        panel.style.borderRadius = '5px'
-        window.localStorage.setItem('infoColor', JSON.stringify('blur'))
-        break
-    }
+    constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
+    window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
   }
   const handleChangeAccentColor = (event) => {
     const color = event.target.id
-    switch (color) {
-      case 'yellow':
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.yellow)
-        document.documentElement.style.setProperty('--buttonTextColor', '#4e4e4e')
-        window.localStorage.setItem('accentColor', JSON.stringify('#ffff00'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#4e4e4e'))
-        break
-      case 'blue':
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.blue)
-        document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
-        window.localStorage.setItem('accentColor', JSON.stringify('cornflowerblue'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
-        break
-      case 'green':
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.green)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#00cc66'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
-        break
-      case 'defaultLight':
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
-        break
-      case 'defaultDark':
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultDark)
-        document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bf7272'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
-        break
-    }
+    constants.ACCENT_COLORS[color].applyStyles()
   }
-  const handleHideDesktops = (event) => {
-    console.log(event.target.value)
+  const handleHideDesktops = async (event) => {
+    const body = { name: event.target.value, hidden: true }
+    await editDesktopVisible(body)
     const newState = [...desktopsStore].filter(desktop => desktop.displayName !== event.target.value)
     setDesktopsStore(newState)
+    const newHiddenState = [...hiddenDesktops, event.target.value]
+    setHiddenDesktops(newHiddenState)
+  }
+  const handleRestoreDesktop = async (event) => {
+    event.preventDefault()
+    const body = { name: event.target.innerText, hidden: false }
+    const response = await editDesktopVisible(body)
+    const newState = [...response].filter(desktop => desktop.hidden !== true)
+    setDesktopsStore(newState)
+    const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
+    setHiddenDesktops(newHiddenState)
   }
   useEffect(() => {
     getBackgroundMiniatures()
@@ -156,57 +126,79 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       })
   }, [])
   // Ocultar escritorios con select?
-  const visibleClass = customizePanelVisible ? styles.flex : styles.hidden
+  // const visibleClass = customizePanelVisible ? styles.flex : styles.hidden
   return (
     <>
-             <div className={visibleClass + ' ' + styles.customizePanel}>
-                <h2>Personaliza Escritorio</h2>
-                <form style={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit}>
-                    <div className={styles.formControl}>
-                        <input ref={inputRef} type="text" name="" id="" defaultValue={desktop[0]?.displayName}/>
-                        <button>Modificar</button>
+             <div className={`${styles.customizePanel} ${visibleClassName}`}>
+                <div className={styles.wrapper}>
+                  <h3>Personaliza Escritorio</h3>
+                  <form style={{ display: 'flex', flexDirection: 'column', marginBottom: '25px' }} onSubmit={handleSubmit}>
+                    <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
+                      <div className={styles.rowGroup} style={{ position: 'relative' }}>
+                          <label htmlFor="changeDesktopName" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Nombre:</label>
+                          <input ref={inputRef} type="text" name="changeDesktopName" id="changeDesktopName" defaultValue={desktop[0]?.displayName}/>
+                          <button className={styles.inputButton} type='submit'>Modificar</button>
+                      </div>
+                      <div className={styles.rowGroup}>
+                          <label htmlFor="" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Número de columnas:&nbsp;<strong>{numberOfColumns}</strong></label>
+                          <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} />
+                          <datalist id="steplist">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                          </datalist>
+                      </div>
                     </div>
-                    <div className={styles.formControl}>
-                        <label htmlFor="">Número de columnas:</label>
-                        <input type="range" name="" id="" min={1} max={5} value={columnCount} onChange={handleNumberColumnsChange} /> <strong>{columnCount}</strong>
-                    </div>
-                    <div className={styles.formControl}>
-                        <label htmlFor="">Ocultar Escritorios:</label>
-                        <select name="" id="" onChange={handleHideDesktops}>
-                        {
-                            desktopsStore.map(desktop => {
-                              return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                      <h3>Ocultar Escritorios</h3>
+                      <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
+                         <div className={styles.rowGroup}>
+                         <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label>
+                          <select name="" id="" onChange={handleHideDesktops}>
+                          {
+                              desktopsStore.map(desktop => {
+                                return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                              })
+                          }
+                          </select>
+                         </div>
+                         <div className={styles.rowGroup}>
+                         {
+                            hiddenDesktops.length > 0 && hiddenDesktops.map(desktop => {
+                              return <button onClick={handleRestoreDesktop} key={desktop} className={styles.hiddenDesktops}>{desktop}</button>
                             })
-                        }
-                        </select>
-                    </div>
-                </form>
-                <h2>Cambiar Fondo</h2>
-                <div className={styles.selectBackground}>
-                    {
+                          }
+                         </div>
+                      </div>
+                  </form>
+                  <h3>Cambiar Fondo</h3>
+                  <div className={styles.selectBackground}>
+                      {
                         miniatures
                           ? miniatures.map(img => {
                             return <img key={img.nombre} src={img.url} alt={img.nombre} onClick={handleChangeBackgroundImage}/>
                           })
                           : <div>Cargando ...</div>
-
-                    }
-                </div>
-                <h2>Cambiar Color del Panel</h2>
-                {/* foreach infocolor */}
-                <div className={styles.selectInfoColor}>
-                    <div className="infoColors" onClick={handleChangePanelColor} id="theme" style={{ background: 'var(--bgGradient)' }}> </div>
-                    <div className="infoColors" onClick={handleChangePanelColor} id="transparent"> </div>
-                    <div className="infoColors" onClick={handleChangePanelColor} id="blur"> </div>
-                </div>
-                <h2>Cambiar Color de Acento</h2>
-                {/* foreach accentcolor */}
-                <div className={styles.selectAccentColor}>
-                    <div className="accentColors" onClick={handleChangeAccentColor} id="yellow" style={{ backgroundColor: constants.ACCENT_COLORS.yellow }}></div>
-                    <div className="accentColors" onClick={handleChangeAccentColor} id="blue" style={{ backgroundColor: constants.ACCENT_COLORS.blue }}></div>
-                    <div className="accentColors" onClick={handleChangeAccentColor} id="green" style={{ backgroundColor: constants.ACCENT_COLORS.green }}></div>
-                    <div className="accentColors" onClick={handleChangeAccentColor} id="defaultLight" style={{ backgroundColor: constants.ACCENT_COLORS.defaultLight }}></div>
-                    <div className="accentColors" onClick={handleChangeAccentColor} id="defaultDark" style={{ backgroundColor: constants.ACCENT_COLORS.defaultDark }}></div>
+                      }
+                      <div className={styles.removeBackground} onClick={handleChangeBackgroundImage}></div>
+                  </div>
+                  <h3>Cambiar Color del Panel</h3>
+                  <div className={styles.selectInfoColor}>
+                      {
+                        sideInfoStyles && sideInfoStyles.map(style => {
+                          return <div key={style} className="infoColors" onClick={handleChangePanelStyles} id={style} style={{ background: constants.SIDE_INFO_STYLES[style].background }}></div>
+                        })
+                      }
+                  </div>
+                  <h3>Cambiar Color de Acento</h3>
+                  <div className={styles.selectAccentColor}>
+                      {
+                        accentColors && accentColors.map(color => {
+                          return <div key={color} className="accentColors" onClick={handleChangeAccentColor} id={color} style={{ backgroundColor: constants.ACCENT_COLORS[color].color }}></div>
+                        })
+                      }
+                  </div>
                 </div>
             </div>
    </>

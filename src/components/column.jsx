@@ -94,15 +94,14 @@ export default function Columna ({ data, children }) {
           ref={colRef}
           className={styles.column}
           id={columna._id}
-          onContextMenu={(e) => handleContextMenu(e) }
-          onClick={() => setEditMode(true) }
+          // onClick={() => setEditMode(true) }
           {...attributes}
           {...listeners}
         >
           {
             editMode
               ? <input type='text' defaultValue={columna.name} onBlur={handleHeaderBlur} autoFocus/>
-              : <h2 ref={headRef}>{columna.name}</h2>
+              : <h2 onClick={() => setEditMode(true) } ref={headRef} onContextMenu={(e) => handleContextMenu(e) }>{columna.name}</h2>
           }
             {children}
         </div>

@@ -16,7 +16,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName }) {
   // Hook global
   useEffect(() => {
     const hideFormOnClickOutside = (event) => {
-      if (event.target !== formRef.current && event.target.nodeName !== 'P' && !formRef.current.contains(event.target)) {
+      if (event.target !== formRef.current && event.target.nodeName !== 'SPAN' && !formRef.current.contains(event.target)) {
         setFormVisible(false)
       }
     }

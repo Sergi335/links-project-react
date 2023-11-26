@@ -5,7 +5,7 @@ import DeleteLinkForm from './DeleteLinkForm'
 import MoveOtherDeskForm from './MoveOtherDeskForm'
 import ContextLinkMenu from './ContextualMenu'
 import ContextualColMenu from './ContextualColMenu'
-import CustomizeDesktopPanel from './CustomizeDesktopPanel'
+// import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import AddLinkForm from './AddLinkForm'
 import DeleteColConfirmForm from './DeleteColConfirmForm'
 import { useFormsStore } from '../store/forms'
@@ -18,6 +18,7 @@ export default function FormsContainer () {
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const points = useFormsStore(state => state.points)
   const editFormVisible = useFormsStore(state => state.editFormVisible)
+  console.log('🚀 ~ file: FormsContainer.jsx:21 ~ FormsContainer ~ editFormVisible:', editFormVisible)
   const setEditFormVisible = useFormsStore(state => state.setEditFormVisible)
   const activeLink = useFormsStore(state => state.activeLink)
   const activeElement = useFormsStore(state => state.activeElement)
@@ -27,7 +28,7 @@ export default function FormsContainer () {
   const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const moveFormVisible = useFormsStore(state => state.moveFormVisible)
   const setMoveFormVisible = useFormsStore(state => state.setMoveFormVisible)
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
+  // const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   // const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const addLinkFormVisible = useFormsStore(state => state.addLinkFormVisible)
   const setAddLinkFormVisible = useFormsStore(state => state.setAddLinkFormVisible)
@@ -112,13 +113,13 @@ export default function FormsContainer () {
                 />
               : null
           }
-          {
+          {/* {
             customizePanelVisible
               ? <CustomizeDesktopPanel
                   customizePanelVisible={customizePanelVisible}
             />
               : null
-          }
+          } */}
           {
             addLinkFormVisible
               ? <AddLinkForm

@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styles from './Pages/LinkDetails.module.css'
+import { ArrowLeft, ArrowRight } from './Icons/icons'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
   const nextIndex = links.findIndex(link => linkId.id === link._id) + 1 // > length
@@ -17,10 +18,16 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
     prevId = null
   }
   return (
-      <section className={styles.navigation}>
-          {prevId ? <Link to={`/desktop/link/${prevId}`}>Prev</Link> : null}
-          <Link to={`/desktop/${actualDesktop}`}>Volver</Link>
-          {nextId ? <Link to={`/desktop/link/${nextId}`}>Next</Link> : null}
-      </section>
+    <section className={styles.navigation_container}>
+      <div className={styles.navigation}>
+          {prevId
+            ? <NavLink className={styles.details_nav_link} to={`/desktop/link/${prevId}`}><ArrowLeft/>Prev</NavLink>
+            : <a className={styles.details_nav_link_disabled}><ArrowLeft/>Prev</a>}
+          <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}`}>Volver</NavLink>
+          {nextId
+            ? <NavLink className={styles.details_nav_link} to={`/desktop/link/${nextId}`}><ArrowRight/>Next</NavLink>
+            : <a className={styles.details_nav_link_disabled}><ArrowRight/>Next</a>}
+      </div>
+    </section>
   )
 }

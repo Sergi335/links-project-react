@@ -1,4 +1,4 @@
-export default function FolderIcon () {
+export default function FolderIcon ({ className = 'uiIcon' }) {
   return (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ export default function FolderIcon () {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
-        className="icon icon-tabler icon-tabler-folder-filled"
+        className={className}
         viewBox="0 0 24 24"
         >
             <path stroke="none" d="M0 0h24v24H0z"></path>

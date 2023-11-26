@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import { useFormsStore } from '../store/forms'
+import { AddPlusIcon, EditTextIcon, FolderMoveIcon, PasteLinkIcon, TrashIcon } from './Icons/icons'
 
 export default function ContextualColMenu ({ visible, points, params, desktopColumns, setDesktopColumns, desktops, setAddLinkFormVisible }) {
   const { desktopName } = useParams()
@@ -40,12 +41,12 @@ export default function ContextualColMenu ({ visible, points, params, desktopCol
         <div className={
             visible ? styles.flex : styles.hidden
           } style={{ left: points.x, top: points.y }}>
-            <strong>Opciones Columna</strong>
-            <span>{params.name}</span>
-            <p onClick={() => setAddLinkFormVisible(true)}>Nuevo</p>
-            <p onClick={() => { pasteLink({ params, linksStore, setLinksStore, desktopName, activeLocalStorage }) }}>Pegar</p>
-            <p>Renombrar</p>
-            <span className={styles.moveTo}>Mover a
+            <p>Opciones Columna</p>
+            <p>{params.name}</p>
+            <span onClick={() => setAddLinkFormVisible(true)}><AddPlusIcon className='uiIcon-menu'/>Nuevo</span>
+            <span onClick={() => { pasteLink({ params, linksStore, setLinksStore, desktopName, activeLocalStorage }) }}><PasteLinkIcon className='uiIcon-menu'/>Pegar</span>
+            <span><EditTextIcon className='uiIcon-menu'/>Renombrar</span>
+            <span className={styles.moveTo}><FolderMoveIcon className='uiIcon-menu'/>Mover a
               <ul className={styles.moveList}>
                 {
                   desktops.map(desk => desk.name === desktopName
@@ -56,7 +57,7 @@ export default function ContextualColMenu ({ visible, points, params, desktopCol
                 }
               </ul>
             </span>
-            <p onClick={() => setDeleteColFormVisible(true)}>Borrar</p>
+            <span onClick={() => setDeleteColFormVisible(true)}><TrashIcon className='uiIcon-menu'/>Borrar</span>
         </div>
   )
 }

@@ -1,5 +1,5 @@
 #root {
-  max-width: 1400px;
+  /* max-width: 1400px; */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -10,7 +10,10 @@
   list-style-type: none;
   width: fit-content;
 }
-
+.fullscreen {
+  padding: 0 !important;
+  overflow: hidden;
+}
 .draggedDesk li a {
   font-size: 14px;
   padding: 8px 10px;
@@ -31,13 +34,27 @@
 }
 .uiIcon-button {
   width: 20px;
-  color: var(--buttonTextColor);
+  /* color: var(--buttonTextColor); */
+  cursor: pointer;
+}
+.uiIcon-menu {
+  width: 20px;
+  color: var(--accentColor);
   cursor: pointer;
 }
 .column {
   width: 33%;
 }
-
+.buttonIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color .6s;
+}
 a.active {
   background-color: var(--firstHvColor);
 }
@@ -89,7 +106,12 @@ a.active {
   justify-content: center;
   align-items: center;
 }
-
+textarea {
+  background-color: var(--thirdColor);
+  color: var(--firstTextColor);
+  padding: 5px;
+  border-radius: 5px;
+}
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
@@ -128,4 +150,79 @@ ul {
 
 .read-the-docs {
   color: #888;
+}
+/* * -- Progresss Circle ---- * */
+
+.progressPieChart {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #E5E5E5;
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    /* display: none; */
+    margin: 50px auto 0;
+}
+
+.progressPieChart.gt50 {
+    background-color: #81CE97;
+}
+
+.ppcProgress {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    left: calc(50% - 100px);
+    top: calc(50% - 100px);
+    width: 200px;
+    height: 200px;
+    clip: rect(0, 200px, 200px, 100px);
+}
+
+.ppcProgressFill {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    left: calc(50% - 100px);
+    top: calc(50% - 100px);
+    width: 200px;
+    height: 200px;
+    clip: rect(0, 100px, 200px, 0);
+    background: #81CE97;
+    transform: rotate(60deg);
+}
+
+.gt50 .ppcProgress {
+    clip: rect(0, 100px, 200px, 0);
+}
+
+.gt50 .ppcProgress .ppcProgressFill {
+    clip: rect(0, 200px, 200px, 100px);
+    background: #E5E5E5;
+}
+
+.ppcPercents {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    left: calc(50% - 173.9130434783px/2);
+    top: calc(50% - 173.9130434783px/2);
+    width: 173.9130434783px;
+    height: 173.9130434783px;
+    background: #fff;
+    text-align: center;
+    display: table;
+}
+
+.ppcPercents span {
+    display: block;
+    font-size: 2.6em;
+    font-weight: bold;
+    color: #81CE97;
+}
+
+.pccPercentsWrapper {
+    display: table-cell;
+    vertical-align: middle;
 }

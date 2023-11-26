@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { usePreferencesStore } from '../store/preferences'
 import { moveLink } from '../services/dbQueries'
 import { toast } from 'react-toastify'
+import { EditIcon, FolderMoveIcon, TrashIcon } from './Icons/icons'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const linksStore = useLinksStore(state => state.linksStore)
@@ -64,10 +65,10 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
   }
   return (
     <div id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
-      <strong>Opciones Enlace</strong>
-      <span>{params.name}</span>
-      <p onClick={handleEditClick}>Editar</p>
-      <span className={styles.moveTo}>Mover a
+      <p><strong>Opciones Enlace</strong></p>
+      <p>{params.name}</p>
+      <span onClick={handleEditClick}><EditIcon className='uiIcon-menu'/>Editar</span>
+      <span className={styles.moveTo}><FolderMoveIcon className='uiIcon-menu'/>Mover a
         <ul className={styles.moveList}>
           <li onClick={handleMoveFormClick}>Mover a otro escritorio</li>
           {
@@ -77,7 +78,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
           }
         </ul>
       </span>
-      <p onClick={handleDeleteClick}>Borrar</p>
+      <span onClick={handleDeleteClick}><TrashIcon className='uiIcon-menu'/>Borrar</span>
     </div>
   )
 }

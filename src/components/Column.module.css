@@ -1,7 +1,7 @@
 .column {
     width: 90%;
     margin: 0 auto;
-    background-color: var(--firstColor);
+    background-color: var(--seventhColor);
     padding: 5px;
     border-radius: 5px;
     display: flex;

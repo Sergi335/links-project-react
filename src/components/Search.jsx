@@ -110,6 +110,7 @@ export default function Search () {
                             key={link._id}
                             data={{ link }}
                             idpanel={link.idpanel}
+                            className={'searchResult'}
                             />
                         ))
                     }
