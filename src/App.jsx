@@ -32,7 +32,7 @@ function App () {
       constants.ACCENT_COLORS[JSON.parse(localStorage.getItem('accentColorName'))].applyStyles()
     }
   }, [])
-  const user = useSessionStore(state => state.user)
+  const user = useSessionStore(state => state.user) // la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const router = createBrowserRouter([
     {
       path: '/',

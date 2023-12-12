@@ -1,112 +1,315 @@
 import { constants } from './constants'
 
-export async function getDataForDesktops (desktop) {
+// Organizar por links, columns, desktops, etc
+// Poner donde se llama a cada funcion
+
+// LinkDetails, useColumns, useLinks, useDragItems ---> Activo solo en LinkDetails
+// Necesario para crear el mapa de links para la navegación de linkdetails
+// export async function getDataForDesktops (desktop) {
+//   try {
+//     const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columns/getbydesk/${desktop}`, {
+//       method: 'GET',
+//       ...constants.FETCH_OPTIONS
+//     })
+//     const linksResponsePromise = fetch(`${constants.BASE_API_URL}/links/desktop/?desk=${desktop}`, {
+//       method: 'GET',
+//       ...constants.FETCH_OPTIONS
+//     })
+
+//     const [columnsResponse, linksResponse] = await Promise.all([columnsResponsePromise, linksResponsePromise])
+
+//     if (columnsResponse.ok && linksResponse.ok) {
+//       const [columnsData, linksData] = await Promise.all([columnsResponse.json(), linksResponse.json()])
+//       // respuesta ok solo se ocupa de errores de red, comprobar el success de la respuesta
+//       return [columnsData, linksData]
+//     } else {
+//       // Manejar el caso en el que columnsResponse o linksResponse no estén bien
+//       return ({ error: 'Fallo al obtener datos para el escritorio' })
+//     }
+//   } catch (error) {
+//     console.log(error)
+//     return error
+//   }
+// }
+// MoveOtherDeskForm ---> Necesario para crear el menu con todos los escritorios y columnas a donde mover el link
+// export async function getDesktopsAndColumns () {
+//   try {
+//     const desktopsResponsePromise = fetch(`${constants.BASE_API_URL}/desktops`, {
+//       method: 'GET',
+//       ...constants.FETCH_OPTIONS
+//     })
+//     const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columns`, {
+//       method: 'GET',
+//       ...constants.FETCH_OPTIONS
+//     })
+
+//     const [desktopsResponse, columnsResponse] = await Promise.all([desktopsResponsePromise, columnsResponsePromise])
+
+//     if (desktopsResponse.ok && columnsResponse.ok) {
+//       const [desktopsData, columnsData] = await Promise.all([desktopsResponse.json(), columnsResponse.json()])
+//       const desktops = desktopsData.data
+//       const columns = columnsData.columns
+//       return [desktops, columns]
+//     } else {
+//       console.log(desktopsResponse, columnsResponse)
+//       return { error: 'Error al obtener datos' }
+//     }
+//   } catch (error) {
+//     console.log(error)
+//     return error
+//   }
+// }
+
+/* ------------ LINKS ------------------- */
+
+// ProfilePage
+export async function getAllLinks () {
   try {
-    const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columnas?escritorio=${desktop}`)
-    const linksResponsePromise = fetch(`${constants.BASE_API_URL}/links/desktop/${desktop}`)
-
-    const [columnsResponse, linksResponse] = await Promise.all([columnsResponsePromise, linksResponsePromise])
-
-    if (columnsResponse.ok && linksResponse.ok) {
-      const [columnsData, linksData] = await Promise.all([columnsResponse.json(), linksResponse.json()])
-
-      return [columnsData, linksData]
+    const res = await fetch(`${constants.BASE_API_URL}/links`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    const data = await res.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+// MoveOtherDeskForm
+export async function getLinksCount ({ idpanel }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/count/?column=${idpanel}`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    const data = await res.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+// useDragItems
+export async function getLinkById ({ id }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/getbyid/${id}`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    const data = await res.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+// AddLinkForm -- Validar datos
+export async function addLink (body) {
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'POST',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+// EditlinkForm, linkDetails -- Validar datos
+export async function editLink ({ id, name, URL, description, notes }) {
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({
+      id,
+      fields: {
+        name,
+        URL,
+        description,
+        imgURL: URL ? constants.BASE_LINK_IMG_URL(URL) : undefined,
+        notes
+      }
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    })
+}
+// DeleteLinkForm -- Validar datos
+export async function deleteLink ({ body }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/${body.linkId}`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS
+      // body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
     } else {
-      // Manejar el caso en el que columnsResponse o linksResponse no estén bien
-      throw new Error('Una o ambas respuestas no están bien')
+      const data = await res.json()
+      console.log(data)
+      return data
     }
   } catch (error) {
     console.log(error)
-    throw error // Volver a lanzar el error para propagarlo más adelante si es necesario
+    return error
   }
 }
-export async function getDesktops () {
+// Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
+export async function moveLink (body) {
+  return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+// ProfilePage
+export async function findDuplicateLinks () {
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/escritorios`, {
+    const res = await fetch(`${constants.BASE_API_URL}/links/duplicates`, {
       method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      }
+      ...constants.FETCH_OPTIONS
     })
-
-    if (!response.ok) {
-      throw new Error('Error de red al obtener datos')
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
     }
-
-    const data = await response.json()
-    // console.log(data)
-    return data
   } catch (error) {
-    console.error('Error al obtener datos:', error)
-    throw error
+    console.log(error)
+    return error
   }
 }
-export async function moveColumns (columnIds, escritorio) {
-  try {
-    const body = columnIds
-    const response = await fetch(`${constants.BASE_API_URL}/dragcol?escritorio=${escritorio}`, {
-      method: 'PUT',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
-      body: JSON.stringify({ body })
-    })
+/* --------------- COLUMNS -------------------- */
 
-    if (!response.ok) {
-      throw new Error('Error al mover columnas')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    throw error
-  }
-}
-export async function moveLinks (id, linkIds, escritorio, idpanel) {
+// Column, ContectualColMenu, useDragItems
+export async function editColumn ({ name, oldDesktop, newDesktop, idPanel, columnsIds }) {
   try {
-    const body = { id, destinyIds: linkIds, fields: { escritorio, idpanel } }
-    // let body = { id, destinyIds, fields: { escritorio, name: nombre, idpanel, panel, orden } }
-    const response = await fetch(`${constants.BASE_API_URL}/links`, {
+    const body = { id: idPanel, oldDesktop, columnsIds, fields: { name, escritorio: newDesktop } }
+    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
       method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+      ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
-
-    if (!response.ok) {
-      throw new Error('Error al mover columnas')
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
     }
-
-    const data = await response.json()
-    console.log(data)
-    return data
   } catch (error) {
-    console.error('Error de red:', error)
-    throw error
+    console.log(error)
+    return error
   }
 }
+// DeleteColConfirmForm
+export async function deleteColumn (idPanel) {
+  try {
+    const body = { id: idPanel }
+    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+// SideInfo
+export async function createColumn ({ name, escritorio, order }) {
+  try {
+    const body = { name, escritorio, order }
+    console.log(body)
+    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
+      return data
+    } else {
+      const data = await res.json()
+      console.log(data)
+      return data
+    }
+  } catch (error) {
+    console.error('Error de red:', error)
+    return error
+  }
+}
+
+/* --------------- DESKTOPS -------------------- */
+// useDesktops
+// export async function getDesktops () {
+//   try {
+//     const res = await fetch(`${constants.BASE_API_URL}/desktops`, {
+//       method: 'GET',
+//       ...constants.FETCH_OPTIONS
+//     })
+//     if (res.ok) {
+//       const data = await res.json()
+//       console.log(data)
+//       return data
+//     } else {
+//       const data = await res.json()
+//       console.log(data)
+//       return data
+//     }
+//   } catch (error) {
+//     console.error('Error al obtener datos:', error)
+//     return error
+//   }
+// }
+// Nav
 export async function moveDesktops (items) {
   try {
     const names = items.map(item => {
       return item.displayName
     })
     const body = { names }
-    const response = await fetch(`${constants.BASE_API_URL}/ordenaDesks`, {
-      method: 'PUT',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+    const response = await fetch(`${constants.BASE_API_URL}/desktops/setorder`, {
+      method: 'PATCH',
+      ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
 
@@ -122,57 +325,12 @@ export async function moveDesktops (items) {
     throw error
   }
 }
-export async function createColumn (nombre, escritorio, orden) {
-  try {
-    const body = { nombre, escritorio, orden }
-    console.log(body)
-    const response = await fetch(`${constants.BASE_API_URL}/columnas`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
-      body: JSON.stringify(body)
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al mover columnas')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    throw error
-  }
-}
-export async function addLink (body) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader'
-    },
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-export const createDesktop = async ({ name, displayName, orden }) => {
+// AddDesktopForm
+export async function createDesktop ({ name, displayName, orden }) {
   const body = { name, displayName, orden }
-  return fetch(`${constants.BASE_API_URL}/escritorios`, {
+  return fetch(`${constants.BASE_API_URL}/desktops`, {
     method: 'POST',
-    headers: {
-      'Content-type': 'Application/json'
-    },
+    ...constants.FETCH_OPTIONS,
     body: JSON.stringify(body)
   })
     .then(res => res.json())
@@ -183,82 +341,11 @@ export const createDesktop = async ({ name, displayName, orden }) => {
       return error
     })
 }
-export async function editColumn (name, desk, idPanel) {
-  try {
-    const body = { nombre: name, escritorio: desk, id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export async function moveColumn (deskOrigen, deskDestino, idPanel) {
-  try {
-    const body = { deskOrigen, deskDestino, colId: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/moveCols`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      return data
-    } else {
-      const data = await res.json()
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export async function deleteColumn (idPanel) {
-  try {
-    const body = { id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export async function moveLink (body) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
+// CustomizeDesktopPanel
+export async function editDesktop (body) {
+  return fetch(`${constants.BASE_API_URL}/desktops`, {
     method: 'PATCH',
-    headers: {
-      'Content-type': 'Application/json'
-    },
+    ...constants.FETCH_OPTIONS,
     body: JSON.stringify(body)
   })
     .then(res => res.json())
@@ -269,52 +356,38 @@ export async function moveLink (body) {
       return error
     })
 }
-export async function editDesktopName (body) {
-  return fetch(`${constants.BASE_API_URL}/escritorios`, {
-    method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader'
-    },
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
+// DeleteConfirmForm
+export async function deleteDesktop ({ body }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/desktops`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log(data)
       return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-export async function editDesktopVisible (body) {
-  return fetch(`${constants.BASE_API_URL}/escritoriosvisible`, {
-    method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader'
-    },
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
+    } else {
+      const data = await res.json()
+      console.log(data)
       return data
-    })
-    .catch(error => {
-      return error
-    })
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }
+
+/* --------------- STORAGE -------------------- */
+
+// CustomizeDesktopPanel
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
-    return fetch(`${constants.BASE_API_URL}/getBackground?nombre=${nombre}`, {
+    return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
       method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      }
+      ...constants.FETCH_OPTIONS
     })
       .then(res => res.text())
       .then(data => {
@@ -332,34 +405,37 @@ export async function changeBackgroundImage (event) {
     window.localStorage.setItem('bodyBackground', '')
   }
 }
+// CustomizeDesktopPanel
 export async function getBackgroundMiniatures () {
-  return fetch(`${constants.BASE_API_URL}/escritorios/backgrounds`, {
+  return fetch(`${constants.BASE_API_URL}/storage/backgrounds`, {
     method: 'GET',
-    headers: {
-      'content-type': 'application/json', // A variable global
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader'
-    }
+    ...constants.FETCH_OPTIONS
   })
     .then(res => res.json())
     .then(data => {
-      return data
+      const { backgrounds } = data
+      return backgrounds
     })
     .catch(error => {
       return error
     })
 }
+// LinkDetails
 export async function fetchImage ({ imageUrl, linkId }) {
   try {
     const formData = new FormData()
     const response = await fetch(imageUrl)
     const blob = await response.blob()
-    // eslint-disable-next-line no-undef
     const file = new File([blob], 'image', { type: blob.type })
     formData.append('images', file, 'image.png')
     formData.append('linkId', linkId)
-    const res = await fetch(`${constants.BASE_API_URL}/uploadImg`, {
+    const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'POST',
+      credentials: 'include',
+      headers: {
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
+      },
       body: formData
     })
     if (res.ok) {
@@ -374,6 +450,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     return { error }
   }
 }
+// DeleteImageConfirmForm
 export async function deleteImage ({ imageUrl, linkId }) {
   try {
     let body = {
@@ -381,11 +458,9 @@ export async function deleteImage ({ imageUrl, linkId }) {
       id: linkId
     }
     body = JSON.stringify(body)
-    const res = await fetch(`${constants.BASE_API_URL}/deleteImg`, {
+    const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'DELETE',
-      headers: {
-        'content-type': 'application/json'
-      },
+      ...constants.FETCH_OPTIONS,
       body
     })
     if (res.ok) {
@@ -418,32 +493,7 @@ export async function deleteImage ({ imageUrl, linkId }) {
     return error
   }
 }
-export async function sendNotes ({ id, notes }) {
-  let body = { id, fields: { notes } }
-  body = JSON.stringify(body)
-  console.log(body)
-  const res = await fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'PATCH',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body
-  })
-  const json = await res.json()
-  console.log(json)
-  const firstKey = Object.keys(json)[0]
-  const firstValue = json[firstKey]
-
-  if (firstKey === 'error' || firstKey === 'errors') {
-    if (firstKey === 'errors') {
-      return (`Error, valor ${firstValue[0].path} no válido`)
-    } else {
-      return (`${firstKey}, ${firstValue}`)
-    }
-  } else {
-    return json
-  }
-}
+// LinkDetails
 export async function fetchLinkIconFile ({ file, linkId }) {
   if (file) {
     const formData = new FormData()
@@ -451,8 +501,13 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     formData.append('linkId', linkId)
     console.log(formData)
     try {
-      const response = await fetch(`${constants.BASE_API_URL}/uploadLinkImg`, {
+      const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
+        credentials: 'include',
+        headers: {
+          'x-justlinks-user': 'SergioSR',
+          'x-justlinks-token': 'otroheader'
+        },
         body: formData
       })
 
@@ -478,13 +533,19 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     }
   }
 }
+// LinkDetails
 export async function saveLinkIcon ({ src, linkId }) {
   const formData = new FormData()
   formData.append('filePath', src)
   formData.append('linkId', linkId)
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/uploadLinkImg`, {
+    const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'POST',
+      credentials: 'include',
+      headers: {
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
+      },
       body: formData
     })
 
@@ -508,19 +569,13 @@ export async function saveLinkIcon ({ src, linkId }) {
     return ('Error al cambiar imagen')
   }
 }
+// LinkDetails
 export async function deleteLinkImage (imageId) {
   try {
-    let body = {
-      image: imageId
-      // id
-    }
-    body = JSON.stringify(body)
-    const res = await fetch(`${constants.BASE_API_URL}/deleteLinkImg`, {
+    const res = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'DELETE',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ image: imageId })
     })
     if (res.ok) {
       const result = await res.json()
@@ -547,38 +602,19 @@ export async function deleteLinkImage (imageId) {
     return error
   }
 }
-export async function editLink ({ id, name, URL, description }) {
-  const body = {
-    id,
-    fields: {
-      name,
-      URL,
-      description
-    }
-  }
-  return fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'PATCH',
-    headers: {
-      'Content-type': 'Application/json'
-    },
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(err => {
-      console.log(err)
-      return err
-    })
-}
+// ProfilePage
 export async function uploadProfileImg (file) {
   if (file) {
     const formData = new FormData()
     formData.append('file', file)
     try {
-      const response = await fetch(`${constants.BASE_API_URL}/uploadImgProfile`, {
+      const response = await fetch(`${constants.BASE_API_URL}/storage/profilepic`, {
         method: 'POST',
+        credentials: 'include',
+        headers: {
+          'x-justlinks-user': 'SergioSR',
+          'x-justlinks-token': 'otroheader'
+        },
         body: formData
       })
       if (response.ok) {
@@ -601,17 +637,20 @@ export async function uploadProfileImg (file) {
     }
   }
 }
-export async function editUserAditionalInfo ({ realName, aboutMe, website }) {
+
+// Backup
+
+/* --------------- USER -------------------- */
+
+// ProfilePage
+export async function editUserAditionalInfo ({ email, fields }) {
   const body = {
-    realName,
-    aboutMe,
-    website
+    email,
+    fields
   }
-  return fetch(`${constants.BASE_API_URL}/userAditionalInfo`, {
+  return fetch(`${constants.BASE_API_URL}/auth/updateuser`, {
     method: 'PATCH',
-    headers: {
-      'Content-type': 'Application/json'
-    },
+    ...constants.FETCH_OPTIONS,
     body: JSON.stringify(body)
   })
     .then(res => res.json())
@@ -623,89 +662,3 @@ export async function editUserAditionalInfo ({ realName, aboutMe, website }) {
       return err
     })
 }
-export async function findDuplicates () {
-  try {
-    const res = await fetch(`${constants.BASE_API_URL}/duplicados`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export async function getAllLinks () {
-  try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/all/all`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-// export async function findBrokenLinks () {
-//   // try catch deberia estar en otra función y dejar un solo fetch
-//   try {
-//     const data = await fetch(`${constants.BASE_URL}/links/all/all`, {
-//       method: 'GET',
-//       headers: {
-//         'content-type': 'application/json'
-//       }
-//     })
-//     const res = await data.json()
-//     // res = res.slice(0, 50)
-//     console.log(res.length)
-//     const porcentajePorPaso = 100 / res.length
-//     console.log(porcentajePorPaso)
-//     const numeroPasos = Math.ceil(100 / porcentajePorPaso)
-//     console.log('🚀 ~ file: profile.js:325 ~ findBrokenLinks ~ numeroPasos:', numeroPasos)
-//     let count = 0
-//     const downLinks = await Promise.all(res.map(async (link) => {
-//       const response = await fetch(`${constants.BASE_API_URL}/linkStatus?url=${link.URL}`, {
-//         method: 'GET',
-//         headers: {
-//           'content-type': 'application/json'
-//         }
-//       })
-//       const data = await response.json()
-//       if (data.status !== 'success') {
-//         count += porcentajePorPaso
-//         return { data, link }
-//       }
-//       count += porcentajePorPaso
-//       $ppc.dataset.percent = count
-//       progressCircle()
-//       // console.log(count)
-//       return null
-//     }))
-//     const filteredLinks = downLinks.filter(link => link !== null)
-//     console.log(filteredLinks)
-//   } catch (error) {
-//     console.log(error)
-//     return error
-//   }
-// }

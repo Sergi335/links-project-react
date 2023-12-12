@@ -1,13 +1,15 @@
 import { useState, useMemo } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styles from './Nav.module.css'
 import { DndContext, useSensor, useSensors, PointerSensor, DragOverlay, closestCorners } from '@dnd-kit/core'
 import { SortableContext, useSortable, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { createPortal } from 'react-dom'
 import { moveDesktops } from '../services/dbQueries'
-import { useDesktops } from '../hooks/useDesktops'
+// import { useDesktops } from '../hooks/useDesktops'
 import { useDesktopsStore } from '../store/desktops'
+import { handleResponseErrors } from '../services/functions'
+import { toast } from 'react-toastify'
 
 function NavItem ({ escritorio }) {
   const {
@@ -43,8 +45,8 @@ function NavItem ({ escritorio }) {
 export default function Nav () {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
-  const { desktopName } = useParams()
-  useDesktops({ desktopName })
+  // const { desktopName } = useParams()
+  // useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
 
@@ -55,12 +57,16 @@ export default function Nav () {
       setMovedDesk(event.active.data.current.escritorio)
     }
   }
-  const onDragEnd = (event) => {
+  const onDragEnd = async (event) => {
     setActiveDesk(null)
     if (movedDesk) {
       setMovedDesk(null)
-      moveDesktops(desktopsStore)
-      localStorage.setItem('Desktops', JSON.stringify(desktopsStore.toSorted((a, b) => (a.order - b.order))))
+      const response = await moveDesktops(desktopsStore)
+      const { hasError, message } = handleResponseErrors(response)
+      if (hasError) {
+        toast(message)
+      }
+      // localStorage.setItem('Desktops', JSON.stringify(desktopsStore.toSorted((a, b) => (a.order - b.order))))
     }
   }
   const onDragOver = (event) => {

@@ -1,28 +1,66 @@
 import styles from './ProfilePage.module.css'
 import { useSessionStore } from '../../store/session'
 import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, KeyIcon, UploadIcon } from '../Icons/icons'
-import { formatDate } from '../../services/functions'
+import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useEffect, useRef, useState } from 'react'
-import { uploadProfileImg, editUserAditionalInfo, findDuplicates, getAllLinks } from '../../services/dbQueries'
+import { uploadProfileImg, editUserAditionalInfo, getAllLinks, findDuplicateLinks } from '../../services/dbQueries'
 import { toast } from 'react-toastify'
 import { constants } from '../../services/constants'
+import useGoogleAuth from '../../hooks/useGoogleAuth'
+import { useGlobalStore } from '../../store/global'
+import { useDesktopsStore } from '../../store/desktops'
 
 export function UserPreferences () {
+  const [visible, setVisible] = useState(false)
+  const setUser = useSessionStore(state => state.setUser)
+  const user = useSessionStore(state => state.user)
+  const { handleDeleteUser } = useGoogleAuth()
+  const handleDeleteAccount = (e) => {
+    e.preventDefault()
+    console.log('delete account')
+    fetch(`${constants.BASE_API_URL}/auth/deleteuser`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ email: user.email })
+    })
+      .then(res => res.json())
+      .then(data => {
+        const { hasError, message } = handleResponseErrors(data)
+        if (hasError) {
+          toast(message)
+          return
+        }
+        handleDeleteUser()
+        toast('Cuenta eliminada con éxito')
+        setTimeout(() => {
+          setUser(null)
+        }, 2000)
+      })
+  }
   return (
-    <div className={`${styles.tabcontentRow} ${styles.preferences}`} id="preferences">
-      <button id="closeAccount">
+    <div className={`${styles.preferences}`} id="preferences">
+      <button id="closeAccount" onClick={() => setVisible(true)}>
         Cerrar Cuenta
       </button>
-      <div className={styles.profileDeleteConfirm}>
-        <p>Seguro que quieres eliminar tu perfil? Esto borrará todos tus datos</p>
-        <p>Esta operación no se puede deshacer</p>
-        <button id="confirm">Confirmar </button>
-        <button id="cancel">Cancelar</button>
-      </div>
+      {
+        visible
+          ? (
+            <div className='deskForm'>
+              <p>Seguro que quieres cerrar tu cuenta? Esto borrará todos tus datos</p>
+              <p>Esta operación no se puede deshacer</p>
+              <div className='button_group'>
+                <button id="confirm" onClick={handleDeleteAccount}>Confirmar</button>
+                <button id="cancel" onClick={() => setVisible(false)}>Cancelar</button>
+              </div>
+            </div>
+            )
+          : null
+      }
     </div>
   )
 }
 export function UserSecurity () {
+  const user = useSessionStore(state => state.user)
   const [passwordVisible, setPasswordVisible] = useState(false)
   const handleChangePassword = (e) => {
     e.preventDefault()
@@ -34,6 +72,48 @@ export function UserSecurity () {
     const form = new FormData(e.target)
     const data = Object.fromEntries(form)
     console.log(data)
+    // Tiene que ser en firebase
+  }
+  const handleCreateBackup = (e) => {
+    fetch(`${constants.BASE_API_URL}/storage/backup`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS
+    })
+      .then(res => res.json())
+      .then(data => {
+        const { hasError, message } = handleResponseErrors(data)
+        if (hasError) {
+          toast(message)
+          return
+        }
+        toast('Copia creada con éxito')
+      })
+  }
+  const handleDownloadBackup = (e) => {
+    window.open(`${user.lastBackupUrl}`)
+  }
+  const handleUploadBackup = (e) => {
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.append('backup', file)
+    fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
+      },
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        const { hasError, message } = handleResponseErrors(data)
+        if (hasError) {
+          toast(message)
+          return
+        }
+        toast('Copia subida con éxito')
+      })
   }
   return (
     <>
@@ -42,7 +122,7 @@ export function UserSecurity () {
         <KeyIcon />
         <p>Cambiar contraseña</p>
         <form onSubmit={handleChangePassword} className={styles.flexForm}>
-          <input type="password" disabled="true" value="password"/>
+          <input type="password" disabled={true} value="password"/>
           <button id="changePassword">Cambiar</button>
         </form>
         {
@@ -65,21 +145,23 @@ export function UserSecurity () {
       <div className={styles.backup}>
         <h3>Copia de seguridad de tus datos</h3>
         <div className={styles.backupControls}>
-          <button id="backup">Crear Copia </button>
-          <button id="download">Descargar</button>
+          <button id="backup" onClick={handleCreateBackup}>Crear Copia </button>
+          <button id="download" onClick={handleDownloadBackup}>Descargar</button>
         </div>
         <p id="errorMessage"> </p>
         <p id="successMessage"></p>
-        <p>Restaurar Copia</p>
-        <button className={styles.upFile}>
-          <label htmlFor="upFile">
-            <UploadIcon />
-            Subir Archivo
-          </label>
-          <input id="upFile" className={styles.upFileInput} type="file" name="upFile"/>
-        </button>
-        <p id="errorUpMessage"> </p>
-        <p id="successUpMessage"></p>
+        <form onChange={handleUploadBackup}>
+          <p>Restaurar Copia</p>
+          <button className={styles.upFile}>
+            <label htmlFor="upFile">
+              <UploadIcon />
+              Subir Archivo
+            </label>
+            <input id="upFile" className={styles.upFileInput} type="file" name="upFile"/>
+          </button>
+          <p id="errorUpMessage"> </p>
+          <p id="successUpMessage"></p>
+        </form>
       </div>
     </>
   )
@@ -98,41 +180,40 @@ export function PieChart ({ links, setLinks }) {
       const result = chartPercentRef.current
 
       // counter.innerHTML = 'Broken Links:' // -> estado?
-
-      // Reseteamos el circulo
-      if ($ppc.classList.contains('gt50')) {
-        $ppc.classList.remove('gt50')
-      }
-      $ppc.dataset.percent = 0
-      $fill.style.transform = 'rotate(0deg)'
-      result.innerHTML = 0 + '%'
-
-      const newLinks = [...links].slice(0, 150)
-
-      const porcentajePorPaso = 100 / newLinks.length
-      let count = 0
-      const downLinks = await Promise.all(newLinks.map(async (link) => {
-        const response = await fetch(`${constants.BASE_API_URL}/linkStatus?url=${link.URL}`, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json'
-          }
-        })
-        const data = await response.json()
-        if (data.status !== 'success') {
-          count += porcentajePorPaso
-          return { data, link }
+      if ($ppc) {
+        // Reseteamos el circulo
+        if ($ppc?.classList.contains('gt50')) {
+          $ppc.classList.remove('gt50')
         }
-        count += porcentajePorPaso
-        $ppc.dataset.percent = count
-        progressCircle()
-        return null
-      }))
+        $ppc.dataset.percent = 0
+        $fill.style.transform = 'rotate(0deg)'
+        result.innerHTML = 0 + '%'
 
-      const filteredLinks = downLinks.filter(link => link !== null)
-      setBrokenLinks(filteredLinks)
-      // counter.innerHTML = `Broken Links: ${filteredLinks.length}`
-      setLinks([])
+        const newLinks = [...links].slice(0, 150)
+
+        const porcentajePorPaso = 100 / newLinks.length
+        let count = 0
+        const downLinks = await Promise.all(newLinks.map(async (link) => {
+          const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${link.URL}`, {
+            method: 'GET',
+            ...constants.FETCH_OPTIONS
+          })
+          const data = await response.json()
+          if (data.status !== 'success') {
+            count += porcentajePorPaso
+            return { data, link }
+          }
+          count += porcentajePorPaso
+          $ppc.dataset.percent = count
+          progressCircle()
+          return null
+        }))
+
+        const filteredLinks = downLinks.filter(link => link !== null)
+        setBrokenLinks(filteredLinks)
+        // counter.innerHTML = `Broken Links: ${filteredLinks.length}`
+        setLinks([])
+      }
     }
     createChart()
   }, [links])
@@ -169,7 +250,7 @@ export function PieChart ({ links, setLinks }) {
       }
       {
         brokenLinks.length > 0 && (<div className={styles.resultsHeader}>
-                        <p id="counter">Links Caídos: {brokenLinks.length}</p>
+                        <p id="counter"><span className={styles.bold}>Links Caídos:</span> {brokenLinks.length}</p>
                         <button onClick={() => setBrokenLinks([])}><CloseIcon/></button>
                         </div>)
       }
@@ -181,9 +262,9 @@ export function PieChart ({ links, setLinks }) {
                 <a target="_blank" href={link.link.URL} rel="noreferrer">
                   <img src={link.link.imgURL}/>{link.link.name}
                 </a>
-                <p>Escritorio: {link.link.escritorio}</p>
-                <p>Panel: {link.link.panel}</p>
-                <p>url: {link.link.URL}</p>
+                <p><span className={styles.bold}>Escritorio:</span> {link.link.escritorio}</p>
+                <p><span className={styles.bold}>Panel:</span> {link.link.panel}</p>
+                <p><span className={styles.bold}>url:</span> {link.link.URL}</p>
               </div>
             )
           })
@@ -195,37 +276,55 @@ export function PieChart ({ links, setLinks }) {
 export function UserStats () {
   const [duplicates, setDuplicates] = useState([])
   const [links, setLinks] = useState([])
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
 
   const handleFindDuplicates = async (e) => {
-    const response = await findDuplicates()
+    const response = await findDuplicateLinks()
     setDuplicates(response)
   }
   const handleFindBrokenLinks = async (e) => {
     const response = await getAllLinks()
-    if (Array.isArray(response)) {
-      setLinks(response)
-    } else {
-      toast('Error al obtener los links')
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
+      return
     }
+    const { links } = response
+    setLinks(links)
   }
 
   return (
         <>
-          <div className="statsInfo">
-            <h2>Estadísticas</h2>
-            <p>Escritorios: 15</p>
-            <p>Paneles: 116</p>
-            <p>Links: 1298</p>
+          <header className={styles.infoHeader}>
+            <p>Estadísticas</p>
+          </header>
+          <div className={styles.statsInfo}>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Escritorios</th>
+                  <th>Paneles</th>
+                  <th>Links</th>
+                </tr>
+                <tr>
+                  <td>{desktopsStore.length}</td>
+                  <td>{globalColumns.length}</td>
+                  <td>{globalLinks.length}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="statsControls">
-            <div className="groupControl">
+          <div className={styles.statsControls}>
+            <div className={styles.groupControl}>
               <h3>Encontrar Duplicados</h3>
               <button id="duplicates" onClick={handleFindDuplicates}>
                 <DuplicatesIcon />
                 Buscar
               </button>
             </div>
-            <div className="groupControl">
+            <div className={styles.groupControl}>
               <h3>Encontrar Links Caidos</h3>
               <button id="brokenLinks" onClick={handleFindBrokenLinks}>
                 <BrokenLinksIcon />
@@ -233,18 +332,16 @@ export function UserStats () {
               </button>
             </div>
           </div>
-          <div className="results">
+          <div className={styles.results}>
             {
               duplicates.length > 0 && (
                 <div className={styles.resultsHeader}>
-                  <p id="counter">Duplicados: {duplicates.length}</p><button onClick={() => setDuplicates([])}><CloseIcon/></button>
+                  <p id="counter"><span className={styles.bold}>Duplicados: </span>{duplicates.length}</p><button onClick={() => setDuplicates([])}><CloseIcon/></button>
                 </div>
               )
             }
 
             <PieChart links={links} setLinks={setLinks}/>
-          </div>
-
           <div className={styles.duplicatesResult}>
             {
               duplicates && duplicates.map((duplicate) => {
@@ -254,15 +351,17 @@ export function UserStats () {
                       <a target="_blank" href={duplicate.URL} rel="noreferrer">
                         <img src={duplicate.imgURL}/>{duplicate.name}
                       </a>
-                      <p>Escritorio: {duplicate.escritorio}</p>
-                      <p>Panel: {duplicate.panel}</p>
-                      <p>url: {duplicate.URL}</p>
+                      <p><span className={styles.bold}>Escritorio:</span> {duplicate.escritorio}</p>
+                      <p><span className={styles.bold}>Panel:</span> {duplicate.panel}</p>
+                      <p><span className={styles.bold}>url:</span> {duplicate.URL}</p>
                     </div>
                   </>
                 )
               })
             }
           </div>
+        </div>
+
     </>
   )
 }
@@ -273,15 +372,15 @@ export function UserInfo () {
   const [fileToUploadLoading, setFileToUploadLoading] = useState(false)
   console.log(user)
 
-  const handlePersonalInfoSubmit = (e) => {
+  const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault()
     const form = e.target
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     console.log(data)
-    const response = editUserAditionalInfo(data)
+    const response = await editUserAditionalInfo({ email: user.email, fields: { ...data } })
     console.log(response)
-    const newUserState = { ...user, ...data }
+    const newUserState = { ...response.data }
     setUser(newUserState)
   }
   const handleUploadImageInputChange = async (e) => {
@@ -312,65 +411,116 @@ export function UserInfo () {
     setFileToUpload(null)
   }
   return (
-    <div className={styles.info}><h2>Información</h2>
+    <div className={styles.info}>
       <div className={styles.wrapper}>
+        <header className={styles.infoHeader}>
+          <p>{user.name} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
+          <p>{user.email}</p>
+        </header>
+        <p className={styles.dateJoin}><span>Miembro desde: </span>{formatDate(user.createdAt)}</p>
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
-            <img id="preview-image" src={user.profileImage} onError={(e) => { e.target.onerror = null; e.target.src = '/img/avatar.svg' }}/>
-            <button className={styles.upFile}>
-              <label htmlFor="image-input">
-                <AddImageIcon />
-                Subir Imagen
-              </label>
-              <input className={styles.imageInput} type="file" accept="image/*" name="image-input" onChange={handleUploadImageInputChange}/>
-            </button>
+            <img id="preview-image" src={user.profileImage ? user.profileImage : '/img/avatar.svg'}/>
             {
-              fileToUpload && (<div><button className={styles.upFile} onClick={handleUploadImage}>Guardar</button>
+              !fileToUploadLoading && (
+                <button className={styles.upFile}>
+                  <label htmlFor="image-input">
+                    <AddImageIcon />
+                    Subir Imagen
+                  </label>
+                  <input className={styles.imageInput} type="file" accept="image/*" name="image-input" onChange={handleUploadImageInputChange}/>
+                </button>
+              )
+            }
+            {
+              fileToUpload && !fileToUploadLoading && (<div><button className={styles.upFile} onClick={handleUploadImage}>Guardar</button>
               <button className={styles.upFile} onClick={handleCancelUploadImage}>Cancelar</button></div>)
             }
             {
-              fileToUploadLoading && (<div className={styles.loading}><div className={styles.spinner}>Cargando ...</div></div>)
+              fileToUploadLoading && (<span className={styles.loader}></span>)
             }
           </div>
+          <div className={styles.uploadImageTooltip}>
+            <p>Sube tu imagen de perfil</p>
+            <p>Tamaño recomendado 125x125</p>
+            <p>Max. 15MB</p>
+          </div>
+        </div>
+      </div>
+        <div className={styles.userInfo}>
           <div className={styles.otherInfo}>
             <form id="otherInfoForm" onSubmit={handlePersonalInfoSubmit}>
-              <label htmlFor="realName">Nombre: </label>
-              <input type="text" name="realName" defaultValue={user.realName}/>
+              <label htmlFor="realName">Nombre Completo: </label>
+              <input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/>
               <label htmlFor="website">Sitio Web:</label>
               <input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/>
               <label htmlFor="aboutMe">Sobre mí:</label>
-              <textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''}/>
+              <textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/>
               <button id="editOtherInfo" type="submit">Guardar</button>
             </form>
           </div>
-        </div>
-        <div className={styles.userInfo}>
-          <p>{user.name || 'SergioSR'}</p>
-          <p>{user.email}</p>
-          <p><span>Miembro desde: </span>{formatDate(user.createdAt)}</p>
-        </div>
+
       </div>
     </div>
   )
 }
 export default function ProfilePage () {
+  const infoRef = useRef()
+  const statsRef = useRef()
+  const secRef = useRef()
+  const prefRef = useRef()
+  useEffect(() => {
+    openTab('info', 'infoTab')
+  }, [])
+  const openTab = (tabName, tabId) => {
+    const tabcontent = [infoRef.current, statsRef.current, secRef.current, prefRef.current]
+    const tablinks = document.getElementsByClassName('buttonlink')
+    for (let i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = 'none'
+    }
+    for (let i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(` ${styles.active}`, '')
+    }
+    document.getElementById(tabName).style.display = 'flex'
+    document.getElementById(tabId).className += ` ${styles.active}`
+  }
   return (
-    <>
+    <main className={styles.profileWrapper}>
+      <section className={styles.buttons}>
         <div className={styles.profileTitle}>
           <h2>Perfil de usuario</h2>
         </div>
-        <div className={styles.tabcontent} id="info">
+        <button className={`${styles.tablinks} buttonlink`} id="infoTab" onClick={() => { openTab('info', 'infoTab') }}>
+          <svg xmlns="http://www.w3.org/2000/svg" style={{ color: '#3c9aed', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+          Información
+        </button>
+        <button className={`${styles.tablinks} buttonlink`} id="statsTab" onClick={() => { openTab('stats', 'statsTab') }}>
+          <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(48 179 82)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 3.2a9 9 0 1 0 10.8 10.8a1 1 0 0 0 -1 -1h-6.8a2 2 0 0 1 -2 -2v-7a.9 .9 0 0 0 -1 -.8" /><path d="M15 3.5a9 9 0 0 1 5.5 5.5h-4.5a1 1 0 0 1 -1 -1v-4.5" /></svg>
+          Estadísticas
+        </button>
+        <button className={`${styles.tablinks} buttonlink`} id="securityTab" onClick={() => { openTab('security', 'securityTab') }}>
+          <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(184 111 48)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" /><path d="M12 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 12l0 2.5" /></svg>
+          Seguridad
+        </button>
+        <button className={`${styles.tablinks} buttonlink`} id="preferencesTab" onClick={() => { openTab('preferences', 'preferencesTab') }}>
+          <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(184 48 48)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+          Preferencias
+        </button>
+      </section>
+      <section className={styles.content}>
+        <div ref={infoRef} className={styles.tabcontent} id="info">
           <UserInfo />
-          <div className={styles.statistics}>
-          <UserStats />
-          </div>
         </div>
-        <div className={styles.tabcontentRow} id="security">
+        <div ref={statsRef} className={`${styles.statistics} ${styles.tabcontent}`} id="stats">
+          <UserStats />
+        </div>
+        <div ref={secRef} className={styles.tabcontent} id="security">
           <UserSecurity />
         </div>
-        <div className={styles.tabcontent} id="info">
+        <div ref={prefRef} className={styles.tabcontent} id="preferences">
           <UserPreferences />
         </div>
-    </>
+      </section>
+    </main>
   )
 }

@@ -1,21 +1,99 @@
+.profileWrapper {
+    display: grid;
+    grid-template-columns: 18% 1fr;
+    max-width: 1400px;
+    margin: 120px auto 0;
+    min-height: 975px;
+}
+
 .profileTitle {
-    padding: 25px;
+    /* padding: 25px;
     border: 1px solid var(--firstBorderColor);
     border-radius: 5px;
     background-color: var(--firstColor);
-    margin-bottom: 50px;
-    margin-top: 160px;
+    margin-bottom: 50px; */
     color: var(--firstTextColor);
+    display: flex;
+    width: -webkit-fill-available;
+    margin-top: 25px;
+    border-bottom: 1px solid var(--firstBorderColor);
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: var(--firstColor);
+    border-left: 5px solid var(--thirdColor);
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.about {
+    font-size: 13px;
+    margin-left: 15px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.tablinks {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 0 0 48px;
+    cursor: pointer;
+    background-color: var(--firstColor);
+    color: var(--firstTextColor);
+    transition: background 0.3s ease-in-out;
+    border-radius: 0;
+    gap: 8px;
+}
+.tablinks:hover {
+    background-color: var(--thirdColor);
+    transition: background-color .3s;
 }
 .profileTitle h2 {
-    text-align: left;
+    width: -webkit-fill-available;
+    font-weight: 500;
+    font-size: 20px;
 }
+
 .tabcontent {
     display: flex;
     flex-direction: column;
     color: var(--firstTextColor);
     text-align: left;
+    flex-grow: 1;
 }
+
+.content {
+    display: flex;
+}
+
+.infoHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 26px 50px 0;
+    border-bottom: 1px solid var(--firstBorderColor);
+    background-color: var(--firstColorOpacity);
+    border-top-right-radius: 5px;
+}
+
+.infoHeader p {
+    margin: 16px 0;
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.infoHeader p:first-child {
+    font-size: 20px;
+    font-weight: 500;
+    padding-top: 0;
+}
+
 .profileDeleteConfirm {
     position: absolute;
     background-color: var(--firstColor);
@@ -29,6 +107,7 @@
     left: 25%;
     display: none;
 }
+
 .tabcontentRow {
     display: flex;
     color: var(--firstTextColor);
@@ -37,60 +116,101 @@
     background-color: var(--firstColor);
     border-radius: 5px;
 }
+
 .backupControls {
     display: flex;
     gap: 15px;
 }
+
 .preferences {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--fourthColor);
-    border-radius: 5px;
-    box-shadow: var(--neumoShadow);
+    background-color: var(--thirdColor);
     padding: 50px;
     flex-direction: column;
     flex-grow: 1;
 }
+
 .tabcontent h2 {
     font-size: 1.9em;
     margin-top: 0;
 }
-.info {
-    padding: 25px;
-    border: 1px solid var(--firstBorderColor);
-    border-radius: 5px;
-    background-color: var(--firstColor);
+
+.active {
+    background-color: var(--thirdColor);
+    /* color: var(--thirdColor); */
+
 }
+
+.info {
+    /* padding: 25px; */
+    background-color: var(--thirdColor);
+    height: -webkit-fill-available;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 .wrapper {
     display: flex;
-    gap: 35px;
+    /* gap: 35px; */
     flex-direction: column;
+    background-image: url(/img/prf_back.png);
+    background-size: cover;
+    border-top-right-radius: 5px;
 }
+
 .aditionalInfo {
     display: flex;
-    gap: 80px;
+    gap: 20px;
+    background-color: var(--firstColorOpacity);
+    padding: 21px 37px;
 }
+
+.uploadImageTooltip p {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.uploadImageTooltip p:nth-child(2),
+.uploadImageTooltip p:nth-child(3) {
+    font-size: 13px;
+    margin: 0;
+    font-weight: normal;
+}
+
 .profileImage {
     display: flex;
-    align-items: start;
+    align-items: center;
     flex-direction: column;
     width: fit-content;
     padding: 15px;
-    border: 1px solid var(--firstBorderColor);
+    /* border: 1px solid var(--firstBorderColor);
     border-radius: 5px;
-    box-shadow: var(--secondNeumoShadow);
+    box-shadow: var(--secondNeumoShadow); */
 }
+
+.dateJoin {
+    background-color: var(--firstColorOpacity);
+    margin: 0;
+    padding: 16px 50px;
+    font-size: 13px;
+}
+
 .profileImage img {
-    border-radius: 5px;
-    width: 200px;
-    height: 200px;
+    border-radius: 3px;
+    width: 173px;
+    height: 151px;
     object-fit: cover;
 }
+
 .upFile {
-    width: 200px;
+    width: 173px;
     position: relative;
+    font-size: 13px;
+    margin-top: 15px;
 }
+
 .upFile label {
     position: absolute;
     display: flex;
@@ -101,14 +221,17 @@
     align-items: center;
     width: 158.36px;
 }
+
 .upFileInput {
     cursor: pointer;
     opacity: 0;
 }
+
 .imageInput {
     cursor: pointer;
     opacity: 0;
 }
+
 .otherInfo form {
     justify-content: center;
     flex-direction: column;
@@ -116,38 +239,121 @@
     gap: 8px;
     display: flex;
 }
+
+.otherInfo form label {
+    font-weight: 500;
+}
+
+.otherInfo form input {
+    /* width: 100%; */
+    height: 37px;
+    border-radius: 5px;
+    border: 1px solid var(--firstBorderColor);
+    padding: 0 15px;
+    background-color: var(--firstColor);
+    color: var(--firstTextColor);
+}
+
+.otherInfo form textarea {
+    background-color: var(--firstColor);
+}
+
+.otherInfo form button {
+    font-size: 13px;
+}
+
 .userInfo {
-    padding: 15px;
-    box-shadow: var(--secondNeumoShadow);
+    padding: 15px 50px;
+    margin-top: 46px;
+    /* box-shadow: var(--secondNeumoShadow);
     border: 1px solid var(--firstColor);
     border-radius: 5px;
-    text-align: left;
+    text-align: left; */
 }
+
 .userInfo p:first-child {
     font-size: 26px;
     margin: 0;
 }
-.statistics {
-    padding: 25px;
-    border: 1px solid var(--firstBorderColor);
-    border-radius: 5px;
-    background-color: var(--firstColor);
-    margin-top: 50px;
+h3 {
+    font-weight: 500;
 }
-.duplicatesResult, .brokenLinksResult {
+.statistics {
+    /* padding: 25px;
+    background-color: var(--firstColor); */
+}
+.statsInfo {
+    background-color: var(--firstColorOpacity);
+}
+.statsControls {
+    display: flex;
+    /* justify-content: space-around; */
+    background-color: var(--firstColorOpacity);
+    padding: 50px;
+    border-top: 1px solid var(--firstBorderColor);
+    gap: 100px;
+}
+.results {
+    background-color: var(--firstColorOpacity);
+    flex-grow: 1;
+    padding-bottom: 50px;
+    border-bottom-right-radius: 5px;
+}
+.groupControl {
+    display: flex;
+    flex-direction: column;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 45%;
+    background-color: var(--fourthColor);
+    margin: 40px;
+}
+
+td,
+th {
+    border: 1px solid var(--firstBorderColor);
+    text-align: left;
+    padding: 8px;
+    width: 33%;
+}
+
+tr:nth-child(even) {
+    background-color: var(--firstColor);
+}
+
+.duplicatesResult,
+.brokenLinksResult {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 50px;
+    margin: 0 50px;
+}
+.bold {
+    font-weight: 500;
 }
 .link {
     height: auto;
     background-color: var(--secondColor);
     border-radius: 15px;
     padding: 25px;
-    flex-wrap: wrap;
-    max-width: 259px;
+    width: 259px;
     display: flex;
+    border: 1px solid var(--firstBorderColor);
+    flex-direction: column;
+    gap: 6px;
+}
+.link:hover {
+    background-color: var(--firstHvColor);
+}
+.link p {
+    margin: 0;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
 }
 .link a {
     width: 100%;
@@ -158,29 +364,36 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-left: 0;
+    align-items: center;
 }
+
 .link a img {
     width: 16px;
     height: 16px;
+    padding-top: 1px;
 }
+
 .resultsHeader {
     display: flex;
     justify-content: space-between;
-    padding: 0 25px;
+    padding: 0 50px;
     align-items: center;
+    width: 84%;
+}
+.resultsHeader button {
+    padding: 0px 10px;
 }
 .password {
     display: flex;
     justify-content: stretch;
     align-items: center;
-    width: 40%;
     background-color: var(--firstColor);
-    border-radius: 5px;
     padding: 50px;
     flex-direction: column;
     flex-grow: 1;
     gap: 15px;
 }
+
 .changePasswordDialog {
     position: fixed;
     background-color: var(--fifthColor);
@@ -197,17 +410,17 @@
     box-shadow: var(--neumoShadow);
     padding: 25px;
 }
+
 .backup {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40%;
     background-color: var(--firstColor);
-    border-radius: 5px;
     padding: 50px;
     flex-direction: column;
     flex-grow: 1;
 }
+
 .flexForm {
     display: flex;
     flex-direction: column;
@@ -218,4 +431,63 @@
     display: flex;
     gap: 15px;
     margin-top: 15px;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 1s linear infinite;
+    padding: 12px;
+    margin: 25px;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid #FFF;
+    animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+    border-color: #FF3D00;
+    animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+    inset: 6px;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    }
+
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+    }
 }

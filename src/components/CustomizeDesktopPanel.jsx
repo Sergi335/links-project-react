@@ -2,16 +2,19 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDesktopsStore } from '../store/desktops'
 import { constants } from '../services/constants'
-import { formatPath } from '../services/functions'
+import { formatPath, handleResponseErrors } from '../services/functions'
 import { usePreferencesStore } from '../store/preferences'
-import { editDesktopName, changeBackgroundImage, getBackgroundMiniatures, editDesktopVisible } from '../services/dbQueries'
+import { editDesktop, changeBackgroundImage, getBackgroundMiniatures } from '../services/dbQueries'
 import { toast } from 'react-toastify'
 import styles from './CustomizeDesktopPanel.module.css'
+import useHideForms from '../hooks/useHideForms'
+import { useFormsStore } from '../store/forms'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
-  const [hiddenDesktops, setHiddenDesktops] = useState([])
+  const [hiddenDesktops, setHiddenDesktops] = useState([]) // store
   const inputRef = useRef()
+  const formRef = useRef()
   const { desktopName } = useParams()
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
@@ -22,35 +25,28 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
+  const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
+  useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
   // Debería estar montado y ocultarlo y mostrarlo mediante clases css
   const handleSubmit = async (event) => {
     event.preventDefault()
     const newName = inputRef.current.value.trim()
-    const newNameFormat = formatPath(newName)
-    const body = { newName, oldName: desktopName, newNameFormat }
+    const name = formatPath(newName)
+    const body = { newName, oldName: desktopName, name }
     // if new === old return
-    const response = await editDesktopName(body)
-    // Error de red
-    if (!Array.isArray(response) && !response.ok && response.error === undefined) {
-      toast('Error de red')
+    const response = await editDesktop(body)
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
       return
     }
-    // Error http
-    if (!Array.isArray(response) && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!Array.isArray(response) && response.error) {
-      toast(`Error: ${response.error}`)
-      return
-    }
+    const { data } = response
     const url = new URL(window.location.href)
-    url.pathname = `desktop/${newNameFormat}`
+    url.pathname = `desktop/${name}`
     window.history.pushState(null, null, url)
     const changeUrlEvent = new Event('changeurl')
     window.dispatchEvent(changeUrlEvent)
-    setDesktopsStore(response)
+    setDesktopsStore(data)
   }
   const handleNumberColumnsChange = (event) => {
     setNumberOfColumns(event.target.value)
@@ -86,8 +82,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     constants.ACCENT_COLORS[color].applyStyles()
   }
   const handleHideDesktops = async (event) => {
-    const body = { name: event.target.value, hidden: true }
-    await editDesktopVisible(body)
+    const name = formatPath(event.target.value)
+    const body = { name, hidden: true }
+    const response = await editDesktop(body)
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
+      return
+    }
     const newState = [...desktopsStore].filter(desktop => desktop.displayName !== event.target.value)
     setDesktopsStore(newState)
     const newHiddenState = [...hiddenDesktops, event.target.value]
@@ -95,8 +97,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
-    const body = { name: event.target.innerText, hidden: false }
-    const response = await editDesktopVisible(body)
+    const name = formatPath(event.target.value)
+    const body = { name, hidden: false }
+    const response = await editDesktop(body)
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
+      return
+    }
     const newState = [...response].filter(desktop => desktop.hidden !== true)
     setDesktopsStore(newState)
     const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
@@ -129,7 +137,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   // const visibleClass = customizePanelVisible ? styles.flex : styles.hidden
   return (
     <>
-             <div className={`${styles.customizePanel} ${visibleClassName}`}>
+             <div ref={formRef} className={`${styles.customizePanel} ${visibleClassName}`}>
                 <div className={styles.wrapper}>
                   <h3>Personaliza Escritorio</h3>
                   <form style={{ display: 'flex', flexDirection: 'column', marginBottom: '25px' }} onSubmit={handleSubmit}>

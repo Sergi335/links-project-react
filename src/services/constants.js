@@ -1,7 +1,15 @@
 export const constants = {
-  BASE_API_URL: 'http://localhost:3003/api',
+  BASE_API_URL: 'http://localhost:3001',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
+  },
+  FETCH_OPTIONS: {
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json',
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader'
+    }
   },
   ACCENT_COLORS: {
     yellow: {
@@ -87,5 +95,8 @@ export const constants = {
     3: 'repeat(auto-fill, minmax(537px, 1fr))',
     4: 'repeat(auto-fill, minmax(393px, 1fr))',
     5: 'repeat(auto-fill, minmax(306px, 1fr))'
+  },
+  MIDDLEWARE_ERROR_MESSAGE: {
+    cookieFailed: 'MIDDLEWARE UNAUTHORIZE REQUEST!'
   }
 }

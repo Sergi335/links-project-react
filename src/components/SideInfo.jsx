@@ -4,38 +4,34 @@ import { useEffect, useState } from 'react'
 import Clock from './Clock'
 import { createColumn } from '../services/dbQueries'
 import { useSessionStore } from '../store/session'
-import { useColumnsStore } from '../store/columns'
-import { useDesktops } from '../hooks/useDesktops'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFormsStore } from '../store/forms'
 import { useDesktopsStore } from '../store/desktops'
 import { usePreferencesStore } from '../store/preferences'
+import { useGlobalStore } from '../store/global'
 
 export default function SideInfo ({ environment }) {
   const { desktopName } = useParams()
   const user = useSessionStore(state => state.user)
-  // console.log(user)
-  const columnsStore = useColumnsStore(state => state.columnsStore)
-  const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
-  // console.log('🚀 ~ file: SideInfo.jsx:21 ~ SideInfo ~ customizePanelVisible:', customizePanelVisible)
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
-  const { desktop } = useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const desktop = desktopsStore.find(desk => desk.name === desktopName)
   const [desktopDisplayName, setDesktopDisplayName] = useState()
   const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
-  // const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
-  const numRows = Math.ceil(columnsStore.length / numberCols)
+  const numRows = Math.ceil(desktopColumns.length / numberCols)
   const result = []
   const [salut, setSalut] = useState('')
   const navigate = useNavigate()
 
   for (let i = 0; i < numRows; i++) {
     const startIdx = i * numberCols
-    const row = [...columnsStore].slice(startIdx, startIdx + numberCols)
+    const row = [...desktopColumns].slice(startIdx, startIdx + numberCols)
     result.push(row)
   }
-
   useEffect(() => {
     setSalut(saludo(user?.realName || 'Usuario'))
   }, [])
@@ -91,9 +87,9 @@ export default function SideInfo ({ environment }) {
   }, [result])
 
   const handleClick = async () => {
-    const newColumn = await createColumn('New Column', desktop.name, columnsStore.length)
-
-    setColumnsStore((() => { return [...columnsStore, { ...newColumn[0] }] })())
+    const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
+    const { column } = response
+    setGlobalColumns((() => { return [...globalColumns, ...column] })())
   }
   const handleNavigate = () => {
     // <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
@@ -128,7 +124,7 @@ export default function SideInfo ({ environment }) {
 
                  <svg className={styles.uiIcon} id="readingList" onClick={handleNavigate} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"></path></svg>
 
-                 <svg className={styles.uiIcon} id="editDesk" onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path></svg>
+                 <svg className={styles.uiIcon} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }} id="editDesk" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path></svg>
 
                  <svg className={styles.uiIcon} onClick={handleClick} id="addCol" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"></path></svg>
 

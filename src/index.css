@@ -14,6 +14,7 @@
   -webkit-text-size-adjust: 100%;
 
   --firstColor: white;
+  --firstColorOpacity: rgb(255 255 255 / 89%);
   --secondColor: #f9f9f9;
   --thirdColor: #f1f3f4;
   --fourthColor: #f1f1f1;
@@ -40,7 +41,7 @@
 
 html.dark {
   --firstColor: #292929;
-  /* --secondColor: #313131; */
+  --firstColorOpacity: #292929e3;
   --secondColor: #313131;
   --thirdColor: #414141;
   --fourthColor: #2d2d2d;
@@ -71,6 +72,18 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px var(--thirdColor) inset !important;
     -webkit-text-fill-color: var(--firstTextColor) !important;
+}
+@font-face {
+  font-family: 'EncodeSans';
+  src: url('/public/fonts/encodesans/EncodeSansExpanded-Regular.woff2') format('woff2');
+  font-weight: 400; /* Peso para la fuente regular */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'EncodeSans';
+  src: url('/public/fonts/encodesans/EncodeSansExpanded-Medium.woff2') format('woff2');
+  font-weight: 500; /* Peso para la fuente regular */
+  font-style: normal;
 }
 .textBold {
   font-weight: bold;
@@ -135,6 +148,7 @@ body {
   background: var(--bgGradient);
   /* background-size: cover; */
   background-attachment: fixed;
+  /* font-family: 'EncodeSans', sans-serif; */
 }
 
 h1 {
@@ -156,6 +170,7 @@ button {
   font-size: 16px;
   cursor: pointer;
   transition: background-color .6s;
+  gap: 6px;
 }
 button:disabled {
   opacity: .5;
@@ -239,3 +254,74 @@ div.settings:hover .bodcontrols {
     background-color: #f9f9f9;
   }
 } */
+
+/* Borde animado */
+@-webkit-keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+.conic {
+  position: relative;
+  z-index: 0;
+  /* width: 400px;
+  height: 300px;
+  margin: 20px; */
+  /* border-radius: 10px; */
+  overflow: hidden;
+  /* padding: 2rem; */
+}
+.conic::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(transparent, #a8efff, transparent 30%);
+  -webkit-animation: rotate 4s linear 1;
+          animation: rotate 4s linear 1;
+}
+.conic::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 2px;
+  top: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  background: var(--firstColor);
+  border-radius: 5px;
+}
+
+.conic-demo::after {
+  -webkit-animation: opacityChange 5s infinite linear;
+          animation: opacityChange 5s infinite linear;
+}
+
+@-webkit-keyframes opacityChange {
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes opacityChange {
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

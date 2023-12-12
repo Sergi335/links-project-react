@@ -7,6 +7,22 @@ export const useLinksStore = create(
       linksStore: [],
       setLinksStore: (linksStore) => {
         set({ linksStore })
+      },
+      linkLoader: false,
+      setLinkLoader: (linkLoader) => {
+        set({ linkLoader })
+      },
+      columnLoaderTarget: null,
+      setColumnLoaderTarget: (columnLoaderTarget) => {
+        set({ columnLoaderTarget })
+      },
+      pastedLinkId: [],
+      setPastedLinkId: (pastedLinkId) => {
+        set({ pastedLinkId })
+      },
+      numberOfPastedLinks: 1,
+      setNumberOfPastedLinks: (numberOfPastedLinks) => {
+        set({ numberOfPastedLinks })
       }
     }
   }

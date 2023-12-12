@@ -1,16 +1,17 @@
 import { useParams } from 'react-router-dom'
-import { checkUrlMatch, formatDate, getUrlStatus } from '../../services/functions'
+import { checkUrlMatch, formatDate, getUrlStatus, handleResponseErrors } from '../../services/functions'
 import { useFormsStore } from '../../store/forms'
 import { useEffect, useRef, useState } from 'react'
-import { getDataForDesktops, fetchImage, sendNotes, saveLinkIcon, fetchLinkIconFile, deleteLinkImage, editLink } from '../../services/dbQueries'
+import { fetchImage, saveLinkIcon, fetchLinkIconFile, deleteLinkImage, editLink } from '../../services/dbQueries'
 import SideInfo from '../SideInfo'
 import LinkDetailsNav from '../LinkDetailsNav'
 import Masonry from 'react-layout-masonry'
 import styles from './LinkDetails.module.css'
-import { PasteImageIcon, CloseIcon, CodeIcon, TrashIcon, MaximizeIcon } from '../Icons/icons'
+import { PasteImageIcon, CloseIcon, CodeIcon, TrashIcon, MaximizeIcon, CheckIcon } from '../Icons/icons'
 import { toast } from 'react-toastify'
-import DeleteImageConfirmForm from '../DeleteImageConfirmForm'
+import DeleteImageConfirmForm from '../Forms/DeleteImageConfirmForm'
 import { constants } from '../../services/constants'
+import { useGlobalStore } from '../../store/global'
 
 export function LinksInfo ({ data, links, setLinks }) {
   // Cuando borras una imagen al pasar al siguiente link el boton de borrar imagen sigue activo a veces
@@ -19,6 +20,7 @@ export function LinksInfo ({ data, links, setLinks }) {
   const [nameEditMode, setNameEditMode] = useState(false)
   const [descriptionEditMode, setDescriptionEditMode] = useState(false)
   const [urlStatus, setUrlStatus] = useState()
+  const [badgeClass, setBadgeClass] = useState()
   const inputRef = useRef()
   const currentImageRef = useRef()
   const deleteButtonRef = useRef()
@@ -38,20 +40,27 @@ export function LinksInfo ({ data, links, setLinks }) {
   }
 
   useEffect(() => {
-    fetch('http://localhost:3003/api/linksIcons')
+    fetch('http://localhost:3001/storage/icons', {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
       .then(res => res.json())
       .then(data => {
-        const { icons } = data
-        if (icons.length > 0) {
-          setIcons(icons)
-        }
+        setIcons(data)
       })
   }, [])
 
   useEffect(() => {
     const checkUrlStatus = async (url) => {
       const status = await getUrlStatus(url)
-      setUrlStatus(status)
+      console.log(status)
+      if (status) {
+        setUrlStatus(<CheckIcon className='badgeIcon'/>)
+        setBadgeClass('badge-success')
+      } else {
+        setUrlStatus(<CloseIcon className='badgeIcon'/>)
+        setBadgeClass('badge-danger')
+      }
     }
     checkUrlStatus(data.URL)
   }, [data])
@@ -170,20 +179,10 @@ export function LinksInfo ({ data, links, setLinks }) {
     const newState = [...links]
     newState[elementIndex].name = editNameInputRef.current.value
     setLinks(newState)
-    const response = await editLink({ id: data._id, name: editNameInputRef.current.value }) // cambiar por saveLinkName
-    // Error de red
-    if (!response._id && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
-    }
-    // Error http
-    if (!response._id && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response._id && response.error) {
-      toast(`Error: ${response.error}`)
+    const response = await editLink({ id: data._id, name: editNameInputRef.current.value })
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
     }
   }
   const handleEditLinkDescription = async () => {
@@ -194,20 +193,10 @@ export function LinksInfo ({ data, links, setLinks }) {
     const newState = [...links]
     newState[elementIndex].description = editDescriptionInputRef.current.value
     setLinks(newState)
-    const response = await editLink({ id: data._id, description: editDescriptionInputRef.current.value }) // cambiar por saveLinkName
-    // Error de red
-    if (!response._id && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
-    }
-    // Error http
-    if (!response._id && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response._id && response.error) {
-      toast(`Error: ${response.error}`)
+    const response = await editLink({ id: data._id, description: editDescriptionInputRef.current.value })
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
     }
   }
   // Borrar imagen solo si es una de las subidas por el usuario si no deshabilitar boton
@@ -229,7 +218,7 @@ export function LinksInfo ({ data, links, setLinks }) {
               : <span>{data.description}</span>}
           </p>
         </div>
-        <p><strong>Activo:</strong> <span>{urlStatus || 'Cargando...' }</span></p>
+        <p><strong>Activo:</strong> <span className={badgeClass}>{urlStatus || 'Cargando...' }</span></p>
         <p><strong>Fecha de creación: </strong><span>{formatDate(data.createdAt)}</span></p>
         <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => setShowIcons(!showIcons)} className={styles.iconImage} src={data.imgURL} alt="" /></p>
         <div className={showIcons ? `${styles.slideInLeft} ${styles.imgOptions}` : `${styles.imgOptions}` }>
@@ -282,7 +271,7 @@ export function NotesEditor ({ notes, setNotes, linkId, links, setLinks }) {
     setNotes(inputRef.current.value)
   }
   const handleSubmit = async () => {
-    const response = await sendNotes({ id, notes })
+    const response = await editLink({ id, notes })
     if (response._id) {
       toast('Notas guardadas')
       const linkIndex = links.findIndex(link => link._id === id)
@@ -350,33 +339,32 @@ export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId }) {
         })}
       </Masonry>
       {visible && <ImageModal image={activeImage} setVisible={setVisible}/>}
-      {deleteConfFormVisible && <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={links} setLinks={setLinks} linkId={linkId} />}
+      <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={links} setLinks={setLinks} linkId={linkId} />
     </>
   )
 }
 export default function LinkDetails () {
   const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop)
+  console.log('🚀 ~ file: LinkDetails.jsx:348 ~ LinkDetails ~ actualDesktop:', actualDesktop)
   const [links, setLinks] = useState([])
+  console.log('🚀 ~ file: LinkDetails.jsx:350 ~ LinkDetails ~ links:', links)
   const [maximizeVideo, setMaximizeVideo] = useState(false)
   const [notesState, setNotesState] = useState()
   const linkId = useParams()
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === actualDesktop).toSorted((a, b) => a.orden - b.orden)
 
   useEffect(() => {
-    getData()
+    let dataFinal = []
+    desktopColumns.forEach((column) => {
+      dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+    })
+    setLinks(dataFinal)
   }, [actualDesktop])
 
-  const getData = async () => {
-    const [columnsData, linksData] = await getDataForDesktops(actualDesktop)
-    if (columnsData && linksData) {
-      let dataFinal = []
-      columnsData.forEach((column) => {
-        dataFinal = dataFinal.concat(linksData.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
-      })
-      setLinks(dataFinal)
-    }
-  }
-
   const data = links.find(link => link._id === linkId.id)
+  console.log('🚀 ~ file: LinkDetails.jsx:367 ~ LinkDetails ~ data:', data)
   useEffect(() => {
     // if (data?.URL) {
     //   const isVideo = checkUrlMatch(data.URL)
@@ -392,22 +380,18 @@ export default function LinkDetails () {
   }, [data])
 
   const handlePasteImage = () => {
-    navigator.clipboard.read().then((clipboardItems) => {
+    navigator.clipboard.read().then(clipboardItems => {
       for (const clipboardItem of clipboardItems) {
-        console.log(clipboardItems)
         for (const type of clipboardItem.types) {
           if (type.startsWith('image/')) {
             // es una imagen
-            clipboardItem.getType(type).then(async (blob) => {
-              console.log('Imagen:', blob)
+            clipboardItem.getType(type).then(async blob => {
               const imageUrl = URL.createObjectURL(blob)
               const elementIndex = links.findIndex(link => link._id === data._id)
-              console.log(elementIndex)
               const newState = [...links]
               const response = await fetchImage({ imageUrl, linkId: newState[elementIndex]._id })
-              console.log(response.images[response.images.length - 1])
+
               newState[elementIndex].images.push(response.images[response.images.length - 1])
-              console.log(newState[elementIndex])
               setLinks(newState)
               // Error de red
               if (!response._id && !response.ok && response.error === undefined) {

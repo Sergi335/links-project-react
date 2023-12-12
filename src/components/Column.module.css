@@ -28,10 +28,10 @@
     margin-bottom: 45px;
 }
 .dragginColumn {
-    border: 1px solid #f1f3f4;
+    border: 1px solid var(--accentColor);
     width: 320px;
     /* margin: 0 auto; */
-    background-color: var(--firstColor);
+    background-color: transparent;
     padding: 5px;
     border-radius: 5px;
     display: flex;

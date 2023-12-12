@@ -91,7 +91,10 @@ export function hora () {
 export const searchLinks = async ({ search }) => {
   if (search === '') return null
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/search?query=${search}`)
+    const response = await fetch(`${constants.BASE_API_URL}/search?query=${search}`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
     if (response.ok) {
       const data = await response.json()
       console.log(data)
@@ -137,11 +140,9 @@ export function formatDate (date) {
 export async function getUrlStatus (url) {
   // console.log('🚀 ~ file: sidepanel.js:644 ~ getUrlStatus ~ url:', url)
   // console.log('Funciona Status')
-  const query = await fetch(`${constants.BASE_API_URL}/linkStatus?url=${url}`, {
+  const query = await fetch(`${constants.BASE_API_URL}/links/status?url=${url}`, {
     method: 'GET',
-    headers: {
-      'content-type': 'application/json'
-    }
+    ...constants.FETCH_OPTIONS
   })
   const res = await query.json()
   // console.log(res)
@@ -151,23 +152,33 @@ export async function getUrlStatus (url) {
   let icon
   if (firstKey === 'error' || firstKey === 'errors') {
     if (firstKey === 'errors') {
-      icon = convertHtmlEntityToEmoji('&#x1F198;')
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = false
     } else {
-      icon = convertHtmlEntityToEmoji('&#x1F198;')
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = false
     }
     return icon
   } else {
     if (firstValue === 'success' || firstValue === 'redirect') {
-      icon = convertHtmlEntityToEmoji('&#x1F197;')
+      // icon = convertHtmlEntityToEmoji('&#x1F197;')
+      icon = true
     }
     if (firstValue === 'clientErr' || firstValue === 'serverErr') {
-      icon = convertHtmlEntityToEmoji('&#x1F198;')
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = true
     }
     return icon
   }
 }
-function convertHtmlEntityToEmoji (htmlEntity) {
-  // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
-  const codePoint = parseInt(htmlEntity.slice(3, -1), 16)
-  return String.fromCodePoint(codePoint)
+export function handleResponseErrors (response) {
+  if (response.status !== 'success' || !response.status) {
+    return { hasError: true, message: 'Error al efectuar la operación' }
+  }
+  return { hasError: false, message: '' }
 }
+// function convertHtmlEntityToEmoji (htmlEntity) {
+//   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
+//   const codePoint = parseInt(htmlEntity.slice(3, -1), 16)
+//   return String.fromCodePoint(codePoint)
+// }

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 export const useFormsStore = create(
-  (set) => {
+  (set, get) => {
     return {
       linkContextMenuVisible: false,
       setContextMenuVisible: (linkContextMenuVisible) => {
