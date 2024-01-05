@@ -33,9 +33,10 @@ export default function ListOfLinks () {
   const globalLoading = useGlobalStore(state => state.globalLoading)
 
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks.filter(link => link.escritorio.toLowerCase() === desktopName)
+  const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
+  const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
+  // console.log('🚀 ~ file: ListOfLinks.jsx:39 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -44,7 +45,7 @@ export default function ListOfLinks () {
       }
     })
   )
-  const columnsId = desktopColumns.map((col) => col._id)
+  const columnsId = desktopColumns?.map((col) => col._id)
   const getLinksIds = (columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }

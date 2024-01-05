@@ -1,0 +1,179 @@
+.header {
+    padding: 0px;
+    position: relative;
+    overflow: hidden;
+    height: 70vh;
+}
+
+.nav a:hover {
+    color: #09f;
+}
+
+.header h1 {
+    font-size: 5.2em;
+    position: relative;
+    font-family: sans-serif;
+    color: white;
+}
+
+.logo {
+    position: relative;
+    font-family: k2d;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    color: #797979;
+}
+.navlinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 54px;
+    position: relative;
+    /* margin-right: 12px; */
+
+}
+.logo svg {
+    width: 36px;
+    height: 36px;
+    transform: rotate(34deg);
+    color: coral;
+}
+.navlinks a {
+    color: #797979;
+    font-size: 21px;
+}
+.heroImage {
+    margin: 0  0 140px 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    /* display: none; */
+    flex-direction: column;
+    align-items: center;
+}
+.heroImage p {
+    color: #797979;
+    width: 60ch;
+    font-size: 1.2em;
+    text-align: center;
+}
+.link {
+    color: black;
+    display: flex;
+    background-color: white;
+    border-radius: 5px;
+    height: 43px;
+    width: 274px;
+    align-items: center;
+    font-size: 1.3em;
+    padding-left: 15px;
+    gap: 15px;
+    box-shadow: 0px 0px 13px #ccc;
+}
+.fakelinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    margin: 140px;
+
+}
+.fakelinks div:nth-child(2) {
+    transform: translateY(10px);
+}
+.heroImage img {
+    width: 21px;
+    position: relative;
+    top: 1px;
+}
+/* .background {
+    background-image: url(img/stars.jpg);
+    inset: 0;
+    background-size: contain;
+    position: absolute;
+    animation: pulse 60s infinite;
+} */
+
+/* .heroImage img {
+    width: 625px;
+    border-radius: 5px;
+    box-shadow: var(--neumoShadow);
+    height: auto;
+    backdrop-filter: blur(15px);
+    animation: pulse 60s infinite;
+} */
+
+/* .heroImage img:nth-child(1),
+.heroImage img:nth-child(3) {
+    object-position: 57px;
+    object-fit: contain;
+}
+
+.heroImage img:nth-child(2) {
+    object-fit: none;
+    object-position: center;
+} */
+
+.nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 65px;
+    align-items: center;
+}
+
+.sup {
+    font-family: system-ui;
+    font-size: 2rem;
+    vertical-align: super;
+    color: coral;
+    font-style: italic;
+}
+
+.start {
+    padding: 12px 30px;
+    background-color: coral;
+    color: white;
+    border-radius: 5px;
+    font-size: 2em;
+    position: relative;
+    transition: background-color .3s, box-shadow .3s;
+}
+.start:hover {
+    background-color: #ff6f00;
+    box-shadow: 0px 0px 27px coral;
+}
+
+.section {
+    min-height: 25vh;
+    /* background-color: antiquewhite; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 60px;
+}
+
+/* .section:nth-child(odd) {
+    background-color: #f9f9f9;
+} */
+
+.textColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1) rotate(0deg) translate(97px, -48px);
+    }
+
+    50% {
+        transform: scale(1.5) rotate(2deg) translate(97px, -48px);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg) translate(97px, -48px);
+    }
+}

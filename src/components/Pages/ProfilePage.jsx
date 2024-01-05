@@ -182,8 +182,8 @@ export function PieChart ({ links, setLinks }) {
       // counter.innerHTML = 'Broken Links:' // -> estado?
       if ($ppc) {
         // Reseteamos el circulo
-        if ($ppc?.classList.contains('gt50')) {
-          $ppc.classList.remove('gt50')
+        if ($ppc?.classList.contains(`${styles.gt50}}`)) {
+          $ppc.classList.remove(`${styles.gt50}}`)
         }
         $ppc.dataset.percent = 0
         $fill.style.transform = 'rotate(0deg)'
@@ -226,7 +226,7 @@ export function PieChart ({ links, setLinks }) {
     const deg = 360 * percent / 100
 
     if (percent > 50) {
-      $ppc.classList.add('gt50')
+      $ppc.classList.add(`${styles.gt50}}`)
     }
     $fill.style.transform = `rotate(${deg}deg)`
     result.innerHTML = percent + '%'
@@ -236,12 +236,12 @@ export function PieChart ({ links, setLinks }) {
     {
     links.length > 0
       ? (
-      <div ref={chartRef} className="progressPieChart" data-percent="0">
-        <div className="ppcProgress">
-          <div ref={chartFillRef} className="ppcProgressFill"></div>
+      <div ref={chartRef} className={styles.progressPieChart} data-percent="0">
+        <div className={styles.ppcProgress}>
+          <div ref={chartFillRef} className={styles.ppcProgressFill}></div>
         </div>
-        <div className="ppcPercents">
-          <div className="pccPercentsWrapper">
+        <div className={styles.ppcPercents}>
+          <div className={styles.pccPercentsWrapper}>
             <span ref={chartPercentRef}>0%</span>
           </div>
         </div>

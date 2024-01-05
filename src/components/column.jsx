@@ -9,11 +9,14 @@ import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import { useFormsStore } from '../store/forms'
 import { handleResponseErrors } from '../services/functions'
+import { ArrowDown } from './Icons/icons'
 
 export default function Columna ({ data, children }) {
   const columna = data.columna || data.activeColumn
   const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
+  const [open, setOpen] = useState(false)
+  const openClass = open ? styles.colOpen : ''
   const colRef = useRef(null)
   const headRef = useRef(null)
   const { desktopName } = useParams()
@@ -22,6 +25,7 @@ export default function Columna ({ data, children }) {
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const setActiveColumn = useFormsStore(state => state.setActiveColumn)
   const setColumnContextMenuVisible = useFormsStore(state => state.setColumnContextMenuVisible)
+  const childCount = children?.props.children[0]?.length || 0
 
   const handleContextMenu = useCallback((event) => {
     event.preventDefault()
@@ -89,15 +93,24 @@ export default function Columna ({ data, children }) {
       <div ref={setNodeRef} style={style} className={styles.columnWrapper} data-order={columna.order}>
         <div
           ref={colRef}
-          className={styles.column}
+          className={`${styles.column} ${openClass}`}
           id={columna._id}
           {...attributes}
           {...listeners}
         >
           {
             editMode
-              ? <input type='text' defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
-              : <h2 onClick={() => setEditMode(true) } ref={headRef} onContextMenu={(e) => handleContextMenu(e) }>{columna.name}</h2>
+              ? <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
+              : <div className={styles.headContainer} onContextMenu={(e) => handleContextMenu(e) }>
+                  <h2 onClick={() => setEditMode(true) } ref={headRef} >
+                    {columna.name}
+                  </h2>
+                  <div className={styles.opener} onClick={() => setOpen(!open)}>
+                    {
+                      childCount >= 8 && <ArrowDown/>
+                    }
+                  </div>
+                </div>
           }
             {children}
         </div>

@@ -15,6 +15,18 @@ export const usePreferencesStore = create(
       styleOfColumns: localStorage.getItem('styleOfColumns') ? JSON.parse(localStorage.getItem('styleOfColumns')) : constants.COLUMNS_COUNT[4],
       setStyleOfColumns: (styleOfColumns) => {
         set({ styleOfColumns })
+      },
+      navScroll: 0,
+      setNavScroll: (navScroll) => {
+        set({ navScroll })
+      },
+      navElement: null,
+      setNavElement: (navElement) => {
+        set({ navElement })
+      },
+      limit: 0,
+      setLimit: (limit) => {
+        set({ limit })
       }
     }
   }

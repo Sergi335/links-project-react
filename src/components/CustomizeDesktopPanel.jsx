@@ -21,9 +21,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
-  const desktop = desktopsStore.filter(desk => desk.name === desktopName)
+  const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
+  const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
@@ -80,6 +81,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const handleChangeAccentColor = (event) => {
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
+  }
+  const handleChangeThemeVariant = (event) => {
+    const style = event.target.id
+    const element = document.documentElement
+    // element.classList.add('transparent')
+    constants.THEME_VARIANTS[style].applyStyles(element)
   }
   const handleHideDesktops = async (event) => {
     const name = formatPath(event.target.value)
@@ -165,7 +172,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label>
                           <select name="" id="" onChange={handleHideDesktops}>
                           {
-                              desktopsStore.map(desktop => {
+                              desktopsStore?.map(desktop => {
                                 return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
                               })
                           }
@@ -173,7 +180,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          </div>
                          <div className={styles.rowGroup}>
                          {
-                            hiddenDesktops.length > 0 && hiddenDesktops.map(desktop => {
+                            hiddenDesktops?.length > 0 && hiddenDesktops?.map(desktop => {
                               return <button onClick={handleRestoreDesktop} key={desktop} className={styles.hiddenDesktops}>{desktop}</button>
                             })
                           }
@@ -190,6 +197,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           : <div>Cargando ...</div>
                       }
                       <div className={styles.removeBackground} onClick={handleChangeBackgroundImage}></div>
+                  </div>
+                  <h3>Cambiar Variante del tema</h3>
+                  <div className={styles.selectThemeVariant}>
+                      {
+                        themeVariants && themeVariants.map(style => {
+                          return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
+                        })
+                      }
                   </div>
                   <h3>Cambiar Color del Panel</h3>
                   <div className={styles.selectInfoColor}>

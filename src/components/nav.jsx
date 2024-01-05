@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import styles from './Nav.module.css'
 import { DndContext, useSensor, useSensors, PointerSensor, DragOverlay, closestCorners } from '@dnd-kit/core'
@@ -7,9 +7,12 @@ import { CSS } from '@dnd-kit/utilities'
 import { createPortal } from 'react-dom'
 import { moveDesktops } from '../services/dbQueries'
 // import { useDesktops } from '../hooks/useDesktops'
+import { usePreferencesStore } from '../store/preferences'
 import { useDesktopsStore } from '../store/desktops'
 import { handleResponseErrors } from '../services/functions'
 import { toast } from 'react-toastify'
+import { useGlobalStore } from '../store/global'
+import NavLoader from './NavLoader'
 
 function NavItem ({ escritorio }) {
   const {
@@ -45,10 +48,17 @@ function NavItem ({ escritorio }) {
 export default function Nav () {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
+  const navRef = useRef()
   // const { desktopName } = useParams()
   // useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  // const navScroll = usePreferencesStore(state => state.navScroll)
+  // console.log('🚀 ~ file: Nav.jsx:55 ~ Nav ~ navScroll:', navScroll)
+  const setNavScroll = usePreferencesStore(state => state.setNavScroll)
+  const setNavElement = usePreferencesStore(state => state.setNavElement)
+  const globalLoading = useGlobalStore(state => state.globalLoading)
+  // const setLimit = usePreferencesStore(state => state.setLimit)
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
@@ -99,9 +109,27 @@ export default function Nav () {
   )
   const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
 
+  useEffect(() => {
+    setNavElement(navRef.current)
+    // console.log(navRef)
+    // console.log(navRef.current?.scrollWidth - navRef.current?.offsetWidth)
+    // setLimit(navRef.current.scrollWidth - navRef.current.offsetWidth)
+    const navHorizontalScroll = (evt) => {
+      evt.preventDefault()
+      navRef.current.scrollLeft += evt.deltaY
+      // console.log(navRef.current.scrollLeft)
+      setNavScroll(navRef.current.scrollLeft)
+    }
+    navRef.current?.addEventListener('wheel', navHorizontalScroll)
+
+    return () => {
+      navRef.current?.removeEventListener('wheel', navHorizontalScroll)
+    }
+  }, [navRef.current])
+
   return (
 
-        <nav className={styles.nav}>
+        <nav ref={navRef} className={styles.nav}>
             <ul>
             <DndContext
               sensors={sensors}
@@ -112,14 +140,16 @@ export default function Nav () {
             >
               <SortableContext items={desktopsId} strategy={horizontalListSortingStrategy}>
                 {
-                    desktopsStore.map(escritorio => (
-                        <NavItem key={escritorio._id} escritorio={escritorio}/>
+                  globalLoading
+                    ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
+                    : desktopsStore.map(escritorio => (
+                      <NavItem key={escritorio._id} escritorio={escritorio}/>
                     ))
                 }
               </SortableContext>
               {
                 createPortal(
-                  <DragOverlay className='draggedDesk'>
+                  <DragOverlay className={styles.draggedDesk}>
                     {
                       activeDesk && (<NavItem key={activeDesk._id} escritorio={activeDesk} />)
                     }

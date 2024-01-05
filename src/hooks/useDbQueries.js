@@ -1,28 +1,22 @@
 import { useEffect } from 'react'
 import { constants } from '../services/constants'
 import { useDesktopsStore } from '../store/desktops'
-// import { useColumnsStore } from '../store/columns'
-// import { useLinksStore } from '../store/links'
 import { useGlobalStore } from '../store/global'
-// import { useSessionStore } from '../store/session'
+import { useNavigate } from 'react-router-dom'
+import { useSessionStore } from '../store/session'
 
 const useDbQueries = ({ desktopName }) => {
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
-  // const setColumnsStore = useColumnsStore(state => state.setColumnsStore)
-  // const setLinksStore = useLinksStore(state => state.setLinksStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  // const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  // const globalLinks = useGlobalStore(state => state.globalLinks)
-  // const [linksState, setLinksState] = useState([])
-  // const [error, setError] = useState(null) // si da error de cors poner usuario a null
+  const navigate = useNavigate()
+  const setUser = useSessionStore(state => state.setUser)
 
   useEffect(() => {
     setGlobalLoading(true)
     const getData = async () => {
-      console.log('Toda la info')
       const desktopsQuery = fetch(`${constants.BASE_API_URL}/desktops`, {
         method: 'GET',
         ...constants.FETCH_OPTIONS
@@ -43,10 +37,8 @@ const useDbQueries = ({ desktopName }) => {
             const columns = response[1].columns
             const links = response[2].links
             setDesktopsStore(desktops)
-            // setColumnsStore(columns.filter(col => col.escritorio === desktopName).toSorted((a, b) => (a.orden - b.orden)))
             setGlobalColumns(columns)
-            // setLinksStore(links.toSorted((a, b) => (a.orden - b.orden)))
-            setGlobalLinks(links) // 1 fuente de la verdad y filtrar luego
+            setGlobalLinks(links)
             setGlobalLoading(false)
           })
           .catch((error) => {
@@ -54,9 +46,23 @@ const useDbQueries = ({ desktopName }) => {
             setGlobalError({ error: 'Error al recuperar los datos' })
             setGlobalLoading(false)
           })
+      } else {
+        // Diccionario de errores por codigo de respuesta, eg 401: 'Unauthorized'
+        console.log({ error: desktopsResponse.statusText })
+        setGlobalError({ error: desktopsResponse.statusText })
+        setGlobalLoading(false)
+        setUser(null)
+        navigate('/login')
       }
     }
     getData()
+      // .then(res => { console.log(res) })
+      .catch(error => {
+        console.log(error + ', desde el .catch')
+        setUser(null)
+        setGlobalLoading(false)
+        navigate('/login')
+      })
   }, [])
 
   // useEffect(() => {

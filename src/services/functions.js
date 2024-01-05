@@ -30,6 +30,13 @@ export const videoUrlsObj = {
       }
     }
   },
+  YoutubeShort: {
+    url: /^https:\/\/www\.youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
+    embedURL: 'https://www.youtube.com/embed/',
+    extractParam: function (url) {
+      return url.split('/')[4]
+    }
+  },
   Pornhub: {
     url: 'https://es.pornhub.com/view_video',
     embedURL: 'https://www.pornhub.com/embed/',
@@ -97,7 +104,7 @@ export const searchLinks = async ({ search }) => {
     })
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await response.json()

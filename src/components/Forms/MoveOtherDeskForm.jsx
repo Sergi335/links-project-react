@@ -95,7 +95,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
                     <p>Mover {params?.name}</p>
                     <ul className={styles.destDeskMoveTo}>
                     {
-                          desktopsStore.map(desk => desk.name !== params?.escritorio
+                          desktopsStore?.map(desk => desk.name !== params?.escritorio
                             ? (
                             <li key={desk._id} onClick={handleResizeSublist} className={styles.accordion} id={desk.name}>
                                 <FolderIcon className='uiIcon'/>

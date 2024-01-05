@@ -39,9 +39,9 @@ export default function CustomLink ({ data, idpanel, className }) {
 
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
-      linkRef.current?.parentNode.classList.add('conic')
+      linkRef.current?.parentNode.classList.add(`${styles.conic}`)
       setTimeout(() => {
-        linkRef.current?.parentNode.classList.remove('conic')
+        linkRef.current?.parentNode.classList.remove(`${styles.conic}`)
       }, 4000)
       setPastedLinkId([])
     }
@@ -83,7 +83,7 @@ export default function CustomLink ({ data, idpanel, className }) {
           {...listeners} className={isDragging ? styles.link_dragged : styles.link} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
-            <span style={{ width: 'calc(100% - 41px)' }}>{link.name}</span>
+            <span>{link.name}</span>
             {
               className !== 'searchResult' && <span className={styles.description}>{link.description}</span>
             }

@@ -3,18 +3,19 @@ import ContentLoader from 'react-content-loader'
 import styles from './ColumnsLoader.module.css'
 
 const ColumnsLoader = (props) => {
-  const width = '100%'
+  const width = '90%'
   return (
     <ContentLoader // No se adapta
       speed={1}
       width={width}
-      height={460}
+      height={323}
       viewBox={`0 0 ${width} 460`}
-      backgroundColor="var(--firstColor)"
-      foregroundColor="var(--secondColor)"
+      backgroundColor="var(--secondColor)"
+      foregroundColor="var(--thirdColor)"
+      className={styles.columnsLoader}
       {...props}
     >
-      <rect className={styles.columnsLoader} x="0" y="0" rx="5" ry="5" width={width} height="600" />
+      <rect x="0" y="0" rx="5" ry="5" width="100%" height="600" />
     </ContentLoader>
   )
 }

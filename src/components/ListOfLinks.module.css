@@ -1,14 +1,30 @@
 .listOfLinks {
-    min-width: 1400px;
+    min-width: auto;
     display: grid;
     /* grid-template-columns: auto auto auto auto; */
-    margin-top: 160px;
+    margin-top: 90px;
     gap: 40px;
 
 }
 .mainContent {
     display: grid;
-    max-width: 1692px;
+    max-width: auto;
     gap: 40px;
-    margin-left: 16.4%;
+    margin-left: 0;
+}
+@media (min-width: 1536px) {
+    .listOfLinks {
+        min-width: 1400px;
+        display: grid;
+        /* grid-template-columns: auto auto auto auto; */
+        margin-top: 90px;
+        gap: 40px;
+    
+    }
+    .mainContent {
+        display: grid;
+        max-width: 75vw;
+        gap: 40px;
+        margin-left: var(--main-content-margin-left);
+    }
 }

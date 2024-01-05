@@ -6,7 +6,7 @@ export const constants = {
   FETCH_OPTIONS: {
     credentials: 'include',
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'x-justlinks-user': 'SergioSR',
       'x-justlinks-token': 'otroheader'
     }
@@ -66,17 +66,19 @@ export const constants = {
   SIDE_INFO_STYLES: {
     theme: {
       applyStyles: (element) => {
-        element.style.background = 'var(--bgGradient)'
-        element.style.backdropFilter = 'none'
-        element.style.borderRadius = '5px'
+        element.style.background = 'var(--mainColor)'
+        element.style.backdropFilter = 'blur(20px)'
+        element.style.borderRadius = '8px'
+        element.style.borderLeft = '1px solid transparent'
       },
-      background: 'var(--bgGradient)'
+      background: 'var(--frostColor)'
     },
     transparent: {
       applyStyles: (element) => {
         element.style.background = 'transparent'
         element.style.backdropFilter = 'none'
         element.style.borderRadius = '0'
+        element.style.borderLeft = '1px dashed var(--firstBorderColor)'
       },
       background: 'transparent'
     },
@@ -84,7 +86,32 @@ export const constants = {
       applyStyles: (element) => {
         element.style.background = 'transparent'
         element.style.backdropFilter = 'blur(15px)'
-        element.style.borderRadius = '5px'
+        element.style.borderRadius = '8px'
+        element.style.borderLeft = '1px solid transparent'
+      },
+      background: 'transparent'
+    }
+  },
+  THEME_VARIANTS: {
+    solid: {
+      applyStyles: (element) => {
+        if (element.classList.contains('transparent')) {
+          element.classList.remove('transparent')
+          element.classList.add('solid')
+        } else {
+          element.classList.add('solid')
+        }
+      },
+      background: 'var(--frostColor)'
+    },
+    transparent: {
+      applyStyles: (element) => {
+        if (element.classList.contains('solid')) {
+          element.classList.remove('solid')
+          element.classList.add('transparent')
+        } else {
+          element.classList.add('transparent')
+        }
       },
       background: 'transparent'
     }

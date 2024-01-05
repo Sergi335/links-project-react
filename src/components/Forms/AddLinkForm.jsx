@@ -7,9 +7,10 @@ import { addLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import useHideForms from '../../hooks/useHideForms'
 import { useGlobalStore } from '../../store/global'
+import styles from './AddLinkForm.module.css'
 
 export default function AddLinkForm ({ setFormVisible, params, desktopName, formVisible }) {
-  const visibleClassName = formVisible ? 'flex' : 'hidden'
+  const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
   // const setLinksStore = useLinksStore(state => state.setLinksStore)
   // const linksStore = useLinksStore(state => state.linksStore)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)

@@ -1,18 +1,20 @@
 .customizePanel {
-  top: 126px;
-  border-radius: 0;
-  right: 0;
+  top: 91px;
+  right: 2rem;
   left: initial;
   max-width: min-content;
   min-width: 525px;
-  height: -webkit-fill-available;
+  height: calc(87vh + 34px);
   position: fixed;
   z-index: 7;
-  box-shadow: 0px 49px 11px var(--firstShadow);
-  background-color: var(--firstColor);
+  /* box-shadow: 0px 49px 11px var(--firstShadow); */
+  background-color: var(--mainColor);
   font-size: 13px;
-  transform: translate(105%, 0);
+  transform: translate(111%, 0);
   transition: transform .5s ease;
+  backdrop-filter: blur(42px);
+  border-radius: 8px;
+  border: var(--firstBorder);
 }
 .slideIn {
   transform: translate(0, 0);
@@ -25,7 +27,7 @@
   margin-top: 0;
   text-align: left;
   margin-bottom: 6px;
-  background-color: var(--seventhColor);
+  background-color: var(--firstColor);
   padding: 7px 15px;
   border-radius: 5px;
   font-size: 13px;
@@ -57,7 +59,8 @@
 }
 
 .selectInfoColor,
-.selectAccentColor {
+.selectAccentColor,
+.selectThemeVariant {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -70,7 +73,8 @@
 }
 
 .selectInfoColor div,
-.selectAccentColor div {
+.selectAccentColor div,
+.selectThemeVariant div {
   height: 30px;
   width: 30px;
   border-radius: 25px;

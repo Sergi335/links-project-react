@@ -1,46 +1,43 @@
+import { useState } from 'react'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
+import styles from './LoginPage.module.css'
+import { Link } from 'react-router-dom'
 
 export default function Login () {
-  // const [user, setUser] = useState(null)
-  // const [password, setPassword] = useState(null)
   const { handleGoogleLogin, handleLoginWithMail, handleRegisterWithMail } = useGoogleAuth()
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault()
-  //   console.log('Submit')
-  //   const body = JSON.stringify({ name: user, password })
-  //   fetch('http://localhost:3003/login', {
-  //     method: 'POST',
-  //     headers: {
-  //       'content-type': 'application/json'
-  //     },
-  //     body
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log(data)
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // }
+  const [login, setLogin] = useState(true)
   return (
-    <>
-    <div className="loginWrapper">
-      <form className="loginForm" action="" onSubmit={handleLoginWithMail}>
-        <input type="text" name='email' />
-        <input type="text" name='password'/>
-        <button>{'Log In'}</button>
-      </form>
+    <main className={styles.loginMain}>
+    <img src="img/pic4.svg" alt="" />
+    <div className={styles.loginWrapper}>
+      {
+        login
+          ? (
+          <form className={styles.loginForm} action="" onSubmit={handleLoginWithMail}>
+            <input type="text" name='email' placeholder='email' required/>
+            <input type="password" name='password' placeholder='password' required/>
+            <button>{'Log In'}</button>
+          </form>
+            )
+          : (
+          <form className={styles.registerForm} action="" onSubmit={handleRegisterWithMail}>
+            <input type="text" id="email" name="email" placeholder="email" required/>
+            <input type="password" id="password" name="password" placeholder="password" required/>
+            <input type="text" id="name" name="name" placeholder="nick"/>
+            <button>Register</button>
+          </form>
+            )
+      }
+
+      <p>
+        {login ? 'Don\'t have an account? ' : 'Already have an account? '}
+        <a className={styles.logSwitch} onClick={() => setLogin(!login)}>{login ? 'Register' : 'Login'}</a>
+      </p>
+      <p>Or</p>
       <button onClick={handleGoogleLogin}>{'Sign In With Google'}</button>
       {/* <button onClick={handleGoogleLogOut}>{'Log Out'}</button> */}
-    <form className="registerForm" action="" onSubmit={handleRegisterWithMail}>
-        <input type="text" id="email" name="email" placeholder="email"/>
-        <input type="text" id="password" name="password" placeholder="password"/>
-        <input type="text" id="name" name="name" placeholder="nombre"/>
-        <button>Register</button>
-      </form>
+    <Link className={styles.start} to={'/'}>Go Back</Link>
     </div>
-    </>
+    </main>
   )
 }

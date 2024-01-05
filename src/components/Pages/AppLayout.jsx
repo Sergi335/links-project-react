@@ -1,5 +1,5 @@
 import Header from '../Header'
-import Nav from '../Nav'
+// import Nav from '../Nav'
 import { Outlet, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import useDbQueries from '../../hooks/useDbQueries'
@@ -20,11 +20,10 @@ export default function AppLayout ({ children }) {
   }, [desktopName])
 
   return (
-    <>
+    <div className="root">
       <Header />
-      <Nav />
       {/* <ListOfLinks /> */}
       <Outlet />
-    </>
+    </div>
   )
 }

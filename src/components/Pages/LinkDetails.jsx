@@ -3,7 +3,7 @@ import { checkUrlMatch, formatDate, getUrlStatus, handleResponseErrors } from '.
 import { useFormsStore } from '../../store/forms'
 import { useEffect, useRef, useState } from 'react'
 import { fetchImage, saveLinkIcon, fetchLinkIconFile, deleteLinkImage, editLink } from '../../services/dbQueries'
-import SideInfo from '../SideInfo'
+// import SideInfo from '../SideInfo'
 import LinkDetailsNav from '../LinkDetailsNav'
 import Masonry from 'react-layout-masonry'
 import styles from './LinkDetails.module.css'
@@ -55,11 +55,11 @@ export function LinksInfo ({ data, links, setLinks }) {
       const status = await getUrlStatus(url)
       console.log(status)
       if (status) {
-        setUrlStatus(<CheckIcon className='badgeIcon'/>)
-        setBadgeClass('badge-success')
+        setUrlStatus(<CheckIcon className={styles.badgeIcon}/>)
+        setBadgeClass(`${styles.badgeSuccess}`)
       } else {
-        setUrlStatus(<CloseIcon className='badgeIcon'/>)
-        setBadgeClass('badge-danger')
+        setUrlStatus(<CloseIcon className={styles.badgeIcon}/>)
+        setBadgeClass(`${styles.badgeDanger}`)
       }
     }
     checkUrlStatus(data.URL)
@@ -236,15 +236,15 @@ export function LinksInfo ({ data, links, setLinks }) {
           </div>
         </div>
         <div className={styles.imgOptionsControls}>
-          <button className={`${styles.upLinkImage} control_button`}>
+          <button className={`${styles.upLinkImage} ${styles.control_button}`}>
             <label htmlFor="upLinkImg">
             <svg className="uiIcon-button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"></path></svg>
               </label>
             <input ref={inputRef} id="upLinkImg" type="file" accept="image/*" onChange={handleChangeInputUpload}/>
           </button>
-          <button className='control_button' ref={saveButtonRef} id="saveLinkImage" onClick={handleUploadImage}>Guardar</button>
-          <button className='control_button' id="option8" onClick={handleSetAutoIcon}>Auto</button>
-          <button className='control_button' ref={deleteButtonRef} id="deleteLinkImage" onClick={handleDeleteLinkIcon}>Borrar</button>
+          <button className={`${styles.control_button}`} ref={saveButtonRef} id="saveLinkImage" onClick={handleUploadImage}>Guardar</button>
+          <button className={`${styles.control_button}`} id="option8" onClick={handleSetAutoIcon}>Auto</button>
+          <button className={`${styles.control_button}`} ref={deleteButtonRef} id="deleteLinkImage" onClick={handleDeleteLinkIcon}>Borrar</button>
         </div>
       </div>
     </>
@@ -272,15 +272,16 @@ export function NotesEditor ({ notes, setNotes, linkId, links, setLinks }) {
   }
   const handleSubmit = async () => {
     const response = await editLink({ id, notes })
-    if (response._id) {
-      toast('Notas guardadas')
-      const linkIndex = links.findIndex(link => link._id === id)
-      const newState = [...links]
-      newState[linkIndex].notes = notes
-      setLinks(newState)
-    } else {
-      toast('Error al guardar las notas')
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
+      return
     }
+    toast('Notas guardadas')
+    const linkIndex = links.findIndex(link => link._id === id)
+    const newState = [...links]
+    newState[linkIndex].notes = notes
+    setLinks(newState)
   }
   return (
     <div id="notesContainer" className={styles.notesContainer}>
@@ -290,9 +291,9 @@ export function NotesEditor ({ notes, setNotes, linkId, links, setLinks }) {
       </form>
       <div className={styles.text_controls_container}>
         <div id="textControls" className={styles.textControls}>
-          <button className='control_button'><CodeIcon/></button>
-          <button className='control_button'><TrashIcon className='uiIcon-button'/></button>
-          <button className='control_button' id="sendNotes" onClick={handleSubmit}>Guardar</button>
+          <button className={`${styles.control_button}`}><CodeIcon/></button>
+          <button className={`${styles.control_button}`}><TrashIcon className='uiIcon-button'/></button>
+          <button className={`${styles.control_button}`} id="sendNotes" onClick={handleSubmit}>Guardar</button>
         </div>
       </div>
     </div>
@@ -345,9 +346,7 @@ export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId }) {
 }
 export default function LinkDetails () {
   const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop)
-  console.log('🚀 ~ file: LinkDetails.jsx:348 ~ LinkDetails ~ actualDesktop:', actualDesktop)
   const [links, setLinks] = useState([])
-  console.log('🚀 ~ file: LinkDetails.jsx:350 ~ LinkDetails ~ links:', links)
   const [maximizeVideo, setMaximizeVideo] = useState(false)
   const [notesState, setNotesState] = useState()
   const linkId = useParams()
@@ -361,17 +360,11 @@ export default function LinkDetails () {
       dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
     })
     setLinks(dataFinal)
-  }, [actualDesktop])
+  }, [globalColumns])
 
   const data = links.find(link => link._id === linkId.id)
-  console.log('🚀 ~ file: LinkDetails.jsx:367 ~ LinkDetails ~ data:', data)
+
   useEffect(() => {
-    // if (data?.URL) {
-    //   const isVideo = checkUrlMatch(data.URL)
-    //   if (!isVideo) {
-    //     setGalleryWithFullClass(styles.wfull)
-    //   }
-    // }
     if (data?.notes) {
       setNotesState(data.notes)
     } else {
@@ -415,8 +408,8 @@ export default function LinkDetails () {
     })
   }
   const handleMaximizeVideo = () => {
-    const root = document.getElementById('root')
-    root.classList.toggle('fullscreen')
+    const root = document.getElementsByClassName('root')
+    root[0].classList.toggle(`${styles.fullscreen}`)
     setMaximizeVideo(!maximizeVideo)
   }
   return (
@@ -424,9 +417,9 @@ export default function LinkDetails () {
     {links && data
       ? (
       <>
-        {
+        {/* {
           !maximizeVideo && <SideInfo environment={'linkdetails'} />
-        }
+        } */}
         <header className={styles.header}>
           <h3>Detalles del Link</h3>
           <a href={data.URL} target='_blank' rel="noreferrer">{data.name}</a>

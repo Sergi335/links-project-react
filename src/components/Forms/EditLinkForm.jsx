@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 // import { useLinksStore } from '../../store/links'
 import { useParams } from 'react-router-dom'
-// import styles from './EditLinkForm.module.css'
+import styles from './EditLinkForm.module.css'
 import { usePreferencesStore } from '../../store/preferences'
 import useHideForms from '../../hooks/useHideForms'
 import { useFormsStore } from '../../store/forms'
@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import { useGlobalStore } from '../../store/global'
 
 export default function EditLinkForm ({ formVisible, setFormVisible }) {
-  const visibleClassName = formVisible ? 'flex' : 'hidden'
+  const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
   // const setLinksStore = useLinksStore(state => state.setLinksStore)
   // const linksStore = useLinksStore(state => state.linksStore)
   const formRef = useRef()

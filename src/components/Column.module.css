@@ -1,32 +1,51 @@
 .column {
     width: 90%;
     margin: 0 auto;
-    background-color: var(--seventhColor);
+    background-color: var(--columnBgColor);
     padding: 5px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     gap: 3px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    max-height: 323px;
+    overflow: hidden;
+    transition: max-height .3s ease-in-out, box-shadow .5s ease-in;
+    /* max-height: 3000px; */
+    border: var(--firstBorder);
+    border-left: 5px solid var(--accentColor);
+}
+.colOpen {
+    max-height: max-content;
+    /* transition: max-height .3s ease-in-out; */
+}
+.opener {
+    display: flex;
+    align-items: center;
+    padding-right: 13px;
+}
+.headContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: var(--secondColor); */
+    /* border-radius: 5px; */
+    /* min-height: 45px; */
+    border-bottom: 1px solid var(--firstBorderColor);
 }
 .column h2 {
     text-align: left;
     margin: 0;
-    font-size: 1.1em;
-    font-weight: 500;
-    overflow: hidden;
+    font-size: 1.4em;
+    font-weight: 600;
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: 5px 13px;
-    color: var(--firstTextColor);;
-    background-color: var(--secondColor);
-    border-radius: 3px;
+    color: var(--firstTextColor);
 }
-.columnWrapper {
-    /* width: 320px; */
+/* .columnWrapper {
+    width: 320px;
     margin-bottom: 45px;
-}
+} */
 .dragginColumn {
     border: 1px solid var(--accentColor);
     width: 320px;
@@ -39,4 +58,14 @@
     gap: 3px;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+input[type='text'].editInput {
+   min-height: 37.3px !important;
+   max-height: 37.3px !important;
+   font-size: 1.4em;
+   font-weight: 600 !important;
+   box-sizing: border-box;
+}
+input[type='text'].editInput:focus {
+    background: var(--frostHvColor);
 }
