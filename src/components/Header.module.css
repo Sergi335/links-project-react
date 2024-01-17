@@ -187,7 +187,7 @@
     padding: 10px;
     display: flex;
     gap: 15px;
-    transition: background-color .3s ease-out;
+    transition: background-color .3s ease-out, filter .3s ease-out;
 }
 .settings:hover,
 .settingsImg:hover {

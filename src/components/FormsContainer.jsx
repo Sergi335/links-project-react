@@ -11,6 +11,7 @@ import DeleteConfirmForm from './Forms/DeleteConfirmForm'
 import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
 import { useFormsStore } from '../store/forms'
 import { useDesktopsStore } from '../store/desktops'
+import { usePreferencesStore } from '../store/preferences'
 
 export default function FormsContainer () {
   const { desktopName } = useParams()
@@ -36,6 +37,8 @@ export default function FormsContainer () {
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  const selectedLinks = usePreferencesStore(state => state.selectedLinks)
+  const links = selectedLinks.length > 0 ? selectedLinks : activeLink
 
   // Ocultar context menus
   useEffect(() => {
@@ -78,12 +81,12 @@ export default function FormsContainer () {
         <DeleteLinkForm
             deleteFormVisible={deleteFormVisible}
             setDeleteFormVisible={setDeleteFormVisible}
-            params={activeLink}
+            params={links}
         />
         <MoveOtherDeskForm
             moveFormVisible={moveFormVisible}
             setMoveFormVisible={setMoveFormVisible}
-            params={activeLink}
+            params={links}
         />
         <AddLinkForm
             setFormVisible={setAddLinkFormVisible}
@@ -111,7 +114,7 @@ export default function FormsContainer () {
                   visible={linkContextMenuVisible}
                   setVisible={setContextMenuVisible}
                   points={points}
-                  params={activeLink}
+                  params={links}
                   setEditFormVisible={setEditFormVisible}
                   setDeleteFormVisible={setDeleteFormVisible}
                   setMoveFormVisible={setMoveFormVisible}

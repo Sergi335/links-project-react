@@ -150,10 +150,10 @@ export async function editLink ({ id, name, URL, description, notes }) {
 // DeleteLinkForm -- Validar datos
 export async function deleteLink ({ body }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/${body.linkId}`, {
+    const res = await fetch(`${constants.BASE_API_URL}/links`, {
       method: 'DELETE',
-      ...constants.FETCH_OPTIONS
-      // body: JSON.stringify(body)
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
     })
     if (res.ok) {
       const data = await res.json()
@@ -172,6 +172,20 @@ export async function deleteLink ({ body }) {
 // Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
 export async function moveLink (body) {
   return fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'PATCH',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      return error
+    })
+}
+export async function moveMultipleLinks (body) {
+  return fetch(`${constants.BASE_API_URL}/links/move`, {
     method: 'PATCH',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify(body)

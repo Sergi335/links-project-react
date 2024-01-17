@@ -17,15 +17,22 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
   useHideForms({ form: formRef.current, setFormVisible: setDeleteFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  // console.log(params)
   // Habrá que hacer un custom hook que devuelva la funcion handleDeleteLinkSubmit
   const handleClick = async (event) => {
     event.preventDefault()
     setDeleteFormVisible(false)
-    const newList = [...globalLinks].filter(link => link._id !== params._id)
-    setGlobalLinks(newList)
+    if (Array.isArray(params)) {
+      const newList = [...globalLinks].filter(link => !params.includes(link._id))
+      setGlobalLinks(newList)
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+    } else {
+      const newList = [...globalLinks].filter(link => link._id !== params._id)
+      setGlobalLinks(newList)
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+    }
     const body = {
-      linkId: params._id,
-      idpanel: params.idpanel
+      linkId: Array.isArray(params) ? params : params._id
     }
     const response = await deleteLink({ body })
     console.log(response)
@@ -34,10 +41,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
     if (hasError) {
       toast(message)
       // devolver estado anterior
-      return
     }
-
-    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   return (
       <form ref={formRef} onSubmit={handleClick} className={`deskForm ${visibleClassName}`}>

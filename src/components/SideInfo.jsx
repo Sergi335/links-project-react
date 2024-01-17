@@ -12,7 +12,7 @@ import { useGlobalStore } from '../store/global'
 import { constants } from '../services/constants'
 import NameLoader from './NameLoader'
 
-export default function SideInfo ({ environment }) {
+export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const { desktopName } = useParams()
   const user = useSessionStore(state => state.user)
   const globalColumns = useGlobalStore(state => state.globalColumns)
@@ -29,7 +29,9 @@ export default function SideInfo ({ environment }) {
   const result = []
   const [salut, setSalut] = useState('')
   const navigate = useNavigate()
+  const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
   // const globalLoading = useGlobalStore(state => state.globalLoading)
+  // console.log('🚀 ~ file: SideInfo.jsx:34 ~ SideInfo ~ localClass:', localClass)
 
   for (let i = 0; i < numRows; i++) {
     const startIdx = i * numberCols
@@ -129,7 +131,7 @@ export default function SideInfo ({ environment }) {
     }, 1000)
   }
   return (
-      <div id='sideinfo' className={styles.sideInfo}>
+      <div id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
           <div className={styles.deskInfos}>
               <Clock />
               <p className={styles.saludo}>{salut}</p>

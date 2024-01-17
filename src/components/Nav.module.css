@@ -1,7 +1,7 @@
 .nav {
     display: flex;
     font-size: 14px;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     /* transform: translateX(-132%); */
     width: calc(100% - 50px);
     /* height: 43px; */
@@ -13,7 +13,16 @@
     background-color: var(--mainColor);
     /* scroll-behavior: smooth; */
 }
+.nav_side_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-right: 10px; */
+    /* margin-bottom: 15px; */
+    /* align-items: flex-start; */
 
+}
 .nav ul {
     list-style-type: none;
     display: flex;

@@ -27,6 +27,18 @@ export const usePreferencesStore = create(
       limit: 0,
       setLimit: (limit) => {
         set({ limit })
+      },
+      selectModeGlobal: false,
+      setSelectModeGlobal: (selectModeGlobal) => {
+        set({ selectModeGlobal })
+      },
+      columnSelectModeId: [],
+      setColumnSelectModeId: (columnSelectModeId) => {
+        set({ columnSelectModeId })
+      },
+      selectedLinks: [],
+      setSelectedLinks: (selectedLinks) => {
+        set({ selectedLinks })
       }
     }
   }

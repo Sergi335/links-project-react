@@ -4,7 +4,7 @@ import FolderIcon from '../Icons/folder'
 // import { useLinksStore } from '../../store/links'
 import { useParams } from 'react-router-dom'
 import { usePreferencesStore } from '../../store/preferences'
-import { moveLink, getLinksCount } from '../../services/dbQueries'
+import { moveLink, getLinksCount, moveMultipleLinks } from '../../services/dbQueries'
 import useHideForms from '../../hooks/useHideForms'
 import { toast } from 'react-toastify'
 import { handleResponseErrors } from '../../services/functions'
@@ -54,36 +54,65 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   const handleMove = async () => {
     const columnSelected = document.querySelector('.selected')
     const count = await getLinksCount({ idpanel: columnSelected.id })
-    const updatedDesktopLinks = globalLinks.map(link => {
-      if (link._id === params._id) {
-        // Modifica la propiedad del elemento encontrado
-        return { ...link, idpanel: columnSelected.id, panel: columnSelected.innerText, escritorio: columnSelected.attributes[1].nodeValue, orden: count }
-      }
-      return link
-    }).toSorted((a, b) => (a.orden - b.orden))
-    setGlobalLinks(updatedDesktopLinks)
-    setMoveFormVisible(false)
-    const body = {
-      id: params._id,
-      idpanelOrigen: params.idpanel,
-      fields: {
-        idpanel: columnSelected.id,
+    if (Array.isArray(params)) {
+      console.log('Multiple links')
+      const updatedDesktopLinks = globalLinks.map(link => {
+        if (params.includes(link._id)) {
+          // Modifica la propiedad del elemento encontrado
+          return { ...link, idpanel: columnSelected.id, panel: columnSelected.innerText, escritorio: columnSelected.attributes[1].nodeValue, orden: count } // orden!!
+        }
+        return link
+      }).toSorted((a, b) => (a.orden - b.orden))
+      setGlobalLinks(updatedDesktopLinks)
+      setMoveFormVisible(false)
+      const body = {
+        source: params[0].idpanel, // multiplesources!!
+        destiny: columnSelected.id,
         panel: columnSelected.innerText,
-        name: params.name,
-        orden: count,
+        links: params,
         escritorio: columnSelected.attributes[1].nodeValue
       }
-    }
-    const response = await moveLink(body)
+      const response = await moveMultipleLinks(body)
 
-    const { hasError, message } = handleResponseErrors(response)
-    if (hasError) {
-      toast(message)
-      return
+      const { hasError, message } = handleResponseErrors(response)
+      if (hasError) {
+        toast(message)
+        return
+      }
+      toast('Enlaces movidos correctamente')
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+    } else {
+      const updatedDesktopLinks = globalLinks.map(link => {
+        if (link._id === params._id) {
+          // Modifica la propiedad del elemento encontrado
+          return { ...link, idpanel: columnSelected.id, panel: columnSelected.innerText, escritorio: columnSelected.attributes[1].nodeValue, orden: count }
+        }
+        return link
+      }).toSorted((a, b) => (a.orden - b.orden))
+      setGlobalLinks(updatedDesktopLinks)
+      setMoveFormVisible(false)
+      const body = {
+        id: params._id,
+        idpanelOrigen: params.idpanel,
+        fields: {
+          idpanel: columnSelected.id,
+          panel: columnSelected.innerText,
+          name: params.name,
+          orden: count,
+          escritorio: columnSelected.attributes[1].nodeValue
+        }
+      }
+      const response = await moveLink(body)
+
+      const { hasError, message } = handleResponseErrors(response)
+      if (hasError) {
+        toast(message)
+        return
+      }
+      toast('Enlace movido correctamente')
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+      // Modificar el localstorage de destino
     }
-    toast('Enlace movido correctamente')
-    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
-    // Modificar el localstorage de destino
   }
   return (
     <div ref={moveFormRef} id="menuMoveTo" className={visibleClass + ' ' + styles.menuMoveTo}>

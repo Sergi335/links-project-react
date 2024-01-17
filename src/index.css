@@ -32,6 +32,7 @@
   --thirdColor: #f1f3f4;
   --firstBorder: 1px solid #e7e7e7;
   --firstBorderColor: #e7e7e7;
+  --firstColorOpacity: rgb(255 255 255 / 89%);
 
   /* --firstColor: #f3f3f3;
   --linkBgColor: #fcfcfc;
@@ -85,6 +86,10 @@ html.dark {
   --thirdColor: #1e1e1e;
   --firstBorder: 1px solid #323232cc;
   --firstBorderColor: #323232cc;
+  --firstColorOpacity: #292929e3;
+}
+html.dark {
+  background-color: #1D1D1D;
 }
 /* html.dark {
   --firstColor: black;
@@ -180,8 +185,11 @@ a {
 a:hover svg {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
-a.active {
+a.active, .link.active {
   background-color: var(--frostHvColor);
+}
+.selectMode .link img {
+  margin-left: 0;
 }
 h1 {
   font-size: 3.2em;
@@ -232,6 +240,15 @@ button:hover svg {
   width: 20px;
   color: var(--accentColor);
   cursor: pointer;
+}
+.uiIcon_small {
+  width: 17px;
+  cursor: pointer;
+  color: var(--accentColor);
+  transition: filter .3s ease-out;
+}
+.uiIcon_small:hover {
+  filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
 .buttonIcon {
   display: flex;

@@ -16,11 +16,12 @@ import { useFormsStore } from '../store/forms'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import LinkLoader from './Loaders/LinkLoader'
 import { useGlobalStore } from '../store/global'
+import useResizeWindow from '../hooks/useResizeWindow'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
   const { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn } = useDragItems({ desktopName })
-
+  const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const setNumberOfPastedLinks = useLinksStore(state => state.setNumberOfPastedLinks) // cuando setear a 1?
@@ -54,9 +55,10 @@ export default function ListOfLinks () {
       setNumberOfPastedLinks(1)
     }
   }, [desktopLinks])
+  const isDesktop = windowSize.width > 1536
   return (
     <main className={styles.listOfLinks}>
-      <SideInfo environment={'listoflinks'}/>
+      {isDesktop && <SideInfo environment={'listoflinks'}/>}
       {
         globalLoading
           ? <div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>

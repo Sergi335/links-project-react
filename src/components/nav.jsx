@@ -13,8 +13,10 @@ import { handleResponseErrors } from '../services/functions'
 import { toast } from 'react-toastify'
 import { useGlobalStore } from '../store/global'
 import NavLoader from './NavLoader'
+import SideInfo from './SideInfo'
+import useResizeWindow from '../hooks/useResizeWindow'
 
-function NavItem ({ escritorio }) {
+function NavItem ({ escritorio, toggleMobileMenu }) {
   const {
     setNodeRef,
     attributes,
@@ -40,15 +42,16 @@ function NavItem ({ escritorio }) {
     )
   }
   return (
-    <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners}>
+    <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} onClick={toggleMobileMenu}>
       <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
     </li>
   )
 }
-export default function Nav () {
+export default function Nav ({ toggleMobileMenu }) {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const navRef = useRef()
+  const windowSize = useResizeWindow()
   // const { desktopName } = useParams()
   // useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
@@ -59,6 +62,7 @@ export default function Nav () {
   const setNavElement = usePreferencesStore(state => state.setNavElement)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   // const setLimit = usePreferencesStore(state => state.setLimit)
+  const isMobile = windowSize.width < 1536
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
@@ -130,6 +134,8 @@ export default function Nav () {
   return (
 
         <nav ref={navRef} className={styles.nav}>
+            {/* // deshabilitar en profile y en link details */}
+            {isMobile && <SideInfo environment={'listoflinks'} className='nav_side_info' />}
             <ul>
             <DndContext
               sensors={sensors}
@@ -143,7 +149,7 @@ export default function Nav () {
                   globalLoading
                     ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
                     : desktopsStore.map(escritorio => (
-                      <NavItem key={escritorio._id} escritorio={escritorio}/>
+                      <NavItem key={escritorio._id} escritorio={escritorio} toggleMobileMenu={toggleMobileMenu}/>
                     ))
                 }
               </SortableContext>

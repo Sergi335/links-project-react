@@ -15,7 +15,7 @@ export default function Search () {
   const resRef = useRef()
   const inputRef = useRef()
   const [media] = useState(window.matchMedia('(max-width: 768px)'))
-  console.log('render')
+  // console.log('render')
 
   const handleSubmit = async (event) => {
     event.preventDefault()

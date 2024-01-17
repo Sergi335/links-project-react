@@ -48,6 +48,7 @@ export default function useGoogleAuth () {
         const googleUser = result.user
         console.log(googleUser)
         const csrfToken = getCookie('csrfToken')
+        console.log('🚀 ~ .then ~ csrfToken:', csrfToken)
         // setUser(googleUser.displayName)
         // checkToken(googleUser.auth.currentUser.accessToken, googleUser.auth.currentUser.reloadUserInfo)
         return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/googlelogin`, idToken: googleUser.auth.currentUser.accessToken, csrfToken, uid: googleUser.uid, email: googleUser.email })

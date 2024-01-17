@@ -1,6 +1,6 @@
-.sideInfo {
+/* .sideInfo {
     display: none;
-}
+} */
 
 .sideButtons {
     background-color: transparent;
@@ -17,6 +17,9 @@
 
 .deskInfos p {
     width: -webkit-fill-available;
+}
+.nav_side_info p {
+    margin-top: 0;
 }
 
 .deskTitle {
@@ -105,8 +108,8 @@
         border-left: 1px solid transparent;
         width: 221px;
         left: 2rem;
-        background: var(--mainColor);
+        /* background: var(--mainColor); */
         border-radius: 8px;
-        backdrop-filter: blur(20px);
+        /* backdrop-filter: blur(20px); */
     }
 }

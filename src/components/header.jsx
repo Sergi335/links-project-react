@@ -76,7 +76,7 @@ export default function Header () {
               </div>
             )
            }
-           <Nav />
+           <Nav toggleMobileMenu={toggleMobileMenu}/>
            {
             navScroll < limit && (
               <div className={styles.settings} style={{ position: 'absolute', right: '25px' }} onClick={handleScrollNav}>

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 // import { useLinksStore } from '../../store/links'
 import { useParams } from 'react-router-dom'
 import styles from './EditLinkForm.module.css'
@@ -12,16 +12,25 @@ import { useGlobalStore } from '../../store/global'
 
 export default function EditLinkForm ({ formVisible, setFormVisible }) {
   const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
-  // const setLinksStore = useLinksStore(state => state.setLinksStore)
-  // const linksStore = useLinksStore(state => state.linksStore)
   const formRef = useRef()
+  const nameRef = useRef()
+  const urlRef = useRef()
+  const descriptionRef = useRef()
   const { desktopName } = useParams()
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   // Link sobre el que se hace click contextual se setea en customlink, podriamos pasarselo desde el custom hook y limpiar mas el componente?
   const activeLink = useFormsStore(state => state.activeLink)
+  const name = useMemo(() => activeLink?.name, [activeLink, visibleClassName])
+  const URL = useMemo(() => activeLink?.URL, [activeLink, visibleClassName])
+  const description = useMemo(() => activeLink?.description, [activeLink, visibleClassName])
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  useEffect(() => {
+    nameRef.current.value = name
+    urlRef.current.value = URL
+    descriptionRef.current.value = description
+  }, [activeLink])
   // Habrá que hacer un custom hook que devuelva la funcion handleEditLinkSubmit
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -54,18 +63,17 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
     setGlobalLinks(updatedState)
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
   }
-
   return (
       <form ref={formRef} onSubmit={handleSubmit} className={`deskForm ${visibleClassName}`}>
         <h2>Edita Link</h2>
         <fieldset>
           <legend>Nombre, URL y Descripción</legend>
           <label htmlFor="editLinkName">Nombre</label>
-          <input id="editlinkName" type="text" name="editlinkName" maxLength="35" required="" defaultValue={activeLink?.name || ''} />
+          <input ref={nameRef} id="editlinkName" type="text" name="editlinkName" required defaultValue={name || ''} />
           <label htmlFor="editLinkURL">URL</label>
-          <input id="editlinkURL" type="text" name="editlinkURL" defaultValue={activeLink?.URL || ''}/>
+          <input ref={urlRef} id="editlinkURL" type="text" name="editlinkURL" required defaultValue={URL || ''}/>
           <label htmlFor="editLinkDescription">Descripción</label>
-          <input id="editlinkDescription" type="text" name="editlinkDescription" defaultValue={activeLink?.description || ''}/>
+          <input ref={descriptionRef} id="editlinkDescription" type="text" name="editlinkDescription" defaultValue={description || ''}/>
           <div className='button_group'>
             <button id="editlinkSubmit" type="submit">Modificar</button>
             <button type='button' onClick={() => setFormVisible(false)}>Cancelar</button>

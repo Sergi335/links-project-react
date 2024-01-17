@@ -12,8 +12,15 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
-
+import { constants } from './services/constants'
+// Hay que hacer una peticion a / para recibir el csfr token
 function App () {
+  useEffect(() => {
+    fetch(constants.BASE_API_URL, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+  })
   const user = useSessionStore(state => state.user) // la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const router = createBrowserRouter([
     {

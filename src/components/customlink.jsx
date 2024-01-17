@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './customlink.module.css'
 import { ArrowDown, MaximizeIcon } from './Icons/icons'
@@ -6,8 +6,9 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useFormsStore } from '../store/forms'
 import { useLinksStore } from '../store/links'
+import { usePreferencesStore } from '../store/preferences'
 
-export default function CustomLink ({ data, idpanel, className }) {
+export default function CustomLink ({ data, className }) {
   const link = data.link || data.activeLink
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const setPoints = useFormsStore(state => state.setPoints)
@@ -15,13 +16,25 @@ export default function CustomLink ({ data, idpanel, className }) {
   const setActiveElement = useFormsStore(state => state.setActiveElement)
   const pastedLinkId = useLinksStore(state => state.pastedLinkId)
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
-  // console.log('🚀 ~ file: customlink.jsx:16 ~ CustomLink ~ pastedLinkId:', pastedLinkId)
+  const [linkSelectMode, setLinkSelectMode] = useState(false)
   const controlStyle = className === 'searchResult' ? { width: 'auto', position: 'relative', top: '25%' } : {}
   const linkStyle = className === 'searchResult' ? { flexWrap: 'wrap', height: '77px' } : {}
   const anchorStyle = className === 'searchResult' ? { height: '20px', paddingTop: '10px' } : {}
   // Ref del link
   const linkRef = useRef(null)
-  // console.log(link)
+  const selectModeGlobal = usePreferencesStore(state => state.selectModeGlobal)
+  const columnSelectModeId = usePreferencesStore(state => state.columnSelectModeId)
+  const selectedLinks = usePreferencesStore(state => state.selectedLinks)
+  // console.log('🚀 ~ CustomLink ~ selectedLinks:', selectedLinks)
+  const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  useEffect(() => {
+    // console.log(selectModeGlobal, columnSelectModeId, link.idpanel)
+    if (columnSelectModeId.includes(link.idpanel)) {
+      setLinkSelectMode(true) // no estamos comprobando el idpanel de los que quedan
+    } else {
+      setLinkSelectMode(false)
+    }
+  }, [selectModeGlobal])
   const handleContextMenu = useCallback((e) => {
     e.preventDefault()
     setPoints({ x: e.pageX, y: e.pageY })
@@ -36,7 +49,24 @@ export default function CustomLink ({ data, idpanel, className }) {
     linkDiv.classList.toggle(styles.div_open)
     anchor.classList.toggle(styles.link_open)
   }
-
+  const handleSelectChange = (e) => {
+    const linkId = e.currentTarget.parentNode.parentNode.id
+    // console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
+    if (selectedLinks.includes(linkId)) {
+      const index = selectedLinks.findIndex((id) => id === linkId)
+      const newState = [...selectedLinks]
+      newState.splice(index, 1)
+      setSelectedLinks(newState)
+      if (e.currentTarget.parentNode.parentNode.classList.contains('active')) {
+        e.currentTarget.parentNode.parentNode.classList.remove('active')
+      }
+    } else {
+      setSelectedLinks([...selectedLinks, linkId])
+      if (!e.currentTarget.parentNode.parentNode.classList.contains('active')) {
+        e.currentTarget.parentNode.parentNode.classList.add('active')
+      }
+    }
+  }
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
       linkRef.current?.parentNode.classList.add(`${styles.conic}`)
@@ -80,8 +110,9 @@ export default function CustomLink ({ data, idpanel, className }) {
         <div ref={setNodeRef}
           style={style}
           {...attributes}
-          {...listeners} className={isDragging ? styles.link_dragged : styles.link} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
+          {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
+            {linkSelectMode && <input type='checkbox' className={styles.checkbox} onChange={handleSelectChange}/>}
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
             {
