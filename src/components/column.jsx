@@ -153,7 +153,7 @@ export default function Columna ({ data, children }) {
                   </h2>
                   <div className={styles.opener} onClick={() => setOpen(!open)}>
                     {
-                      childCount >= 8 && <ArrowDown className='uiIcon_small'/>
+                      childCount > 6 && <ArrowDown className='uiIcon_small'/>
                     }
                   </div>
                   <div id={columna._id} onClick={handleSetSelectMode} style={{ paddingRight: '13px' }}>

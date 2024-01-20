@@ -9,7 +9,7 @@ import { useFormsStore } from '../store/forms'
 import { useDesktopsStore } from '../store/desktops'
 import { usePreferencesStore } from '../store/preferences'
 import { useGlobalStore } from '../store/global'
-import { constants } from '../services/constants'
+// import { constants } from '../services/constants'
 import NameLoader from './NameLoader'
 
 export default function SideInfo ({ environment, className = 'listoflinks' }) {
@@ -91,22 +91,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [result])
-  useEffect(() => {
-    if (localStorage.getItem('bodyBackground')) {
-      document.body.style.backgroundImage = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
-      document.body.style.backgroundSize = 'cover'
-    }
-    if (localStorage.getItem('theme')) {
-      JSON.parse(localStorage.getItem('theme')) === 'dark' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')
-    }
-    if (localStorage.getItem('sideInfoStyles')) {
-      const panel = document.getElementById('sideinfo')
-      panel && constants.SIDE_INFO_STYLES[JSON.parse(localStorage.getItem('sideInfoStyles'))].applyStyles(panel)
-    }
-    if (localStorage.getItem('accentColorName')) {
-      constants.ACCENT_COLORS[JSON.parse(localStorage.getItem('accentColorName'))].applyStyles()
-    }
-  }, [])
+
   const handleClick = async () => {
     const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
     const { column } = response

@@ -10,6 +10,8 @@ export default function useGoogleAuth () {
   const auth = getAuth()
   const navigate = useNavigate()
   const setUser = useSessionStore(state => state.setUser)
+  const csrfToken = useSessionStore(state => state.csfrtoken)
+  console.log('🚀 ~ useGoogleAuth ~ csrfToken:', csrfToken)
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -29,11 +31,11 @@ export default function useGoogleAuth () {
         } // Estamos devolviendo el password!!!
       }) // Control de errores
   }
-  const getCookie = (name) => {
-    const value = '; ' + document.cookie
-    const parts = value.split('; ' + name + '=')
-    if (parts.length === 2) return parts.pop().split(';').shift()
-  }
+  // const getCookie = (name) => {
+  //   const value = '; ' + document.cookie
+  //   const parts = value.split('; ' + name + '=')
+  //   if (parts.length === 2) return parts.pop().split(';').shift()
+  // }
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
@@ -47,7 +49,6 @@ export default function useGoogleAuth () {
         // console.log(credential)
         const googleUser = result.user
         console.log(googleUser)
-        const csrfToken = getCookie('csrfToken')
         console.log('🚀 ~ .then ~ csrfToken:', csrfToken)
         // setUser(googleUser.displayName)
         // checkToken(googleUser.auth.currentUser.accessToken, googleUser.auth.currentUser.reloadUserInfo)
@@ -75,7 +76,7 @@ export default function useGoogleAuth () {
   }
   const handleGoogleLogOut = () => {
     getAuth().currentUser.getIdToken(/* forceRefresh */ true).then(async function (idToken) {
-      const csrfToken = getCookie('csrfToken')
+      // const csrfToken = getCookie('csrfToken')
       const body = { idToken, csrfToken }
       return fetch(`${constants.BASE_API_URL}/auth/logout`, {
         method: 'POST',
@@ -119,7 +120,7 @@ export default function useGoogleAuth () {
       return user.getIdToken().then(idToken => {
         // Session login endpoint is queried and the session cookie is set.
         // CSRF protection should be taken into account.
-        const csrfToken = getCookie('csrfToken')
+        // const csrfToken = getCookie('csrfToken')
         return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/login`, idToken, csrfToken, uid: user.uid, email: user.email })
       })
     }).then(() => {
@@ -158,7 +159,7 @@ export default function useGoogleAuth () {
           // Send token to your backend via HTTPS
           // ...
           // console.log(idToken)
-          const csrfToken = getCookie('csrfToken')
+          // const csrfToken = getCookie('csrfToken')
           return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/register`, idToken, csrfToken, uid: user.uid, nickname }
           )
             .then(data => {

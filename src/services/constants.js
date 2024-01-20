@@ -1,5 +1,5 @@
 export const constants = {
-  BASE_API_URL: 'https://zen-marks-api-dev-cmer.1.ie-1.fl0.io',
+  BASE_API_URL: 'http://localhost:3001',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },

@@ -8,6 +8,10 @@ export const useSessionStore = create(
         user: null,
         setUser: (user) => {
           set({ user })
+        },
+        csfrtoken: null,
+        setCsfrtoken: (csfrtoken) => {
+          set({ csfrtoken })
         }
       }
     },

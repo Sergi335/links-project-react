@@ -16,11 +16,36 @@ import { constants } from './services/constants'
 // Hay que hacer una peticion a / para recibir el csfr token
 function App () {
   useEffect(() => {
+    if (localStorage.getItem('bodyBackground')) {
+      document.body.style.backgroundImage = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
+      document.body.style.backgroundSize = 'cover'
+    }
+    if (localStorage.getItem('theme')) {
+      JSON.parse(localStorage.getItem('theme')) === 'dark' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')
+    }
+    if (localStorage.getItem('sideInfoStyles')) {
+      const panel = document.getElementById('sideinfo')
+      panel && constants.SIDE_INFO_STYLES[JSON.parse(localStorage.getItem('sideInfoStyles'))].applyStyles(panel)
+    }
+    if (localStorage.getItem('accentColorName')) {
+      constants.ACCENT_COLORS[JSON.parse(localStorage.getItem('accentColorName'))].applyStyles()
+    }
+  }, [])
+  // const csfrtoken = useSessionStore(state => state.csfrtoken)
+  const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
+  useEffect(() => {
     fetch(constants.BASE_API_URL, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-  })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        const { csrfToken } = data
+        setCsfrtoken(csrfToken)
+      })
+  }, [])
+  // console.log('🚀 ~ App ~ csfrtoken:', csfrtoken)
   const user = useSessionStore(state => state.user) // la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const router = createBrowserRouter([
     {

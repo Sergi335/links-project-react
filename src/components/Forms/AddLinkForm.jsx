@@ -55,7 +55,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
         <label htmlFor="linkName">Nombre</label>
         <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="35" required/>
         <label htmlFor="linkURL">URL</label>
-        <input ref={urlRef} id="linkURL" type="text" name="linkURL" required/>
+        <input ref={urlRef} id="linkURL" type="text" name="linkURL"/>
         <button type="submit">Enviar</button>
       </form>
   )
