@@ -145,7 +145,7 @@ export function LinksInfo ({ data, links, setLinks }) {
   }
 
   useEffect(() => {
-    fetch('http://localhost:3001/storage/icons', {
+    fetch(`${constants.BASE_API_URL}/storage/icons`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
@@ -409,7 +409,8 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
     })
   }
   const handleSubmit = async () => {
-    const response = await editLink({ id, notesState })
+    console.log(notesState)
+    const response = await editLink({ id, notes: notesState })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)

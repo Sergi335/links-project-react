@@ -17,7 +17,7 @@ export default function ImageLoader ({ src, alt, ref, handleShowImageModal }) {
         ref={ref}
         src={src}
         alt={alt}
-        style={{ width: '100%', height: '', opacity: loaded ? 1 : 0, transition: 'opacity .5s' }}
+        style={{ width: '100%', height: '', opacity: loaded ? 1 : 0, transition: 'opacity .5s', objectFit: 'contain' }}
         onLoad={handleImageLoad}
         onClick={handleShowImageModal}
       />

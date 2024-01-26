@@ -33,7 +33,7 @@
   --frostHvColor: #f3f3f3c9;
   --firstShadow: #50505057;
   --secondColor: #f9f9f9;
-  --thirdColor: #f1f3f4;
+  --thirdColor: white;
   --firstBorder: 1px solid #e7e7e7;
   --firstBorderColor: #e7e7e7;
   --firstColorOpacity: rgb(255 255 255 / 89%);
@@ -201,6 +201,12 @@ a.active, .link.active {
 .selectMode .link img {
   margin-left: 0;
 }
+.selectMode .link a {
+    flex-wrap: nowrap;
+}
+.selectMode .column h2 {
+  margin-left: 0;
+}
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -245,6 +251,7 @@ button:hover svg {
   width: 23px;
   cursor: pointer;
   color: var(--accentColor);
+  transition: transform .150s ease-in-out;
 }
 .uiIcon-button {
   width: 20px;
@@ -260,7 +267,7 @@ button:hover svg {
   width: 17px;
   cursor: pointer;
   color: var(--accentColor);
-  transition: filter .3s ease-out;
+  transition: filter .3s ease-out, transform .150s ease-in-out;
 }
 .uiIcon_small:hover {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
@@ -273,7 +280,8 @@ button:hover svg {
   border: 0;
   padding: 2px;
   cursor: pointer;
-  transition: background-color .6s;
+  transition: background-color .3s;
+  border-radius: 3px;
 }
 .buttonIcon:hover {
   background-color: var(--frostHvColor);
@@ -319,4 +327,15 @@ textarea {
   background-color: transparent;
   color: var(--firstTextColor);
   padding: 10px;
+}
+.newSection {
+  padding: 38px;
+  background-color: var(--mainColor);
+  border-radius: var(--border-radius);
+  border: var(--firstBorder);
+  width: 21.8%;
+  position: relative;
+  left: 390px;
+  border-left-color: var(--accentColor);
+  display: inline-flex;
 }

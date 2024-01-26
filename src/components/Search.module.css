@@ -3,6 +3,7 @@
     display: flex;
     height: var(--navBarContentHeight);
     align-items: center;
+    justify-content: center;
 }
 
 .searchForm input.searchInput {
@@ -228,7 +229,7 @@
 
     .searchForm {
         width: 100%;
-        margin-left: 25px;
+        /* margin-left: 25px; */
     }
 
     .searchButton {
@@ -237,7 +238,8 @@
 
     .searchButton {
         height: 35px;
-        border-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
 
     .searchResults {

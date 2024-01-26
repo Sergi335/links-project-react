@@ -4,9 +4,11 @@
 
 .sideButtons {
     background-color: transparent;
-    padding: 5px;
+    padding: 0;
 }
-
+.sideButtons:hover {
+    background-color: transparent;
+}
 .deskInfos {
     display: flex;
     flex-direction: column;
@@ -27,17 +29,18 @@
     font-size: 14px;
     padding: 6px 20px;
     margin-top: 0;
+    margin-bottom: 12px;
 }
 
 .deskControls {
-    padding: 3px;
-    background-color: var(--mainColor);
+    padding: 0;
+    /* background-color: var(--mainColor); */
     border-radius: 5px;
     margin: 0px auto 90px 20px;
-    gap: 3px;
+    gap: 10px;
     width: fit-content;
     display: flex;
-    border: var(--firstBorder);
+    /* border: var(--firstBorder); */
 }
 
 .sideInfo div {

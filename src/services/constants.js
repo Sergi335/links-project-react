@@ -69,7 +69,8 @@ export const constants = {
         element.style.background = 'var(--mainColor)'
         element.style.backdropFilter = 'blur(20px)'
         element.style.borderRadius = '8px'
-        element.style.borderLeft = '1px solid transparent'
+        // element.style.borderLeft = '1px solid transparent'
+        element.style.border = 'var(--firstBorder)'
       },
       background: 'var(--frostColor)'
     },
@@ -78,6 +79,7 @@ export const constants = {
         element.style.background = 'transparent'
         element.style.backdropFilter = 'none'
         element.style.borderRadius = '0'
+        element.style.border = 'none'
         element.style.borderLeft = '1px dashed var(--firstBorderColor)'
       },
       background: 'transparent'
@@ -88,6 +90,7 @@ export const constants = {
         element.style.backdropFilter = 'blur(15px)'
         element.style.borderRadius = '8px'
         element.style.borderLeft = '1px solid transparent'
+        element.style.border = 'var(--firstBorder)'
       },
       background: 'transparent'
     }
@@ -122,6 +125,18 @@ export const constants = {
     3: 'repeat(auto-fill, minmax(537px, 1fr))',
     4: 'repeat(auto-fill, minmax(393px, 1fr))',
     5: 'repeat(auto-fill, minmax(306px, 1fr))'
+  },
+  DEFAULT_BACKGROUNDS: {
+    light: {
+      applyBackground: () => {
+        document.body.style.backgroundImage = 'url("https://firebasestorage.googleapis.com/v0/b/justlinks-7330b.appspot.com/o/backgrounds%2Fbackground9.webp?alt=media&token=0df22fb0-0eb5-40b2-8692-1fe05818bf9f")'
+      }
+    },
+    dark: {
+      applyBackground: () => {
+        document.body.style.backgroundImage = 'url("https://firebasestorage.googleapis.com/v0/b/justlinks-7330b.appspot.com/o/backgrounds%2Fbackground8.webp?alt=media&token=7638f025-0a9c-497c-bea2-230d83b9e4fd")'
+      }
+    }
   },
   MIDDLEWARE_ERROR_MESSAGE: {
     cookieFailed: 'MIDDLEWARE UNAUTHORIZE REQUEST!'

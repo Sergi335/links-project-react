@@ -7,6 +7,7 @@ import { MenuIcon } from './Icons/icons'
 import Search from './Search'
 import Nav from './Nav'
 import { usePreferencesStore } from '../store/preferences'
+import { constants } from '../services/constants'
 
 export default function Header () {
   const user = useSessionStore(state => state.user)
@@ -25,10 +26,12 @@ export default function Header () {
     if (root.classList.contains('dark')) {
       root.classList.remove('dark')
       root.classList.add('light')
+      constants.DEFAULT_BACKGROUNDS.light.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('light'))
     } else if (root.classList.contains('light')) {
       root.classList.remove('light')
       root.classList.add('dark')
+      constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     } else {
       root.classList.add('dark')

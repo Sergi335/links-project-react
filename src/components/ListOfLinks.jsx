@@ -58,6 +58,17 @@ export default function ListOfLinks () {
   const isDesktop = windowSize.width > 1536
   return (
     <main className={styles.listOfLinks}>
+      {/* <div style={{ display: 'flex', gap: '25px', marginTop: '50px' }}>
+        <h3 style={{ position: 'absolute', left: '427px', top: '115px' }}>Favoritos</h3>
+        <div className='newSection' style={{ display: 'flex', gap: '25px', flexDirection: 'column' }}>
+          <div>New Section</div>
+        </div>
+
+          <h3 style={{ position: 'absolute', left: '952px', top: '115px' }}>Artículos</h3>
+          <div className='newSection' style={{ display: 'flex', gap: '25px', flexDirection: 'column' }}>
+            <div>New Section</div>
+          </div>
+      </div> */}
       {isDesktop && <SideInfo environment={'listoflinks'}/>}
       {
         globalLoading

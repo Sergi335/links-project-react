@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './customlink.module.css'
 import { ArrowDown, MaximizeIcon } from './Icons/icons'
@@ -20,35 +20,41 @@ export default function CustomLink ({ data, className }) {
   const controlStyle = className === 'searchResult' ? { width: 'auto', position: 'relative', top: '25%' } : {}
   const linkStyle = className === 'searchResult' ? { flexWrap: 'wrap', height: '77px' } : {}
   const anchorStyle = className === 'searchResult' ? { height: '20px', paddingTop: '10px' } : {}
-  // Ref del link
+  // Ref del link y descripción
   const linkRef = useRef(null)
+  const linkDesc = useRef(null)
   const selectModeGlobal = usePreferencesStore(state => state.selectModeGlobal)
   const columnSelectModeId = usePreferencesStore(state => state.columnSelectModeId)
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
-  // console.log('🚀 ~ CustomLink ~ selectedLinks:', selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+
   useEffect(() => {
-    // console.log(selectModeGlobal, columnSelectModeId, link.idpanel)
     if (columnSelectModeId.includes(link.idpanel)) {
       setLinkSelectMode(true) // no estamos comprobando el idpanel de los que quedan
     } else {
       setLinkSelectMode(false)
     }
   }, [selectModeGlobal])
-  const handleContextMenu = useCallback((e) => {
+
+  const handleContextMenu = (e) => {
     e.preventDefault()
     setPoints({ x: e.pageX, y: e.pageY })
     setContextMenuVisible(true)
     setActiveLink(link)
     setActiveElement(linkRef.current)
-  }, [link, setPoints, setContextMenuVisible, setActiveLink, linkRef])
-
-  const toggleLinkHeight = (e) => {
-    const linkDiv = e.currentTarget.parentNode.parentNode
-    const anchor = linkDiv.childNodes[0]
-    linkDiv.classList.toggle(styles.div_open)
-    anchor.classList.toggle(styles.link_open)
   }
+
+  const handleHeightChange = (e) => {
+    const rotator = e.currentTarget.childNodes[0]
+    e.currentTarget.parentNode.parentNode.classList.toggle('active')
+    const displayNewImage = () => {
+      rotator.classList.toggle(styles.rotate)
+      linkDesc.current.classList.toggle(styles.link_open)
+      linkDesc.current.childNodes[0].classList.toggle(styles.fade)
+    }
+    displayNewImage()
+  }
+
   const handleSelectChange = (e) => {
     const linkId = e.currentTarget.parentNode.parentNode.id
     // console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
@@ -112,12 +118,9 @@ export default function CustomLink ({ data, className }) {
           {...attributes}
           {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
-            {linkSelectMode && <input type='checkbox' className={styles.checkbox} onChange={handleSelectChange}/>}
+            <input type='checkbox' className={linkSelectMode ? `${styles.checkbox}` : `${styles.hidden}`} onChange={handleSelectChange}/>
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
-            {
-              className !== 'searchResult' && <span className={styles.description}>{link.description}</span>
-            }
           </a>
           {
             className !== 'searchResult' && (
@@ -128,7 +131,7 @@ export default function CustomLink ({ data, className }) {
                   </Link>
                   </button>
                   {
-                    className !== 'searchResult' && (<button className='buttonIcon' onClick={toggleLinkHeight}><ArrowDown /></button>)
+                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown /></button>)
                   }
 
                 </div>
@@ -147,6 +150,9 @@ export default function CustomLink ({ data, className }) {
           )
         }
         </div>
+        {
+          className !== 'searchResult' && <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>
+        }
       </>
   )
 }

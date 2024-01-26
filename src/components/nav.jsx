@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import styles from './Nav.module.css'
 import { DndContext, useSensor, useSensors, PointerSensor, DragOverlay, closestCorners } from '@dnd-kit/core'
 import { SortableContext, useSortable, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
@@ -63,6 +63,8 @@ export default function Nav ({ toggleMobileMenu }) {
   const globalLoading = useGlobalStore(state => state.globalLoading)
   // const setLimit = usePreferencesStore(state => state.setLimit)
   const isMobile = windowSize.width < 1536
+  const params = useParams()
+  const isLinkDetails = params?.id !== undefined
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
@@ -135,7 +137,7 @@ export default function Nav ({ toggleMobileMenu }) {
 
         <nav ref={navRef} className={styles.nav}>
             {/* // deshabilitar en profile y en link details */}
-            {isMobile && <SideInfo environment={'listoflinks'} className='nav_side_info' />}
+            {isMobile && !isLinkDetails && <SideInfo environment={'listoflinks'} className='nav_side_info' />}
             <ul>
             <DndContext
               sensors={sensors}

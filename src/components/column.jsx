@@ -16,8 +16,8 @@ export default function Columna ({ data, children }) {
   const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
   const [selectMode, setSelectMode] = useState(false)
-  const [open, setOpen] = useState(false)
-  const openClass = open ? styles.colOpen : ''
+  // const [open, setOpen] = useState(false)
+  // const openClass = open ? styles.colOpen : ''
   const selectModeClass = selectMode ? 'selectMode' : ''
   const colRef = useRef(null)
   const headRef = useRef(null)
@@ -34,16 +34,31 @@ export default function Columna ({ data, children }) {
   const columnSelectModeId = usePreferencesStore(state => state.columnSelectModeId)
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const maxHeight = (10 + 2 + 38) * childCount + (3 * childCount)
 
+  const handleChangeColumnHeight = (e) => {
+    const opener = e.currentTarget
+    const column = opener.parentNode.parentNode.parentNode
+    const displayNewImage = () => {
+      column.classList.toggle(styles.colOpen)
+      opener.childNodes[0].classList.toggle(styles.rotate)
+      if (column.classList.contains(styles.colOpen)) {
+        column.style.maxHeight = `${maxHeight}px`
+      } else {
+        column.style.maxHeight = ''
+      }
+    }
+    displayNewImage()
+  }
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
-    setSelectMode(!selectMode)
-    setSelectModeGlobal(!selectModeGlobal)
+    setSelectMode(!selectMode) // se podria pasar desde el componente padre a ambos y nos quitamos el global? = no por que no seria independiente
+    setSelectModeGlobal(!selectModeGlobal) // al cambiar el global se cambia el de todos los componentes y renderiza todos (no aunque se desactive sigue renderizando todos)
     const prevState = [...columnSelectModeId]
     if (prevState.includes(e.currentTarget.id)) {
       const index = prevState.findIndex((id) => id === e.currentTarget.id)
       prevState.splice(index, 1)
-      setColumnSelectModeId(prevState) // solo seleccionamos una a la vez, cambiar a array para seleccionar varias
+      setColumnSelectModeId(prevState)
     } else {
       prevState.push(e.currentTarget.id)
       setColumnSelectModeId(prevState)
@@ -138,7 +153,7 @@ export default function Columna ({ data, children }) {
       <div ref={setNodeRef} style={style} className={`${styles.columnWrapper} ${selectModeClass}`} data-order={columna.order}>
         <div
           ref={colRef}
-          className={`${styles.column} ${openClass}`}
+          className={`${styles.column} column`}
           id={columna._id}
           {...attributes}
           {...listeners}
@@ -151,12 +166,12 @@ export default function Columna ({ data, children }) {
                   <h2 onClick={() => setEditMode(true) } ref={headRef} >
                     {columna.name}
                   </h2>
-                  <div className={styles.opener} onClick={() => setOpen(!open)}>
+                  <div className={styles.opener} onClick={handleChangeColumnHeight}>
                     {
                       childCount > 6 && <ArrowDown className='uiIcon_small'/>
                     }
                   </div>
-                  <div id={columna._id} onClick={handleSetSelectMode} style={{ paddingRight: '13px' }}>
+                  <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>
                 </div>

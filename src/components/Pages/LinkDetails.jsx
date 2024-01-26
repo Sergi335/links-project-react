@@ -27,6 +27,7 @@ export default function LinkDetails () {
   }, [globalColumns])
 
   const data = links.find(link => link._id === linkId.id)
+  console.log('🚀 ~ LinkDetails ~ data:', data)
 
   useEffect(() => {
     if (data?.notes) {
