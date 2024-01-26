@@ -35,6 +35,7 @@ export default function Header () {
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     } else {
       root.classList.add('dark')
+      constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
   }
