@@ -4,8 +4,8 @@ export default function NameLoader ({ className }) {
         <ContentLoader // No se adapta
             speed={2}
             width={200}
-            height={35}
-            viewBox="0 0 100% 35"
+            height={21}
+            viewBox="0 0 100% 21"
             backgroundColor="var(--mainColor)"
             foregroundColor="var(--frostHvColor)"
             className={className}

@@ -29,7 +29,8 @@
 }
 .description span {
   opacity: 0;
-  padding: 15px;
+  padding: 17px;
+  text-align: left;
   /* transition: opacity .1s ease-in-out; */
 }
 .description span.fade {

@@ -26,16 +26,16 @@ export default function Header () {
     if (root.classList.contains('dark')) {
       root.classList.remove('dark')
       root.classList.add('light')
-      constants.DEFAULT_BACKGROUNDS.light.applyBackground()
+      // constants.DEFAULT_BACKGROUNDS.light.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('light'))
     } else if (root.classList.contains('light')) {
       root.classList.remove('light')
       root.classList.add('dark')
-      constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
+      // constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     } else {
       root.classList.add('dark')
-      constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
+      // constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
   }

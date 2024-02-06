@@ -11,7 +11,7 @@ export default function useGoogleAuth () {
   const navigate = useNavigate()
   const setUser = useSessionStore(state => state.setUser)
   const csrfToken = useSessionStore(state => state.csfrtoken)
-  console.log('🚀 ~ useGoogleAuth ~ csrfToken:', csrfToken)
+  // console.log('🚀 ~ useGoogleAuth ~ csrfToken:', csrfToken)
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -48,8 +48,8 @@ export default function useGoogleAuth () {
         // The signed-in user info.
         // console.log(credential)
         const googleUser = result.user
-        console.log(googleUser)
-        console.log('🚀 ~ .then ~ csrfToken:', csrfToken)
+        // console.log(googleUser)
+        // console.log('🚀 ~ .then ~ csrfToken:', csrfToken)
         // setUser(googleUser.displayName)
         // checkToken(googleUser.auth.currentUser.accessToken, googleUser.auth.currentUser.reloadUserInfo)
         return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/googlelogin`, idToken: googleUser.auth.currentUser.accessToken, csrfToken, uid: googleUser.uid, email: googleUser.email })

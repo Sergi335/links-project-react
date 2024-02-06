@@ -17,6 +17,7 @@ export default function AppLayout ({ children }) {
       setActualDesktop(desktopName)
       localStorage.setItem('actualDesktop', JSON.stringify(desktopName))
     }
+    document.body.classList.remove('home')
   }, [desktopName])
 
   return (

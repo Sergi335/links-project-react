@@ -4,7 +4,9 @@
     overflow: hidden;
     /* height: 70vh; */
 }
-
+/* body {
+    background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%);
+} */
 .nav a:hover {
     color: #09f;
 }
@@ -153,6 +155,7 @@
     align-items: center;
     gap: 50px;
     padding: 60px;
+    flex-direction: column;
 }
 
 /* .section:nth-child(odd) {

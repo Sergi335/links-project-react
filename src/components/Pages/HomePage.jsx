@@ -6,10 +6,9 @@ import { useEffect } from 'react'
 export default function HomePage () {
   useEffect(() => {
     document.title = 'Zenmarks'
-    const body = document.body
-    body.style.backgroundImage = 'linear-gradient(to top, #feada6 0%, #f5efef 100%)'
-    // const root = document.getElementById('root')
-    // root.style.padding = '0'
+    document.body.classList.add('home')
+    // const body = document.body
+    // body.style.backgroundImage = 'linear-gradient(to top, #feada6 0%, #f5efef 100%)'
   })
   return (
       <>
@@ -48,7 +47,8 @@ export default function HomePage () {
               <h2>Section 1</h2>
               <p>Vídeo usando la app</p>
             </div>
-            <img src="img/pic1.svg" alt="" />
+            {/* <img src="img/pic1.svg" alt="" /> */}
+            <video src="img/Video2.webm" autoPlay loop controls></video>
           </section>
           <section className={styles.section}>
             <img src="img/pic2.svg" alt="" />

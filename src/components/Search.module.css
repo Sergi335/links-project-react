@@ -244,7 +244,7 @@
 
     .searchResults {
         flex-direction: column;
-        margin: 12% 30%;
+        /* margin: 12% 30%; */
         position: fixed;
         width: 1023px;
         overflow-y: auto;

@@ -141,6 +141,12 @@ body {
   background: var(--bgGradient);
   background-attachment: fixed;
 }
+/* html.dark body {
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/justlinks-7330b.appspot.com/o/backgrounds%2Fbackground8.webp?alt=media&token=7638f025-0a9c-497c-bea2-230d83b9e4fd");
+} */
+body.home {
+  background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%) !important;
+}
 .root {
   margin: 0 auto;
   padding: 2rem;

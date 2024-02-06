@@ -1,5 +1,7 @@
+import styles from '../components/SideInfo.module.css'
 export const constants = {
-  BASE_API_URL: 'http://localhost:3001',
+  // BASE_API_URL: 'http://localhost:3001',
+  BASE_API_URL: 'https://zenmarks.xyz',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -67,10 +69,17 @@ export const constants = {
     theme: {
       applyStyles: (element) => {
         element.style.background = 'var(--mainColor)'
-        element.style.backdropFilter = 'blur(20px)'
-        element.style.borderRadius = '8px'
-        // element.style.borderLeft = '1px solid transparent'
         element.style.border = 'var(--firstBorder)'
+        element.style.backdropFilter = 'none'
+        // element.style.backdropFilter = 'blur(20px)'
+        // element.style.borderRadius = 'var(--border-radius)'
+        // element.style.borderLeft = '1px solid transparent'
+        const sects = element.querySelectorAll(`.${styles.sectActive}`)
+        sects.forEach((sect) => {
+          // sect.style.backgroundColor = 'transparent'
+          sect.style.border = 'var(--firstBorder)'
+          // sect.style.borderLeft = '2px solid var(--accentColor)'
+        })
       },
       background: 'var(--frostColor)'
     },
@@ -78,9 +87,14 @@ export const constants = {
       applyStyles: (element) => {
         element.style.background = 'transparent'
         element.style.backdropFilter = 'none'
-        element.style.borderRadius = '0'
+        // element.style.borderRadius = '0'
         element.style.border = 'none'
-        element.style.borderLeft = '1px dashed var(--firstBorderColor)'
+        const sects = element.querySelectorAll(`.${styles.sectActive}`)
+        sects.forEach((sect) => {
+          sect.style.backgroundColor = 'var(--frostHvColor)'
+          sect.style.border = 'var(--firstBorder)'
+        })
+        // element.style.borderLeft = '1px dashed var(--firstBorderColor)'
       },
       background: 'transparent'
     },
@@ -88,9 +102,14 @@ export const constants = {
       applyStyles: (element) => {
         element.style.background = 'transparent'
         element.style.backdropFilter = 'blur(15px)'
-        element.style.borderRadius = '8px'
+        // element.style.borderRadius = 'var(--border-radius)'
         element.style.borderLeft = '1px solid transparent'
-        element.style.border = 'var(--firstBorder)'
+        element.style.border = 'none'
+        const sects = element.querySelectorAll(`.${styles.sectActive}`)
+        sects.forEach((sect) => {
+          // sect.style.backgroundColor = 'transparent'
+          sect.style.border = 'none'
+        })
       },
       background: 'transparent'
     }
