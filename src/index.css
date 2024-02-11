@@ -81,7 +81,8 @@ html.dark.transparent {
 
 }
 html.dark {
-  --bgGradient: url('/img/fondo.png');
+  /* --bgGradient: url('/img/fondo.png'); */
+  --bgGradient: #0e0e0e;
   --mainColor: #1D1D1D;
   --columnBgColor: #1d1d1d;
   --placeholderImg: url('/img/placeholderImg.png');
@@ -144,9 +145,9 @@ body {
 /* html.dark body {
   background-image: url("https://firebasestorage.googleapis.com/v0/b/justlinks-7330b.appspot.com/o/backgrounds%2Fbackground8.webp?alt=media&token=7638f025-0a9c-497c-bea2-230d83b9e4fd");
 } */
-body.home {
+/* body.home {
   background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%) !important;
-}
+} */
 .root {
   margin: 0 auto;
   padding: 2rem;

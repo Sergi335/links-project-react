@@ -2,6 +2,7 @@ import styles from '../components/SideInfo.module.css'
 export const constants = {
   // BASE_API_URL: 'http://localhost:3001',
   BASE_API_URL: 'https://zenmarks.xyz',
+  // BASE_API_URL: 'http://34.240.3.227:3001',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },

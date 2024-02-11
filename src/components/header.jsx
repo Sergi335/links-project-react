@@ -7,7 +7,7 @@ import { MenuIcon } from './Icons/icons'
 import Search from './Search'
 import Nav from './Nav'
 import { usePreferencesStore } from '../store/preferences'
-import { constants } from '../services/constants'
+// import { constants } from '../services/constants'
 
 export default function Header () {
   const user = useSessionStore(state => state.user)
