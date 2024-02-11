@@ -1,0 +1,233 @@
+:root {
+    --link-height: 43px;
+    --link-width: 274px;
+}
+.home * {
+    padding: 0;
+    box-sizing: border-box;
+}
+.home {
+    font-size: 1.2rem;
+}
+.home p {
+    max-width: 60ch;
+    text-wrap: pretty;
+}
+.home p:first-of-type {
+    text-wrap: balance;
+}
+.home h2, .home h3 {
+    margin-bottom: 0;
+}
+.home a:hover {
+    color: #09f;
+}
+.home video {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: var(--secondNeumoShadow);
+}
+.main {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.logo {
+    position: relative;
+    font-family: k2d;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+}
+.logo::after {
+    content: 'Beta';
+    position: relative;
+    left: 0.5em;
+    color: coral;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+.logo svg {
+    width: 36px;
+    height: 36px;
+    transform: rotate(34deg);
+    color: coral;
+    position: relative;
+    top: 18px;
+}
+
+.navlinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 54px;
+    position: relative;
+}
+
+.heroSection {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    mask-image: radial-gradient(ellipse 37% 54% at 50% 50%,#000 59%,transparent 120%);
+    background-size: 14px 14px;
+    background-image: linear-gradient(90deg,#4f4f4f2e 1px,transparent 0),linear-gradient(180deg,#4f4f4f2e 1px,transparent 0);
+    padding-bottom: 110px;
+}
+.heroSection p {
+    text-align: center;
+}
+.link {
+    width: var(--link-width);
+    height: var(--link-height);
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+    container-name: link;
+    container-type: size;
+}
+
+.linkContent {
+    z-index: 5;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    top: -100%;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    padding-left: 20px;
+}
+.background {
+    position: absolute;
+    width: 383px;
+    height: 1167px;
+    background: linear-gradient(108deg, rgba(255,255,255,0) 49%, rgb(255, 255, 255) 55%);
+    z-index: -1;
+    clip-path: polygon(0 0, 100% 0, 52% 50%, 48% 50%);
+    animation: rotate 7s ease-in-out infinite;
+    top: -559px;
+    left: -57px;
+    z-index: 1;
+}
+.border {
+    display: flex;
+    width: calc(var(--link-width) - 2px);
+    height: calc(var(--link-height) - 2px);
+    position: relative;
+    top: 1px;
+    left: 1px;
+    background-color: rgb(12, 12, 12);
+    z-index: 2;
+    border-radius: 5px;
+}
+.fakelinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    margin: 140px;
+
+}
+/* .fakelinks div:nth-child(2) {
+    transform: translateY(10px);
+} */
+.heroSection img {
+    width: 21px;
+    position: relative;
+    top: 1px;
+}
+.section {
+    min-height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 16px;
+    flex-wrap: wrap;
+}
+
+.nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 65px;
+    align-items: center;
+}
+
+.sup {
+    font-family: system-ui;
+    font-size: 2rem;
+    vertical-align: super;
+    font-style: italic;
+}
+
+.start {
+    padding: 12px 30px;
+    background-color: coral;
+    border-radius: 5px;
+    font-size: 2em;
+    position: relative;
+    transition: background-color .3s, box-shadow .3s;
+}
+.start:hover {
+    background-color: #ff6f00;
+    box-shadow: 0px 0px 27px coral;
+}
+
+.textColumn {
+    display: flex;
+    flex-direction: column;
+    text-wrap: balance;
+    width: calc(50% - 25px);
+}
+.mediaColumn {
+    display: flex;
+    width: calc(50% - 25px);
+}
+.mediaColumn img {
+    max-width: 100%;
+    height: auto;
+}
+@media (max-width: 1325px) {
+    .section {
+        flex-direction: column;
+    }
+    .fakelinks {
+        flex-direction: column;
+    }
+    .textColumn, .mediaColumn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+    .home h2, .home h3 {
+        text-align: center;
+    
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1) rotate(0deg) translate(97px, -48px);
+    }
+
+    50% {
+        transform: scale(1.5) rotate(2deg) translate(97px, -48px);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg) translate(97px, -48px);
+    }
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,34 +1,118 @@
 .searchForm {
-    width: 100%;
+    width: auto;
+    display: flex;
+    height: var(--navBarContentHeight);
+    align-items: center;
+    justify-content: center;
 }
 
-.searchForm input {
-    width: 55%;
+.searchForm input.searchInput {
+    padding-left: 11px;
+    background-color: var(--frostHvColor);
+    border: 0;
+    color: var(--firstTextColor);
+    outline: none;
+    font-family: inherit;
+    font-weight: 500;
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    right: 0;
+    width: auto;
+    border-radius: 8px;
+    height: 41px;
+    transform: translateY(-52px);
+    z-index: -1;
+    transition: transform .3s ease-out;
+}
+
+.searchButtonIcon {
+    height: -webkit-fill-available;
+    background-color: transparent;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: 18px;
+    padding: 0 10px;
+    color: var(--accentColor);
+    cursor: pointer;
+}
+
+.searchButton {
+    background-color: transparent;
+    padding: 0;
+    height: 43px;
+    border-radius: 0;
+}
+
+.cleanButton {
+    background-color: var(--frostHvColor);
+    border-radius: 0;
+    padding: 0;
+    height: 43px;
+    display: none;
+    /* margin-right: 10px; */
 }
 
 .searchResults {
     flex-direction: column;
+    margin: auto;
     position: fixed;
-    width: 100%;
+    width: auto;
     overflow-y: auto;
     display: flex;
     z-index: 6;
     align-items: center;
-    top: 58px;
-    border: 1px solid var(--firstBorderColor);
-    border-top: 0;
-    background-color: var(--secondColor);
-    max-height: 350px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border: 1px solid #9a9a9a;
-    border-top: 0;
-    box-shadow: 0px 18px 18px #ccc;
+    top: 101px;
+    background: var(--mainColor);
+    max-height: 87vh;
+    border-radius: 5px;
+    border: var(--firstBorder);
+    box-shadow: 0px 0px 18px var(--firstShadow);
     padding: 5px 0;
+    gap: 3px;
+    min-height: 50px;
+    left: 0rem;
+    right: 0rem;
 }
 
-.searchResults div {
+.searchForm input.searchInput.show {
+    transform: translateY(0);
+}
+
+.searchResults .lcontrols {
+    width: auto;
+}
+
+.searchResults .resControlsGroup {
+    width: auto;
+    display: flex;
+    gap: 5px;
+}
+
+.searchResults div:not(:first-child) {
     width: 98%;
+    /* height: 150px; */
+    overflow: visible;
+    align-items: center;
+    max-height: none;
+    flex-wrap: wrap;
+}
+
+/* .searchResults>div:first-child {
+    position: fixed;
+    width: 50%;
+    background-color: var(--mainColor);
+} */
+
+.searchResults>div:nth-child(2) {
+    margin-top: 60px;
+}
+
+.searchResults a {
+    overflow: visible !important;
+    width: 100%;
+    position: static !important;
+    align-items: center !important;
 }
 
 .searchResults::-webkit-scrollbar {
@@ -39,25 +123,171 @@
     background-color: var(--accentColor);
 }
 
-input[type='text'].active {
+/* input[type='text'].active {
     background: var(--bgGradient);
     border: 1px solid #9a9a9a;
-}
+} */
+
 .resControls {
     display: flex;
     gap: 5px;
     padding: 10px 0;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--firstBorderColor);
     margin-bottom: 5px;
+    justify-content: space-between;
+    position: fixed;
+    width: 96%;
+    background-color: var(--mainColor);
+    align-items: center;
 }
-.checkBox, .noResText {
+.loaderWrapper {
+    display: flex;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+.resControls .cleanButton {
+    margin-right: 10px;
+    background-color: transparent;
+    display: block;
+}
+
+.checkBox,
+.noResText {
     margin-left: 15px;
 }
-.checkLabel, .noResText {
+
+.checkLabel,
+.noResText {
     font-family: inherit;
     font-weight: 500;
     font-size: 13.3333px;
 }
+
+.loader,
+.loader:before,
+.loader:after {
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    animation-fill-mode: both;
+    animation: bblFadInOut 1.8s infinite ease-in-out;
+}
+
+.loader {
+    color: var(--firstTextColor);
+    font-size: 7px;
+    position: relative;
+    text-indent: -9999em;
+    transform: translateZ(0);
+    animation-delay: -0.16s;
+}
+
+.loader:before,
+.loader:after {
+    content: '';
+    position: absolute;
+    top: 0;
+}
+
+.loader:before {
+    left: -3.5em;
+    animation-delay: -0.32s;
+}
+
+.loader:after {
+    left: 3.5em;
+}
+
+@keyframes bblFadInOut {
+
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 2.5em 0 -1.3em
+    }
+
+    40% {
+        box-shadow: 0 2.5em 0 0
+    }
+}
+
+@media (min-width: 768px) {
+    .searchForm input.searchInput {
+        display: initial;
+        position: initial;
+        border-radius: 0;
+        width: 77%;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        height: 33px;
+        transform: none;
+        z-index: 0;
+    }
+
+    .searchForm {
+        width: 100%;
+        /* margin-left: 25px; */
+    }
+
+    .searchButton {
+        background-color: var(--frostHvColor);
+    }
+
+    .searchButton {
+        height: 35px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+
+    .searchResults {
+        flex-direction: column;
+        /* margin: 12% 30%; */
+        position: fixed;
+        width: 1023px;
+        overflow-y: auto;
+        display: flex;
+        z-index: 6;
+        align-items: center;
+        top: 58px;
+        background: var(--mainColor);
+        max-height: 550px;
+        border-radius: 5px;
+        border: var(--firstBorder);
+        box-shadow: 0px 0px 18px var(--firstShadow);
+        padding: 5px 0;
+        gap: 3px;
+        min-height: 69px;
+    }
+    .resControls {
+        display: flex;
+        gap: 5px;
+        padding: 10px 0;
+        border: 1px dashed var(--firstBorderColor);
+        margin-bottom: 5px;
+        justify-content: space-between;
+        position: fixed;
+        width: 994px;
+        background-color: var(--mainColor);
+        align-items: center;
+    }
+    .cleanButton {
+        background-color: var(--frostHvColor);
+        border-radius: 0;
+        padding: 0;
+        height: 35px;
+        display: block;
+        /* margin-right: 10px; */
+    }
+    .resControls .cleanButton {
+        margin-right: 10px;
+        background-color: transparent;
+        display: block;
+    }
+}
+
 /* .searchResults::-webkit-scrollbar-track {
     background-color: var(--firstColor);
 } */

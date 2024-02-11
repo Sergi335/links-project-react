@@ -1,55 +1,73 @@
-import { Link, useParams } from 'react-router-dom'
-import { checkUrlMatch } from '../../services/functions'
-import { useNavStore } from '../../store/session'
+import { useParams } from 'react-router-dom'
+import { useFormsStore } from '../../store/forms'
+import { useEffect, useState } from 'react'
+// import { fetchImage } from '../../services/dbQueries'
+import styles from './LinkDetails.module.css'
+// import { PasteImageIcon } from '../Icons/icons'
+// import { toast } from 'react-toastify'
+import { useGlobalStore } from '../../store/global'
+import LinkDetailsMedia from '../LinkDetailsMedia'
 
 export default function LinkDetails () {
-  const links = useNavStore(state => state.links)
-  const actualDesk = links[0].escritorio
+  const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?
+  const [links, setLinks] = useState([])
+  const [maximizeVideo, setMaximizeVideo] = useState(false)
+  const [notesState, setNotesState] = useState()
   const linkId = useParams()
-  const nextIndex = links.findIndex(link => linkId.id === link._id) + 1 // > length
-  const prevIndex = links.findIndex(link => linkId.id === link._id) - 1 // -2
-  let nextId
-  if (typeof links[nextIndex] === 'object' && links[nextIndex]._id !== undefined) {
-    nextId = links[nextIndex]._id
-  } else {
-    nextId = null
-  }
-  let prevId
-  if (typeof links[prevIndex] === 'object' && links[prevIndex]._id !== undefined) {
-    prevId = links[prevIndex]._id
-  } else {
-    prevId = null
-  }
-  const data = links.find(link => link._id === linkId.id)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === actualDesktop).toSorted((a, b) => a.orden - b.orden) // memo?
 
+  useEffect(() => {
+    let dataFinal = []
+    desktopColumns.forEach((column) => {
+      dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+    })
+    setLinks(dataFinal)
+  }, [globalColumns])
+
+  const data = links.find(link => link._id === linkId.id)
+  console.log('🚀 ~ LinkDetails ~ data:', data)
+
+  useEffect(() => {
+    if (data?.notes) {
+      setNotesState(data.notes)
+    } else {
+      setNotesState('Escribe aquí...')
+    }
+  }, [data])
+
+  const handleMaximizeVideo = () => {
+    const root = document.getElementsByClassName('root')
+    root[0].classList.toggle(`${styles.fullscreen}`)
+    setMaximizeVideo(!maximizeVideo)
+  }
   return (
+    <main className={`${styles.linkDetails} ${maximizeVideo ? styles.videoMaximized : ''}`}>
+    {links && data
+      ? (
       <>
-      {
-        prevId
-          ? <Link to={`/link/${prevId}`}>Prev</Link>
-          : null
-      }
-        <Link to={`/desktop/${actualDesk}`}>Volver</Link>
-      {
-        nextId
-          ? <Link to={`/link/${nextId}`}>Next</Link>
-          : null
-      }
-        <h1>Detalles del Link</h1>
-        <p>{data.name}</p>
-        <p>{data.description}</p>
-        <p>{data.escritorio}</p>
-        <p>{data.panel}</p>
-        {
-         data.images.length
-           ? data.images.map(img => (
-            <img key={img} src={img} alt="" />
-           ))
-           : null
-        }
-        {
-          checkUrlMatch(data.URL) ? <iframe src={checkUrlMatch(data.URL)} width={1068} height={600}></iframe> : null
-        }
+        <header className={styles.header}>
+          <h3>Detalles del Link</h3>
+          <a href={data.URL} target='_blank' rel="noreferrer">{data.name}</a>
+          {/* {
+            !maximizeVideo && (
+              <>
+                <p>Pegar Imagen:</p>
+                <button onClick={handlePasteImage}>
+                  <PasteImageIcon />
+                </button>
+              </>
+            )
+          } */}
+        </header>
+
+        <LinkDetailsMedia data={data} maximizeVideo={maximizeVideo} handleMaximizeVideo={handleMaximizeVideo} notesState={notesState} setNotesState={setNotesState} links={links} setLinks={setLinks} linkId={linkId} actualDesktop={actualDesktop} />
       </>
+        )
+      : (
+          <div>Cargando ...</div>
+        )}
+  </main>
   )
 }

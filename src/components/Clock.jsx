@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react'
 import styles from './Clock.module.css'
 export default function Clock () {
-  const [seconds, setSeconds] = useState('')
-  const [minutes, setMinutes] = useState('')
-  const [hours, setHours] = useState('')
+  const [seconds, setSeconds] = useState(new Date().getSeconds())
+  const [minutes, setMinutes] = useState(new Date().getMinutes())
+  const [hours, setHours] = useState(new Date().getHours())
+
   useEffect(() => {
-    const getTime = () => {
+    const intervalId = setInterval(() => {
       const date = new Date()
-      const secs = date.getSeconds()
-      const mins = date.getMinutes()
-      const hrs = date.getHours()
-      setSeconds(secs)
-      setMinutes(mins)
-      setHours(hrs)
-    }
-    setInterval(() => {
-      getTime()
+      setSeconds(date.getSeconds())
+      setMinutes(date.getMinutes())
+      setHours(date.getHours())
     }, 1000)
-  })
+
+    return () => clearInterval(intervalId)
+  }, [])
+
   return (
-        <p className={styles.reloj}>{`${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</p>
+    <p className={styles.reloj}>
+      {`${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}
+    </p>
   )
 }

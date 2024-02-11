@@ -1,27 +1,132 @@
 .column {
-    width: 90%;
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
-    background-color: var(--firstColor);
     padding: 5px;
-    border-radius: 5px;
+    gap: 3px;
+    border-radius: var(--border-radius);
+    height: max-content;
+    background-color: var(--columnBgColor);
+    overflow: hidden;
+    width: 100%;
+}
+
+.columnWrapper {
+    max-height: 321px;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    border: var(--firstBorder);
+    display: flex;
+    /* border-left: 1px solid var(--accentColor); */
+    transition: max-height .5s ease-in-out, box-shadow .5s ease-in;
+    height: max-content;
+    background-color: var(--columnBgColor);
+}
+.colOpen {
+    max-height: 900px;
+}
+
+.opener {
+    display: flex;
+}
+
+.selector {
+    display: flex;
+    margin-right: 11px;
+    transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
+}
+
+.headContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    gap: 10px;
+    background-color: var(--frostHvColor);
+    border-top-right-radius: var(--button-radius);
+    border-top-left-radius: var(--button-radius);
+}
+
+/* .headContainer::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 38px;
+    background-color: var(--firstBorderColor);
+    margin-left: 13px;
+    border-top-right-radius: var(--button-radius);
+
+} */
+.column h2 {
+    text-align: left;
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 5px 0;
+    color: var(--firstTextColor);
+    flex-grow: 1;
+    margin-left: 15px;
+    transition: margin .3s ease-in-out;
+    overflow: hidden;
+}
+
+.selectMode .column h2 {
+    margin-left: 0;
+}
+
+.dragginColumn {
+    border: 1px solid var(--accentColor);
+    width: 320px;
+    background-color: transparent;
+    padding: 5px;
+    border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     gap: 3px;
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.column h2 {
-    text-align: left;
-    margin: 0 7px;
-    font-size: 1.1em;
-    font-weight: 500;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding: 5px;
-    color: #787676;
+
+input[type='text'].editInput {
+    min-height: 37.3px !important;
+    max-height: 37.3px !important;
+    font-size: 1.4em;
+    font-weight: 600 !important;
+    box-sizing: border-box;
+    border-radius: var(--button-radius);
+    padding-left: 15px;
 }
-.columnWrapper {
-    width: 320px;
-    margin-bottom: 45px;
+
+input[type='text'].editInput:focus {
+    background: var(--frostHvColor);
+}
+
+.rotate {
+    transform: rotate(180deg);
+    /* view-transition-name: column-height; 
+    No puede haber dos animaciones con el mismo nombre
+    */
+}
+
+@media (min-width: 1536px) {
+    .opener {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
+    }
+    .headContainer:hover .opener {
+        visibility: visible;
+        opacity: 1;
+    }
+    .selector {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
+    }
+    .headContainer:hover .selector {
+        visibility: visible;
+        opacity: 1;
+    }
 }

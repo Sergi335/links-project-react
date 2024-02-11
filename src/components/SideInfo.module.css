@@ -1,34 +1,49 @@
-.sideInfo {
-    gap: 2px;
-    position: fixed;
-    top: 158px;
-    left: 3%;
-    flex-direction: column;
-    padding: 17px 17px 17px 0;
-    height: 79vh;
-    border-left: 1px dashed var(--firstBorderColor);
-    width: 8%;
+.sideButtons {
+    background-color: transparent;
+    padding: 0;
 }
-
+.sideButtons:hover {
+    background-color: transparent;
+}
 .deskInfos {
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
-    margin-bottom: 15px;
-    align-items: flex-start;
+    margin-bottom: 60px;
+    padding: 0 0 15px 15px;
+    border-radius: var(--button-radius);
+    background-color: var(--frostHvColor);
+    border: var(--firstBorder);
+    /* margin-left: 10px; */
+    /* margin-bottom: 15px; */
+    /* align-items: flex-start; */
+    /* position: relative;
+    left: -6px; */
 }
+
 .deskInfos p {
-    margin: 0;
+    width: -webkit-fill-available;
 }
+/* .nav_side_info p {
+    margin-top: 0;
+} */
+
+.deskTitle {
+    text-align: left;
+    font-size: 14px;
+    /* padding: 6px 20px; */
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
 .deskControls {
-    padding: 10px;
-    background-color: var(--firstButtonColor);
+    padding: 0;
+    /* background-color: var(--mainColor); */
     border-radius: 5px;
-    margin-bottom: 90px;
-    margin-left: 10px;
-    gap: 15px;
+    /* margin: 0px auto 60px 20px; */
+    gap: 10px;
     width: fit-content;
     display: flex;
+    /* border: var(--firstBorder); */
 }
 
 .sideInfo div {
@@ -42,29 +57,64 @@
     cursor: pointer;
     color: var(--accentColor);
 }
+
 .sect {
     display: flex;
     flex-direction: column;
     margin-bottom: 60px;
     border-left: 4px solid var(--firstBorderColor);
     padding-left: 10px;
-    position: relative;
-    left: -2px;
+    /* position: relative;
+    left: -6px; */
     padding: 5px 15px;
+    border: 1px solid transparent;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    transition: all 1.3s;
+    transition: background-color .6s ease-in, border-color .6s ease-in, border-color .6s ease-in;
 }
+
+.sectLoader {
+    margin-bottom: 60px;
+}
+.sectActive {
+    background-color: var(--frostHvColor);
+    border-left-color: var(--accentColor) !important;
+    border: var(--firstBorder);
+}
+.sideInfoSelectedCol {
+    box-shadow: 0px 0px 30px var(--accentColor);
+}
+
 .sideInfo .sect a {
     text-decoration: none;
     color: var(--firstTextColor);
-    font-size: 14px;
+    font-size: 13px;
     cursor: pointer;
     text-align: left;
+    margin-bottom: 5px;
+    transition: color .3s ease-out;
+}
+.sideInfo .sect a:hover {
+    color: var(--accentColor);
 }
 .saludo {
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
-    font-weight: 500;
     color: var(--firstTextColor);
+    text-wrap: balance;
+    /* padding-left: 20px; */
+    text-align: left;
+}
+
+@media (min-width: 1536px) {
+    .sideInfo {
+        position: fixed;
+        top: 97px;
+        padding: 5px;
+        min-height: 87vh;
+        border-left: 1px solid transparent;
+        width: 226px;
+        left: 2rem;
+        border-radius: var(--border-radius);
+    }
 }
