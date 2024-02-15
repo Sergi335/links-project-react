@@ -127,11 +127,11 @@ export default function CustomLink ({ data, className }) {
               <div className={styles.lcontrols} style={controlStyle}>
                 <button className='buttonIcon'>
                   <Link to={`/desktop/link/${link._id}`} state={link._id}>
-                    <MaximizeIcon />
+                    <MaximizeIcon className='uiIcon_small'/>
                   </Link>
                   </button>
                   {
-                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown /></button>)
+                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown className='uiIcon_small' /></button>)
                   }
 
                 </div>

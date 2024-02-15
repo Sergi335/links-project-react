@@ -272,6 +272,7 @@ button:hover svg {
 }
 .uiIcon_small {
   width: 17px;
+  height: 17px;
   cursor: pointer;
   color: var(--accentColor);
   transition: filter .3s ease-out, transform .150s ease-in-out;

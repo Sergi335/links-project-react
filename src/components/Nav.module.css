@@ -65,7 +65,16 @@
     background-color: var(--frostHvColor);
     cursor: pointer;
 }
-
+.link_dragged {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    width: -webkit-fill-available;
+    align-items: center;
+    background-color: var(--accentColor);
+}
 .draggedDesk li {
     list-style-type: none;
     width: fit-content;

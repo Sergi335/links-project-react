@@ -118,13 +118,14 @@
 }
 
 .lcontrols {
-  transition: border .5s ease-in-out;
+  /* transition: border .5s ease-in-out;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 3px; */
   display: flex;
-  margin-right: 5px;
-  background-color: var(--columnBgColor);
-  border: 1px solid var(--firstBorderColor);
+  margin-right: 11px;
+  gap: 3px;
+  /* background-color: var(--columnBgColor);
+  border: 1px solid var(--firstBorderColor); */
 }
 
 .lcontrols a {

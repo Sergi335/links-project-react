@@ -1,7 +1,7 @@
 import styles from './SideInfo.module.css'
 import columnStyles from './Column.module.css'
 import { saludo } from '../services/functions'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Clock from './Clock'
 import { createColumn } from '../services/dbQueries'
 import { useSessionStore } from '../store/session'
@@ -10,7 +10,7 @@ import { useFormsStore } from '../store/forms'
 import { useDesktopsStore } from '../store/desktops'
 import { usePreferencesStore } from '../store/preferences'
 import { useGlobalStore } from '../store/global'
-// import { constants } from '../services/constants'
+import { constants } from '../services/constants'
 import NameLoader from './NameLoader'
 import SideInfoLoader from './Loaders/SideInfoLoader'
 import { ExpandHeightIcon } from './Icons/icons'
@@ -33,6 +33,9 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const navigate = useNavigate()
   const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
   const globalLoading = useGlobalStore(state => state.globalLoading)
+  const sideInfoRef = useRef()
+  // const setSidePanelElement = usePreferencesStore(state => state.setSidePanelElement)
+  // setSidePanelElement(sideInfoRef.current)
   // console.log('🚀 ~ SideInfo ~ globalLoading:', globalLoading)
 
   // Agrupa las columnas del escritorio en funcion del numero de columnas seleccionado -> memo
@@ -43,6 +46,8 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }
   useEffect(() => {
     setSalut(saludo(user?.realName || 'Usuario'))
+    const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
+    if (sideInfoRef) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sideInfoRef.current)
   }, [])
   useEffect(() => {
     const newDeskName = (window.location.pathname).replace('/desktop/', '')
@@ -109,7 +114,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     })
   }
   return (
-      <div id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
+      <div ref={sideInfoRef} id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
           <div className={styles.deskInfos}>
               <Clock />
               <p className={styles.saludo}>{salut}</p>

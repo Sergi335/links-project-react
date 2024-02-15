@@ -37,7 +37,7 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
   }
   if (isDragging) {
     return (
-      <li ref={setNodeRef} style={style} id={escritorio._id}>
+      <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.link_dragged}>
       </li>
     )
   }

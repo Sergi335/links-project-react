@@ -16,6 +16,10 @@ export const usePreferencesStore = create(
       setStyleOfColumns: (styleOfColumns) => {
         set({ styleOfColumns })
       },
+      // sidePanelElement: null,
+      // setSidePanelElement: (sidePanelElement) => {
+      //   set({ sidePanelElement })
+      // },
       navScroll: 0,
       setNavScroll: (navScroll) => {
         set({ navScroll })

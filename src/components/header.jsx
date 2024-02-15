@@ -7,6 +7,7 @@ import { MenuIcon } from './Icons/icons'
 import Search from './Search'
 import Nav from './Nav'
 import { usePreferencesStore } from '../store/preferences'
+import { useEffect } from 'react'
 // import { constants } from '../services/constants'
 
 export default function Header () {
@@ -23,6 +24,9 @@ export default function Header () {
 
   const handleChangeTheme = () => {
     const root = document.documentElement
+    // if (window.matchMedia('prefers-color-scheme: dark').matches) {
+    //   document.root.classList.add('dark')
+    // }
     if (root.classList.contains('dark')) {
       root.classList.remove('dark')
       root.classList.add('light')
@@ -39,6 +43,28 @@ export default function Header () {
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
   }
+  useEffect(() => {
+    const setTheme = (e) => {
+      console.log('cambio de tema detectado')
+      const root = document.documentElement
+      if (e.matches) {
+        root.classList.add('dark')
+        root.classList.remove('light')
+        window.localStorage.setItem('theme', JSON.stringify('dark'))
+        console.log('dark mode desde el header')
+      } else {
+        root.classList.add('light')
+        root.classList.remove('dark')
+        window.localStorage.setItem('theme', JSON.stringify('light'))
+        console.log('light mode desde el header')
+      }
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme)
+
+    return () => {
+      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', setTheme)
+    }
+  }, [])
   const handleScrollNav = (e) => {
     console.log(navElement.scrollWidth - navElement.offsetWidth)
     // console.log(navElement.offsetWidth)

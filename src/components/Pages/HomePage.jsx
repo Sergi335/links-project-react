@@ -7,15 +7,18 @@ export default function HomePage () {
   useEffect(() => {
     document.title = 'Zenmarks'
     document.body.classList.add(`${styles.home}`)
+    document.body.style.backgroundImage = ''
     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
 
     const applyTheme = (theme) => {
       if (prefersDarkMode.matches) {
         // Aplicar estilos para el modo oscuro
         document.documentElement.classList.add('dark')
+        console.log('dark mode desde el home')
       } else {
         // Aplicar estilos para el modo claro
         document.documentElement.classList.remove('dark')
+        console.log('light mode desde el home')
       }
     }
     prefersDarkMode.addEventListener('change', applyTheme)
