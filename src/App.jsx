@@ -1,26 +1,23 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
+import 'overlayscrollbars/overlayscrollbars.css'
 import { useEffect } from 'react'
-import HomePage from './components/Pages/HomePage'
-import AppLayout from './components/Pages/AppLayout'
-import Login from './components/Pages/LoginPage'
-import LinkDetails from './components/Pages/LinkDetails'
-import { useSessionStore } from '../src/store/session'
-import ListOfLinks from './components/ListOfLinks'
-import ReadingList from './components/Pages/ReadingList'
-import ProfilePage from './components/Pages/ProfilePage'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import 'overlayscrollbars/overlayscrollbars.css'
-import { useOverlayScrollbars } from 'overlayscrollbars-react'
+import { useSessionStore } from '../src/store/session'
+import ListOfLinks from './components/ListOfLinks'
+import AppLayout from './components/Pages/AppLayout'
+import HomePage from './components/Pages/HomePage'
+import LinkDetails from './components/Pages/LinkDetails'
+import Login from './components/Pages/LoginPage'
+import ProfilePage from './components/Pages/ProfilePage'
+import ReadingList from './components/Pages/ReadingList'
 import { constants } from './services/constants'
-// import { usePreferencesStore } from './store/preferences'
 
 function App () {
-  // const sidePanelElement = usePreferencesStore(state => state.sidePanelElement)
-  // console.log('🚀 ~ App ~ sidePanelElement:', sidePanelElement)
-  // la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
+  // TODO la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const user = useSessionStore(state => state.user)
-  // Hay que hacer una peticion a / para recibir el csfr token
+  // TODO Hay que hacer una peticion a / para recibir el csfr token, limitar a solo cuando acceda a / o /login
   const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
   useEffect(() => {
     fetch(constants.BASE_API_URL, {
@@ -29,14 +26,13 @@ function App () {
     })
       .then(res => res.json())
       .then(data => {
-        // console.log(data)
         const { csrfToken } = data
         setCsfrtoken(csrfToken)
       })
   }, [])
-  // Obtenemos el tema para el toast
-  const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona
-  console.log('reload app')
+
+  // Obtenemos el tema para el toast -> no funciona?
+  const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
   useEffect(() => {
     const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme'))
     document.documentElement.classList.add(theme)
@@ -44,10 +40,7 @@ function App () {
     const accentColor = localStorage.getItem('accentColorName') === null ? '#bababa' : JSON.parse(localStorage.getItem('accentColorName'))
     constants.ACCENT_COLORS[accentColor].applyStyles()
   }, [])
-  // useLayoutEffect(() => {
-  //   const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
-  //   if (sidePanelElement) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sidePanelElement)
-  // }, [])
+
   const router = createBrowserRouter([
     {
       path: '/',
@@ -109,7 +102,7 @@ function App () {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={theme}
+        theme={themeforToastify}
       />
     </>
   )

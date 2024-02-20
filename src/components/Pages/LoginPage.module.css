@@ -5,8 +5,9 @@
     justify-content: center;
     height: 65vh;
     width: 30%;
-    background-color: white;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
+    background-color: var(--columnBgColor);
+    border: var(--firstBorder);
 }
 
 .loginMain {

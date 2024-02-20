@@ -1,15 +1,15 @@
-import { checkUrlMatch, formatDate, getUrlStatus, handleResponseErrors } from '../services/functions'
-import { useEffect, useRef, useState, Suspense } from 'react'
-import { saveLinkIcon, fetchLinkIconFile, deleteLinkImage, editLink, fetchImage } from '../services/dbQueries'
-import LinkDetailsNav from './LinkDetailsNav'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import Masonry from 'react-layout-masonry'
-import styles from '../components/Pages/LinkDetails.module.css'
-import { CloseIcon, CodeIcon, TrashIcon, MaximizeIcon, CheckIcon, PasteImageIcon } from '../components/Icons/icons'
 import { toast } from 'react-toastify'
 import DeleteImageConfirmForm from '../components/Forms/DeleteImageConfirmForm'
+import { CheckIcon, CloseIcon, CodeIcon, MaximizeIcon, PasteImageIcon, TrashIcon } from '../components/Icons/icons'
+import styles from '../components/Pages/LinkDetails.module.css'
 import { constants } from '../services/constants'
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
+import { deleteLinkImage, editLink, fetchImage, fetchLinkIconFile, saveLinkIcon } from '../services/dbQueries'
+import { checkUrlMatch, formatDate, getUrlStatus, handleResponseErrors } from '../services/functions'
 import ImageLoader from './ImageLoader'
+import LinkDetailsNav from './LinkDetailsNav'
 
 export function ImageModal ({ image, setVisible }) {
   return (
@@ -328,13 +328,9 @@ export function LinksInfo ({ data, links, setLinks }) {
           <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => setShowIcons(!showIcons)} className={styles.iconImage} src={data.imgURL} alt="" /></p>
           <div className={showIcons ? `${styles.slideInLeft} ${styles.imgOptions}` : `${styles.imgOptions}` }>
             <div className={styles.imgOptionsWrapper}>
-              <img onClick={handleChangeIcon} id="option1" src="/img/opcion1.svg"/>
-              <img onClick={handleChangeIcon} id="option2" src="/img/opcion2.png"/>
-              <img onClick={handleChangeIcon} id="option3" src="/img/opcion3.png"/>
-              <img onClick={handleChangeIcon} id="option4" src="/img/opcion4.svg"/>
-              <img onClick={handleChangeIcon} id="option5" src="/img/opcion5.svg"/>
-              <img onClick={handleChangeIcon} id="option6" src="/img/opcion6.svg"/>
-              <img onClick={handleChangeIcon} id="option7" src="/img/opcion7.png"/>
+              {
+                constants.DEFAULT_LINK_ICONS.map(icon => (<img key={icon.option} id={icon.option} onClick={handleChangeIcon} src={icon.url} alt={icon.option} />))
+              }
               {
                 icons?.map(icon => (<img key={icon.nombre} id={icon.nombre} onClick={handleChangeIcon} src={icon.url} alt="" />))
               }

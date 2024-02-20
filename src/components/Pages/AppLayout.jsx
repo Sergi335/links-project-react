@@ -1,11 +1,9 @@
-import Header from '../Header'
-// import Nav from '../Nav'
-import { Outlet, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
 import { useFormsStore } from '../../store/forms'
+import Header from '../Header'
 import styles from './HomePage.module.css'
-// import ListOfLinks from '../ListOfLinks'
 
 export default function AppLayout ({ children }) {
   const { desktopName } = useParams()

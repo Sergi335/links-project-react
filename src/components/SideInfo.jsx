@@ -1,19 +1,19 @@
-import styles from './SideInfo.module.css'
-import columnStyles from './Column.module.css'
-import { saludo } from '../services/functions'
-import { useEffect, useState, useRef } from 'react'
-import Clock from './Clock'
-import { createColumn } from '../services/dbQueries'
-import { useSessionStore } from '../store/session'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useFormsStore } from '../store/forms'
-import { useDesktopsStore } from '../store/desktops'
-import { usePreferencesStore } from '../store/preferences'
-import { useGlobalStore } from '../store/global'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { constants } from '../services/constants'
-import NameLoader from './NameLoader'
-import SideInfoLoader from './Loaders/SideInfoLoader'
+import { createColumn } from '../services/dbQueries'
+import { saludo } from '../services/functions'
+import { useDesktopsStore } from '../store/desktops'
+import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
+import { usePreferencesStore } from '../store/preferences'
+import { useSessionStore } from '../store/session'
+import Clock from './Clock'
+import columnStyles from './Column.module.css'
 import { ExpandHeightIcon } from './Icons/icons'
+import SideInfoLoader from './Loaders/SideInfoLoader'
+import NameLoader from './NameLoader'
+import styles from './SideInfo.module.css'
 
 export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const { desktopName } = useParams()
@@ -44,6 +44,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     const row = [...desktopColumns].slice(startIdx, startIdx + numberCols)
     result.push(row)
   }
+  // TODO: No se actualiza con el cambio de hora, puede ser de noche y decirte buenos días
   useEffect(() => {
     setSalut(saludo(user?.realName || 'Usuario'))
     const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))

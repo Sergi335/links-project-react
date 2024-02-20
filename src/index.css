@@ -40,6 +40,9 @@
   --buttonColor: white;
   --buttonHoverColor: #d6d6d6;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(239 239 239);
+  --inverseColor: black;
+  --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
+  --homeHeroGradient: linear-gradient(90deg, #4f4f4f08 1px, transparent 0), linear-gradient(180deg, #4f4f4f08 1px, transparent 0);
 
   /* --firstColor: #f3f3f3;
   --linkBgColor: #fcfcfc;
@@ -98,6 +101,9 @@ html.dark {
   --buttonColor: black;
   --buttonHoverColor: #353434;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
+  --inverseColor: white;
+  --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
+  --homeHeroGradient: linear-gradient(90deg, #4f4f4f33 1px, transparent 0), linear-gradient(180deg, #4f4f4f33 1px, transparent 0);
 }
 html.dark {
   background-color: #1D1D1D;

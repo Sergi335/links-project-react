@@ -8,7 +8,6 @@ export default function Login () {
   const [login, setLogin] = useState(true)
   return (
     <main className={styles.loginMain}>
-    <img src="img/pic4.svg" alt="" />
     <div className={styles.loginWrapper}>
       {
         login

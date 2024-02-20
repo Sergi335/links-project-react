@@ -1,14 +1,13 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import useGoogleAuth from '../hooks/useGoogleAuth'
-import { useSessionStore } from '../store/session'
 import { useFormsStore } from '../store/forms'
+import { usePreferencesStore } from '../store/preferences'
+import { useSessionStore } from '../store/session'
 import styles from './Header.module.css'
 import { MenuIcon } from './Icons/icons'
-import Search from './Search'
 import Nav from './Nav'
-import { usePreferencesStore } from '../store/preferences'
-import { useEffect } from 'react'
-// import { constants } from '../services/constants'
+import Search from './Search'
 
 export default function Header () {
   const user = useSessionStore(state => state.user)

@@ -2,7 +2,6 @@ import styles from '../components/SideInfo.module.css'
 export const constants = {
   // BASE_API_URL: 'http://localhost:3001',
   BASE_API_URL: 'https://zenmarks.xyz',
-  // BASE_API_URL: 'http://34.240.3.227:3001',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -160,5 +159,14 @@ export const constants = {
   },
   MIDDLEWARE_ERROR_MESSAGE: {
     cookieFailed: 'MIDDLEWARE UNAUTHORIZE REQUEST!'
-  }
+  },
+  DEFAULT_LINK_ICONS: [
+    { option: 'opcion1', url: '/img/opcion1.svg' },
+    { option: 'opcion2', url: '/img/opcion2.png' },
+    { option: 'opcion3', url: '/img/opcion3.png' },
+    { option: 'opcion4', url: '/img/opcion4.svg' },
+    { option: 'opcion5', url: '/img/opcion5.svg' },
+    { option: 'opcion6', url: '/img/opcion6.svg' },
+    { option: 'opcion7', url: '/img/opcion7.png' }
+  ]
 }
