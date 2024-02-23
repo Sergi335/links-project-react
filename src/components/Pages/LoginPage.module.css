@@ -3,13 +3,30 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 65vh;
-    width: 30%;
+    height: 82vh;
+    width: 45%;
     border-radius: var(--border-radius);
     background-color: var(--columnBgColor);
     border: var(--firstBorder);
-}
+    gap: 25px;
 
+    & p {
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+}
+.google {
+    background-color: var(--sidePanelsBgColor);
+    border: var(--firstBorder);
+    padding: 15px 35px;
+    font-size: 1.6rem;
+    gap: 12px;
+    font-family: system-ui;
+    color: var(--secondTextColor);
+    border-radius: var(--border-radius);
+    justify-content: start;
+    box-shadow: 0px 7px 13px var(--secondShadow);
+}
 .loginMain {
     display: flex;
     align-items: center;
@@ -17,7 +34,12 @@
     height: 100vh;
     gap: 50px;
 }
-
+.loginButton {
+    border: var(--firstBorder);
+    background-color: var(--inverseColor);
+    color: var(--mainColor);
+    font-weight: bold;
+}
 .loginForm,
 .registerForm {
     display: flex;
@@ -30,20 +52,59 @@
 }
 .loginForm input[type="text"],
 .registerForm input[type="text"],
+.loginForm input[type="email"],
 .loginForm input[type="password"],
-.registerForm input[type="password"] {
+.registerForm input[type="password"],
+.registerForm input[type="email"] {
     width: 40%;
 }
 .logSwitch {
     cursor: pointer;
     font-size: 1em;
+    color: coral;
+    font-weight: bold;
 }
 .logSwitch:hover {
     color: var(--accentColor);
 }
 .start {
     margin-top: 100px;
+    font-size: 1.3rem;
+    color: coral;
+    font-weight: bold;
 }
 .start:hover {
     color: var(--accentColor);
+}
+.logo {
+    position: relative;
+    font-family: k2d;
+    font-size: 2em;
+    display: flex;
+
+    & h2 {
+        font-size: 96px;
+        margin-top: 0;
+    }
+}
+
+.logo::after {
+    content: 'Beta';
+    position: relative;
+    color: coral;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-style: italic;
+    top: 17px;
+    height: fit-content;
+}
+
+.logo svg {
+    width: 84px;
+    height: 60px;
+    transform: rotate(34deg);
+    color: coral;
+    position: relative;
+    top: 41px;
+    left: 27px;
 }

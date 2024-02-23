@@ -1,3 +1,5 @@
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import 'photoswipe/style.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './HomePage.module.css'
@@ -27,6 +29,26 @@ export default function HomePage () {
       prefersDarkMode.removeEventListener('change', applyTheme)
     }
   }, [])
+  useEffect(() => {
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: '#my-gallery',
+      children: 'a',
+      pswpModule: () => import('photoswipe')
+    })
+    lightbox.init()
+    const lightbox2 = new PhotoSwipeLightbox({
+      gallery: '#my-gallery2',
+      children: 'a',
+      pswpModule: () => import('photoswipe')
+    })
+    lightbox2.init()
+    const lightbox3 = new PhotoSwipeLightbox({
+      gallery: '#my-gallery3',
+      children: 'a',
+      pswpModule: () => import('photoswipe')
+    })
+    lightbox3.init()
+  })
   return (
       <>
         <header className={styles.header}>
@@ -39,7 +61,7 @@ export default function HomePage () {
           </nav>
           <div className={styles.heroSection}>
             <div className={styles.logo}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 19V5m6 14V5M6 19V5"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 19V5m6 14V5M6 19V5"/></svg>
               <h2 className={styles.logoText}>Zenmarks</h2>
             </div>
             <h2 className={styles.subtitle}>Organiza Tu Mundo Digital</h2>
@@ -65,29 +87,31 @@ export default function HomePage () {
           <section className={styles.section}>
             <div className={styles.textColumn}>
               <h2>Potentes Funciones a tu Alcance</h2>
-              <p>Desde guardar enlaces con un simple copy/paste, añadir descripciones detalladas, imágenes, notas... nuestra aplicación ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces. Reordénarlos con facilidad, reproducir vídeos directamente desde la aplicación y más.</p>
+              <p>Guardar enlaces con un simple copy/paste, añadir descripciones detalladas, imágenes, notas...</p>
+              <p><strong>Zenmarks</strong> ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces. Reordénarlos con facilidad, reproduce vídeos directamente desde la aplicación y más.</p>
             </div>
-            <div className={styles.mediaColumn}>
-              {/* <video src="img/zenmarks2.webm" autoPlay loop controls muted></video> */}
-              <img src="img/557shots_so.png" alt="" />
+            <div className={styles.mediaColumn} id='my-gallery'>
+              <a href="img/557shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/557shots_so.png" width='960' height='640' alt=""/></a>
             </div>
           </section>
           <section className={styles.section}>
-            <div className={styles.mediaColumn}>
-            <img src="img/717shots_so.png" alt="" />
+            <div className={styles.mediaColumn} id='my-gallery2'>
+            <a href="img/717shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/717shots_so.png" width='960' height='640' alt=""/></a>
             </div>
             <div className={styles.textColumn}>
-              <h2>Hazlo Tuyo: Personalización sin Límites</h2>
-              <p>Diseña tu experiencia a tu gusto con nuestras opciones de personalización avanzadas. Desde ajustes de interfaz hasta temas y diseños, tú tienes el control. Mantén tu espacio de trabajo organizado y estéticamente agradable para una experiencia de usuario óptima.</p>
+              <h2>Amplias opciones de personalización</h2>
+              <p>Diseña tu experiencia a tu gusto, temas, colores, fondos, iconos de los links ... tú tienes el control.</p>
+              <p> Mantén tu espacio de trabajo organizado y estéticamente agradable para una experiencia de usuario agradable.</p>
             </div>
           </section>
           <section className={styles.section}>
           <div className={styles.textColumn}>
-              <h2>Innovando Constantemente para Ti</h2>
-              <p>Estamos comprometidos con la mejora continua. Nuestro equipo está constantemente trabajando en nuevas funciones y mejoras para hacer de Zenmarks la herramienta definitiva para la gestión de enlaces y la productividad en general. Mantente al tanto de nuestras actualizaciones.</p>
+              <h2>Mejora continua</h2>
+              <p>Estamos comprometidos con la mejora continua. Nuestro equipo está constantemente trabajando en nuevas funciones y mejoras para hacer de Zenmarks la herramienta definitiva para la gestión de enlaces.</p>
+              <p> <strong>Próximamente:</strong> Lista de lectura y modo lectura, snippets de código, extensión para el navegador y más. Mantente al tanto de nuestras actualizaciones.</p>
             </div>
-            <div className={styles.mediaColumn}>
-            <img src="img/189shots_so.png" alt="" />
+            <div className={styles.mediaColumn} id='my-gallery3'>
+            <a href="img/189shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/189shots_so.png" width='960' height='640' alt=""/></a>
             </div>
           </section>
         </main>

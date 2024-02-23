@@ -1,18 +1,17 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDesktopsStore } from '../store/desktops'
-import { constants } from '../services/constants'
-import { formatPath, handleResponseErrors } from '../services/functions'
-import { usePreferencesStore } from '../store/preferences'
-import { editDesktop, changeBackgroundImage, getBackgroundMiniatures } from '../services/dbQueries'
 import { toast } from 'react-toastify'
-import styles from './CustomizeDesktopPanel.module.css'
 import useHideForms from '../hooks/useHideForms'
+import { constants } from '../services/constants'
+import { changeBackgroundImage, editDesktop, getBackgroundMiniatures } from '../services/dbQueries'
+import { formatPath, handleResponseErrors } from '../services/functions'
+import { useDesktopsStore } from '../store/desktops'
 import { useFormsStore } from '../store/forms'
+import { usePreferencesStore } from '../store/preferences'
+import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
-  const [hiddenDesktops, setHiddenDesktops] = useState([]) // store
   const inputRef = useRef()
   const formRef = useRef()
   const { desktopName } = useParams()
@@ -24,7 +23,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
-  const themeVariants = Object.keys(constants.THEME_VARIANTS)
+  // const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
@@ -82,12 +81,13 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
   }
-  const handleChangeThemeVariant = (event) => {
-    const style = event.target.id
-    const element = document.documentElement
-    // element.classList.add('transparent')
-    constants.THEME_VARIANTS[style].applyStyles(element)
-  }
+  // TODO
+  // const handleChangeThemeVariant = (event) => {
+  //   const style = event.target.id
+  //   const element = document.documentElement
+  //   // element.classList.add('transparent')
+  //   constants.THEME_VARIANTS[style].applyStyles(element)
+  // }
   const handleHideDesktops = async (event) => {
     const name = formatPath(event.target.value)
     const body = { name, hidden: true }
@@ -97,14 +97,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const newState = [...desktopsStore].filter(desktop => desktop.displayName !== event.target.value)
+    const deskIndex = desktopsStore.findIndex(desktop => desktop.name === name)
+    const newState = [...desktopsStore]
+    newState[deskIndex].hidden = true
     setDesktopsStore(newState)
-    const newHiddenState = [...hiddenDesktops, event.target.value]
-    setHiddenDesktops(newHiddenState)
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
-    const name = formatPath(event.target.value)
+    const name = formatPath(event.target.textContent)
     const body = { name, hidden: false }
     const response = await editDesktop(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -112,10 +112,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const newState = [...response].filter(desktop => desktop.hidden !== true)
+    const newState = [...desktopsStore]
+    const deskIndex = newState.findIndex(desktop => desktop.name === name)
+    newState[deskIndex].hidden = false
     setDesktopsStore(newState)
-    const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
-    setHiddenDesktops(newHiddenState)
+    // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
+    // setHiddenDesktops(newHiddenState)
   }
   useEffect(() => {
     getBackgroundMiniatures()
@@ -140,8 +142,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         toast({ error })
       })
   }, [])
-  // Ocultar escritorios con select?
-  // const visibleClass = customizePanelVisible ? styles.flex : styles.hidden
+
   return (
     <>
              <div ref={formRef} className={`${styles.customizePanel} ${visibleClassName}`}>
@@ -173,18 +174,24 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           <select name="" id="" onChange={handleHideDesktops}>
                           {
                               desktopsStore?.map(desktop => {
-                                return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                                if (!desktop.hidden) {
+                                  return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                                }
+                                return null // Add this line to return null if the condition is not met
                               })
                           }
                           </select>
                          </div>
-                         <div className={styles.rowGroup}>
-                         {
-                            hiddenDesktops?.length > 0 && hiddenDesktops?.map(desktop => {
-                              return <button onClick={handleRestoreDesktop} key={desktop} className={styles.hiddenDesktops}>{desktop}</button>
-                            })
-                          }
-                         </div>
+                        <div className={styles.rowGroup}>
+                        {
+                          desktopsStore?.map(desktop => {
+                            if (desktop.hidden) {
+                              return <button onClick={handleRestoreDesktop} key={desktop._id} className={styles.hiddenDesktops}>{desktop.displayName}</button>
+                            }
+                            return null // Add this line to return null if the condition is not met
+                          })
+                        }
+                        </div>
                       </div>
                   </form>
                   <h3>Cambiar Fondo</h3>
@@ -198,14 +205,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       }
                       <div className={styles.removeBackground} onClick={handleChangeBackgroundImage}></div>
                   </div>
-                  <h3>Cambiar Variante del tema</h3>
+                  {/* <h3>Cambiar Variante del tema</h3>
                   <div className={styles.selectThemeVariant}>
                       {
                         themeVariants && themeVariants.map(style => {
                           return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
                         })
                       }
-                  </div>
+                  </div> */}
                   <h3>Cambiar Color del Panel</h3>
                   <div className={styles.selectInfoColor}>
                       {

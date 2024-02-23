@@ -30,8 +30,10 @@
   --placeholderVid: url(/img/placeholderVidLight.png);
   --navBarContentHeight: 35px;
   --firstTextColor: #4e4e4e;
+  --secondTextColor: #757575;
   --frostHvColor: #f3f3f3c9;
   --firstShadow: #50505057;
+  --secondShadow: #5050501c;
   --secondColor: #f9f9f9;
   --thirdColor: white;
   --firstBorder: 1px solid #e7e7e7;
@@ -43,6 +45,9 @@
   --inverseColor: black;
   --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
   --homeHeroGradient: linear-gradient(90deg, #4f4f4f08 1px, transparent 0), linear-gradient(180deg, #4f4f4f08 1px, transparent 0);
+  --homeH2Color: #535353;
+  --homeFooterColor: #f1f1f1;
+  --sidePanelsBgColor: white;
 
   /* --firstColor: #f3f3f3;
   --linkBgColor: #fcfcfc;
@@ -91,8 +96,10 @@ html.dark {
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
   --firstTextColor: #cdcdcd;
+  --secondTextColor: #9f9f9f;
   --frostHvColor: black;
   --firstShadow: #0c0c0c96;
+  --secondShadow: #00000063;
   --secondColor: #242424;
   --thirdColor: #1e1e1e;
   --firstBorder: 1px solid #323232cc;
@@ -103,7 +110,10 @@ html.dark {
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
   --inverseColor: white;
   --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
-  --homeHeroGradient: linear-gradient(90deg, #4f4f4f33 1px, transparent 0), linear-gradient(180deg, #4f4f4f33 1px, transparent 0);
+  --homeHeroGradient: linear-gradient(90deg, #4f4f4f14 1px, transparent 0), linear-gradient(180deg, #4f4f4f14 1px, transparent 0);
+  --homeH2Color: #73ff6b;
+  --homeFooterColor: #242424;
+  --sidePanelsBgColor: black;
 }
 html.dark {
   background-color: #1D1D1D;
@@ -169,7 +179,7 @@ input:-webkit-autofill:active {
     border: 0 !important;
     /* border-radius: 0 !important; */
 }
-input[type='text'], input[type='password'] {
+input[type='text'], input[type='password'], input[type='email'] {
   padding-left: 11px;
   background-color: var(--frostHvColor);
   border-radius: var(--button-radius);
