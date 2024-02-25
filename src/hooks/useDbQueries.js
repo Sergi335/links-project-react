@@ -5,7 +5,7 @@ import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
 import { useSessionStore } from '../store/session'
 
-const useDbQueries = ({ desktopName }) => {
+const useDbQueries = () => {
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)

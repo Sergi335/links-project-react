@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
-import { moveLink, getLinkById, editColumn } from '../services/dbQueries'
-import { handleResponseErrors } from '../services/functions'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
+import { editColumn, getLinkById, moveLink } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 
 export const useDragItems = ({ desktopName }) => {
@@ -26,7 +26,7 @@ export const useDragItems = ({ desktopName }) => {
   const updateLinksStore = useRef(setGlobalLinks) // el truco del almendruco actualiza el estado sin renderizar
   function handleDragEnd (event) {
     const { active, over } = event
-    if (event.active.data.current?.type === 'link') {
+    if (event.active.data.current?.type === 'link' && over !== null) {
       if (active.id !== over.id) {
         const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
         const newIndex = globalLinks.findIndex((t) => t._id === over.id)
@@ -34,7 +34,7 @@ export const useDragItems = ({ desktopName }) => {
         setMovedLink(activeLink)
       }
     }
-    if (event.active.data.current?.type === 'Column') {
+    if (event.active.data.current?.type === 'Column' && over !== null) {
       if (active.id !== over.id) {
         const oldIndex = globalColumns.findIndex((t) => t._id === active.id)
         const newIndex = globalColumns.findIndex((t) => t._id === over.id)
@@ -46,7 +46,12 @@ export const useDragItems = ({ desktopName }) => {
     setActiveLink(null)
     setActiveColumn(null)
   }
-
+  function handleDragCancel () {
+    setActiveLink(null)
+    setActiveColumn(null)
+    setGlobalColumns(globalColumns)
+    setGlobalLinks(globalLinks)
+  }
   function handleDragOver (event) {
     const { active, over } = event
     if (active.data.current?.type === 'link') {
@@ -109,5 +114,5 @@ export const useDragItems = ({ desktopName }) => {
     }
   }, [movedLink, movedColumn])
 
-  return { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn }
+  return { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn }
 }

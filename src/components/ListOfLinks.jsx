@@ -1,26 +1,26 @@
-import { useParams } from 'react-router-dom'
+import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, DragOverlay } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy, rectSortingStrategy } from '@dnd-kit/sortable'
-import Columna from './Column'
-import CustomLink from './customlink'
-import SideInfo from './SideInfo'
-import FormsContainer from './FormsContainer'
-import styles from './ListOfLinks.module.css'
+import { useParams } from 'react-router-dom'
+import { useDragItems } from '../hooks/useDragItems'
+import useResizeWindow from '../hooks/useResizeWindow'
+import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import { useDragItems } from '../hooks/useDragItems'
+import Columna from './Column'
 import ColumnsLoader from './ColumnsLoader'
-import { useFormsStore } from '../store/forms'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
+import FormsContainer from './FormsContainer'
+import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
-import { useGlobalStore } from '../store/global'
-import useResizeWindow from '../hooks/useResizeWindow'
+import SideInfo from './SideInfo'
+import CustomLink from './customlink'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
-  const { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn } = useDragItems({ desktopName })
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
   const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
@@ -87,6 +87,7 @@ export default function ListOfLinks () {
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               onDragOver={handleDragOver}
+              onDragCancel={handleDragCancel}
             >
               <SortableContext strategy={rectSortingStrategy} items={columnsId}>
               {desktopColumns

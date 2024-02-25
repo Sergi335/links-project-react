@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../hooks/useHideForms'
 import { constants } from '../services/constants'
@@ -7,11 +7,13 @@ import { changeBackgroundImage, editDesktop, getBackgroundMiniatures } from '../
 import { formatPath, handleResponseErrors } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
 import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
+  const navigate = useNavigate()
   const inputRef = useRef()
   const formRef = useRef()
   const { desktopName } = useParams()
@@ -20,6 +22,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
+  const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
@@ -41,12 +47,27 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       return
     }
     const { data } = response
-    const url = new URL(window.location.href)
-    url.pathname = `desktop/${name}`
-    window.history.pushState(null, null, url)
-    const changeUrlEvent = new Event('changeurl')
-    window.dispatchEvent(changeUrlEvent)
     setDesktopsStore(data)
+    const newColsState = globalColumns.map(column => {
+      if (column.escritorio === desktopName) {
+        column.escritorio = name
+      }
+      return column
+    })
+    setGlobalColumns(newColsState)
+    const newLinksState = globalLinks.map(link => {
+      if (link.escritorio === desktopName) {
+        link.escritorio = name
+      }
+      return link
+    })
+    setGlobalLinks(newLinksState)
+    // const changeUrlEvent = new Event('changeurl')
+    // window.dispatchEvent(changeUrlEvent)
+    // const url = new URL(window.location.href)
+    // url.pathname = `desktop/${name}`
+    // window.history.pushState(null, null, url)
+    navigate(`/desktop/${name}`)
   }
   const handleNumberColumnsChange = (event) => {
     setNumberOfColumns(event.target.value)
