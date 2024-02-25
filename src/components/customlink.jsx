@@ -1,12 +1,12 @@
-import { useRef, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './customlink.module.css'
-import { ArrowDown, MaximizeIcon } from './Icons/icons'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useFormsStore } from '../store/forms'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
+import { ArrowDown, MaximizeIcon } from './Icons/icons'
+import styles from './customlink.module.css'
 
 export default function CustomLink ({ data, className }) {
   const link = data.link || data.activeLink
@@ -102,6 +102,7 @@ export default function CustomLink ({ data, className }) {
     transform: CSS.Transform.toString(transform),
     ...linkStyle
   }
+  // Lo que hace es retornar el link vacio si está siendo arrastrado
   if (isDragging) {
     return (
       <div ref={setNodeRef}

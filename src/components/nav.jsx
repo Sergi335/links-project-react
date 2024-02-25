@@ -37,7 +37,8 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
   }
   if (isDragging) {
     return (
-      <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.link_dragged}>
+      <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.draggedDesk}>
+        <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
       </li>
     )
   }
@@ -157,9 +158,9 @@ export default function Nav ({ toggleMobileMenu }) {
               </SortableContext>
               {
                 createPortal(
-                  <DragOverlay className={styles.draggedDesk}>
+                  <DragOverlay>
                     {
-                      activeDesk && (<NavItem key={activeDesk._id} escritorio={activeDesk} />)
+                      activeDesk && (<li className={styles.floatLi}><NavItem key={activeDesk._id} escritorio={activeDesk} /></li>)
                     }
                   </DragOverlay>
                   , document.body)

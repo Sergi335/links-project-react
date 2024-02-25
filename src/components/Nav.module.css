@@ -50,7 +50,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     transition: background-color .3s ease-out;
-    border-radius: 5px;
+    border-radius: var(--button-radius);
     height: -webkit-fill-available;
     display: flex;
     justify-content: center;
@@ -65,32 +65,35 @@
     background-color: var(--frostHvColor);
     cursor: pointer;
 }
-.link_dragged {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 0;
-    margin: 0;
-    width: -webkit-fill-available;
-    align-items: center;
-    background-color: var(--accentColor);
-}
-.draggedDesk li {
+.draggedDesk {
     list-style-type: none;
     width: fit-content;
+    background-color: var(--accentColor);
+    border-radius: var(--button-radius);
 }
-.draggedDesk li a {
-    font-size: 14px;
-    padding: 8px 10px;
-    color: var(--firstTextColor);
-    text-decoration: none;
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border-radius: 5px;
-    background-color: var(--firstHvColor);
-  }
+.draggedDesk a {
+    color: transparent !important;
+}
+/*el componente link crea una clase active automaticamente por eso no funciona, los estilos estan en index.css*/
+.draggedDesk a.active {
+    background-color: transparent !important;
+}
+.floatLi {
+    background-color: var(--linkBgColor);
+    height: var(--navBarContentHeight);
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--button-radius);
+    list-style-type: none;
+}
+/*Esto le da color cuando se arrastra!!! */
+.floatLi:hover {
+    background-color: var(--frostHvColor);
+    cursor: pointer;
+
+}
 @media (min-width: 1536px) {
     .nav {
         display: flex;
