@@ -65,7 +65,11 @@ export default function HomePage () {
               <h2 className={styles.logoText}>Zenmarks</h2>
             </div>
             <h2 className={styles.subtitle}>Organiza Tu Mundo Digital</h2>
-            <p className={styles.headingText}>Bienvenido a Zenmarks, la herramienta definitiva para gestionar tus enlaces y maximizar tu productividad. Con funciones intuitivas y personalizables, para simplificar tu experiencia digital.</p>
+            <div className={styles.actionLinks}>
+              <Link className={styles.start} to={'/login'}>Get Started</Link>
+              <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
+            </div>
+            <p className={styles.headingText}>Bienvenido a <strong className={styles.strong}>Zenmarks</strong>, la herramienta definitiva para gestionar tus enlaces y maximizar tu productividad. Con funciones intuitivas y personalizables, para simplificar tu experiencia digital.</p>
             <video src="img/zenmarks2.webm" autoPlay loop muted></video>
             {/* <div className={styles.fakelinks}>
               <div className={styles.link}>
@@ -77,10 +81,6 @@ export default function HomePage () {
                 </div>
               </div>
             </div> */}
-            <div className={styles.actionLinks}>
-              <Link className={styles.start} to={'/login'}>Get Started</Link>
-              <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
-            </div>
           </div>
         </header>
         <main className={styles.main}>

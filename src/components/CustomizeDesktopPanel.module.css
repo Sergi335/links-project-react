@@ -7,7 +7,7 @@
   height: calc(87vh + 34px);
   position: fixed;
   z-index: 7;
-  /* box-shadow: 0px 49px 11px var(--firstShadow); */
+  box-shadow: 0px 49px 11px var(--firstShadow);
   background-color: var(--mainColor);
   font-size: 13px;
   transform: translate(111%, 0);
@@ -15,29 +15,30 @@
   backdrop-filter: blur(42px);
   border-radius: 8px;
   border: var(--firstBorder);
+  overflow-y: auto;
 }
 .slideIn {
   transform: translate(0, 0);
 }
 .wrapper {
   padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .wrapper h3 {
-  margin-top: 0;
+  margin: 0;
   text-align: left;
-  margin-bottom: 6px;
-  background-color: var(--firstColor);
-  padding: 7px 15px;
-  border-radius: 5px;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--firstBorderColor);
 }
-
-/* .flex {
-    display: flex;
-    flex-direction: column;
-} */
+.wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 .hidden {
   display: none;
 }
@@ -46,16 +47,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin-bottom: 25px;
-  border: 1px solid var(--firstBorderColor);
-  padding: 15px;
+  /* border: 1px solid var(--firstBorderColor); */
+  /* padding: 15px; */
   border-radius: 5px;
-  background-color: var(--sixthColor);
+  /* background-color: var(--bgGradient); */
 }
 
 .selectBackground img {
-  width: 100px;
+  width: 112px;
   cursor: pointer;
+  border-radius: var(--button-radius);
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  box-sizing: border-box;
 }
 
 .selectInfoColor,
@@ -65,11 +69,10 @@
   flex-wrap: wrap;
   gap: 15px;
   width: -webkit-fill-available;
-  margin-bottom: 25px;
-  border: 1px solid var(--firstBorderColor);
-  padding: 15px;
+  /* border: 1px solid var(--firstBorderColor); */
+  /* padding: 15px; */
   border-radius: 5px;
-  background-color: var(--sixthColor);
+  /* background-color: var(--bgGradient); */
 }
 
 .selectInfoColor div,
@@ -77,36 +80,41 @@
 .selectThemeVariant div {
   height: 30px;
   width: 30px;
-  border-radius: 25px;
-  border: 1px solid #ccc;
+  border-radius: var(--button-radius);
+  border: 1px solid var(--firstBorderColor);
   cursor: pointer;
 }
-
+.optionSelected {
+  border: 2px solid var(--inverseColor) !important;
+}
 .formControl {
   display: flex;
   column-gap: 25px;
-  margin-bottom: 5px;
   flex-wrap: wrap;
-  border: 1px solid var(--firstBorderColor);
-  padding: 15px;
+  /* border: 1px solid var(--firstBorderColor); */
+  /* padding: 15px; */
   border-radius: 5px;
-  background-color: var(--sixthColor);
+  /* background-color: var(--bgGradient); */
 }
 
 .removeBackground {
   background: var(--bgGradient);
-  width: 100px;
+  width: 112px;
   cursor: pointer;
+  border-radius: var(--button-radius);
+  aspect-ratio: 4/3;
+  object-fit: cover;
 }
 
 .inputButton {
   position: absolute;
-  left: 63%;
+  left: 150px;
   padding: 0 5px;
   font-size: small;
-  height: 28px;
-  top: 35px;
+  height: 32px;
+  top: 34px;
   width: 35%;
+  background-color: var(--buttonColor);
 }
 
 .rowGroup {
@@ -115,6 +123,10 @@
   gap: 5px;
   width: 45%;
   flex-grow: 1;
+
+  & input[type="text"] {
+    background-color: var(--inputBackgroundColor);
+  }
 }
 
 .hasRowGroup {
@@ -127,21 +139,24 @@
   vertical-align: middle;
   outline: none;
   border: none;
-  padding: 0;
+  padding: 1px 11px;
   background: none;
-  height: 100%;
-  width: 65%;
+  /* width: 100%; */
+  /* background-color: var(--frostHvColor); */
+  border-radius: var(--button-radius);
+  height: 36px;
+  margin: 0;
 }
 
 .range::-webkit-slider-runnable-track {
-  background-color: var(--thirdColor);
+  background-color: var(--inputBackgroundColor);
   height: 6px;
   border-radius: 3px;
   border: 1px solid transparent;
 }
 
 .range::-moz-range-track {
-  background-color: var(--thirdColor);
+  background-color: var(--inputBackgroundColor);
   height: 6px;
   border-radius: 3px;
   border: none;
@@ -208,12 +223,15 @@
 }
 
 .formControl select {
-  background-color: var(--thirdColor);
-  height: 30px;
+  background-color: var(--inputBackgroundColor);
+  height: 38px;
   border-radius: 5px;
   color: var(--firstTextColor);
-  padding: 0 6px;
-  border: 1px solid var(--firstBorderColor);
+  padding: 0 11px;
+  /* border: 1px solid var(--firstBorderColor); */
+  border: 0;
+  appearance: none;
+  font-family: monospace;
 }
 
 /* input[type=range]:after {

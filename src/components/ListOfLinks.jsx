@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
@@ -40,7 +40,7 @@ export default function ListOfLinks () {
   // console.log('🚀 ~ file: ListOfLinks.jsx:39 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 0
       }
@@ -96,7 +96,7 @@ export default function ListOfLinks () {
                         <Columna key={columna._id} data={{ columna }}>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
-                              !activeColumn &&
+                              !activeColumn && // Es esto pero hay problemas si se quita, deberia poder activarse lo de abajo
                                 desktopLinks.map((link) =>
                                   link.idpanel === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
@@ -126,7 +126,7 @@ export default function ListOfLinks () {
                   {activeColumn && (
                     <Columna data={{ activeColumn }}>
                       {/* {
-                        linksStore.map((link) =>
+                        desktopLinks.map((link) =>
                           link.idpanel === activeColumn._id
                             ? (<CustomLink key={link._id} data={{ link }} idpanel={activeColumn._id} />)
                             : null

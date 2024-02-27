@@ -30,11 +30,11 @@
 }
 
 .home a:hover {
-    color: #09f;
+    color: coral;
 }
 
 .home video {
-    max-width: 60%;
+    max-width: 40%;
     height: auto;
     border-radius: 5px;
     box-shadow: var(--secondNeumoShadow);
@@ -188,7 +188,7 @@
     align-items: center;
     gap: 100px;
     flex-wrap: wrap;
-    margin-top: 175px;
+    margin-top: 85px;
 }
 
 /* .fakelinks div:nth-child(2) {
@@ -226,12 +226,12 @@
 
 .start {
     padding: 12px 0;
-    background-color: white;
+    background-color: #e5e5e5;
     color: #121212;
     border-radius: 5px;
-    font-size: 2em;
+    font-size: 1.4em;
     position: relative;
-    width: 300px;
+    width: 272px;
     display: flex;
     justify-content: center;
     box-shadow: 0px 0px 25px var(--firstShadow);
@@ -250,7 +250,7 @@
     flex-grow: 1;
 }
 .textColumn p {
-    border-left: 2px solid #4f4f4f1f;
+    border-left: 2px solid coral;
     padding-left: 15px;
     margin-left: 3px;
 }
@@ -258,7 +258,9 @@
     display: flex;
     width: calc(50% - 25px);
 }
-
+.strong {
+    color: coral;
+}
 .mediaColumn img {
     max-width: 100%;
     height: auto;

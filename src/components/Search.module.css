@@ -29,8 +29,8 @@
 .searchButtonIcon {
     height: -webkit-fill-available;
     background-color: transparent;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: var(--button-radius);
+    border-bottom-right-radius: var(--button-radius);
     width: 18px;
     padding: 0 10px;
     color: var(--accentColor);
@@ -220,8 +220,8 @@
         position: initial;
         border-radius: 0;
         width: 77%;
-        border-bottom-left-radius: 5px;
-        border-top-left-radius: 5px;
+        border-bottom-left-radius: var(--button-radius);
+        border-top-left-radius: var(--button-radius);
         height: 33px;
         transform: none;
         z-index: 0;
@@ -246,7 +246,7 @@
         flex-direction: column;
         /* margin: 12% 30%; */
         position: fixed;
-        width: 1023px;
+        max-width: 1023px;
         overflow-y: auto;
         display: flex;
         z-index: 6;
@@ -269,7 +269,7 @@
         margin-bottom: 5px;
         justify-content: space-between;
         position: fixed;
-        width: 994px;
+        max-width: 994px;
         background-color: var(--mainColor);
         align-items: center;
     }

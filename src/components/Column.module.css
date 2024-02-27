@@ -42,9 +42,10 @@
     align-items: center;
     position: relative;
     gap: 10px;
-    background-color: var(--frostHvColor);
-    border-top-right-radius: var(--button-radius);
-    border-top-left-radius: var(--button-radius);
+    /* background-color: var(--frostHvColor); */
+    /* border-top-right-radius: var(--button-radius);
+    border-top-left-radius: var(--button-radius); */
+    border-bottom: 1px solid var(--firstBorderColor);
 }
 
 /* .headContainer::after {

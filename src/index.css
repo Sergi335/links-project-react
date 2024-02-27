@@ -39,15 +39,16 @@
   --firstBorder: 1px solid #e7e7e7;
   --firstBorderColor: #e7e7e7;
   --firstColorOpacity: rgb(255 255 255 / 89%);
-  --buttonColor: white;
+  --buttonColor: #d2d2d2;
   --buttonHoverColor: #d6d6d6;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(239 239 239);
   --inverseColor: black;
   --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
   --homeHeroGradient: linear-gradient(90deg, #4f4f4f08 1px, transparent 0), linear-gradient(180deg, #4f4f4f08 1px, transparent 0);
-  --homeH2Color: #535353;
+  --homeH2Color: coral;
   --homeFooterColor: #f1f1f1;
   --sidePanelsBgColor: white;
+  --inputBackgroundColor: #f3f3f3c9;
 
   /* --firstColor: #f3f3f3;
   --linkBgColor: #fcfcfc;
@@ -111,9 +112,10 @@ html.dark {
   --inverseColor: white;
   --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
   --homeHeroGradient: linear-gradient(90deg, #4f4f4f14 1px, transparent 0), linear-gradient(180deg, #4f4f4f14 1px, transparent 0);
-  --homeH2Color: #73ff6b;
+  --homeH2Color: coral;
   --homeFooterColor: #242424;
   --sidePanelsBgColor: black;
+  --inputBackgroundColor: #3B3B3B;
 }
 html.dark {
   background-color: #1D1D1D;
@@ -181,7 +183,7 @@ input:-webkit-autofill:active {
 }
 input[type='text'], input[type='password'], input[type='email'] {
   padding-left: 11px;
-  background-color: var(--frostHvColor);
+  background-color: var(--inputBackgroundColor);
   border-radius: var(--button-radius);
   border: 0;
   color: var(--firstTextColor);
@@ -241,7 +243,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  background-color: var(--buttonColor);
   color: var(--firstTextColor);
   border: 0;
   padding: 8px 19px;
@@ -322,12 +324,19 @@ button:hover svg {
   position: fixed;
   left: 50%;
   transform: translate(-50%, 0);
-  /* display: flex; */
+  border: var(--firstBorder);
   z-index: 7;
   padding: 50px;
   border-radius: var(--border-radius);
   gap: 15px;
   box-shadow: 0px 0px 35px var(--firstShadow);
+
+  & input {
+    width: 60%;
+  }
+  & legend {
+    padding: 0 16px;
+  }
 }
 .deskForm fieldset {
   display: flex;

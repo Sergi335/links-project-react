@@ -124,7 +124,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         transition: background-color .3s ease-out;
-        border-radius: 5px;
+        border-radius: var(--button-radius);
         height: -webkit-fill-available;
         display: flex;
         justify-content: center;

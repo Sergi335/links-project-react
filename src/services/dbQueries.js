@@ -399,6 +399,7 @@ export async function deleteDesktop ({ body }) {
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
+    console.log('fetch')
     return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
@@ -414,9 +415,7 @@ export async function changeBackgroundImage (event) {
         return error
       })
   } else {
-    document.body.style.backgroundImage = ''
-    document.body.style.backgroundSize = 'initial'
-    window.localStorage.setItem('bodyBackground', '')
+    return { error: 'Error al cambiar la imagen de fondo' }
   }
 }
 // CustomizeDesktopPanel

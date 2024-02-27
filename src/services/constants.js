@@ -96,7 +96,7 @@ export const constants = {
         })
         // element.style.borderLeft = '1px dashed var(--firstBorderColor)'
       },
-      background: 'transparent'
+      background: 'url(/img/transparent-miniature.png)'
     },
     blur: {
       applyStyles: (element) => {
@@ -111,7 +111,7 @@ export const constants = {
           sect.style.border = 'none'
         })
       },
-      background: 'transparent'
+      background: 'url(/img/blur-background.png)'
     }
   },
   THEME_VARIANTS: {
