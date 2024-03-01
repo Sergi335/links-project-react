@@ -6,7 +6,7 @@
     gap: 3px;
     border-radius: var(--border-radius);
     height: max-content;
-    background-color: var(--columnBgColor);
+    /* background-color: var(--columnBgColor); */
     overflow: hidden;
     width: 100%;
 }
@@ -18,9 +18,10 @@
     border: var(--firstBorder);
     display: flex;
     /* border-left: 1px solid var(--accentColor); */
-    transition: max-height .5s ease-in-out, box-shadow .5s ease-in;
+    transition: max-height .5s ease-in-out, box-shadow .5s ease-in, transform 250ms cubic-bezier(0.25, 1, 0.5, 1);
     height: max-content;
-    background-color: var(--columnBgColor);
+    background-color: var(--mainColor);
+    backdrop-filter: blur(42px);
 }
 .colOpen {
     max-height: 900px;
@@ -45,7 +46,7 @@
     /* background-color: var(--frostHvColor); */
     /* border-top-right-radius: var(--button-radius);
     border-top-left-radius: var(--button-radius); */
-    border-bottom: 1px solid var(--firstBorderColor);
+    /* border-bottom: 1px solid var(--firstBorderColor); */
 }
 
 /* .headContainer::after {
@@ -61,8 +62,7 @@
 .column h2 {
     text-align: left;
     margin: 0;
-    font-size: 1.4em;
-    font-weight: 600;
+    font-size: .95rem;
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: 5px 0;
@@ -71,6 +71,7 @@
     margin-left: 15px;
     transition: margin .3s ease-in-out;
     overflow: hidden;
+    font-weight: 500;
 }
 
 .selectMode .column h2 {
@@ -78,26 +79,20 @@
 }
 
 .dragginColumn {
-    border: 1px solid var(--accentColor);
-    width: 320px;
-    background-color: transparent;
-    padding: 5px;
+    background-color: var(--accentColor);
     border-radius: var(--border-radius);
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    transition: max-height .5s ease-in-out, box-shadow .5s ease-in, transform 250ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 input[type='text'].editInput {
     min-height: 37.3px !important;
     max-height: 37.3px !important;
-    font-size: 1.4em;
+    font-size: .95rem;
     font-weight: 600 !important;
     box-sizing: border-box;
     border-radius: var(--button-radius);
     padding-left: 15px;
+    font-weight: 500;
 }
 
 input[type='text'].editInput:focus {

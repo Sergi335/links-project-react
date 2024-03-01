@@ -1,19 +1,17 @@
-import styles from './ProfilePage.module.css'
+import { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
+import useGoogleAuth from '../../hooks/useGoogleAuth'
+import { constants } from '../../services/constants'
+import { editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
+import { formatDate, handleResponseErrors } from '../../services/functions'
+import { useDesktopsStore } from '../../store/desktops'
+import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, KeyIcon, UploadIcon } from '../Icons/icons'
-import { formatDate, handleResponseErrors } from '../../services/functions'
-import { useEffect, useRef, useState } from 'react'
-import { uploadProfileImg, editUserAditionalInfo, getAllLinks, findDuplicateLinks } from '../../services/dbQueries'
-import { toast } from 'react-toastify'
-import { constants } from '../../services/constants'
-import useGoogleAuth from '../../hooks/useGoogleAuth'
-import { useGlobalStore } from '../../store/global'
-import { useDesktopsStore } from '../../store/desktops'
+import styles from './ProfilePage.module.css'
 
-export function UserPreferences () {
+export function UserPreferences ({ user, setUser }) {
   const [visible, setVisible] = useState(false)
-  const setUser = useSessionStore(state => state.setUser)
-  const user = useSessionStore(state => state.user)
   const { handleDeleteUser } = useGoogleAuth()
   const handleDeleteAccount = (e) => {
     e.preventDefault()
@@ -38,6 +36,11 @@ export function UserPreferences () {
       })
   }
   return (
+    <>
+    <header className={styles.infoHeader}>
+      <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
+      <p>{user.email}</p>
+    </header>
     <div className={`${styles.preferences}`} id="preferences">
       <button id="closeAccount" onClick={() => setVisible(true)}>
         Cerrar Cuenta
@@ -57,10 +60,10 @@ export function UserPreferences () {
           : null
       }
     </div>
+    </>
   )
 }
-export function UserSecurity () {
-  const user = useSessionStore(state => state.user)
+export function UserSecurity ({ user }) {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const handleChangePassword = (e) => {
     e.preventDefault()
@@ -117,8 +120,11 @@ export function UserSecurity () {
   }
   return (
     <>
+      <header className={styles.infoHeader}>
+        <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
+        <p>{user.email}</p>
+      </header>
       <div className={styles.password}>
-        <h3>Seguridad </h3>
         <KeyIcon />
         <p>Cambiar contraseña</p>
         <form onSubmit={handleChangePassword} className={styles.flexForm}>
@@ -273,7 +279,7 @@ export function PieChart ({ links, setLinks }) {
       </>
   )
 }
-export function UserStats () {
+export function UserStats ({ user }) {
   const [duplicates, setDuplicates] = useState([])
   const [links, setLinks] = useState([])
   const globalLinks = useGlobalStore(state => state.globalLinks)
@@ -298,7 +304,8 @@ export function UserStats () {
   return (
         <>
           <header className={styles.infoHeader}>
-            <p>Estadísticas</p>
+            <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
+            <p>{user.email}</p>
           </header>
           <div className={styles.statsInfo}>
             <table>
@@ -365,15 +372,19 @@ export function UserStats () {
     </>
   )
 }
-export function UserInfo () {
-  const user = useSessionStore(state => state.user)
-  const setUser = useSessionStore(state => state.setUser)
+export function UserInfo ({ user, setUser }) {
   const [fileToUpload, setFileToUpload] = useState()
   const [fileToUploadLoading, setFileToUploadLoading] = useState(false)
+  const [editName, setEditName] = useState(false)
+  const [editWebsite, setEditWebsite] = useState(false)
+  const [editAboutMe, setEditAboutMe] = useState(false)
   console.log(user)
 
   const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault()
+    setEditName(false)
+    setEditWebsite(false)
+    setEditAboutMe(false)
     const form = e.target
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
@@ -410,17 +421,43 @@ export function UserInfo () {
     previewImage.src = user.profileImage
     setFileToUpload(null)
   }
+  const handleEditInfo = (e) => {
+    if (e.target.id === 'editName') {
+      setEditName(true)
+      setEditWebsite(false)
+      setEditAboutMe(false)
+    }
+    if (e.target.id === 'editWeb') {
+      setEditWebsite(true)
+      setEditName(false)
+      setEditAboutMe(false)
+    }
+    if (e.target.id === 'editAbout') {
+      setEditAboutMe(true)
+      setEditName(false)
+      setEditWebsite(false)
+    }
+  }
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside)
+  //   return () => document.removeEventListener('click', handleClickOutside)
+  // }, [])
   return (
     <div className={styles.info}>
       <div className={styles.wrapper}>
         <header className={styles.infoHeader}>
-          <p>{user.name} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
+          <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
           <p>{user.email}</p>
         </header>
         <p className={styles.dateJoin}><span>Miembro desde: </span>{formatDate(user.createdAt)}</p>
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
             <img id="preview-image" src={user.profileImage ? user.profileImage : '/img/avatar.svg'}/>
+          </div>
+          <div className={styles.uploadImageTooltip}>
+            <p>Sube tu imagen de perfil</p>
+            <p>Tamaño recomendado 125x125</p>
+            <p>Max. 15MB</p>
             {
               !fileToUploadLoading && (
                 <button className={styles.upFile}>
@@ -440,23 +477,34 @@ export function UserInfo () {
               fileToUploadLoading && (<span className={styles.loader}></span>)
             }
           </div>
-          <div className={styles.uploadImageTooltip}>
-            <p>Sube tu imagen de perfil</p>
-            <p>Tamaño recomendado 125x125</p>
-            <p>Max. 15MB</p>
-          </div>
         </div>
       </div>
         <div className={styles.userInfo}>
           <div className={styles.otherInfo}>
             <form id="otherInfoForm" onSubmit={handlePersonalInfoSubmit}>
-              <label htmlFor="realName">Nombre Completo: </label>
-              <input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/>
-              <label htmlFor="website">Sitio Web:</label>
-              <input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/>
-              <label htmlFor="aboutMe">Sobre mí:</label>
-              <textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/>
-              <button id="editOtherInfo" type="submit">Guardar</button>
+              <div className={styles.rowGroup}>
+                {
+                  editName
+                    ? <><label htmlFor="realName">Nombre Completo: </label><input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditName(false)}>Cancelar</button></>
+                    : <><p id='editName' onClick={handleEditInfo}>Nombre Completo:&nbsp;&nbsp;{user.realName || 'User'}</p></>
+                }
+              </div>
+              <div className={styles.rowGroup}>
+                {
+                  editWebsite
+                    ? <><label htmlFor="website">Sitio Web: </label><input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditWebsite(false)}>Cancelar</button></>
+                    : <><p id='editWeb' onClick={handleEditInfo}>Sitio Web:&nbsp;&nbsp;{user.website || 'www.mywebsite.com'}</p></>
+                }
+              </div>
+              <div className={styles.rowGroup}>
+                {
+                  editAboutMe
+                    ? <><label htmlFor="aboutMe">Sobre mí:</label><textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditAboutMe(false)}>Cancelar</button></>
+                    : <><p id='editAbout' onClick={handleEditInfo}>Sobre mí:&nbsp;&nbsp;{user.aboutMe || 'My favorite things to do'}</p></>
+                }
+                {/* <label htmlFor="aboutMe">Sobre mí:</label>
+                <textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/> */}
+              </div>
             </form>
           </div>
 
@@ -465,6 +513,8 @@ export function UserInfo () {
   )
 }
 export default function ProfilePage () {
+  const user = useSessionStore(state => state.user)
+  const setUser = useSessionStore(state => state.setUser)
   const infoRef = useRef()
   const statsRef = useRef()
   const secRef = useRef()
@@ -509,16 +559,16 @@ export default function ProfilePage () {
       </section>
       <section className={styles.content}>
         <div ref={infoRef} className={styles.tabcontent} id="info">
-          <UserInfo />
+          <UserInfo user={user} setUser={setUser}/>
         </div>
         <div ref={statsRef} className={`${styles.statistics} ${styles.tabcontent}`} id="stats">
-          <UserStats />
+          <UserStats user={user}/>
         </div>
         <div ref={secRef} className={styles.tabcontent} id="security">
-          <UserSecurity />
+          <UserSecurity user={user}/>
         </div>
         <div ref={prefRef} className={styles.tabcontent} id="preferences">
-          <UserPreferences />
+          <UserPreferences user={user} setUser={setUser}/>
         </div>
       </section>
     </main>

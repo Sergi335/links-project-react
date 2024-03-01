@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { constants } from '../services/constants'
 import { createColumn } from '../services/dbQueries'
 import { saludo } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
@@ -27,6 +26,8 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const desktop = desktopsStore.find(desk => desk.name === desktopName) // memo
   const [desktopDisplayName, setDesktopDisplayName] = useState()
   const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
+  const columnHeights = usePreferencesStore(state => state.columnHeights)
+  // console.log('🚀 ~ SideInfo ~ columnHeights:', columnHeights)
   const numRows = Math.ceil(desktopColumns.length / numberCols)
   const result = []
   const [salut, setSalut] = useState('')
@@ -47,8 +48,8 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   // TODO: No se actualiza con el cambio de hora, puede ser de noche y decirte buenos días
   useEffect(() => {
     setSalut(saludo(user?.realName || 'Usuario'))
-    const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
-    if (sideInfoRef) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sideInfoRef.current)
+    // const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
+    // if (sideInfoRef) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sideInfoRef.current)
   }, [])
   useEffect(() => {
     const newDeskName = (window.location.pathname).replace('/desktop/', '')
@@ -71,7 +72,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
         ))
         const elementTopPosition = props[0].top
         // si la posicion de la parte superior de la fila es mayor a 141 y menor a 1414 o la posicion bottom maxima de cada columna es mayor a 141 o menor a 1414
-        if (Math.abs(elementTopPosition >= 116) && Math.abs(elementTopPosition <= 1141)) {
+        if (Math.abs(elementTopPosition >= 77) && Math.abs(elementTopPosition <= 1141)) {
           targ.el.classList.add(`${styles.sectActive}`)
         } else {
           targ.el.classList.remove(`${styles.sectActive}`)
@@ -110,8 +111,13 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }
   const handleExpandAllColumns = () => {
     const columns = document.querySelectorAll(`.${columnStyles.columnWrapper}`)
-    columns.forEach(column => {
+    columns.forEach((column, index) => {
       column.classList.toggle(`${columnStyles.colOpen}`)
+      if (column.classList.contains(columnStyles.colOpen)) {
+        column.style.maxHeight = `${columnHeights[index]}px`
+      } else {
+        column.style.maxHeight = ''
+      }
     })
   }
   return (

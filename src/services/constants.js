@@ -1,7 +1,7 @@
 import styles from '../components/SideInfo.module.css'
 export const constants = {
-  // BASE_API_URL: 'http://localhost:3001',
-  BASE_API_URL: 'https://zenmarks.xyz',
+  BASE_API_URL: 'http://localhost:3001',
+  // BASE_API_URL: 'https://zenmarks.xyz',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -14,6 +14,16 @@ export const constants = {
     }
   },
   ACCENT_COLORS: {
+    defaultLight: {
+      color: '#bababa',
+      applyStyles: (element) => {
+        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
+        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
+        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
+        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
+        window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
+      }
+    },
     yellow: {
       color: '#ffff00',
       applyStyles: (element) => {
@@ -42,16 +52,6 @@ export const constants = {
         window.localStorage.setItem('accentColor', JSON.stringify('#00cc66'))
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('green'))
-      }
-    },
-    defaultLight: {
-      color: '#bababa',
-      applyStyles: (element) => {
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
-        window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
       }
     },
     defaultDark: {
@@ -91,7 +91,7 @@ export const constants = {
         element.style.border = 'none'
         const sects = element.querySelectorAll(`.${styles.sectActive}`)
         sects.forEach((sect) => {
-          sect.style.backgroundColor = 'var(--frostHvColor)'
+          sect.style.backgroundColor = 'var(--mainColor)'
           sect.style.border = 'var(--firstBorder)'
         })
         // element.style.borderLeft = '1px dashed var(--firstBorderColor)'
@@ -116,7 +116,8 @@ export const constants = {
   },
   THEME_VARIANTS: {
     solid: {
-      applyStyles: (element) => {
+      applyStyles: () => {
+        const element = document.documentElement
         if (element.classList.contains('transparent')) {
           element.classList.remove('transparent')
           element.classList.add('solid')
@@ -124,10 +125,11 @@ export const constants = {
           element.classList.add('solid')
         }
       },
-      background: 'var(--frostColor)'
+      background: 'var(--mainColor)'
     },
     transparent: {
-      applyStyles: (element) => {
+      applyStyles: () => {
+        const element = document.documentElement
         if (element.classList.contains('solid')) {
           element.classList.remove('solid')
           element.classList.add('transparent')
@@ -135,7 +137,7 @@ export const constants = {
           element.classList.add('transparent')
         }
       },
-      background: 'transparent'
+      background: 'url(/img/blur-background.png)'
     }
   },
   COLUMNS_COUNT: {

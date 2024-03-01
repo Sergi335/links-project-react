@@ -71,16 +71,6 @@ export default function HomePage () {
             </div>
             <p className={styles.headingText}>Bienvenido a <strong className={styles.strong}>Zenmarks</strong>, la herramienta definitiva para gestionar tus enlaces y maximizar tu productividad. Con funciones intuitivas y personalizables, para simplificar tu experiencia digital.</p>
             <video src="img/zenmarks2.webm" autoPlay loop muted></video>
-            {/* <div className={styles.fakelinks}>
-              <div className={styles.link}>
-                <div className={styles.background}></div>
-                <div className={styles.border}></div>
-                <div className={styles.linkContent}>
-                  <img src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://github.com&size=64" alt="" />
-                  Github
-                </div>
-              </div>
-            </div> */}
           </div>
         </header>
         <main className={styles.main}>
@@ -116,7 +106,7 @@ export default function HomePage () {
           </section>
         </main>
         <footer className={styles.footer}>
-          <p>Footer</p>
+          <p className={styles.copy}>Made with ❤️ by <a href="https://sergiosanchezdev.com" target='_blank' rel="noreferrer">SergioSR</a></p>
         </footer>
       </>
   )

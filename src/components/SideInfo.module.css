@@ -8,18 +8,18 @@
 .deskInfos {
     display: flex;
     flex-direction: column;
-    margin-bottom: 60px;
-    padding: 0 0 15px 15px;
-    border-radius: var(--button-radius);
+    margin-bottom: 40px;
+    border-radius: var(--border-radius);
     background-color: var(--mainColor);
-    border: var(--firstBorder);
     /* margin-left: 10px; */
     /* margin-bottom: 15px; */
     /* align-items: flex-start; */
     /* position: relative;
     left: -6px; */
 }
-
+.sectContainer {
+    display: none;
+}
 .deskInfos p {
     width: -webkit-fill-available;
 }
@@ -61,17 +61,19 @@
 .sect {
     display: flex;
     flex-direction: column;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
     border-left: 4px solid var(--firstBorderColor);
     padding-left: 10px;
     /* position: relative;
     left: -6px; */
     padding: 5px 15px;
     border: 1px solid transparent;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    /* border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px; */
+    border-radius: var(--border-radius);
     transition: background-color .6s ease-in, border-color .6s ease-in, border-color .6s ease-in;
     gap: 5px;
+    backdrop-filter: blur(20px);
 }
 
 .sectLoader {
@@ -79,7 +81,7 @@
 }
 .sectActive {
     background-color: var(--mainColor);
-    border-left-color: var(--accentColor) !important;
+    /* border-left-color: var(--accentColor) !important; */
     border: var(--firstBorder);
 }
 .sideInfoSelectedCol {
@@ -99,23 +101,31 @@
     color: var(--accentColor);
 }
 .saludo {
-    font-size: 13px;
+    font-size: 12px;
     margin: 0;
     color: var(--firstTextColor);
     text-wrap: balance;
-    /* padding-left: 20px; */
     text-align: left;
+    font-weight: var(--linkFontWeight);
+    margin-bottom: 5px;
 }
 
 @media (min-width: 1536px) {
     .sideInfo {
         position: fixed;
-        top: 112px;
+        top: calc(2rem + 40px);
         padding: 5px;
         min-height: 87vh;
         border-left: 1px solid transparent;
         width: 226px;
-        left: 2rem;
+        left: calc(2rem - 5px);
         border-radius: var(--border-radius);
+    }
+    .deskInfos {
+        border: var(--firstBorder);
+        padding: 0 0 15px 15px;
+    }
+    .sectContainer {
+        display: block;
     }
 }

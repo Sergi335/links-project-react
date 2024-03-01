@@ -1,26 +1,17 @@
 .nav {
     display: flex;
-    font-size: 14px;
-    /* flex-wrap: wrap; */
-    /* transform: translateX(-132%); */
+    font-size: .875rem;
     width: calc(100% - 50px);
-    /* height: 43px; */
-    /* overflow-y: auto; */
     transition: transform .5s;
-    /* z-index: 6; */
     padding: 25px;
     overflow: hidden;
-    background-color: var(--mainColor);
-    /* scroll-behavior: smooth; */
+    background-color: var(--columnBgColor);
 }
 .nav_side_info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    /* margin-right: 10px; */
-    /* margin-bottom: 15px; */
-    /* align-items: flex-start; */
 
 }
 .nav ul {
@@ -37,12 +28,10 @@
 .nav ul li {
     height: var(--navBarContentHeight);
     min-width: fit-content;
-    /* width: 94px; */
 }
 
 .nav ul li a {
-    /* max-width: 180px; */
-    font-size: 14px;
+    font-size: .84rem;
     padding: 5px 10px;
     color: var(--firstTextColor);
     text-decoration: none;
@@ -55,6 +44,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: var(--linkFontWeight);
 }
 
 .nav ul li a.active {
@@ -96,8 +86,9 @@
 }
 @media (min-width: 1536px) {
     .nav {
-        display: flex;
-        transform: none;
+        /* display: flex; */
+        /* transform: none; */
+        background-color: transparent;
         height: 43px;
         z-index: 1;
         width: 90%;
@@ -107,32 +98,12 @@
         scroll-behavior: smooth;
     }
     .nav ul {
-        list-style-type: none;
-        display: flex;
         flex-direction: row;
-        padding: 0;
-        gap: 4px;
-        margin: 0;
     }
     .nav ul li a {
         max-width: 180px;
-        font-size: 14px;
-        padding: 5px 10px;
-        color: var(--firstTextColor);
-        text-decoration: none;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        transition: background-color .3s ease-out;
-        border-radius: var(--button-radius);
-        height: -webkit-fill-available;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
     .nav ul li {
-        height: var(--navBarContentHeight);
-        min-width: fit-content;
         width: 94px;
     }
 }

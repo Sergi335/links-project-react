@@ -1,13 +1,13 @@
-import styles from './ContextualColMenu.module.css'
-import { toast } from 'react-toastify'
-import { editColumn } from '../services/dbQueries'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { usePasteLink } from '../hooks/usePasteLink'
+import { editColumn } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
+import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
-import { useFormsStore } from '../store/forms'
-import { AddPlusIcon, EditTextIcon, FolderMoveIcon, PasteLinkIcon, TrashIcon } from './Icons/icons'
-import { usePasteLink } from '../hooks/usePasteLink'
-import { handleResponseErrors } from '../services/functions'
+import styles from './ContextualColMenu.module.css'
+import { ArrowDown } from './Icons/icons'
 
 export default function ContextualColMenu ({ visible, points, params, desktops, setAddLinkFormVisible }) {
   const { desktopName } = useParams()
@@ -54,12 +54,12 @@ export default function ContextualColMenu ({ visible, points, params, desktops, 
         <div className={
             visible ? styles.flex : styles.hidden
           } style={{ left: points.x, top: points.y }}>
-            <p>Opciones Columna</p>
+            <p><strong>Opciones Columna</strong></p>
             <p>{params.name}</p>
-            <span onClick={() => setAddLinkFormVisible(true)}><AddPlusIcon className='uiIcon-menu'/>Nuevo</span>
-            <span onClick={() => { pasteLink() }}><PasteLinkIcon className='uiIcon-menu'/>Pegar</span>
-            <span><EditTextIcon className='uiIcon-menu'/>Renombrar</span>
-            <span className={styles.moveTo}><FolderMoveIcon className='uiIcon-menu'/>Mover a
+            <span onClick={() => setAddLinkFormVisible(true)}>Nuevo</span>
+            <span onClick={() => { pasteLink() }}>Pegar</span>
+            {/* <span>Renombrar</span> */}
+            <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
               <ul className={styles.moveList}>
                 {
                   desktops.map(desk => desk.name === desktopName
@@ -70,7 +70,7 @@ export default function ContextualColMenu ({ visible, points, params, desktops, 
                 }
               </ul>
             </span>
-            <span onClick={() => setDeleteColFormVisible(true)}><TrashIcon className='uiIcon-menu'/>Borrar</span>
+            <span onClick={() => setDeleteColFormVisible(true)}>Borrar</span>
         </div>
   )
 }

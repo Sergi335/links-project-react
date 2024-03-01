@@ -1,3 +1,9 @@
+import '@fontsource-variable/inconsolata'
+import '@fontsource-variable/inter'
+import '@fontsource-variable/montserrat'
+import '@fontsource-variable/noto-sans'
+import '@fontsource-variable/open-sans'
+import '@fontsource-variable/readex-pro'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { useEffect } from 'react'
@@ -37,8 +43,17 @@ function App () {
     const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme'))
     document.documentElement.classList.add(theme)
 
-    const accentColor = localStorage.getItem('accentColorName') === null ? '#bababa' : JSON.parse(localStorage.getItem('accentColorName'))
+    const accentColors = Object.keys(constants.ACCENT_COLORS)
+    const accentColor = JSON.parse(localStorage.getItem('accentColorName')) ?? accentColors[0]
     constants.ACCENT_COLORS[accentColor].applyStyles()
+
+    if (localStorage.getItem('themeVariant') === null) {
+      localStorage.setItem('themeVariant', JSON.stringify('solid'))
+      constants.THEME_VARIANTS.solid.applyStyles()
+    } else {
+      const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
+      constants.THEME_VARIANTS[themeVariant].applyStyles()
+    }
   }, [])
 
   const router = createBrowserRouter([

@@ -28,8 +28,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
-  const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
-  // const themeVariants = Object.keys(constants.THEME_VARIANTS)
+  // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
+  const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
@@ -116,19 +116,19 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     window.localStorage.setItem('bodyBackground', '')
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.id))
   }
-  const handleChangePanelStyles = (event) => {
-    event.target.classList.add(`${styles.optionSelected}`)
-    const options = document.getElementById('infoColor')
-    options.childNodes.forEach(option => {
-      if (option !== event.target) {
-        option.classList.remove(`${styles.optionSelected}`)
-      }
-    })
-    const currentStyle = event?.target.id
-    const panel = document.getElementById('sideinfo')
-    constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
-    window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
-  }
+  // const handleChangePanelStyles = (event) => {
+  //   event.target.classList.add(`${styles.optionSelected}`)
+  //   const options = document.getElementById('infoColor')
+  //   options.childNodes.forEach(option => {
+  //     if (option !== event.target) {
+  //       option.classList.remove(`${styles.optionSelected}`)
+  //     }
+  //   })
+  //   const currentStyle = event?.target.id
+  //   const panel = document.getElementById('sideinfo')
+  //   constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
+  //   window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
+  // }
   const handleChangeAccentColor = (event) => {
     event.target.classList.add(`${styles.optionSelected}`)
     const options = document.getElementById('accentColor')
@@ -140,13 +140,22 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
   }
-  // TODO
-  // const handleChangeThemeVariant = (event) => {
-  //   const style = event.target.id
-  //   const element = document.documentElement
-  //   // element.classList.add('transparent')
-  //   constants.THEME_VARIANTS[style].applyStyles(element)
-  // }
+  const handleChangeThemeVariant = (event) => {
+    event.target.classList.add(`${styles.optionSelected}`)
+    const style = event.target.id
+    const element = document.documentElement
+    const options = document.getElementById('themeVariant')
+    options.childNodes.forEach(option => {
+      if (option !== event.target) {
+        option.classList.remove(`${styles.optionSelected}`)
+      }
+    })
+    // element.classList.add('transparent')
+    constants.THEME_VARIANTS[style].applyStyles(element)
+    const currentStyle = event?.target.id
+    constants.THEME_VARIANTS[currentStyle].applyStyles(element)
+    window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
+  }
   const handleHideDesktops = async (event) => {
     const name = formatPath(event.target.value)
     const body = { name, hidden: true }
@@ -180,15 +189,15 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   }
   // Useeffect para aplicar las opciones marcadas en el panel de personalización
   useEffect(() => {
-    const sideOption = JSON.parse(window.localStorage.getItem('sideInfoStyles'))
-    const infOptions = document.getElementById('infoColor')
-    infOptions.querySelector(`#${sideOption}`).classList.add(`${styles.optionSelected}`)
+    const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
+    const optionsContainer = document.getElementById('themeVariant')
+    optionsContainer.querySelector(`#${themeVariant}`).classList.add(`${styles.optionSelected}`)
 
-    const accentColor = JSON.parse(window.localStorage.getItem('accentColorName'))
+    const accentColor = JSON.parse(window.localStorage.getItem('accentColorName')) ?? accentColors[0]
     const colorOptions = document.getElementById('accentColor')
     colorOptions.querySelector(`#${accentColor}`).classList.add(`${styles.optionSelected}`)
 
-    const background = JSON.parse(window.localStorage.getItem('backgroundMiniature'))
+    const background = JSON.parse(window.localStorage.getItem('backgroundMiniature')) ?? 'color'
     // console.log('🚀 ~ useEffect ~ background:', background)
     const backgroundOptions = Array.from(document.getElementById('bgMiniatures').childNodes)
     // console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
@@ -287,22 +296,22 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       }
                       <div id='color' className={styles.removeBackground} onClick={handleRemoveBackgroundImage}></div>
                   </div>
-                  {/* <h3>Cambiar Variante del tema</h3>
-                  <div className={styles.selectThemeVariant}>
+                  <h3>Estilo del tema</h3>
+                  <div id='themeVariant' className={styles.selectThemeVariant}>
                       {
                         themeVariants && themeVariants.map(style => {
                           return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
                         })
                       }
-                  </div> */}
-                  <h3>Estilo del Panel</h3>
+                  </div>
+                  {/* <h3>Estilo del Panel</h3>
                   <div id='infoColor' className={styles.selectInfoColor}>
                       {
                         sideInfoStyles && sideInfoStyles.map(style => {
                           return <div key={style} className="infoColors" onClick={handleChangePanelStyles} id={style} style={{ background: constants.SIDE_INFO_STYLES[style].background }}></div>
                         })
                       }
-                  </div>
+                  </div> */}
                   <h3>Color de Acento</h3>
                   <div id='accentColor' className={styles.selectAccentColor}>
                       {

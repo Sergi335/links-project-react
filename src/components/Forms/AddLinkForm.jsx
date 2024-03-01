@@ -2,11 +2,11 @@ import { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { constants } from '../../services/constants'
 // import { useLinksStore } from '../../store/links'
-import { usePreferencesStore } from '../../store/preferences'
+import useHideForms from '../../hooks/useHideForms'
 import { addLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import useHideForms from '../../hooks/useHideForms'
 import { useGlobalStore } from '../../store/global'
+import { usePreferencesStore } from '../../store/preferences'
 import styles from './AddLinkForm.module.css'
 
 export default function AddLinkForm ({ setFormVisible, params, desktopName, formVisible }) {
@@ -56,7 +56,10 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
         <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="35" required/>
         <label htmlFor="linkURL">URL</label>
         <input ref={urlRef} id="linkURL" type="text" name="linkURL"/>
-        <button type="submit">Enviar</button>
+        <div className="button_group">
+          <button type="submit">Enviar</button>
+          <button onClick={() => setFormVisible(false)}>Cancelar</button>
+        </div>
       </form>
   )
 }

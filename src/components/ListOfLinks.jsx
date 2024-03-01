@@ -32,13 +32,24 @@ export default function ListOfLinks () {
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
+  const setColumnHeights = usePreferencesStore(state => state.setColumnHeights)
+  // const columnHeights = usePreferencesStore(state => state.columnHeights)
 
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
-  // console.log('🚀 ~ file: ListOfLinks.jsx:39 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
-
+  // Almacenar en variable global las alturas de las columnas
+  useEffect(() => {
+    if (desktopColumns) {
+      const heights = desktopColumns.map((column) => {
+        const links = desktopLinks.filter(link => link.idpanel === column._id)
+        // TODO mucho magic number
+        return links.length >= 6 ? (10 + 2 + 38) * links.length + (3 * links.length) : 900
+      })
+      setColumnHeights(heights)
+    }
+  }, [desktopName, desktopColumns, desktopLinks])
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {

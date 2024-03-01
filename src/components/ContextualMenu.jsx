@@ -1,11 +1,11 @@
-import styles from './ContextualMenu.module.css'
 import { useParams } from 'react-router-dom'
-import { usePreferencesStore } from '../store/preferences'
-import { moveLink, moveMultipleLinks } from '../services/dbQueries'
 import { toast } from 'react-toastify'
-import { EditIcon, FolderMoveIcon, TrashIcon } from './Icons/icons'
+import { moveLink, moveMultipleLinks } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
+import { usePreferencesStore } from '../store/preferences'
+import styles from './ContextualMenu.module.css'
+import { ArrowDown } from './Icons/icons'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const { desktopName } = useParams()
@@ -89,8 +89,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
     <div id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
       <p>{params.name}</p>
-      <span onClick={handleEditClick}><EditIcon className='uiIcon-menu'/>Editar</span>
-      <span className={styles.moveTo}><FolderMoveIcon className='uiIcon-menu'/>Mover a
+      <span onClick={handleEditClick}>Editar</span>
+      <span className={styles.moveTo}>Mover a<ArrowDown className={ `${styles.rotate} uiIcon_small`}/>
         <ul className={styles.moveList}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
           {
@@ -100,7 +100,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
           }
         </ul>
       </span>
-      <span onClick={handleDeleteClick}><TrashIcon className='uiIcon-menu'/>Borrar</span>
+      <span onClick={handleDeleteClick}>Borrar</span>
     </div>
   )
 }

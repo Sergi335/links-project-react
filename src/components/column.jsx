@@ -1,15 +1,15 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
-import styles from './column.module.css'
-import { editColumn } from '../services/dbQueries'
-import { useParams } from 'react-router-dom'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import React, { useCallback, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { editColumn } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
+import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
-import { useFormsStore } from '../store/forms'
-import { handleResponseErrors } from '../services/functions'
 import { ArrowDown, SelectIcon } from './Icons/icons'
+import styles from './column.module.css'
 
 export default function Columna ({ data, children }) {
   const columna = data.columna || data.activeColumn
@@ -39,7 +39,7 @@ export default function Columna ({ data, children }) {
   const handleChangeColumnHeight = (e) => {
     const opener = e.currentTarget
     const column = opener.parentNode.parentNode.parentNode
-    const displayNewImage = () => {
+    const openColumn = () => {
       column.classList.toggle(styles.colOpen)
       opener.childNodes[0].classList.toggle(styles.rotate)
       if (column.classList.contains(styles.colOpen)) {
@@ -48,7 +48,7 @@ export default function Columna ({ data, children }) {
         column.style.maxHeight = ''
       }
     }
-    displayNewImage()
+    openColumn()
   }
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
@@ -120,7 +120,6 @@ export default function Columna ({ data, children }) {
     attributes,
     listeners,
     transform,
-    transition,
     isDragging
   } = useSortable({
     id: columna._id,
@@ -130,19 +129,14 @@ export default function Columna ({ data, children }) {
     }
   })
   const style = {
-    transition,
     transform: CSS.Transform.toString(transform)
   }
-  const dragginStyle = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-    height: '34px'
-  }
+
   if (isDragging) {
     return (
       <div
         ref={setNodeRef}
-        style={dragginStyle}
+        style={style}
         className={styles.dragginColumn}
       ><h2></h2></div>
     )
@@ -150,11 +144,10 @@ export default function Columna ({ data, children }) {
   return (
     <>
     {/* Debe tener la misma altura y ancho que cuando esta sin arrastrar para no tener problemas */}
-      <div ref={setNodeRef} style={style} className={`${styles.columnWrapper} ${selectModeClass}`} data-order={columna.order}>
+      <div ref={setNodeRef} id={columna._id} style={style} className={`${styles.columnWrapper} ${selectModeClass}`} data-order={columna.order}>
         <div
           ref={colRef}
           className={`${styles.column} column`}
-          id={columna._id}
           {...attributes}
           {...listeners}
         >

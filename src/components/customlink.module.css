@@ -32,6 +32,8 @@
   padding: 17px;
   text-align: left;
   /* transition: opacity .1s ease-in-out; */
+  font-size: 0.75rem;
+  font-weight: 300;
 }
 .description span.fade {
   opacity: 1;
@@ -93,7 +95,7 @@
   height: 43px;
   text-decoration: none;
   color: var(--firstTextColor);
-  font-size: 14px;
+  font-size: .84rem;
   /* text-overflow: ellipsis; */
   overflow: hidden;
   flex-grow: 1;
@@ -102,6 +104,7 @@
   top: 12px;
   /* justify-content: flex-start; */
   gap: 10px;
+  font-weight: var(--linkFontWeight);
 
 }
 

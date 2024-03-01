@@ -57,13 +57,13 @@ const useDbQueries = () => {
       }
     }
     getData()
-      // .then(res => { console.log(res) })
-      .catch(error => {
-        console.log(error + ', desde el .catch')
-        setUser(null)
-        setGlobalLoading(false)
-        navigate('/login')
-      })
+    // .then(res => { console.log(res) })
+    // .catch(error => {
+    //   console.log(error + ', desde el .catch')
+    //   setUser(null)
+    //   setGlobalLoading(false)
+    //   navigate('/login')
+    // })
   }, [])
 
   // useEffect(() => {

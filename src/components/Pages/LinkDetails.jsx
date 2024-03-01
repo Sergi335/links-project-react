@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormsStore } from '../../store/forms'
-import { useEffect, useState } from 'react'
 // import { fetchImage } from '../../services/dbQueries'
 import styles from './LinkDetails.module.css'
 // import { PasteImageIcon } from '../Icons/icons'
@@ -27,7 +27,7 @@ export default function LinkDetails () {
   }, [globalColumns])
 
   const data = links.find(link => link._id === linkId.id)
-  console.log('🚀 ~ LinkDetails ~ data:', data)
+  // console.log('🚀 ~ LinkDetails ~ data:', data)
 
   useEffect(() => {
     if (data?.notes) {
