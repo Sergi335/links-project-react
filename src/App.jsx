@@ -1,23 +1,20 @@
-import '@fontsource-variable/inconsolata'
 import '@fontsource-variable/inter'
-import '@fontsource-variable/montserrat'
-import '@fontsource-variable/noto-sans'
-import '@fontsource-variable/open-sans'
-import '@fontsource-variable/readex-pro'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { useEffect } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useSessionStore } from '../src/store/session'
 import ListOfLinks from './components/ListOfLinks'
+import NotFound from './components/Pages/404'
 import AppLayout from './components/Pages/AppLayout'
 import HomePage from './components/Pages/HomePage'
 import LinkDetails from './components/Pages/LinkDetails'
 import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
+import RecoveryPassword from './components/Pages/RecoveryPassword'
 import { constants } from './services/constants'
 
 function App () {
@@ -59,37 +56,54 @@ function App () {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <HomePage />
+      element: <HomePage />,
+      errorElement: <NotFound />
     },
     {
       path: '/desktop',
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <NotFound />,
       children: [
         {
           path: '/desktop/:desktopName',
-          element: <ListOfLinks />
+          element: <ListOfLinks />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/readinglist',
-          element: <ReadingList />
+          element: <ReadingList />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/link/:id',
-          element: <LinkDetails />
+          element: <LinkDetails />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/profile',
-          element: <ProfilePage />
+          element: <ProfilePage />,
+          errorElement: <NotFound />
         }
       ]
     },
     {
       path: '/link/:id',
-      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />
+      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />,
+      errorElement: <NotFound />
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to="/desktop/inicio" replace={true} />
+      element: user === null ? <Login /> : <Navigate to="/desktop/inicio" replace={true} />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '/recovery-password',
+      element: user === null ? <RecoveryPassword /> : <Navigate to="/desktop/inicio" replace={true} />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
   const [initBodyOverlayScrollbars] =
@@ -108,16 +122,17 @@ function App () {
     <>
       <RouterProvider router={router} />
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
+        hideProgressBar
+        newestOnTop
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
         theme={themeforToastify}
+        transition={Zoom}
       />
     </>
   )

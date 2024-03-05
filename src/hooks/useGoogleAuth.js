@@ -1,9 +1,11 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
-import { firebaseConfig } from '../config/firebaseConfig'
+import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, deleteUser, getAuth, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
-import { useSessionStore } from '../store/session'
+import { toast } from 'react-toastify'
+import { firebaseConfig } from '../config/firebaseConfig'
 import { constants } from '../services/constants'
+import { useGlobalStore } from '../store/global'
+import { useSessionStore } from '../store/session'
 
 export default function useGoogleAuth () {
   initializeApp(firebaseConfig)
@@ -11,7 +13,8 @@ export default function useGoogleAuth () {
   const navigate = useNavigate()
   const setUser = useSessionStore(state => state.setUser)
   const csrfToken = useSessionStore(state => state.csfrtoken)
-  // console.log('🚀 ~ useGoogleAuth ~ csrfToken:', csrfToken)
+  // const globalLoading = useGlobalStore(state => state.globalLoading)
+  const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -31,11 +34,6 @@ export default function useGoogleAuth () {
         } // Estamos devolviendo el password!!!
       }) // Control de errores
   }
-  // const getCookie = (name) => {
-  //   const value = '; ' + document.cookie
-  //   const parts = value.split('; ' + name + '=')
-  //   if (parts.length === 2) return parts.pop().split(';').shift()
-  // }
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
@@ -140,7 +138,7 @@ export default function useGoogleAuth () {
       .catch((e) => {
         console.log(e)
         // Ver los tipos de errores en la documentación
-        // error.innerHTML = e.message
+        toast.error('Usuario o contraseña incorrectos')
       })
   }
   const handleRegisterWithMail = (e) => {
@@ -149,6 +147,7 @@ export default function useGoogleAuth () {
     const email = form.get('email')
     const password = form.get('password')
     const nickname = form.get('name')
+    setGlobalLoading(true)
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -165,7 +164,8 @@ export default function useGoogleAuth () {
             .then(data => {
               console.log(data)
               // navigate('/desktop/start')
-              window.location.href = '/desktop/start'
+              setGlobalLoading(false)
+              window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
             })
         }).catch(function (error) {
           // Handle error
@@ -182,11 +182,54 @@ export default function useGoogleAuth () {
   }
   const handleDeleteUser = () => {
     const user = auth.currentUser
-    deleteUser(user).then(() => {
+    return deleteUser(user).then(() => {
       return 'Usuario eliminado'
     }).catch((error) => {
       console.log(error)
+      return ({ error: error.message, code: error.code })
     })
   }
-  return { handleGoogleLogin, handleGoogleLogOut, handleLoginWithMail, handleRegisterWithMail, handleDeleteUser }
+  const handleResetPasswordWithEmail = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email)
+      return { status: 'success' }
+    } catch (error) {
+      const errorCode = error.code
+      const errorMessage = error.message
+      console.log(errorCode, errorMessage)
+      return { status: 'error', error: { code: errorCode, message: errorMessage } }
+    }
+  }
+  const handleChangeFirebasePassword = async (newPassword) => {
+    const user = auth.currentUser
+    try {
+      await updatePassword(user, newPassword)
+      return { status: 'success' }
+    } catch (error) {
+      const errorCode = error.code
+      const errorMessage = error.message
+      console.log(errorCode, errorMessage)
+      return { status: 'error', error: { code: errorCode, message: errorMessage } }
+    }
+  }
+  const handleReauthenticate = async (password) => {
+    const user = auth.currentUser
+
+    // TODO(you): prompt the user to re-provide their sign-in credentials
+    const credential = EmailAuthProvider.credential(
+      user.email,
+      password
+    )
+
+    return reauthenticateWithCredential(user, credential)
+      .then(() => {
+        return { status: 'success' }
+      }).catch((error) => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode, errorMessage)
+        return { status: 'error', error: { code: errorCode, message: errorMessage } }
+      })
+  }
+  return { handleGoogleLogin, handleGoogleLogOut, handleLoginWithMail, handleRegisterWithMail, handleDeleteUser, handleResetPasswordWithEmail, handleChangeFirebasePassword, handleReauthenticate }
 }

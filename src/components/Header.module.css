@@ -2,12 +2,12 @@
     position: fixed;
     display: flex;
     justify-content: space-between;
-    right: 2rem;
-    left: 2rem;
+    right: 0;
+    left: 0;
     background: var(--mainColor);
     height: 43px;
     z-index: 5;
-    border-radius: var(--border-radius);
+    /* border-radius: var(--border-radius); */
     border: var(--firstBorder);
     backdrop-filter: blur(20px);
 }
@@ -208,6 +208,11 @@
 }
 
 @media (min-width: 768px) {
+    .header {
+        left: 2rem;
+        right: 2rem;
+        border-radius: var(--border-radius);
+    }
     .headLeft {
         grid-area: headLeft;
         display: flex;

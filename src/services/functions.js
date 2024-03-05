@@ -181,8 +181,12 @@ export async function getUrlStatus (url) {
 export function handleResponseErrors (response) {
   if (response.status !== 'success' || !response.status) {
     // return { hasError: true, message: 'Error al efectuar la operación' }
-    return { hasError: true, message: response.error }
+    return { hasError: true, message: response.error || 'Error al efectuar la operación' }
   }
+  // if (response.status === 'error') {
+  //   // return { hasError: true, message: 'Error al efectuar la operación' }
+  //   return { hasError: true, message: response.error?.message }
+  // }
   return { hasError: false, message: '' }
 }
 // function convertHtmlEntityToEmoji (htmlEntity) {

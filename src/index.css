@@ -6,16 +6,10 @@
 }
 :root {
   font-family: 'Inter Variable', sans-serif;
-  /* font-family: 'Noto Sans Variable', sans-serif;
-  font-family: 'Readex Pro Variable', sans-serif;
-  font-family: 'Open Sans Variable', sans-serif;
-  font-family: 'Montserrat Variable', sans-serif; */
   line-height: 1.5;
   font-weight: 400;
-  
   color-scheme: light dark;
   color: var(--firstTextColor);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -108,7 +102,7 @@ body {
 
 .root {
   margin: 0 auto;
-  padding: 1rem 2rem;
+  /* padding: 1rem 2rem; */
   text-align: center;
   overflow: hidden;
 }
@@ -325,4 +319,17 @@ textarea {
   left: 390px;
   border-left-color: var(--accentColor);
   display: inline-flex;
+}
+
+@media (min-width: 768px) {
+  .root {
+    padding: 1rem 2rem;
+  }
+  /* .newSection {
+    width: 21.8%;
+    left: 390px;
+  }
+  .deskForm {
+    min-width: 525px;
+  } */
 }

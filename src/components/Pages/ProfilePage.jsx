@@ -2,45 +2,75 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
 import { constants } from '../../services/constants'
-import { editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
+import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
-import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, KeyIcon, UploadIcon } from '../Icons/icons'
+import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon } from '../Icons/icons'
 import styles from './ProfilePage.module.css'
 
+export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
+  return (
+        <form onSubmit={handleReauth} className={`${styles.changePasswordDialog} deskForm`}>
+          <p>Introduzca su contraseña actual</p>
+          <input type="text" id="currentPassword" name='currentPassword' className={styles.textSecurity}/>
+          <div className={styles.flexButtons}>
+            <button id="changePasswordSubmit" type='submit'>Enviar</button>
+            <button id="changePasswordCancel" onClick={() => setReauthVisible(false)}>Cancelar</button>
+          </div>
+        </form>
+  )
+}
 export function UserPreferences ({ user, setUser }) {
   const [visible, setVisible] = useState(false)
-  const { handleDeleteUser } = useGoogleAuth()
-  const handleDeleteAccount = (e) => {
+  const [reauthVisible, setReauthVisible] = useState(false)
+  const { handleDeleteUser, handleReauthenticate } = useGoogleAuth()
+
+  const handleReauth = async (e) => {
     e.preventDefault()
-    console.log('delete account')
-    fetch(`${constants.BASE_API_URL}/auth/deleteuser`, {
-      method: 'DELETE',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify({ email: user.email })
-    })
-      .then(res => res.json())
-      .then(data => {
-        const { hasError, message } = handleResponseErrors(data)
-        if (hasError) {
-          toast(message)
-          return
-        }
-        handleDeleteUser()
-        toast('Cuenta eliminada con éxito')
-        setTimeout(() => {
-          setUser(null)
-        }, 2000)
-      })
+    const deleteLoading = toast.loading('Eliminando cuenta ...')
+    const form = e.currentTarget
+    const password = form.currentPassword.value
+    const reAuthResponse = await handleReauthenticate(password)
+
+    const { hasError, message } = handleResponseErrors(reAuthResponse)
+    if (hasError) {
+      toast.update(deleteLoading, { render: message.code === 'auth/wrong-password' ? 'Contraseña Incorrecta' : 'Error en la petición vuelve a intentarlo más tarde', type: 'error', isLoading: false, autoClose: 3000 })
+      return
+    }
+    setReauthVisible(false)
+    await handleDeleteUser()
+    setTimeout(() => {
+      toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+      setUser(null)
+    }, 2000)
+  }
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault()
+    const deleteLoading = toast.loading('Eliminando cuenta ...')
+    const response = await deleteAccount({ email: user.email })
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.update(deleteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+      return
+    }
+    // Esto puede dar error de reauth pero si lo ponemos primero da error del middleware de sesion, el orden debe ser este
+    const googleResponse = await handleDeleteUser()
+    if (googleResponse.code === 'auth/requires-recent-login') {
+      setVisible(false)
+      toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
+      setReauthVisible(true)
+      return
+    }
+    setTimeout(() => {
+      toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+      setUser(null)
+    }, 2000)
   }
   return (
     <>
-    <header className={styles.infoHeader}>
-      <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
-      <p>{user.email}</p>
-    </header>
+    <h3>Preferencias</h3>
     <div className={`${styles.preferences}`} id="preferences">
       <button id="closeAccount" onClick={() => setVisible(true)}>
         Cerrar Cuenta
@@ -59,104 +89,155 @@ export function UserPreferences ({ user, setUser }) {
             )
           : null
       }
+      {
+        reauthVisible && <ConfirmPasswordForm handleReauth={handleReauth} setReauthVisible={setReauthVisible}/>
+      }
     </div>
     </>
   )
 }
-export function UserSecurity ({ user }) {
+export function UserSecurity ({ user, setUser }) {
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const [backupLoading, setBackupLoading] = useState(false)
+  const [reauthVisible, setReauthVisible] = useState(false)
+  const [newPasswordState, setNewPasswordState] = useState('')
+  const { handleChangeFirebasePassword, handleReauthenticate } = useGoogleAuth()
+
   const handleChangePassword = (e) => {
     e.preventDefault()
     setPasswordVisible(true)
   }
-  const handleChangePasswordSubmit = (e) => {
+  const handleChangePasswordSubmit = async (e) => {
     e.preventDefault()
-    console.log(e.target)
-    const form = new FormData(e.target)
-    const data = Object.fromEntries(form)
-    console.log(data)
-    // Tiene que ser en firebase
+    const form = e.currentTarget
+    const newPassword = form.newPassword.value
+    setNewPasswordState(newPassword)
+    console.log('🚀 ~ handleChangePasswordSubmit ~ newPassword:', newPassword)
+    const response = await handleChangeFirebasePassword(newPassword)
+    if (response.status === 'success') {
+      toast('Contraseña cambiada con éxito')
+      setPasswordVisible(false)
+      setNewPasswordState('')
+    } else {
+      if (response.error.code === 'auth/weak-password') {
+        toast('La contraseña debe tener al menos 6 caracteres')
+      }
+      if (response.error.code === 'auth/requires-recent-login') {
+        setPasswordVisible(false)
+        setReauthVisible(true)
+      }
+    }
+    console.log('🚀 ~ handleChangePasswordSubmit ~ response:', response)
+  }
+  const handleReauth = async (e) => {
+    e.preventDefault()
+    const form = e.currentTarget
+    const password = form.currentPassword.value
+    const reAuthResponse = await handleReauthenticate(password)
+    console.log(reAuthResponse)
+    if (reAuthResponse.status === 'success') {
+      setReauthVisible(false)
+      const authResponse = await handleChangeFirebasePassword(newPasswordState)
+      // gestionar error tmb
+      toast('Contraseña cambiada con éxito')
+      console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
+    } else {
+      console.log(reAuthResponse)
+      setReauthVisible(false)
+      toast('Error al reautenticar')
+    }
   }
   const handleCreateBackup = (e) => {
+    setBackupLoading(true)
     fetch(`${constants.BASE_API_URL}/storage/backup`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         const { hasError, message } = handleResponseErrors(data)
         if (hasError) {
           toast(message)
+          setBackupLoading(false)
           return
         }
+        const { resultadoDb } = data
+        setUser(resultadoDb)
         toast('Copia creada con éxito')
+        setBackupLoading(false)
       })
   }
   const handleDownloadBackup = (e) => {
     window.open(`${user.lastBackupUrl}`)
   }
-  const handleUploadBackup = (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('backup', file)
-    fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        const { hasError, message } = handleResponseErrors(data)
-        if (hasError) {
-          toast(message)
-          return
-        }
-        toast('Copia subida con éxito')
-      })
-  }
+  // const handleUploadBackup = (e) => {
+  //   const file = e.target.files[0]
+  //   const formData = new FormData()
+  //   formData.append('backup', file)
+  //   fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
+  //     method: 'POST',
+  //     credentials: 'include',
+  //     headers: {
+  //       'x-justlinks-user': 'SergioSR',
+  //       'x-justlinks-token': 'otroheader'
+  //     },
+  //     body: formData
+  //   })
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       const { hasError, message } = handleResponseErrors(data)
+  //       if (hasError) {
+  //         toast(message)
+  //         return
+  //       }
+  //       toast('Copia subida con éxito')
+  //     })
+  // }
   return (
     <>
-      <header className={styles.infoHeader}>
-        <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
-        <p>{user.email}</p>
-      </header>
-      <div className={styles.password}>
-        <KeyIcon />
-        <p>Cambiar contraseña</p>
-        <form onSubmit={handleChangePassword} className={styles.flexForm}>
-          <input type="password" disabled={true} value="password"/>
-          <button id="changePassword">Cambiar</button>
-        </form>
-        {
-          passwordVisible
-            ? (
-              <form onSubmit={handleChangePasswordSubmit} className={styles.changePasswordDialog}>
-                <p>Introduzca su antigua contraseña</p>
-                <input type="password" id="oldPassword" name='oldPassword'/>
-                <p>Introduzca la nueva contraseña</p>
-                <input type="password" id="newPassword" name='newPassword'/>
-                <div className={styles.flexButtons}>
-                  <button id="changePasswordSubmit" type='submit'>Enviar</button>
-                  <button id="changePasswordCancel" onClick={() => setPasswordVisible(false)}>Cancelar</button>
-                </div>
-            </form>
-              )
-            : null
-        }
-      </div>
+      <h3>Seguridad</h3>
+      {
+        user.signMethod !== 'google' && (<div className={styles.password}>
+          {/* <KeyIcon /> */}
+          <h3>Cambiar contraseña</h3>
+          <form onSubmit={handleChangePassword} className={styles.flexForm}>
+            <button id="changePassword">Cambiar</button>
+          </form>
+          {
+            passwordVisible
+              ? (
+                <form onSubmit={handleChangePasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
+                  <p>Introduzca la nueva contraseña</p>
+                  <input type="hidden" name="email" id='email' value={user.email} />
+                  <input type="password" id="newPassword" name='newPassword'/>
+                  <div className={styles.flexButtons}>
+                    <button id="changePasswordSubmit" type='submit'>Enviar</button>
+                    <button id="changePasswordCancel" onClick={() => setPasswordVisible(false)}>Cancelar</button>
+                  </div>
+              </form>
+                )
+              : null
+          }
+          {
+            reauthVisible && <ConfirmPasswordForm handleReauth={handleReauth} setReauthVisible={setReauthVisible}/>
+          }
+        </div>)
+      }
       <div className={styles.backup}>
         <h3>Copia de seguridad de tus datos</h3>
         <div className={styles.backupControls}>
           <button id="backup" onClick={handleCreateBackup}>Crear Copia </button>
-          <button id="download" onClick={handleDownloadBackup}>Descargar</button>
+          {
+            user.lastBackupUrl && <button id="download" onClick={handleDownloadBackup}>Descargar</button>
+          }
         </div>
+        {
+          backupLoading && (<span className={styles.loader}></span>)
+        }
         <p id="errorMessage"> </p>
         <p id="successMessage"></p>
-        <form onChange={handleUploadBackup}>
+        {/* <form onChange={handleUploadBackup}>
           <p>Restaurar Copia</p>
           <button className={styles.upFile}>
             <label htmlFor="upFile">
@@ -167,7 +248,7 @@ export function UserSecurity ({ user }) {
           </button>
           <p id="errorUpMessage"> </p>
           <p id="successUpMessage"></p>
-        </form>
+        </form> */}
       </div>
     </>
   )
@@ -179,6 +260,8 @@ export function PieChart ({ links, setLinks }) {
   const chartPercentRef = useRef()
 
   useEffect(() => {
+    const abortController = new AbortController()
+    const $currentLink = document.getElementById('currentLink')
     const createChart = async () => {
       // const counter = document.getElementById('counter')
       const $ppc = chartRef.current
@@ -195,20 +278,23 @@ export function PieChart ({ links, setLinks }) {
         $fill.style.transform = 'rotate(0deg)'
         result.innerHTML = 0 + '%'
 
-        const newLinks = [...links].slice(0, 150)
+        const newLinks = [...links].slice(0, 500)
 
         const porcentajePorPaso = 100 / newLinks.length
         let count = 0
         const downLinks = await Promise.all(newLinks.map(async (link) => {
           const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${link.URL}`, {
             method: 'GET',
+            signal: abortController.signal,
             ...constants.FETCH_OPTIONS
           })
           const data = await response.json()
           if (data.status !== 'success') {
+            $currentLink.textContent = `Comprobando ${link.name} ...`
             count += porcentajePorPaso
             return { data, link }
           }
+          $currentLink.textContent = `Comprobando ${link.name} ...`
           count += porcentajePorPaso
           $ppc.dataset.percent = count
           progressCircle()
@@ -216,12 +302,18 @@ export function PieChart ({ links, setLinks }) {
         }))
 
         const filteredLinks = downLinks.filter(link => link !== null)
+        if (filteredLinks.length === 0) {
+          toast.success('No se encontraron links caídos')
+        }
         setBrokenLinks(filteredLinks)
         // counter.innerHTML = `Broken Links: ${filteredLinks.length}`
         setLinks([])
       }
     }
     createChart()
+    return () => {
+      abortController.abort()
+    }
   }, [links])
 
   function progressCircle () {
@@ -232,16 +324,17 @@ export function PieChart ({ links, setLinks }) {
     const deg = 360 * percent / 100
 
     if (percent > 50) {
-      $ppc.classList.add(`${styles.gt50}}`)
+      $ppc.classList.add(`${styles.gt50}`)
     }
     $fill.style.transform = `rotate(${deg}deg)`
-    result.innerHTML = percent + '%'
+    result.textContent = percent + '%'
   }
   return (
     <>
     {
     links.length > 0
       ? (
+      <>
       <div ref={chartRef} className={styles.progressPieChart} data-percent="0">
         <div className={styles.ppcProgress}>
           <div ref={chartFillRef} className={styles.ppcProgressFill}></div>
@@ -251,7 +344,9 @@ export function PieChart ({ links, setLinks }) {
             <span ref={chartPercentRef}>0%</span>
           </div>
         </div>
-      </div>)
+      </div>
+      <p id='currentLink' className={styles.currentLink}></p>
+      </>)
       : null
       }
       {
@@ -262,9 +357,9 @@ export function PieChart ({ links, setLinks }) {
       }
       <div id="brokenLinksResult" className={styles.brokenLinksResult}>
         {
-          brokenLinks && brokenLinks.map(link => {
+          brokenLinks && brokenLinks.map((link, index) => {
             return (
-              <div key={link.link._id} className={styles.link}>
+              <div key={link.link._id + index} className={styles.link}>
                 <a target="_blank" href={link.link.URL} rel="noreferrer">
                   <img src={link.link.imgURL}/>{link.link.name}
                 </a>
@@ -282,13 +377,19 @@ export function PieChart ({ links, setLinks }) {
 export function UserStats ({ user }) {
   const [duplicates, setDuplicates] = useState([])
   const [links, setLinks] = useState([])
+  const [duplicatesLoading, setDuplicatesLoading] = useState(false)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-
+  // TODO Errores
   const handleFindDuplicates = async (e) => {
+    setDuplicatesLoading(true)
     const response = await findDuplicateLinks()
+    if (response.length === 0) {
+      toast.success('No se encontraron duplicados')
+    }
     setDuplicates(response)
+    setDuplicatesLoading(false)
   }
   const handleFindBrokenLinks = async (e) => {
     const response = await getAllLinks()
@@ -303,10 +404,7 @@ export function UserStats ({ user }) {
 
   return (
         <>
-          <header className={styles.infoHeader}>
-            <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
-            <p>{user.email}</p>
-          </header>
+          <h3>Estadísticas</h3>
           <div className={styles.statsInfo}>
             <table>
               <tbody>
@@ -349,12 +447,17 @@ export function UserStats ({ user }) {
             }
 
             <PieChart links={links} setLinks={setLinks}/>
+            {
+
+              duplicatesLoading && (<span className={styles.loader}></span>)
+
+            }
           <div className={styles.duplicatesResult}>
             {
-              duplicates && duplicates.map((duplicate) => {
+              !duplicatesLoading && duplicates && duplicates.map((duplicate, index) => {
                 return (
                   <>
-                    <div key={duplicate._id} className={styles.link}>
+                    <div key={duplicate._id + index} className={styles.link}>
                       <a target="_blank" href={duplicate.URL} rel="noreferrer">
                         <img src={duplicate.imgURL}/>{duplicate.name}
                       </a>
@@ -396,6 +499,11 @@ export function UserInfo ({ user, setUser }) {
   }
   const handleUploadImageInputChange = async (e) => {
     const file = e.target.files[0]
+    console.log(file.size)
+    if (file.size > 2e+6) {
+      toast('Imagen demasiado grande')
+      return
+    }
     const previewImage = document.getElementById('preview-image')
     const imageUrl = URL.createObjectURL(file)
     previewImage.src = imageUrl
@@ -422,17 +530,17 @@ export function UserInfo ({ user, setUser }) {
     setFileToUpload(null)
   }
   const handleEditInfo = (e) => {
-    if (e.target.id === 'editName') {
+    if (e.currentTarget.id === 'editName' || (e.currentTarget.id === 'editName' && e.target.tagName === 'STRONG')) {
       setEditName(true)
       setEditWebsite(false)
       setEditAboutMe(false)
     }
-    if (e.target.id === 'editWeb') {
+    if (e.currentTarget.id === 'editWeb' || (e.currentTarget.id === 'editWeb' && e.target.tagName === 'STRONG')) {
       setEditWebsite(true)
       setEditName(false)
       setEditAboutMe(false)
     }
-    if (e.target.id === 'editAbout') {
+    if (e.currentTarget.id === 'editAbout' || (e.currentTarget.id === 'editAbout' && e.target.tagName === 'STRONG')) {
       setEditAboutMe(true)
       setEditName(false)
       setEditWebsite(false)
@@ -445,11 +553,7 @@ export function UserInfo ({ user, setUser }) {
   return (
     <div className={styles.info}>
       <div className={styles.wrapper}>
-        <header className={styles.infoHeader}>
-          <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : ''}</span></p>
-          <p>{user.email}</p>
-        </header>
-        <p className={styles.dateJoin}><span>Miembro desde: </span>{formatDate(user.createdAt)}</p>
+        <h3>Información Básica</h3>
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
             <img id="preview-image" src={user.profileImage ? user.profileImage : '/img/avatar.svg'}/>
@@ -457,7 +561,7 @@ export function UserInfo ({ user, setUser }) {
           <div className={styles.uploadImageTooltip}>
             <p>Sube tu imagen de perfil</p>
             <p>Tamaño recomendado 125x125</p>
-            <p>Max. 15MB</p>
+            <p>Max. 2MB</p>
             {
               !fileToUploadLoading && (
                 <button className={styles.upFile}>
@@ -465,7 +569,7 @@ export function UserInfo ({ user, setUser }) {
                     <AddImageIcon />
                     Subir Imagen
                   </label>
-                  <input className={styles.imageInput} type="file" accept="image/*" name="image-input" onChange={handleUploadImageInputChange}/>
+                  <input className={styles.imageInput} type="file" accept="image/*" name="image-input" id='image-input' onChange={handleUploadImageInputChange}/>
                 </button>
               )
             }
@@ -486,30 +590,38 @@ export function UserInfo ({ user, setUser }) {
                 {
                   editName
                     ? <><label htmlFor="realName">Nombre Completo: </label><input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditName(false)}>Cancelar</button></>
-                    : <><p id='editName' onClick={handleEditInfo}>Nombre Completo:&nbsp;&nbsp;{user.realName || 'User'}</p></>
+                    : <><p id='editName' onClick={handleEditInfo}><strong>Nombre Completo</strong>:&nbsp;&nbsp;{user.realName || 'User'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
               </div>
               <div className={styles.rowGroup}>
                 {
                   editWebsite
                     ? <><label htmlFor="website">Sitio Web: </label><input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditWebsite(false)}>Cancelar</button></>
-                    : <><p id='editWeb' onClick={handleEditInfo}>Sitio Web:&nbsp;&nbsp;{user.website || 'www.mywebsite.com'}</p></>
+                    : <><p id='editWeb' onClick={handleEditInfo}><strong>Sitio Web</strong>:&nbsp;&nbsp;{user.website || 'www.mywebsite.com'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
               </div>
               <div className={styles.rowGroup}>
                 {
                   editAboutMe
                     ? <><label htmlFor="aboutMe">Sobre mí:</label><textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditAboutMe(false)}>Cancelar</button></>
-                    : <><p id='editAbout' onClick={handleEditInfo}>Sobre mí:&nbsp;&nbsp;{user.aboutMe || 'My favorite things to do'}</p></>
+                    : <><p id='editAbout' onClick={handleEditInfo}><strong>Sobre mí</strong>:&nbsp;&nbsp;{user.aboutMe || 'Some nice things about me ...'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
-                {/* <label htmlFor="aboutMe">Sobre mí:</label>
-                <textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/> */}
               </div>
+            <p className={styles.dateJoin}><strong>Miembro desde:&nbsp;&nbsp; </strong>{formatDate(user.createdAt)}</p>
             </form>
           </div>
 
       </div>
     </div>
+  )
+}
+export function ProfileHeader ({ user }) {
+  return (
+    <header className={styles.infoHeader}>
+      <h3>Perfil de usuario</h3>
+      <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : 'Mi frase motivante aquí'}</span></p>
+      <p>{user.email}</p>
+    </header>
   )
 }
 export default function ProfilePage () {
@@ -536,10 +648,8 @@ export default function ProfilePage () {
   }
   return (
     <main className={styles.profileWrapper}>
+      <ProfileHeader user={user}/>
       <section className={styles.buttons}>
-        <div className={styles.profileTitle}>
-          <h2>Perfil de usuario</h2>
-        </div>
         <button className={`${styles.tablinks} buttonlink`} id="infoTab" onClick={() => { openTab('info', 'infoTab') }}>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ color: '#3c9aed', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
           Información
@@ -565,7 +675,7 @@ export default function ProfilePage () {
           <UserStats user={user}/>
         </div>
         <div ref={secRef} className={styles.tabcontent} id="security">
-          <UserSecurity user={user}/>
+          <UserSecurity user={user} setUser={setUser}/>
         </div>
         <div ref={prefRef} className={styles.tabcontent} id="preferences">
           <UserPreferences user={user} setUser={setUser}/>

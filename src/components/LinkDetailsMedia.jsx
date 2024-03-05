@@ -414,22 +414,8 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
               if (hasError) {
                 toast(message)
               } else {
-                newState[elementIndex].images.push(response.images[response.images.length - 1])
+                newState[elementIndex].images.push(response.link.images[response.link.images.length - 1])
                 setLinks(newState)
-                // // Error de red
-                // if (!response._id && !response.ok && response.error === undefined) {
-                //   toast('Error de red')
-                //   return
-                // }
-                // // Error http
-                // if (!response._id && !response.ok && response.status !== undefined) {
-                //   toast(`${response.status}: ${response.statusText}`)
-                //   return
-                // }
-                // // Error personalizado
-                // if (response._id && response.error) {
-                //   toast(`Error: ${response.error}`)
-                // }
                 toast('Imagen guardada!', { autoClose: 1500 })
               }
             })
