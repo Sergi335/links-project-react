@@ -13,6 +13,7 @@
     & p {
         font-weight: bold;
         font-size: 1.3rem;
+        margin: 0;
     }
 }
 .google {
@@ -21,15 +22,8 @@
     padding: 15px 35px;
     font-size: 1.6rem;
     gap: 12px;
-    font-family: system-ui;
     color: var(--secondTextColor);
     border-radius: var(--border-radius);
-    justify-content: start;
-    /* box-shadow: 0px 7px 13px var(--secondShadow); */
-
-    & svg {
-        margin-top: 3px;
-    }
 }
 p.recoveryText {
     font-size: .875rem;
@@ -58,7 +52,7 @@ p.recoveryText {
     align-items: center;
     gap: 15px;
     width: 100%;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px; */
 }
 .loginForm input[type="text"],
 .registerForm input[type="text"],
@@ -73,12 +67,13 @@ p.recoveryText {
     font-size: 1em;
     color: coral;
     font-weight: bold;
+    display: block;
+    text-align: center;
 }
 .logSwitch:hover {
     color: var(--accentColor);
 }
 .start {
-    margin-top: 100px;
     font-size: 1.3rem;
     color: coral;
     font-weight: bold;
@@ -119,7 +114,15 @@ p.recoveryText {
     left: 27px;
 }
 .loaderWrapper {
-    height: 50px;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.hidden {
+    opacity: 0;
+    visibility: hidden;
 }
 .loader {
     width: 50px;

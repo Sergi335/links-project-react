@@ -16,7 +16,7 @@
 .description {
   display: flex;
   align-items: center;
-  background: var(--frostHvColor);
+  background: var(--inputBackgroundColor);
   max-height: 0;
   transition: max-height .3s ease-in-out;
   /* transition-delay: 1s; */
@@ -33,7 +33,7 @@
   text-align: left;
   /* transition: opacity .1s ease-in-out; */
   font-size: 0.75rem;
-  font-weight: 300;
+  font-weight: 500;
 }
 .description span.fade {
   opacity: 1;

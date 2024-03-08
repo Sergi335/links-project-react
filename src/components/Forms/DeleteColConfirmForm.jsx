@@ -1,10 +1,10 @@
-import { toast } from 'react-toastify'
-import { deleteColumn } from '../../services/dbQueries'
-import styles from './AddLinkForm.module.css'
-import useHideForms from '../../hooks/useHideForms'
 import { useRef } from 'react'
+import { toast } from 'react-toastify'
+import useHideForms from '../../hooks/useHideForms'
+import { deleteColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
+import styles from './AddLinkForm.module.css'
 
 export default function DeleteColConfirmForm ({ visible, setVisible, itemType = 'columna', params }) {
   const visibleClassName = visible ? styles.flex : styles.hidden
@@ -22,7 +22,7 @@ export default function DeleteColConfirmForm ({ visible, setVisible, itemType = 
     const response = await deleteColumn(params._id)
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
-      toast(message)
+      toast.error(message)
     }
   }
 

@@ -381,7 +381,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     }
   } catch (error) {
     console.error('Error al obtener la imagen:', error)
-    return { error }
+    return { error: 'Sin conexión con servidor, inténtalo más tarde' } // TODO hacerlo con todos
   }
 }
 // DeleteImageConfirmForm

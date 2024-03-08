@@ -1,23 +1,24 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import EditLinkForm from './Forms/EditLinkForm'
-import DeleteLinkForm from './Forms/DeleteLinkForm'
-import MoveOtherDeskForm from './Forms/MoveOtherDeskForm'
-import ContextLinkMenu from './ContextualMenu'
-import ContextualColMenu from './ContextualColMenu'
-import AddLinkForm from './Forms/AddLinkForm'
-import AddDesktopForm from './Forms/AddDesktopForm'
-import DeleteConfirmForm from './Forms/DeleteConfirmForm'
-import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
-import { useFormsStore } from '../store/forms'
 import { useDesktopsStore } from '../store/desktops'
+import { useFormsStore } from '../store/forms'
 import { usePreferencesStore } from '../store/preferences'
+import ContextualColMenu from './ContextualColMenu'
+import ContextLinkMenu from './ContextualMenu'
+import AddDesktopForm from './Forms/AddDesktopForm'
+import AddLinkForm from './Forms/AddLinkForm'
+import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
+import DeleteConfirmForm from './Forms/DeleteConfirmForm'
+import DeleteLinkForm from './Forms/DeleteLinkForm'
+import EditLinkForm from './Forms/EditLinkForm'
+import MoveOtherDeskForm from './Forms/MoveOtherDeskForm'
 
 export default function FormsContainer () {
   const { desktopName } = useParams()
   const linkContextMenuVisible = useFormsStore(state => state.linkContextMenuVisible)
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const points = useFormsStore(state => state.points)
+  const setPoints = useFormsStore(state => state.setPoints)
   const editFormVisible = useFormsStore(state => state.editFormVisible)
   const setEditFormVisible = useFormsStore(state => state.setEditFormVisible)
   const activeLink = useFormsStore(state => state.activeLink)
@@ -114,6 +115,7 @@ export default function FormsContainer () {
                   visible={linkContextMenuVisible}
                   setVisible={setContextMenuVisible}
                   points={points}
+                  setPoints={setPoints}
                   params={links}
                   setEditFormVisible={setEditFormVisible}
                   setDeleteFormVisible={setDeleteFormVisible}
@@ -126,6 +128,7 @@ export default function FormsContainer () {
               ? <ContextualColMenu
                   visible={columnContextMenuVisible}
                   points={points}
+                  setPoints={setPoints}
                   params={activeColumn}
                   desktops={desktopsStore}
                   setAddLinkFormVisible={setAddLinkFormVisible}

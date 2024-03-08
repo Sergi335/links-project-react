@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { createColumn } from '../services/dbQueries'
 import { saludo } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
@@ -87,6 +88,10 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }, [result])
 
   const handleClick = async () => {
+    if (desktop === undefined) {
+      toast.error('Debes crear un escritorio primero')
+      return
+    }
     const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
     const { column } = response
     setGlobalColumns((() => { return [...globalColumns, ...column] })())

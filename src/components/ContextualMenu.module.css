@@ -52,7 +52,7 @@
 .moveList {
     position: absolute;
     left: 95%;
-    display: none;
+    /* display: none; */
     flex-direction: column;
     background-color: var(--mainColor);
     backdrop-filter: blur(20px);
@@ -62,6 +62,9 @@
     width: max-content;
     box-shadow: 0px 0px 30px var(--firstShadow);
     border: var(--firstBorder);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.1s, opacity 0.1s linear;
     
 }
 .moveList li {
@@ -81,5 +84,7 @@
     cursor:default;
 }
 .moveTo:hover .moveList {
-    display: flex;
+    /* display: flex; */
+    visibility: visible;
+    opacity: 1;
 }

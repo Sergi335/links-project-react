@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { usePasteLink } from '../hooks/usePasteLink'
@@ -9,7 +10,7 @@ import { usePreferencesStore } from '../store/preferences'
 import styles from './ContextualColMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
-export default function ContextualColMenu ({ visible, points, params, desktops, setAddLinkFormVisible }) {
+export default function ContextualColMenu ({ visible, points, setPoints, params, desktops, setAddLinkFormVisible }) {
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -18,6 +19,10 @@ export default function ContextualColMenu ({ visible, points, params, desktops, 
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const { pasteLink } = usePasteLink({ params, desktopName, activeLocalStorage })
+  const menuRef = useRef(null)
+  const subMenuRef = useRef(null)
+  const [subMenuSide, setSubMenuSide] = useState('')
+  const [subMenuTop, setSubMenuTop] = useState('')
 
   const handleMoveCol = async (desk) => {
     const updatedState = [...globalColumns]
@@ -49,9 +54,30 @@ export default function ContextualColMenu ({ visible, points, params, desktops, 
       setGlobalColumns(globalColumns)
     }
   }
-
+  useEffect(() => {
+    const menu = menuRef.current
+    const submenu = subMenuRef.current
+    const newPoints = { x: points.x, y: points.y }
+    // console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
+    if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
+      setSubMenuSide('left')
+      newPoints.x = window.innerWidth - menu.offsetWidth
+    } else {
+      setSubMenuSide('right')
+    }
+    if (points.y + menu.offsetHeight > window.innerHeight) {
+      newPoints.y = window.innerHeight - menu.offsetHeight
+    }
+    if (points.y + submenu.offsetHeight > window.innerHeight) {
+      setSubMenuTop(`-${submenu.offsetHeight - menu.offsetHeight + 13}px`)
+    } else {
+      setSubMenuTop('94px')
+    }
+    setPoints(newPoints)
+  }, [params])
+  // el 67% depende del ancho del menu no esta fijo TODO
   return (
-        <div className={
+        <div ref={menuRef} className={
             visible ? styles.flex : styles.hidden
           } style={{ left: points.x, top: points.y }}>
             <p><strong>Opciones Columna</strong></p>
@@ -60,7 +86,7 @@ export default function ContextualColMenu ({ visible, points, params, desktops, 
             <span onClick={() => { pasteLink() }}>Pegar</span>
             {/* <span>Renombrar</span> */}
             <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
-              <ul className={styles.moveList}>
+              <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-67%', top: subMenuTop }}>
                 {
                   desktops.map(desk => desk.name === desktopName
                     ? (

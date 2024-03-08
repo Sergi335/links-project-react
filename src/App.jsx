@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useDesktopsStore } from '../src/store/desktops'
 import { useSessionStore } from '../src/store/session'
 import ListOfLinks from './components/ListOfLinks'
 import NotFound from './components/Pages/404'
@@ -33,7 +34,8 @@ function App () {
         setCsfrtoken(csrfToken)
       })
   }, [])
-
+  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
   // Obtenemos el tema para el toast -> no funciona?
   const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
   useEffect(() => {
@@ -83,6 +85,11 @@ function App () {
           path: '/desktop/profile',
           element: <ProfilePage />,
           errorElement: <NotFound />
+        },
+        {
+          path: '/desktop/',
+          element: <ListOfLinks />,
+          errorElement: <NotFound />
         }
       ]
     },
@@ -93,12 +100,12 @@ function App () {
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to="/desktop/inicio" replace={true} />,
+      element: user === null ? <Login /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
       errorElement: <NotFound />
     },
     {
       path: '/recovery-password',
-      element: user === null ? <RecoveryPassword /> : <Navigate to="/desktop/inicio" replace={true} />,
+      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
       errorElement: <NotFound />
     },
     {

@@ -25,7 +25,7 @@ export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
 export function UserPreferences ({ user, setUser }) {
   const [visible, setVisible] = useState(false)
   const [reauthVisible, setReauthVisible] = useState(false)
-  const { handleDeleteUser, handleReauthenticate } = useGoogleAuth()
+  const { handleDeleteUser, handleReauthenticate, handleReauthenticateWithGoogle } = useGoogleAuth()
 
   const handleReauth = async (e) => {
     e.preventDefault()
@@ -58,6 +58,23 @@ export function UserPreferences ({ user, setUser }) {
     // Esto puede dar error de reauth pero si lo ponemos primero da error del middleware de sesion, el orden debe ser este
     const googleResponse = await handleDeleteUser()
     if (googleResponse.code === 'auth/requires-recent-login') {
+      if (user.signMethod === 'google') {
+        setVisible(false)
+        toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
+        const response = await handleReauthenticateWithGoogle()
+        const { hasError, message } = handleResponseErrors(response)
+        if (hasError) {
+          console.log(message.code)
+          toast.update(deleteLoading, { render: 'error reauth google', type: 'error', isLoading: false, autoClose: 3000 })
+          return
+        }
+        await handleDeleteUser()
+        setTimeout(() => {
+          toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+          setUser(null)
+        }, 2000)
+        return
+      }
       setVisible(false)
       toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
       setReauthVisible(true)

@@ -1,14 +1,16 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { editColumn } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
+import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import { ArrowDown, SelectIcon } from './Icons/icons'
+import LinkLoader from './Loaders/LinkLoader'
 import styles from './column.module.css'
 
 export default function Columna ({ data, children }) {
@@ -21,6 +23,7 @@ export default function Columna ({ data, children }) {
   const selectModeClass = selectMode ? 'selectMode' : ''
   const colRef = useRef(null)
   const headRef = useRef(null)
+  const spanCountRef = useRef(null)
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -35,7 +38,10 @@ export default function Columna ({ data, children }) {
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const maxHeight = (10 + 2 + 38) * childCount + (3 * childCount)
-
+  const linkLoader = useLinksStore(state => state.linkLoader)
+  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
+  const stylesOnHeader = { height: 'auto' }
+  // console.log({ localColSelectMode: selectMode, globalColSelectMode: selectModeGlobal, selectModeColumnsIds: columnSelectModeId, selectedLinks })
   const handleChangeColumnHeight = (e) => {
     const opener = e.currentTarget
     const column = opener.parentNode.parentNode.parentNode
@@ -44,8 +50,10 @@ export default function Columna ({ data, children }) {
       opener.childNodes[0].classList.toggle(styles.rotate)
       if (column.classList.contains(styles.colOpen)) {
         column.style.maxHeight = `${maxHeight}px`
+        spanCountRef.current.style.display = 'none'
       } else {
         column.style.maxHeight = ''
+        spanCountRef.current.style.display = 'inline'
       }
     }
     openColumn()
@@ -93,7 +101,6 @@ export default function Columna ({ data, children }) {
     setColumnContextMenuVisible(true)
     setActiveColumn(columna)
   }, [columna, setPoints, setColumnContextMenuVisible, setActiveColumn])
-
   const handleHeaderBlur = async (event) => {
     if (event.type === 'keydown' && event.key !== 'Enter') return
     setEditMode(false)
@@ -115,6 +122,11 @@ export default function Columna ({ data, children }) {
       }
     }
   }
+  useEffect(() => {
+    setSelectModeGlobal(false)
+    setSelectedLinks([])
+    setColumnSelectModeId([])
+  }, [desktopName])
   const {
     setNodeRef,
     attributes,
@@ -156,9 +168,15 @@ export default function Columna ({ data, children }) {
               ? <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
               : <div className={styles.headContainer} onContextMenu={(e) => handleContextMenu(e) }>
                 {selectMode && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange}/>}
-                  <h2 onClick={() => setEditMode(true) } ref={headRef} >
+                  <h2 onClick={() => setEditMode(true) } ref={headRef} style={linkLoader ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
+                  {
+                    childCount > 6 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 6}`}</span>
+                  }
                   </h2>
+                  {
+                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 6 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
+                  }
                   <div className={styles.opener} onClick={handleChangeColumnHeight}>
                     {
                       childCount > 6 && <ArrowDown className='uiIcon_small'/>

@@ -46,7 +46,7 @@
 .moveList {
     position: absolute;
     left: 95%;
-    display: none;
+    /* display: none; */
     flex-direction: column;
     padding: 5px;
     border-radius: 5px;
@@ -56,6 +56,9 @@
     backdrop-filter: blur(20px);
     box-shadow: 0px 0px 30px var(--firstShadow);
     border: var(--firstBorder);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.1s, opacity 0.1s linear;
 }
 .moveList li {
     padding: 8px 10px;
@@ -73,5 +76,7 @@
     cursor: default;
 }
 .moveTo:hover .moveList {
-    display: flex;
+    /* display: flex; */
+    visibility: visible;
+    opacity: 1;
 }

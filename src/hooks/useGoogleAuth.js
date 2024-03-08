@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, deleteUser, getAuth, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
+import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, deleteUser, getAuth, reauthenticateWithCredential, reauthenticateWithPopup, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword } from 'firebase/auth'
+import { redirect, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { firebaseConfig } from '../config/firebaseConfig'
 import { constants } from '../services/constants'
@@ -14,7 +14,9 @@ export default function useGoogleAuth () {
   const setUser = useSessionStore(state => state.setUser)
   const csrfToken = useSessionStore(state => state.csfrtoken)
   // const globalLoading = useGlobalStore(state => state.globalLoading)
-  const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
+  // const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
+  const setRegisterLoading = useGlobalStore(state => state.setRegisterLoading)
+  const setLoginLoading = useGlobalStore(state => state.setLoginLoading)
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -38,6 +40,7 @@ export default function useGoogleAuth () {
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
       .then((result) => {
+        setLoginLoading(true)
         // This gives you a Google Access Token. You can use it to access the Google API.
         // const credential = GoogleAuthProvider.credentialFromResult(result)
         // console.log(credential)
@@ -54,8 +57,22 @@ export default function useGoogleAuth () {
       // ...
       })
       .then(() => {
-        console.log('redirect')
-        navigate('/desktop/inicio')
+        // console.log('redirect')
+        // navigate('/desktop/inicio')
+        fetch(`${constants.BASE_API_URL}/desktops`, {
+          method: 'GET',
+          credentials: 'include',
+          ...constants.FETCH_OPTIONS
+        })
+          .then(res => res.json())
+          .then(desks => {
+            const { data } = desks
+            const firstDesktop = data[0]?.name || 'start'
+            // navigate(`/desktop/${firstDesktop}`)
+            setLoginLoading(false)
+            // window.location.href = `/desktop/${firstDesktop}` // --> si esto te redirige el login ha sido correcto en Firebase
+            redirect(`/desktop/${firstDesktop}`)
+          })
       })
       .catch((error) => {
       // Handle Errors here.
@@ -147,7 +164,7 @@ export default function useGoogleAuth () {
     const email = form.get('email')
     const password = form.get('password')
     const nickname = form.get('name')
-    setGlobalLoading(true)
+    setRegisterLoading(true)
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -163,9 +180,9 @@ export default function useGoogleAuth () {
           )
             .then(data => {
               console.log(data)
-              // navigate('/desktop/start')
-              setGlobalLoading(false)
-              window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
+              setRegisterLoading(false)
+              redirect('/desktop/start')
+              // window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
             })
         }).catch(function (error) {
           // Handle error
@@ -214,6 +231,7 @@ export default function useGoogleAuth () {
   }
   const handleReauthenticate = async (password) => {
     const user = auth.currentUser
+    console.log(user.providerData)
 
     // TODO(you): prompt the user to re-provide their sign-in credentials
     const credential = EmailAuthProvider.credential(
@@ -231,5 +249,18 @@ export default function useGoogleAuth () {
         return { status: 'error', error: { code: errorCode, message: errorMessage } }
       })
   }
-  return { handleGoogleLogin, handleGoogleLogOut, handleLoginWithMail, handleRegisterWithMail, handleDeleteUser, handleResetPasswordWithEmail, handleChangeFirebasePassword, handleReauthenticate }
+  const handleReauthenticateWithGoogle = async () => {
+    const provider = new GoogleAuthProvider()
+    const user = auth.currentUser
+    return reauthenticateWithPopup(user, provider)
+      .then(() => {
+        return { status: 'success' }
+      }).catch((error) => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode, errorMessage)
+        return { status: 'error', error: { code: errorCode, message: errorMessage } }
+      })
+  }
+  return { handleGoogleLogin, handleGoogleLogOut, handleLoginWithMail, handleRegisterWithMail, handleDeleteUser, handleResetPasswordWithEmail, handleChangeFirebasePassword, handleReauthenticate, handleReauthenticateWithGoogle }
 }

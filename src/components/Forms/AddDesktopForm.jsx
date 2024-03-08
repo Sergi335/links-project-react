@@ -1,11 +1,11 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDesktopsStore } from '../../store/desktops'
-import { useFormsStore } from '../../store/forms'
 import { toast } from 'react-toastify'
+import useHideForms from '../../hooks/useHideForms'
 import { createDesktop } from '../../services/dbQueries'
 import { formatPath, handleResponseErrors } from '../../services/functions'
-import useHideForms from '../../hooks/useHideForms'
+import { useDesktopsStore } from '../../store/desktops'
+import { useFormsStore } from '../../store/forms'
 import styles from './AddLinkForm.module.css'
 
 export default function AddDesktopForm () {
@@ -28,19 +28,19 @@ export default function AddDesktopForm () {
     const response = await createDesktop({ name, displayName, orden })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
-      toast(message)
+      toast.error(message)
       return
     }
     const { data } = response
     setAddDeskFormVisible(false)
-    toast('Escritorio Añadido!', { autoClose: 1500 })
+    toast.success('Escritorio Añadido!', { autoClose: 1500 })
     setDesktopsStore(data)
     navigate(`/desktop/${name}`)
   }
   return (
         <form ref={formRef} className={`${visibleClassName} deskForm`} onSubmit={handleAddDesktopSubmit}>
           <h3>Añade Escritorio</h3>
-          <input ref={inputRef} id='deskName' type='text' name='deskName' maxLength='35' required />
+          <input ref={inputRef} id='deskName' type='text' name='deskName' maxLength='250' required />
           <div className="button_group">
             <button type='submit'>Enviar</button>
             <button type='button' onClick={() => setAddDeskFormVisible(false)}>Cancelar</button>

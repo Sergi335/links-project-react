@@ -7,7 +7,8 @@ import styles from './LoginPage.module.css'
 
 export default function Login () {
   const { handleGoogleLogin, handleLoginWithMail, handleRegisterWithMail } = useGoogleAuth()
-  const globalLoading = useGlobalStore(state => state.globalLoading)
+  const loginLoading = useGlobalStore(state => state.loginLoading)
+  const registerLoading = useGlobalStore(state => state.registerLoading)
   const [login, setLogin] = useState(true)
   return (
     <main className={styles.loginMain}>
@@ -32,9 +33,9 @@ export default function Login () {
             <input type="password" id="password" name="password" placeholder="password" required />
             <input type="text" id="name" name="name" placeholder="nick" />
             <button className={styles.loginButton}>Registrarse</button>
-            {
-              globalLoading && <div className={styles.loaderWrapper}><span className={styles.loader}></span></div>
-            }
+            <div className={registerLoading ? `${styles.loaderWrapper} ${styles.visible}` : `${styles.loaderWrapper} ${styles.hidden}` }>
+              <span className={styles.loader}></span>
+            </div>
           </form>
             )
       }
@@ -45,7 +46,9 @@ export default function Login () {
       </p>
       <p style={{ textTransform: 'uppercase' }}>O</p>
       <button onClick={handleGoogleLogin} className={styles.google}><GoogleLogo/>Continua con Google</button>
-      {/* <button onClick={handleGoogleLogOut}>{'Log Out'}</button> */}
+      <div className={loginLoading ? `${styles.loaderWrapper} ${styles.visible}` : `${styles.loaderWrapper} ${styles.hidden}` }>
+        <span className={styles.loader}></span>
+      </div>
     <Link className={styles.start} to={'/'}>Volver</Link>
     </div>
     </main>

@@ -65,7 +65,7 @@ html.dark {
   --columnBgColor: #1d1d1d;
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
-  --firstTextColor: #cdcdcd;
+  --firstTextColor: #bbbbbb;
   --secondTextColor: #9f9f9f;
   --frostHvColor: black;
   --firstShadow: #0c0c0c96;
@@ -182,9 +182,9 @@ button {
   border: 0;
   padding: 8px 19px;
   border-radius: var(--button-radius);
-  font-family: monospace;
+  font-family: 'Inter Variable';
   font-weight: 500;
-  font-size: 1.1em;
+  font-size: .75rem;
   cursor: pointer;
   transition: background-color .3s ease-out, color .3s ease-out;
   gap: 6px;
@@ -295,6 +295,7 @@ button:hover svg {
     display: flex;
     width: 80%;
     font-size: .84rem;
+    font-weight: 600;
   }
   & .button_group {
     display: flex;

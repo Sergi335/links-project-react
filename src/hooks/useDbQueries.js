@@ -34,7 +34,7 @@ const useDbQueries = () => {
         await Promise.all([desktopsResponse.json(), columnsResponse.json(), linksResponse.json()])
           .then((response) => {
             const desktops = response[0].data
-            console.log(desktops.filter(desktop => desktop.hidden === false))
+            // console.log(desktops.filter(desktop => desktop.hidden === false))
             const columns = response[1].columns
             const links = response[2].links
             setDesktopsStore(desktops)

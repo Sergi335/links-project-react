@@ -1,5 +1,5 @@
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Masonry from 'react-layout-masonry'
 import { toast } from 'react-toastify'
 import DeleteImageConfirmForm from '../components/Forms/DeleteImageConfirmForm'
@@ -44,7 +44,6 @@ export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId, cla
   return (
     <>
       <OverlayScrollbarsComponent style={{ flexGrow: '1', marginBottom: '8px' }} defer>
-        <Suspense fallback={<div>Loading...</div>}>
         <Masonry
           columns={ 4 }
           gap={5}
@@ -53,11 +52,10 @@ export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId, cla
         >
           {images.map((item) => {
             // return <picture key={item}><img ref={imageRef} onClick={handleShowImageModal} style={{ width: '100%' }} src={item} alt="" onLoad={handleImageLoad} /><span id={item.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span></picture>
-            return <picture key={item}><ImageLoader src={item} ref={imageRef} handleShowImageModal={handleShowImageModal} alt={'my picture'}/><span id={item.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span></picture>
+            return <picture key={item}><ImageLoader src={item} imageRef={imageRef} handleShowImageModal={handleShowImageModal} alt={'my picture'}/><span id={item.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span></picture>
           })}
         </Masonry>
         <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={links} setLinks={setLinks} linkId={linkId} />
-        </Suspense>
       </OverlayScrollbarsComponent>
       {visible && <ImageModal image={activeImage} setVisible={setVisible}/>}
     </>
@@ -398,6 +396,7 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
   const id = linkId.id
   const [notesVisible, setNotesVisible] = useState(false)
   const handlePasteImage = () => {
+    const pasteLoading = toast.loading('Subiendo archivo ...')
     navigator.clipboard.read().then(clipboardItems => {
       for (const clipboardItem of clipboardItems) {
         for (const type of clipboardItem.types) {
@@ -412,11 +411,12 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
               const { hasError, message } = handleResponseErrors(response)
 
               if (hasError) {
-                toast(message)
+                console.log(message)
+                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
               } else {
                 newState[elementIndex].images.push(response.link.images[response.link.images.length - 1])
                 setLinks(newState)
-                toast('Imagen guardada!', { autoClose: 1500 })
+                toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
               }
             })
           }

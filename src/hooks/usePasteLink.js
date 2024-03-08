@@ -1,7 +1,8 @@
 import { useRef } from 'react'
+import { toast } from 'react-toastify'
 import { constants } from '../services/constants'
-import { useLinksStore } from '../store/links'
 import { useGlobalStore } from '../store/global'
+import { useLinksStore } from '../store/links'
 
 export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   const setLinkLoader = useLinksStore(state => state.setLinkLoader)
@@ -175,6 +176,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     }
   }
   async function pasteMultipleLinks (array, params, desktopName, activeLocalStorage) {
+    const pasteLoading = toast.loading('Procesando links ...')
     let orden = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 2 : 0 // que pasa si está vacia? 1 - 2 = -1 orden++ = 0
     const bodies = array.map(link => {
       orden++
@@ -204,13 +206,16 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
         })
         if (res.ok) {
           const data = await res.json()
+          toast.update(pasteLoading, { render: 'Procesado!', type: 'success', isLoading: false, autoClose: 3000 })
           return data.link
         } else {
           const data = await res.json()
           console.log(data)
+          toast.update(pasteLoading, { render: 'Error al pegar los links', type: 'error', isLoading: false, autoClose: 3000 })
         }
       } catch (error) {
         console.log(error)
+        toast.update(pasteLoading, { render: 'Error al pegar los links', type: 'error', isLoading: false, autoClose: 3000 })
       }
     })
 
@@ -221,6 +226,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
       setLinkLoader(false)
       setGlobalLinks(newList)
       setColumnLoaderTarget(null)
+      setNumberOfPastedLinks(1)
     }, 1000)
     setPastedLinkId([...links.map(link => link._id)])
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))

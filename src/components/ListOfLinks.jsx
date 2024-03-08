@@ -24,7 +24,6 @@ export default function ListOfLinks () {
   const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
-  const setNumberOfPastedLinks = useLinksStore(state => state.setNumberOfPastedLinks) // cuando setear a 1?
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
@@ -33,12 +32,15 @@ export default function ListOfLinks () {
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const setColumnHeights = usePreferencesStore(state => state.setColumnHeights)
-  // const columnHeights = usePreferencesStore(state => state.columnHeights)
-
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
+  const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  // Limpia selectedLinks al mover los seleccionados a otra columna
+  useEffect(() => {
+    setSelectedLinks([])
+  }, [globalLinks])
   // Almacenar en variable global las alturas de las columnas
   useEffect(() => {
     if (desktopColumns) {
@@ -61,11 +63,6 @@ export default function ListOfLinks () {
   const getLinksIds = (columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }
-  useEffect(() => {
-    if (numberOfPastedLinks > 1) {
-      setNumberOfPastedLinks(1)
-    }
-  }, [desktopLinks])
   const isDesktop = windowSize.width > 1536
   return (
     <main className={styles.listOfLinks}>

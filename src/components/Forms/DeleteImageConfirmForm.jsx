@@ -1,8 +1,8 @@
-import { deleteImage } from '../../services/dbQueries'
-import { toast } from 'react-toastify'
-import styles from './AddLinkForm.module.css'
-import useHideForms from '../../hooks/useHideForms'
 import { useRef } from 'react'
+import { toast } from 'react-toastify'
+import useHideForms from '../../hooks/useHideForms'
+import { deleteImage } from '../../services/dbQueries'
+import styles from './AddLinkForm.module.css'
 
 export default function DeleteImageConfirmForm ({ visible, setVisible, itemType = 'imagen', imageUrl, links, setLinks, linkId }) {
   const visibleClassName = visible ? styles.flex : styles.hidden
@@ -18,10 +18,10 @@ export default function DeleteImageConfirmForm ({ visible, setVisible, itemType 
       newState[linkIndex].images.splice(imageIndex, 1)
       setLinks(newState)
       setVisible(false)
-      toast('Imagen Borrada Correctamente')
+      toast.success('Imagen Borrada Correctamente')
       // primero no encuentra el blob al pegar y borrar rapido -> cambiar la url
     } else {
-      toast('Error al borrar la imagen')
+      toast.error('Error al borrar la imagen')
     }
   }
   return (
