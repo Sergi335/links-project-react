@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import styles from './Pages/LinkDetails.module.css'
 import { ArrowLeft, ArrowRight } from './Icons/icons'
+import styles from './Pages/LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
   const nextIndex = links.findIndex(link => linkId.id === link._id) + 1 // > length
@@ -21,8 +21,8 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <NavLink className={styles.details_nav_link} to={`/desktop/link/${prevId}`}><ArrowLeft/>Prev</NavLink>
-            : <a className={styles.details_nav_link_disabled}><ArrowLeft/>Prev</a>}
+            ? <NavLink className={styles.details_nav_link} to={`/desktop/link/${prevId}`}>Prev<ArrowLeft/></NavLink>
+            : <a className={styles.details_nav_link_disabled}>Prev<ArrowLeft/></a>}
           <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}`}>Volver</NavLink>
           {nextId
             ? <NavLink className={styles.details_nav_link} to={`/desktop/link/${nextId}`}><ArrowRight/>Next</NavLink>

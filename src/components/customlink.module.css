@@ -117,7 +117,8 @@
 }
 
 .link:hover {
-  background-color: var(--frostHvColor);
+  /* background-color: var(--frostHvColor); */
+  background-color: var(--inputBackgroundColor);
 }
 
 .lcontrols {

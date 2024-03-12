@@ -12,7 +12,7 @@
 }
 
 .columnWrapper {
-    max-height: 317px; /*estaba en 321*/
+    max-height: 320.8px; /*estaba en 321*/
     overflow: hidden;
     border-radius: var(--border-radius);
     border: var(--firstBorder);

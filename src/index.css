@@ -178,7 +178,9 @@ button {
   justify-content: center;
   align-items: center;
   background-color: var(--buttonColor);
+  /* background-color: var(--accentColor); */
   color: var(--firstTextColor);
+  /* color: var(--buttonTextColor); */
   border: 0;
   padding: 8px 19px;
   border-radius: var(--button-radius);
@@ -213,9 +215,9 @@ button:hover svg {
   transition: transform .150s ease-in-out;
 }
 .uiIcon-button {
-  width: 20px;
+  width: 16px;
   cursor: pointer;
-  padding-top: 1px;
+  /* padding-top: 1px; */
 }
 .uiIcon-menu {
   width: 1rem;

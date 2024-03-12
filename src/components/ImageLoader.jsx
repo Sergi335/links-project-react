@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { CloseIcon } from './Icons/icons'
 import ImagesLoader from './Loaders/ImagesLoader'
-export default function ImageLoader ({ src, alt, imageRef, handleShowImageModal }) {
+export default function ImageLoader ({ src, alt, handleDeleteImage }) {
   const [loading, setLoading] = useState(true)
+  const [width, setWidth] = useState()
+  const [height, setHeight] = useState()
   const isMountingRef = useRef(false)
   const handleImageLoad = () => {
+    const img = new Image()
+    img.src = src
+    setWidth(img.naturalWidth)
+    setHeight(img.naturalHeight)
     setLoading(false)
   }
 
@@ -19,14 +26,23 @@ export default function ImageLoader ({ src, alt, imageRef, handleShowImageModal 
   return (
     <>
       {loading && <ImagesLoader/>}
+      <a
+        href={src}
+        data-pswp-width={width}
+        data-pswp-height={height}
+        target='_blank' rel="noreferrer"
+        style={{ position: 'relative' }}
+      >
       <img
-        ref={imageRef}
         src={src}
+        data-pswp-width={width}
+        data-pswp-height={height}
         alt={alt}
         style={{ width: '100%', height: '', opacity: !loading ? 1 : 0, transition: 'opacity .5s', objectFit: 'contain' }}
         onLoad={handleImageLoad}
-        onClick={handleShowImageModal}
       />
+      <span id={src.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span>
+      </a>
     </>
   )
 }

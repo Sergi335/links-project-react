@@ -65,10 +65,10 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
     } else {
       setSubMenuSide('right')
     }
-    if (points.y + menu.offsetHeight > window.innerHeight) {
-      newPoints.y = window.innerHeight - menu.offsetHeight
+    if (points.y + menu.offsetHeight > document.body.scrollHeight) {
+      newPoints.y = document.body.scrollHeight - menu.offsetHeight
     }
-    if (points.y + submenu.offsetHeight > window.innerHeight) {
+    if (points.y + submenu.offsetHeight > document.body.scrollHeight || points.y + submenu.offsetHeight > window.innerHeight) {
       setSubMenuTop(`-${submenu.offsetHeight - menu.offsetHeight + 13}px`)
     } else {
       setSubMenuTop('94px')

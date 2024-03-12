@@ -1,16 +1,44 @@
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useEffect, useRef, useState } from 'react'
-import Masonry from 'react-layout-masonry'
+// import Masonry from 'react-layout-masonry'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import 'photoswipe/style.css'
 import { toast } from 'react-toastify'
 import DeleteImageConfirmForm from '../components/Forms/DeleteImageConfirmForm'
-import { CheckIcon, CloseIcon, CodeIcon, MaximizeIcon, PasteImageIcon, TrashIcon } from '../components/Icons/icons'
+import { CodeIcon, MaximizeIcon, PasteImageIcon, TrashIcon } from '../components/Icons/icons'
 import styles from '../components/Pages/LinkDetails.module.css'
+import useHideForms from '../hooks/useHideForms'
 import { constants } from '../services/constants'
 import { deleteLinkImage, editLink, fetchImage, fetchLinkIconFile, saveLinkIcon } from '../services/dbQueries'
-import { checkUrlMatch, formatDate, getUrlStatus, handleResponseErrors } from '../services/functions'
+import { checkUrlMatch, handleResponseErrors } from '../services/functions'
 import ImageLoader from './ImageLoader'
 import LinkDetailsNav from './LinkDetailsNav'
 
+export function ControlsContainer ({ children }) {
+  return (
+    <div className={styles.text_controls_container}>
+      <div id="textControls" className={styles.textControls}>
+        <div className={styles.flex}>
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
+export function ImagesContainer ({ data, links, setLinks, children }) {
+  return (
+      <div className={styles.imageGalleryContainer} style={{ backgroundImage: data.images.length ? '' : 'var(--placeholderImg)' }}>
+          {data.images.length
+            ? (
+
+              <ResponsiveColumnsMasonry className={styles.imageGallery} images={data.images} links={links} setLinks={setLinks} linkId={data._id} />
+
+              )
+            : null}
+      </div>
+
+  )
+}
 export function ImageModal ({ image, setVisible }) {
   return (
       <div className={styles.modal} id="myModal">
@@ -21,16 +49,9 @@ export function ImageModal ({ image, setVisible }) {
   )
 }
 export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId, className }) {
-  const [visible, setVisible] = useState(false)
   const [deleteConfFormVisible, setDeleteConfFormVisible] = useState(false)
   const [url, setUrl] = useState()
-  const [activeImage, setActiveImage] = useState()
-  const imageRef = useRef()
 
-  const handleShowImageModal = (event) => {
-    setVisible(true)
-    setActiveImage(imageRef.current = event.target) // tiene sentido?
-  }
   const handleDeleteImage = (event) => {
     console.log(event.currentTarget.id)
     const element = document.getElementById(event.currentTarget.id).parentNode.childNodes[0]
@@ -40,54 +61,55 @@ export function ResponsiveColumnsMasonry ({ images, links, setLinks, linkId, cla
     setUrl(element.src)
     // actualizar estado
   }
-
+  useEffect(() => {
+    let lightbox = new PhotoSwipeLightbox({
+      gallery: '#gallery',
+      children: 'a',
+      pswpModule: () => import('photoswipe')
+    })
+    lightbox.init()
+    return () => {
+      lightbox.destroy()
+      lightbox = null
+    }
+  })
   return (
     <>
       <OverlayScrollbarsComponent style={{ flexGrow: '1', marginBottom: '8px' }} defer>
-        <Masonry
-          columns={ 4 }
-          gap={5}
-          style={{ flexGrow: '1' }}
+        <div
+          id='gallery'
+          style={{ flexGrow: '1', columnCount: '4', columnGap: '5px', padding: '5px' }}
           className={className}
         >
           {images.map((item) => {
-            // return <picture key={item}><img ref={imageRef} onClick={handleShowImageModal} style={{ width: '100%' }} src={item} alt="" onLoad={handleImageLoad} /><span id={item.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span></picture>
-            return <picture key={item}><ImageLoader src={item} imageRef={imageRef} handleShowImageModal={handleShowImageModal} alt={'my picture'}/><span id={item.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span></picture>
+            return <ImageLoader key={item} src={item} alt={'my picture'} handleDeleteImage={handleDeleteImage}/>
           })}
-        </Masonry>
+        </div>
         <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={links} setLinks={setLinks} linkId={linkId} />
       </OverlayScrollbarsComponent>
-      {visible && <ImageModal image={activeImage} setVisible={setVisible}/>}
     </>
   )
 }
-export function LinkDetailsNotesControls ({ handleSubmit, children }) {
+export function LinkDetailsNotesControls ({ handleSubmit }) {
   return (
-        <div className={styles.text_controls_container}>
-          <div id="textControls" className={styles.textControls}>
-            <div className={styles.flex}>
+            <div className={styles.notesControls}>
                 <button className={`${styles.control_button}`}><CodeIcon/></button>
                 <button className={`${styles.control_button}`}><TrashIcon className='uiIcon-button'/></button>
                 <button className={`${styles.control_button}`} id="sendNotes" onClick={handleSubmit}>Guardar</button>
             </div>
-            {children}
-          </div>
-        </div>
   )
 }
-export function LinkDetailsImageControls ({ children }) {
+export function LinkDetailsImageControls ({ handlePasteImage }) {
   return (
-        <div className={styles.text_controls_container}>
-          <div id="textControls" className={styles.textControls}>
-            {children}
-            {/* <button className={`${styles.control_button}`}><CodeIcon/></button>
-            <button className={`${styles.control_button}`}><TrashIcon className='uiIcon-button'/></button>
-            <button className={`${styles.control_button}`} id="sendNotes" onClick={handleSubmit}>Guardar</button> */}
-          </div>
-        </div>
+            <>
+              <button className={styles.control_button} onClick={handlePasteImage}>
+                <PasteImageIcon />
+                Pegar Imagen
+              </button>
+            </>
   )
 }
-export function NotesEditor ({ notes, setNotes, linkId, links, setLinks, children }) {
+export function NotesEditor ({ notes, setNotes }) {
   const inputRef = useRef()
   const hasWritten = notes === 'Escribe aquí...'
 
@@ -109,10 +131,8 @@ export function NotesEditor ({ notes, setNotes, linkId, links, setLinks, childre
   return (
       <div id="notesContainer" className={styles.notesContainer}>
         <form>
-          {/* <label htmlFor="linkNotes" style={{ textAlign: 'left' }}>Notas:</label> */}
-          <textarea ref={inputRef} id="linkNotes" className={styles.linkNotes} name="linkNotes" cols="15" rows="15" onFocus={handleFocus} onBlur={handleBlur} onChange={handleChange} defaultValue={notes} value={notes}></textarea>
+          <textarea ref={inputRef} id="linkNotes" className={styles.linkNotes} name="linkNotes" cols="15" rows="15" onFocus={handleFocus} onBlur={handleBlur} onChange={handleChange} value={notes}></textarea>
         </form>
-        {children}
       </div>
   )
 }
@@ -123,14 +143,14 @@ export function LinksInfo ({ data, links, setLinks }) {
   const [icons, setIcons] = useState()
   const [nameEditMode, setNameEditMode] = useState(false)
   const [descriptionEditMode, setDescriptionEditMode] = useState(false)
-  const [urlStatus, setUrlStatus] = useState()
-  const [badgeClass, setBadgeClass] = useState()
   const inputRef = useRef()
   const currentImageRef = useRef()
   const deleteButtonRef = useRef()
   const saveButtonRef = useRef()
   const editNameInputRef = useRef()
   const editDescriptionInputRef = useRef()
+  const linkImgOptions = useRef()
+  useHideForms({ form: linkImgOptions.current, setFormVisible: setShowIcons })
 
   // Checa si la imagen es una de las subidas por el usuario para deshabilitar el boton de borrar
   // Como lo vamos a hacer: se van a poner todas las por defecto en la carpeta public, ya no tiramos de las de SergioSR
@@ -159,21 +179,6 @@ export function LinksInfo ({ data, links, setLinks }) {
         setIcons(data)
       })
   }, [])
-  // Checa el estado de la url en cada cambio de link
-  useEffect(() => {
-    const checkUrlStatus = async (url) => {
-      const status = await getUrlStatus(url)
-      // console.log(status)
-      if (status) {
-        setUrlStatus(<CheckIcon className={styles.badgeIcon}/>)
-        setBadgeClass(`${styles.badgeSuccess}`)
-      } else {
-        setUrlStatus(<CloseIcon className={styles.badgeIcon}/>)
-        setBadgeClass(`${styles.badgeDanger}`)
-      }
-    }
-    checkUrlStatus(data.URL)
-  }, [data])
 
   const handleSelectIconOnClick = async (event) => {
     const $linkIcon = document.getElementById(event.currentTarget.id)
@@ -303,7 +308,7 @@ export function LinksInfo ({ data, links, setLinks }) {
     deleteButtonRef.current.disabled = true
   }
   const handleEditLinkName = async () => {
-    setNameEditMode(false)
+    // setNameEditMode(false)
     if (data.name === editNameInputRef.current.value) return
     // comprobar si el nombre a cambiado para no llamar a la api si no es necesario
     const elementIndex = links.findIndex(link => link._id === data._id)
@@ -317,7 +322,7 @@ export function LinksInfo ({ data, links, setLinks }) {
     }
   }
   const handleEditLinkDescription = async () => {
-    setDescriptionEditMode(false)
+    // setDescriptionEditMode(false)
     if (data.description === editDescriptionInputRef.current.value) return
     // comprobar si el nombre a cambiado para no llamar a la api si no es necesario
     const elementIndex = links.findIndex(link => link._id === data._id)
@@ -330,28 +335,32 @@ export function LinksInfo ({ data, links, setLinks }) {
       toast(message)
     }
   }
+  const handleShowIcons = () => {
+    const element = linkImgOptions.current
+    element.classList.toggle(`${styles.showIcons}`)
+    setShowIcons(!showIcons)
+  }
   return (
       <>
         <div className={styles.infoContainer}>
-          <div className={styles.editBlock}>
-            <p onClick={() => setNameEditMode(!nameEditMode)}><strong>Nombre:&nbsp;</strong>
+          <div className={styles.editFieldsColumn}>
+            <div className={styles.editBlock}>
+              <p onClick={() => setNameEditMode(!nameEditMode)}><strong>Nombre:</strong></p>
               {nameEditMode
                 ? <input ref={editNameInputRef} className={styles.editNameInput} type='text' defaultValue={data.name} autoFocus onBlur={handleEditLinkName}/>
                 : <span>{data.name}</span>}
-            </p>
-          </div>
-            <p><strong>Panel:</strong> <span>{data.panel}</span></p>
-          <div className={styles.editBlock}>
-            <p onClick={() => setDescriptionEditMode(!descriptionEditMode)}><strong>Descripción:&nbsp;</strong>
+            </div>
+            <div className={styles.editBlock}>
+              <p onClick={() => setDescriptionEditMode(!descriptionEditMode)}><strong>Descripción:</strong></p>
               {descriptionEditMode
-                ? <input ref={editDescriptionInputRef} type='text' defaultValue={data.description} className={styles.editNameInput} autoFocus onBlur={handleEditLinkDescription}/>
+                ? <textarea ref={editDescriptionInputRef} className={styles.descriptionTextArea} cols={4} rows={4} type='text' defaultValue={data.description} autoFocus onBlur={handleEditLinkDescription}/>
                 : <span>{data.description}</span>}
-            </p>
+            </div>
+            <div className={styles.editBlock}>
+              <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => handleShowIcons()} className={styles.iconImage} src={data.imgURL} alt="" /><span id='notification' className={styles.notification}></span></p>
+            </div>
           </div>
-          <p><strong>Activo:</strong> <span className={badgeClass}>{urlStatus || 'Cargando...' }</span></p>
-          <p><strong>Fecha de creación: </strong><span>{formatDate(data.createdAt)}</span></p>
-          <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => setShowIcons(!showIcons)} className={styles.iconImage} src={data.imgURL} alt="" /><span id='notification' className={styles.notification}></span></p>
-          <div className={showIcons ? `${styles.slideIn} ${styles.imgOptions}` : `${styles.slideOut} ${styles.imgOptions}` }>
+          <div ref={linkImgOptions} className={showIcons ? `${styles.showIcons} ${styles.imgOptions}` : `${styles.imgOptions}` }>
             <div className={styles.imgOptionsWrapper}>
               {
                 constants.DEFAULT_LINK_ICONS.map(icon => (<img key={icon.option} id={icon.option} className='default' onClick={handleSelectIconOnClick} src={icon.url} alt={icon.option} />))
@@ -360,18 +369,18 @@ export function LinksInfo ({ data, links, setLinks }) {
                 icons?.map(icon => (<img key={icon.nombre} id={icon.nombre} className={icon.clase} onClick={handleSelectIconOnClick} src={icon.url} alt="" />))
               }
             </div>
-          </div>
-          <div className={styles.imgOptionsControls}>
-            <button className={`${styles.upLinkImage} ${styles.control_button}`}>
-              <label htmlFor="upLinkImg">
-              <svg className="uiIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"></path></svg>
-              Subir Favicon
-                </label>
-              <input ref={inputRef} id="upLinkImg" type="file" accept="image/*" onChange={handleCreateImageUrlFromFile}/>
-            </button>
-            <button className={`${styles.control_button}`} ref={saveButtonRef} id="saveLinkImage" onClick={handleUploadImage}>Guardar</button>
-            <button className={`${styles.control_button}`} id="option8" onClick={handleSetAutoIcon}>Auto</button>
-            <button className={`${styles.control_button}`} ref={deleteButtonRef} id="deleteLinkImage" onClick={handleDeleteLinkIcon}>Borrar</button>
+            <div className={styles.imgOptionsControls}>
+              <button className={`${styles.upLinkImage} ${styles.control_button}`}>
+                <label htmlFor="upLinkImg">
+                <svg className="uiIcon-button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"></path></svg>
+                Subir Favicon
+                  </label>
+                <input ref={inputRef} id="upLinkImg" type="file" accept="image/*" onChange={handleCreateImageUrlFromFile}/>
+              </button>
+              <button className={`${styles.control_button}`} ref={saveButtonRef} id="saveLinkImage" onClick={handleUploadImage}>Guardar</button>
+              <button className={`${styles.control_button}`} id="option8" onClick={handleSetAutoIcon}>Auto</button>
+              <button className={`${styles.control_button}`} ref={deleteButtonRef} id="deleteLinkImage" onClick={handleDeleteLinkIcon}>Borrar</button>
+            </div>
           </div>
         </div>
       </>
@@ -379,13 +388,13 @@ export function LinksInfo ({ data, links, setLinks }) {
 }
 export function ToggleSwitchButton ({ setNotesVisible, notesVisible }) {
   const toggleSections = (e) => {
-    // const element = e.currentTarget
-    // element.classList.toggle(`${styles.active}`)
+    const element = e.currentTarget
+    element.classList.toggle(`${styles.active}`)
     setNotesVisible(!notesVisible)
   }
   const activeClass = notesVisible ? `${styles.active}` : ''
   return (
-    <div className={`${styles.colsm5}`}>
+    <div className={styles.switchWrapper}>
         <button type="button" onClick={toggleSections} className={`${activeClass} ${styles.btnlg} ${styles.btntoggle}`} data-toggle="button" aria-pressed="false" autoComplete="off">
             <div className={`${styles.handle}`}></div>
         </button>
@@ -463,68 +472,38 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
             {
                 checkUrlMatch(data.URL)
                   ? (
-                    <>
-                    {
+                    <div className={styles.sectionsWrapper}>
+                      {
                         notesVisible
                           ? (
-                              <NotesEditor notes={notesState} setNotes={setNotesState} linkId={linkId} links={links} setLinks={setLinks}>
-                                <LinkDetailsNotesControls handleSubmit={handleSubmit}>
-                                    <ToggleSwitchButton setNotesVisible={setNotesVisible} notesVisible={notesVisible}/>
-                                </LinkDetailsNotesControls>
-                              </NotesEditor>
+                              <NotesEditor notes={notesState} setNotes={setNotesState} linkId={linkId} links={links} setLinks={setLinks} />
                             )
                           : (
-                            <>
-                              <div className={styles.imageGalleryContainer} style={{ backgroundImage: data.images.length ? '' : 'var(--placeholderImg)' }}>
-                                {data.images.length
-                                  ? (
-
-                                        <ResponsiveColumnsMasonry className={styles.imageGallery} images={data.images} links={links} setLinks={setLinks} linkId={data._id} />
-
-                                    )
-                                  : null}
-                                    <LinkDetailsImageControls>
-                                        <button className={styles.control_button} onClick={handlePasteImage}>
-                                          <PasteImageIcon />
-                                          Pegar Imagen
-                                        </button>
-                                        <ToggleSwitchButton setNotesVisible={setNotesVisible} notesVisible={notesVisible}/>
-                                    </LinkDetailsImageControls>
-                              </div>
-                              </>
+                              <ImagesContainer data={data} links={links} setLinks={setLinks} />
                             )
-                    }
-                    </>
+                      }
+                      <ControlsContainer>
+                        {
+                          notesVisible ? <LinkDetailsNotesControls handleSubmit={handleSubmit}/> : <LinkDetailsImageControls handlePasteImage={handlePasteImage}/>
+                        }
+                        <ToggleSwitchButton setNotesVisible={setNotesVisible} notesVisible={notesVisible}/>
+                      </ControlsContainer>
+                    </div>
                     )
                   : (
                     <>
-                    <div className={styles.imageGalleryContainer} style={{ backgroundImage: data.images.length ? '' : 'var(--placeholderImg)' }}>
-                    {data.images.length
-                      ? (
-                        <ResponsiveColumnsMasonry className={styles.imageGallery} images={data.images} links={links} setLinks={setLinks} linkId={data._id} />
-                        )
-                      : null}
-                      <LinkDetailsImageControls>
-                        {/* <div className={`${styles.colsm5}`}>
-                            <button type="button" onClick={toggleSections} className={`${styles.btn} ${styles.btnlg} ${styles.btntoggle}`} data-toggle="button" aria-pressed="false" autoComplete="off">
-                                <div className={`${styles.handle}`}></div>
-                            </button>
-                        </div> */}
-                        <button className={styles.control_button} onClick={handlePasteImage}>
-                            <PasteImageIcon />
-                            Pegar Imagen
-                        </button>
-                      </LinkDetailsImageControls>
+                    <div className={styles.sectionsWrapper}>
+                      <ImagesContainer data={data} links={links} setLinks={setLinks} />
+                      <ControlsContainer>
+                        <LinkDetailsImageControls handlePasteImage={handlePasteImage}/>
+                      </ControlsContainer>
                     </div>
-                    <NotesEditor notes={notesState} setNotes={setNotesState} linkId={linkId} links={links} setLinks={setLinks}>
-                        <LinkDetailsNotesControls handleSubmit={handleSubmit}>
-                            {/* <div className={`${styles.colsm5}`}>
-                                <button type="button" onClick={toggleSections} className={`${styles.btn} ${styles.btnlg} ${styles.btntoggle}`} data-toggle="button" aria-pressed="false" autoComplete="off">
-                                    <div className={`${styles.handle}`}></div>
-                                </button>
-                            </div> */}
-                        </LinkDetailsNotesControls>
-                    </NotesEditor>
+                    <div className={styles.sectionsWrapper}>
+                      <NotesEditor notes={notesState} setNotes={setNotesState} linkId={linkId} links={links} setLinks={setLinks}/>
+                      <ControlsContainer>
+                          <LinkDetailsNotesControls handleSubmit={handleSubmit}/>
+                      </ControlsContainer>
+                    </div>
                     </>
                     )
             }

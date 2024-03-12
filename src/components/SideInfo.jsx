@@ -28,7 +28,6 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const [desktopDisplayName, setDesktopDisplayName] = useState()
   const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
   const columnHeights = usePreferencesStore(state => state.columnHeights)
-  // console.log('🚀 ~ SideInfo ~ columnHeights:', columnHeights)
   const numRows = Math.ceil(desktopColumns.length / numberCols)
   const result = []
   const [salut, setSalut] = useState('')
@@ -36,9 +35,10 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const sideInfoRef = useRef()
-  // const setSidePanelElement = usePreferencesStore(state => state.setSidePanelElement)
-  // setSidePanelElement(sideInfoRef.current)
-  // console.log('🚀 ~ SideInfo ~ globalLoading:', globalLoading)
+  const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
+  const desktopColumnsIds = desktopColumns.map(col => col._id)
+  const openFlag = useRef(false)
+  // console.log('🚀 ~ SideInfo ~ desktopColumnsIds:', desktopColumnsIds)
 
   // Agrupa las columnas del escritorio en funcion del numero de columnas seleccionado -> memo
   for (let i = 0; i < numRows; i++) {
@@ -67,9 +67,11 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
       }
     ))
     const handleScroll = () => {
-      elements.forEach(targ => {
+      // console.log(elements)
+      if (elements === undefined || elements === null) return
+      elements?.forEach(targ => {
         const props = targ.mappedEls.map(elem => (
-          elem.getBoundingClientRect()
+          elem?.getBoundingClientRect()
         ))
         const elementTopPosition = props[0].top
         // si la posicion de la parte superior de la fila es mayor a 141 y menor a 1414 o la posicion bottom maxima de cada columna es mayor a 141 o menor a 1414
@@ -116,14 +118,34 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }
   const handleExpandAllColumns = () => {
     const columns = document.querySelectorAll(`.${columnStyles.columnWrapper}`)
-    columns.forEach((column, index) => {
-      column.classList.toggle(`${columnStyles.colOpen}`)
-      if (column.classList.contains(columnStyles.colOpen)) {
-        column.style.maxHeight = `${columnHeights[index]}px`
-      } else {
-        column.style.maxHeight = ''
-      }
-    })
+    const newState = [...desktopColumnsIds]
+    if (!openFlag.current) {
+      columns.forEach((column, index) => {
+        if (column.classList.contains(columnStyles.colOpen)) {
+          column.style.maxHeight = `${columnHeights[index]}px`
+        } else {
+          column.classList.add(columnStyles.colOpen)
+          column.style.maxHeight = `${columnHeights[index]}px`
+        }
+      })
+      openFlag.current = true
+      setOpenedColumns(newState)
+      return
+    }
+    if (openFlag.current) {
+      columns.forEach((column, index) => {
+        if (column.classList.contains(columnStyles.colOpen)) {
+          column.classList.remove(columnStyles.colOpen)
+          column.style.maxHeight = ''
+        } else {
+          column.style.maxHeight = ''
+        }
+        setTimeout(() => {
+          openFlag.current = false
+          setOpenedColumns([])
+        }, 500)
+      })
+    }
   }
   return (
       <div ref={sideInfoRef} id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>

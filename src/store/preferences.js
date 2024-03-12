@@ -43,6 +43,10 @@ export const usePreferencesStore = create(
       columnHeights: [],
       setColumnHeights: (columnHeights) => {
         set({ columnHeights })
+      },
+      openedColumns: [],
+      setOpenedColumns: (openedColumns) => {
+        set({ openedColumns })
       }
     }
   }

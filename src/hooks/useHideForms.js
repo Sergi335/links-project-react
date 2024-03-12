@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 const useHideForms = ({ form, setFormVisible }) => {
   useEffect(() => {
     const handleHideFormOnClickOutside = (e) => {
-      const tags = ['SPAN', 'svg', 'path']
+      const tags = ['SPAN', 'svg', 'path', 'IMG']
       // console.log(e.target)
       // console.log('click')
       // console.log(form)

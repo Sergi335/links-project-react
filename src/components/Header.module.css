@@ -35,9 +35,8 @@
     transform: translateX(-132%);
     transition: transform .3s ease-out;
     width: 100%;
-    overflow: hidden;
-    border-radius: var(--border-radius);
-    border: var(--firstBorder);
+    overflow-y: scroll;
+    height: 100vh;
 }
 
 .headLeft {
@@ -226,7 +225,10 @@
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
     }
-
+    .headCenter {
+        border-radius: var(--border-radius);
+        border: var(--firstBorder);
+    }
     .logo {
         display: flex;
         /* gap: 10px; */
@@ -253,6 +255,7 @@
         top: auto;
         width: auto;
         user-select: none;
+        overflow: hidden;
     }
 
     .headLeft {

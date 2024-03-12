@@ -113,7 +113,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     })
     document.body.style.backgroundImage = ''
     document.body.style.backgroundSize = 'initial'
-    window.localStorage.setItem('bodyBackground', '')
+    window.localStorage.setItem('bodyBackground', null)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.id))
   }
   // const handleChangePanelStyles = (event) => {
