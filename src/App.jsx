@@ -1,57 +1,116 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import '@fontsource-variable/inter'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
+import 'overlayscrollbars/overlayscrollbars.css'
 import { useEffect } from 'react'
-import HomePage from './components/Pages/HomePage'
-import AppLayout from './components/Pages/AppLayout'
-import Login from './components/Pages/LoginPage'
-import LinkDetails from './components/Pages/LinkDetails'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { ToastContainer, Zoom } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useDesktopsStore } from '../src/store/desktops'
 import { useSessionStore } from '../src/store/session'
 import ListOfLinks from './components/ListOfLinks'
-import ReadingList from './components/Pages/ReadingList'
+import NotFound from './components/Pages/404'
+import AppLayout from './components/Pages/AppLayout'
+import HomePage from './components/Pages/HomePage'
+import LinkDetails from './components/Pages/LinkDetails'
+import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import 'overlayscrollbars/overlayscrollbars.css'
-import { useOverlayScrollbars } from 'overlayscrollbars-react'
-import useStyles from './hooks/useStyles'
-// import { constants } from './services/constants'
-// Hay que hacer una peticion a / para recibir el csfr token
+import ReadingList from './components/Pages/ReadingList'
+import RecoveryPassword from './components/Pages/RecoveryPassword'
+import { constants } from './services/constants'
+
 function App () {
-  const { theme } = useStyles()
-  const user = useSessionStore(state => state.user) // la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
+  // TODO la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
+  const user = useSessionStore(state => state.user)
+  // TODO Hay que hacer una peticion a / para recibir el csfr token, limitar a solo cuando acceda a / o /login
+  const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
+  useEffect(() => {
+    fetch(constants.BASE_API_URL, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+      .then(res => res.json())
+      .then(data => {
+        const { csrfToken } = data
+        setCsfrtoken(csrfToken)
+      })
+  }, [])
+  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
+  // Obtenemos el tema para el toast -> no funciona?
+  const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
+  useEffect(() => {
+    const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme'))
+    document.documentElement.classList.add(theme)
+
+    const accentColors = Object.keys(constants.ACCENT_COLORS)
+    const accentColor = JSON.parse(localStorage.getItem('accentColorName')) ?? accentColors[0]
+    constants.ACCENT_COLORS[accentColor].applyStyles()
+
+    if (localStorage.getItem('themeVariant') === null) {
+      localStorage.setItem('themeVariant', JSON.stringify('solid'))
+      constants.THEME_VARIANTS.solid.applyStyles()
+    } else {
+      const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
+      constants.THEME_VARIANTS[themeVariant].applyStyles()
+    }
+  }, [])
+
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <HomePage />
+      element: <HomePage />,
+      errorElement: <NotFound />
     },
     {
       path: '/desktop',
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <NotFound />,
       children: [
         {
           path: '/desktop/:desktopName',
-          element: <ListOfLinks />
+          element: <ListOfLinks />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/readinglist',
-          element: <ReadingList />
+          element: <ReadingList />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/link/:id',
-          element: <LinkDetails />
+          element: <LinkDetails />,
+          errorElement: <NotFound />
         },
         {
           path: '/desktop/profile',
-          element: <ProfilePage />
+          element: <ProfilePage />,
+          errorElement: <NotFound />
+        },
+        {
+          path: '/desktop/',
+          element: <ListOfLinks />,
+          errorElement: <NotFound />
         }
       ]
     },
     {
       path: '/link/:id',
-      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />
+      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />,
+      errorElement: <NotFound />
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to="/desktop/inicio" replace={true} />
+      element: user === null ? <Login /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '/recovery-password',
+      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
   const [initBodyOverlayScrollbars] =
@@ -70,16 +129,17 @@ function App () {
     <>
       <RouterProvider router={router} />
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
+        hideProgressBar
+        newestOnTop
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={theme === 'dark' ? 'dark' : 'light'}
+        theme={themeforToastify}
+        transition={Zoom}
       />
     </>
   )

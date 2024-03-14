@@ -1,19 +1,19 @@
-import styles from './SideInfo.module.css'
-import columnStyles from './Column.module.css'
-import { saludo } from '../services/functions'
-import { useEffect, useState } from 'react'
-import Clock from './Clock'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { createColumn } from '../services/dbQueries'
-import { useSessionStore } from '../store/session'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useFormsStore } from '../store/forms'
+import { saludo } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
-import { usePreferencesStore } from '../store/preferences'
+import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
-// import { constants } from '../services/constants'
-import NameLoader from './NameLoader'
-import SideInfoLoader from './Loaders/SideInfoLoader'
+import { usePreferencesStore } from '../store/preferences'
+import { useSessionStore } from '../store/session'
+import Clock from './Clock'
+import columnStyles from './Column.module.css'
 import { ExpandHeightIcon } from './Icons/icons'
+import SideInfoLoader from './Loaders/SideInfoLoader'
+import NameLoader from './NameLoader'
+import styles from './SideInfo.module.css'
 
 export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const { desktopName } = useParams()
@@ -27,13 +27,18 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const desktop = desktopsStore.find(desk => desk.name === desktopName) // memo
   const [desktopDisplayName, setDesktopDisplayName] = useState()
   const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
+  const columnHeights = usePreferencesStore(state => state.columnHeights)
   const numRows = Math.ceil(desktopColumns.length / numberCols)
   const result = []
   const [salut, setSalut] = useState('')
   const navigate = useNavigate()
   const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
   const globalLoading = useGlobalStore(state => state.globalLoading)
-  // console.log('🚀 ~ SideInfo ~ globalLoading:', globalLoading)
+  const sideInfoRef = useRef()
+  const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
+  const desktopColumnsIds = desktopColumns.map(col => col._id)
+  const openFlag = useRef(false)
+  // console.log('🚀 ~ SideInfo ~ desktopColumnsIds:', desktopColumnsIds)
 
   // Agrupa las columnas del escritorio en funcion del numero de columnas seleccionado -> memo
   for (let i = 0; i < numRows; i++) {
@@ -41,8 +46,11 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     const row = [...desktopColumns].slice(startIdx, startIdx + numberCols)
     result.push(row)
   }
+  // TODO: No se actualiza con el cambio de hora, puede ser de noche y decirte buenos días
   useEffect(() => {
     setSalut(saludo(user?.realName || 'Usuario'))
+    // const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
+    // if (sideInfoRef) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sideInfoRef.current)
   }, [])
   useEffect(() => {
     const newDeskName = (window.location.pathname).replace('/desktop/', '')
@@ -59,13 +67,15 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
       }
     ))
     const handleScroll = () => {
-      elements.forEach(targ => {
+      // console.log(elements)
+      if (elements === undefined || elements === null) return
+      elements?.forEach(targ => {
         const props = targ.mappedEls.map(elem => (
-          elem.getBoundingClientRect()
+          elem?.getBoundingClientRect()
         ))
         const elementTopPosition = props[0].top
         // si la posicion de la parte superior de la fila es mayor a 141 y menor a 1414 o la posicion bottom maxima de cada columna es mayor a 141 o menor a 1414
-        if (Math.abs(elementTopPosition >= 116) && Math.abs(elementTopPosition <= 1141)) {
+        if (Math.abs(elementTopPosition >= 77) && Math.abs(elementTopPosition <= 1141)) {
           targ.el.classList.add(`${styles.sectActive}`)
         } else {
           targ.el.classList.remove(`${styles.sectActive}`)
@@ -80,6 +90,10 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }, [result])
 
   const handleClick = async () => {
+    if (desktop === undefined) {
+      toast.error('Debes crear un escritorio primero')
+      return
+    }
     const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
     const { column } = response
     setGlobalColumns((() => { return [...globalColumns, ...column] })())
@@ -104,12 +118,37 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }
   const handleExpandAllColumns = () => {
     const columns = document.querySelectorAll(`.${columnStyles.columnWrapper}`)
-    columns.forEach(column => {
-      column.classList.toggle(`${columnStyles.colOpen}`)
-    })
+    const newState = [...desktopColumnsIds]
+    if (!openFlag.current) {
+      columns.forEach((column, index) => {
+        if (column.classList.contains(columnStyles.colOpen)) {
+          column.style.maxHeight = `${columnHeights[index]}px`
+        } else {
+          column.classList.add(columnStyles.colOpen)
+          column.style.maxHeight = `${columnHeights[index]}px`
+        }
+      })
+      openFlag.current = true
+      setOpenedColumns(newState)
+      return
+    }
+    if (openFlag.current) {
+      columns.forEach((column, index) => {
+        if (column.classList.contains(columnStyles.colOpen)) {
+          column.classList.remove(columnStyles.colOpen)
+          column.style.maxHeight = ''
+        } else {
+          column.style.maxHeight = ''
+        }
+        setTimeout(() => {
+          openFlag.current = false
+          setOpenedColumns([])
+        }, 500)
+      })
+    }
   }
   return (
-      <div id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
+      <div ref={sideInfoRef} id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
           <div className={styles.deskInfos}>
               <Clock />
               <p className={styles.saludo}>{salut}</p>

@@ -16,7 +16,7 @@
 .description {
   display: flex;
   align-items: center;
-  background: var(--frostHvColor);
+  background: var(--inputBackgroundColor);
   max-height: 0;
   transition: max-height .3s ease-in-out;
   /* transition-delay: 1s; */
@@ -32,6 +32,8 @@
   padding: 17px;
   text-align: left;
   /* transition: opacity .1s ease-in-out; */
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 .description span.fade {
   opacity: 1;
@@ -93,7 +95,7 @@
   height: 43px;
   text-decoration: none;
   color: var(--firstTextColor);
-  font-size: 14px;
+  font-size: .84rem;
   /* text-overflow: ellipsis; */
   overflow: hidden;
   flex-grow: 1;
@@ -102,6 +104,7 @@
   top: 12px;
   /* justify-content: flex-start; */
   gap: 10px;
+  font-weight: var(--linkFontWeight);
 
 }
 
@@ -114,17 +117,19 @@
 }
 
 .link:hover {
-  background-color: var(--frostHvColor);
+  /* background-color: var(--frostHvColor); */
+  background-color: var(--inputBackgroundColor);
 }
 
 .lcontrols {
-  transition: border .5s ease-in-out;
+  /* transition: border .5s ease-in-out;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 3px; */
   display: flex;
-  margin-right: 5px;
-  background-color: var(--columnBgColor);
-  border: 1px solid var(--firstBorderColor);
+  margin-right: 11px;
+  gap: 3px;
+  /* background-color: var(--columnBgColor);
+  border: 1px solid var(--firstBorderColor); */
 }
 
 .lcontrols a {

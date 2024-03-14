@@ -5,13 +5,11 @@
   font-style: normal;
 }
 :root {
-  font-family: monospace;
+  font-family: 'Inter Variable', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
   color-scheme: light dark;
   color: var(--firstTextColor);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,116 +21,75 @@
   --button-radius: 4.5px;
 
 
-  --bgGradient: #f8f8f8;
+  --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%);
   --mainColor: white;
   --columnBgColor: white;
   --placeholderImg: url(/img/placeholderImgLight.png);
   --placeholderVid: url(/img/placeholderVidLight.png);
   --navBarContentHeight: 35px;
   --firstTextColor: #4e4e4e;
-  --frostHvColor: #f3f3f3c9;
-  --firstShadow: #50505057;
+  --secondTextColor: #757575;
+  --frostHvColor: #ebebeb;
+  --firstShadow: #50505029;
+  --secondShadow: #5050501c;
   --secondColor: #f9f9f9;
   --thirdColor: white;
   --firstBorder: 1px solid #e7e7e7;
   --firstBorderColor: #e7e7e7;
   --firstColorOpacity: rgb(255 255 255 / 89%);
-  --buttonColor: white;
+  --buttonColor: #f6f6f6;
   --buttonHoverColor: #d6d6d6;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(239 239 239);
+  --inverseColor: black;
+  --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
+  --homeHeroGradient: linear-gradient(90deg, #4f4f4f08 1px, transparent 0), linear-gradient(180deg, #4f4f4f08 1px, transparent 0);
+  --homeH2Color: coral;
+  --homeFooterColor: #f1f1f1;
+  --sidePanelsBgColor: white;
+  --inputBackgroundColor: #f3f3f3c9;
+  --linkFontWeight: 400;
 
-  /* --firstColor: #f3f3f3;
-  --linkBgColor: #fcfcfc;
-  --mainColor: white;
-  --frostColor: #ffffff99;
-  --columnBgColor: white;
-  --firstColorOpacity: rgb(255 255 255 / 89%);
-  --secondColor: #f9f9f9;
-  --thirdColor: #f1f3f4;
-  --fourthColor: #f1f1f1;
-  --fifthColor: #ededed;
-  --seventhColor: #e6e6e6;
-  --bgSecondGradient: radial-gradient(circle, rgba(222, 225, 230, 1) 0%, rgba(222, 225, 230, 1) 100%);
-  --bgGradient: #f8f8f8;
-  --accentColor: #bababa;
-  --neumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(239 239 239), 0.3em 1em 2em rgb(0 0 0 / 7%);
-  --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(239 239 239);
-  --firstTextColor: #4e4e4e;
-  --secondTextColor: #4f4f4f;
-  --buttonTextColor: #4e4e4e;
-  --firstBorder: 1px solid #ececec;
-  --firstShadow: #50505057;
-  --firstBorderColor: #d5d5d5cc;
-  --firstHvColor: #f1f3f4;
-  --frostHvColor: #f3f3f34d;
-  --sixthColor: #fcfcfc;
-  --firstButtonColor: #dee1e6;
-  --placeholderImg: url(/img/placeholderImgLight.png);
-  --placeholderVid: url(/img/placeholderVidLight.png);
-  --linkBoxShadow: 0px 1px 0.5px #000;
-  --navBarContentHeight: 35px;
-  --main-content-margin-left: calc(350px + 3rem) */
 }
+/*Todo lo que quieras aplicar al modo blur debe ir con el maincolor*/
 html.transparent {
   --mainColor: #ffffff99;
 }
 html.dark.transparent {
-  --mainColor: #ffecff47;
+  --mainColor: #1d1d1d6b;
 
 }
 html.dark {
   /* --bgGradient: url('/img/fondo.png'); */
-  --bgGradient: #0e0e0e;
+  --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(0% 0.5 360) 0%, oklch(32% 0 0) 100%);
   --mainColor: #1D1D1D;
   --columnBgColor: #1d1d1d;
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
-  --firstTextColor: #cdcdcd;
+  --firstTextColor: #bbbbbb;
+  --secondTextColor: #9f9f9f;
   --frostHvColor: black;
   --firstShadow: #0c0c0c96;
+  --secondShadow: #00000063;
   --secondColor: #242424;
   --thirdColor: #1e1e1e;
   --firstBorder: 1px solid #323232cc;
   --firstBorderColor: #323232cc;
   --firstColorOpacity: #292929e3;
-  --buttonColor: black;
+  --buttonColor: #313131;
   --buttonHoverColor: #353434;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
+  --inverseColor: white;
+  --homeMaskImage: radial-gradient(ellipse 40% 75% at 50% 50%, #000 59%, transparent 120%);
+  --homeHeroGradient: linear-gradient(90deg, #4f4f4f14 1px, transparent 0), linear-gradient(180deg, #4f4f4f14 1px, transparent 0);
+  --homeH2Color: coral;
+  --homeFooterColor: #242424;
+  --sidePanelsBgColor: black;
+  --inputBackgroundColor: black;
+  --linkFontWeight: 400;
 }
 html.dark {
   background-color: #1D1D1D;
 }
-/* html.dark {
-  --firstColor: black;
-  --linkBgColor: #292929;
-  --mainColor: #1D1D1D;
-  --frostColor: black;
-  --columnBgColor: #1d1d1d;
-  --firstColorOpacity: #292929e3;
-  --secondColor: #313131;
-  --thirdColor: #414141;
-  --fourthColor: #2d2d2d;
-  --fifthColor: #292929;
-  --seventhColor: #3f3e3e;
-  --bgSecondGradient: radial-gradient(circle 815px at 23.4% -21.8%, rgb(64 64 64) 0.2%, rgb(33 33 33) 100.2%);
-  --bgGradient: url('/img/fondo.png');
-  --accentColor: #bf7272;
-  --neumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68), 0.3em 1em 2em rgba(0, 0, 0, 0.3);
-  --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
-  --firstTextColor: #e2e2e2;
-  --buttonTextColor: #4e4e4e;
-  --secondTextColor: #b1b1b1;
-  --firstBorder: 1px solid #323232cc;
-  --firstShadow: #0c0c0c96;
-  --firstBorderColor: #2b2b2b;
-  --firstHvColor: #232323;
-  --frostHvColor: black;
-  --sixthColor: #232323;
-  --firstButtonColor: #313131;
-  --placeholderImg: url('/img/placeholderImg.png');
-  --placeholderVid: url('/img/placeholderVid.png');
-  --linkBoxShadow: 0px 1px 0.5px #000;
-} */
 
 body {
   margin: 0;
@@ -142,15 +99,10 @@ body {
   background: var(--bgGradient);
   background-attachment: fixed;
 }
-/* html.dark body {
-  background-image: url("https://firebasestorage.googleapis.com/v0/b/justlinks-7330b.appspot.com/o/backgrounds%2Fbackground8.webp?alt=media&token=7638f025-0a9c-497c-bea2-230d83b9e4fd");
-} */
-/* body.home {
-  background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%) !important;
-} */
+
 .root {
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 1rem 2rem; */
   text-align: center;
   overflow: hidden;
 }
@@ -163,9 +115,9 @@ input:-webkit-autofill:active {
     border: 0 !important;
     /* border-radius: 0 !important; */
 }
-input[type='text'], input[type='password'] {
+input[type='text'], input[type='password'], input[type='email'] {
   padding-left: 11px;
-  background-color: var(--frostHvColor);
+  background-color: var(--inputBackgroundColor);
   border-radius: var(--button-radius);
   border: 0;
   color: var(--firstTextColor);
@@ -193,7 +145,7 @@ input:-webkit-autofill:focus {
   border: 1px solid #9a9a9a;
 }
 a {
-  font-weight: 500;
+  font-weight: var(--linkFontWeight);
   color: var(--firstTextColor);
   text-decoration: inherit;
   font-size: 14px;
@@ -203,7 +155,7 @@ a:hover svg, span:hover svg {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
 a.active, .link.active {
-  background-color: var(--frostHvColor);
+  background-color: var(--inputBackgroundColor);
 }
 .selectMode .link img {
   margin-left: 0;
@@ -225,14 +177,16 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  background-color: var(--buttonColor);
+  /* background-color: var(--accentColor); */
   color: var(--firstTextColor);
+  /* color: var(--buttonTextColor); */
   border: 0;
   padding: 8px 19px;
   border-radius: var(--button-radius);
-  font-family: monospace;
+  font-family: 'Inter Variable';
   font-weight: 500;
-  font-size: 1.1em;
+  font-size: .75rem;
   cursor: pointer;
   transition: background-color .3s ease-out, color .3s ease-out;
   gap: 6px;
@@ -261,17 +215,18 @@ button:hover svg {
   transition: transform .150s ease-in-out;
 }
 .uiIcon-button {
-  width: 20px;
+  width: 16px;
   cursor: pointer;
-  padding-top: 1px;
+  /* padding-top: 1px; */
 }
 .uiIcon-menu {
-  width: 20px;
+  width: 1rem;
   color: var(--accentColor);
   cursor: pointer;
 }
 .uiIcon_small {
   width: 17px;
+  height: 17px;
   cursor: pointer;
   color: var(--accentColor);
   transition: filter .3s ease-out, transform .150s ease-in-out;
@@ -305,30 +260,52 @@ button:hover svg {
   position: fixed;
   left: 50%;
   transform: translate(-50%, 0);
-  /* display: flex; */
+  border: var(--firstBorder);
   z-index: 7;
-  padding: 50px;
+  padding: 25px 50px;
   border-radius: var(--border-radius);
   gap: 15px;
   box-shadow: 0px 0px 35px var(--firstShadow);
-}
-.deskForm fieldset {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 12px;
-  padding: 24px;
-  border: 1px solid var(--firstBorderColor);
-  border-radius: var(--border-radius);
-  justify-content: center;
-  align-items: center;
-}
-.button_group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-top: 15px;
+  backdrop-filter: blur(20px);
+
+  & input {
+    width: 80%;
+    margin-bottom: 15px;
+  }
+  & legend {
+    padding: 0 16px;
+    margin-bottom: 15px;
+    font-size: .84rem;
+  }
+  & h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+  }
+  & fieldset {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    /* border-radius: var(--button-radius); */
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid var(--firstBorderColor);
+  }
+  & label {
+    display: flex;
+    width: 80%;
+    font-size: .84rem;
+    font-weight: 600;
+  }
+  & .button_group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 15px;
+  }
 }
 textarea {
   background-color: transparent;
@@ -345,4 +322,17 @@ textarea {
   left: 390px;
   border-left-color: var(--accentColor);
   display: inline-flex;
+}
+
+@media (min-width: 768px) {
+  .root {
+    padding: 1rem 2rem;
+  }
+  /* .newSection {
+    width: 21.8%;
+    left: 390px;
+  }
+  .deskForm {
+    min-width: 525px;
+  } */
 }

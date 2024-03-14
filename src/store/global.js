@@ -7,6 +7,14 @@ export const useGlobalStore = create(
       setGlobalLoading: (globalLoading) => {
         set({ globalLoading })
       },
+      registerLoading: false,
+      setRegisterLoading: (registerLoading) => {
+        set({ registerLoading })
+      },
+      loginLoading: false,
+      setLoginLoading: (loginLoading) => {
+        set({ loginLoading })
+      },
       globalError: null,
       setGlobalError: (globalError) => {
         set({ globalError })

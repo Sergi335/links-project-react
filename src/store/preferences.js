@@ -39,6 +39,14 @@ export const usePreferencesStore = create(
       selectedLinks: [],
       setSelectedLinks: (selectedLinks) => {
         set({ selectedLinks })
+      },
+      columnHeights: [],
+      setColumnHeights: (columnHeights) => {
+        set({ columnHeights })
+      },
+      openedColumns: [],
+      setOpenedColumns: (openedColumns) => {
+        set({ openedColumns })
       }
     }
   }

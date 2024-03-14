@@ -1,21 +1,26 @@
-import styles from './ContextualMenu.module.css'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { usePreferencesStore } from '../store/preferences'
-import { moveLink, moveMultipleLinks } from '../services/dbQueries'
 import { toast } from 'react-toastify'
-import { EditIcon, FolderMoveIcon, TrashIcon } from './Icons/icons'
+import { moveLink, moveMultipleLinks } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
+import { usePreferencesStore } from '../store/preferences'
+import styles from './ContextualMenu.module.css'
+import { ArrowDown } from './Icons/icons'
 
-export default function ContextLinkMenu ({ visible, setVisible, points, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
+export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const { desktopName } = useParams()
+  const menuRef = useRef(null)
+  const subMenuRef = useRef(null)
+  const [subMenuSide, setSubMenuSide] = useState('')
+  const [subMenuTop, setSubMenuTop] = useState('')
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
-  // const selectedLinks = usePreferencesStore(state => state.selectedLinks)
-
+  // console.log(points)
+  // console.log(menuRef.current)
   const handleMoveClick = async (event) => {
     if (Array.isArray(params)) {
       console.log('multiple links')
@@ -85,13 +90,37 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
     setMoveFormVisible(true)
     setVisible(false)
   }
+  useEffect(() => {
+    // console.log(window.innerHeight)
+    // console.log(document.body.scrollHeight)
+    const menu = menuRef.current
+    const submenu = subMenuRef.current
+    const newPoints = { x: points.x, y: points.y }
+    // console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
+    if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
+      setSubMenuSide('left')
+      newPoints.x = window.innerWidth - menu.offsetWidth
+    } else {
+      setSubMenuSide('right')
+    }
+    if (points.y + menu.offsetHeight > document.body.scrollHeight) {
+      newPoints.y = document.body.scrollHeight - menu.offsetHeight
+    }
+    // aqui hay que tener en cuenta la cantidad de scroll que haya, asi va bien cuando se ha hecho scroll total
+    if (points.y + submenu.offsetHeight > document.body.scrollHeight || points.y + submenu.offsetHeight > window.innerHeight) {
+      setSubMenuTop(`-${submenu.offsetHeight - menu.offsetHeight + 13}px`)
+    } else {
+      setSubMenuTop('88px')
+    }
+    setPoints(newPoints)
+  }, [params]) // se puede meter params en un useRef
   return (
-    <div id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
+    <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
       <p>{params.name}</p>
-      <span onClick={handleEditClick}><EditIcon className='uiIcon-menu'/>Editar</span>
-      <span className={styles.moveTo}><FolderMoveIcon className='uiIcon-menu'/>Mover a
-        <ul className={styles.moveList}>
+      <span onClick={handleEditClick}>Editar</span>
+      <span className={styles.moveTo}>Mover a<ArrowDown className={ `${styles.rotate} uiIcon_small`}/>
+        <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
           {
             desktopColumns.map(col => col._id === params.idpanel
@@ -100,7 +129,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, params, 
           }
         </ul>
       </span>
-      <span onClick={handleDeleteClick}><TrashIcon className='uiIcon-menu'/>Borrar</span>
+      <span onClick={handleDeleteClick}>Borrar</span>
     </div>
   )
 }

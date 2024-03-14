@@ -1,12 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import { useDesktopsStore } from '../../store/desktops'
-// import { constants } from '../../services/constants'
-import styles from './AddLinkForm.module.css'
-import useHideForms from '../../hooks/useHideForms'
 import { useRef } from 'react'
-import { deleteDesktop } from '../../services/dbQueries'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import useHideForms from '../../hooks/useHideForms'
+import { deleteDesktop } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
+import { useDesktopsStore } from '../../store/desktops'
+import styles from './AddLinkForm.module.css'
 
 export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'escritorio' }) {
   const visibleClassName = visible ? styles.flex : styles.hidden
@@ -16,12 +15,20 @@ export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'es
   const { desktopName } = useParams()
   const formRef = useRef()
   useHideForms({ form: formRef.current, setFormVisible: setVisible })
+  const index = desktopsStore.findIndex((desktop) => desktop.name === desktopName)
+  let desktopToNavigate = desktopsStore.length > 0 ? desktopsStore[0].name : ''
+  if (index === 0 && desktopsStore.length === 1) {
+    desktopToNavigate = ''
+  }
+  if (index === 0 && desktopsStore.length > 1) {
+    desktopToNavigate = desktopsStore[index + 1].name
+  }
+
   const handleDeleteDesktop = async (event) => {
     event.preventDefault()
     setVisible(false)
     const body = { name: desktopName }
     const response = await deleteDesktop({ body })
-    console.log(response)
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
@@ -29,8 +36,7 @@ export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'es
     }
     const { data } = response
     setDesktopsStore(data)
-    console.log(desktopsStore[0].name)
-    navigate(`/desktop/${desktopsStore[0].name}`)
+    navigate(`/desktop/${desktopToNavigate}`)
   }
 
   return (

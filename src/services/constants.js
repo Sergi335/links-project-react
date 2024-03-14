@@ -1,8 +1,7 @@
 import styles from '../components/SideInfo.module.css'
 export const constants = {
-  // BASE_API_URL: 'http://localhost:3001',
-  BASE_API_URL: 'https://zenmarks.xyz',
-  // BASE_API_URL: 'http://34.240.3.227:3001',
+  BASE_API_URL: 'http://localhost:3001',
+  // BASE_API_URL: 'https://zenmarks.xyz',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -15,6 +14,16 @@ export const constants = {
     }
   },
   ACCENT_COLORS: {
+    defaultLight: {
+      color: '#bababa',
+      applyStyles: (element) => {
+        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
+        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
+        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
+        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
+        window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
+      }
+    },
     yellow: {
       color: '#ffff00',
       applyStyles: (element) => {
@@ -43,16 +52,6 @@ export const constants = {
         window.localStorage.setItem('accentColor', JSON.stringify('#00cc66'))
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('green'))
-      }
-    },
-    defaultLight: {
-      color: '#bababa',
-      applyStyles: (element) => {
-        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
-        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
-        window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
       }
     },
     defaultDark: {
@@ -92,12 +91,12 @@ export const constants = {
         element.style.border = 'none'
         const sects = element.querySelectorAll(`.${styles.sectActive}`)
         sects.forEach((sect) => {
-          sect.style.backgroundColor = 'var(--frostHvColor)'
+          sect.style.backgroundColor = 'var(--mainColor)'
           sect.style.border = 'var(--firstBorder)'
         })
         // element.style.borderLeft = '1px dashed var(--firstBorderColor)'
       },
-      background: 'transparent'
+      background: 'url(/img/transparent-miniature.png)'
     },
     blur: {
       applyStyles: (element) => {
@@ -112,12 +111,13 @@ export const constants = {
           sect.style.border = 'none'
         })
       },
-      background: 'transparent'
+      background: 'url(/img/blur-background.png)'
     }
   },
   THEME_VARIANTS: {
     solid: {
-      applyStyles: (element) => {
+      applyStyles: () => {
+        const element = document.documentElement
         if (element.classList.contains('transparent')) {
           element.classList.remove('transparent')
           element.classList.add('solid')
@@ -125,10 +125,11 @@ export const constants = {
           element.classList.add('solid')
         }
       },
-      background: 'var(--frostColor)'
+      background: 'var(--mainColor)'
     },
     transparent: {
-      applyStyles: (element) => {
+      applyStyles: () => {
+        const element = document.documentElement
         if (element.classList.contains('solid')) {
           element.classList.remove('solid')
           element.classList.add('transparent')
@@ -136,7 +137,7 @@ export const constants = {
           element.classList.add('transparent')
         }
       },
-      background: 'transparent'
+      background: 'url(/img/blur-background.png)'
     }
   },
   COLUMNS_COUNT: {
@@ -160,5 +161,14 @@ export const constants = {
   },
   MIDDLEWARE_ERROR_MESSAGE: {
     cookieFailed: 'MIDDLEWARE UNAUTHORIZE REQUEST!'
-  }
+  },
+  DEFAULT_LINK_ICONS: [
+    { option: 'opcion1', url: '/img/opcion1.svg' },
+    { option: 'opcion2', url: '/img/opcion2.png' },
+    { option: 'opcion3', url: '/img/opcion3.png' },
+    { option: 'opcion4', url: '/img/opcion4.svg' },
+    { option: 'opcion5', url: '/img/opcion5.svg' },
+    { option: 'opcion6', url: '/img/opcion6.svg' },
+    { option: 'opcion7', url: '/img/opcion7.png' }
+  ]
 }

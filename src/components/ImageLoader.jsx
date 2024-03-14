@@ -1,26 +1,48 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { CloseIcon } from './Icons/icons'
 import ImagesLoader from './Loaders/ImagesLoader'
-export default function ImageLoader ({ src, alt, ref, handleShowImageModal }) {
-  const [loaded, setLoaded] = useState(false)
-
+export default function ImageLoader ({ src, alt, handleDeleteImage }) {
+  const [loading, setLoading] = useState(true)
+  const [width, setWidth] = useState()
+  const [height, setHeight] = useState()
+  const isMountingRef = useRef(false)
   const handleImageLoad = () => {
-    setLoaded(true)
+    const img = new Image()
+    img.src = src
+    setWidth(img.naturalWidth)
+    setHeight(img.naturalHeight)
+    setLoading(false)
   }
 
   useEffect(() => {
-    setLoaded(false) // Resetea el estado cuando cambia la URL de la imagen
+    isMountingRef.current = true
+  }, [])
+  useEffect(() => {
+    if (!isMountingRef.current) {
+      setLoading(true)
+      isMountingRef.current = false
+    }
   }, [src])
   return (
     <>
-      {!loaded && <ImagesLoader/>}
+      {loading && <ImagesLoader/>}
+      <a
+        href={src}
+        data-pswp-width={width}
+        data-pswp-height={height}
+        target='_blank' rel="noreferrer"
+        style={{ position: 'relative' }}
+      >
       <img
-        ref={ref}
         src={src}
+        data-pswp-width={width}
+        data-pswp-height={height}
         alt={alt}
-        style={{ width: '100%', height: '', opacity: loaded ? 1 : 0, transition: 'opacity .5s', objectFit: 'contain' }}
+        style={{ width: '100%', height: '', opacity: !loading ? 1 : 0, transition: 'opacity .5s', objectFit: 'contain' }}
         onLoad={handleImageLoad}
-        onClick={handleShowImageModal}
       />
+      <span id={src.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span>
+      </a>
     </>
   )
 }

@@ -1,30 +1,29 @@
-import { useParams } from 'react-router-dom'
+import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, DragOverlay } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy, rectSortingStrategy } from '@dnd-kit/sortable'
-import Columna from './Column'
-import CustomLink from './customlink'
-import SideInfo from './SideInfo'
-import FormsContainer from './FormsContainer'
-import styles from './ListOfLinks.module.css'
+import { useParams } from 'react-router-dom'
+import { useDragItems } from '../hooks/useDragItems'
+import useResizeWindow from '../hooks/useResizeWindow'
+import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import { useDragItems } from '../hooks/useDragItems'
+import Columna from './Column'
 import ColumnsLoader from './ColumnsLoader'
-import { useFormsStore } from '../store/forms'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
+import FormsContainer from './FormsContainer'
+import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
-import { useGlobalStore } from '../store/global'
-import useResizeWindow from '../hooks/useResizeWindow'
+import SideInfo from './SideInfo'
+import CustomLink from './customlink'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
-  const { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn } = useDragItems({ desktopName })
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
   const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
-  const setNumberOfPastedLinks = useLinksStore(state => state.setNumberOfPastedLinks) // cuando setear a 1?
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
@@ -32,15 +31,31 @@ export default function ListOfLinks () {
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
-
+  const setColumnHeights = usePreferencesStore(state => state.setColumnHeights)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
-  // console.log('🚀 ~ file: ListOfLinks.jsx:39 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
-
+  const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const openedColumns = usePreferencesStore(state => state.openedColumns)
+  console.log('🚀 ~ ListOfLinks ~ openedColumns:', openedColumns)
+  // Limpia selectedLinks al mover los seleccionados a otra columna
+  useEffect(() => {
+    setSelectedLinks([])
+  }, [globalLinks])
+  // Almacenar en variable global las alturas de las columnas
+  useEffect(() => {
+    if (desktopColumns) {
+      const heights = desktopColumns.map((column) => {
+        const links = desktopLinks.filter(link => link.idpanel === column._id)
+        // TODO mucho magic number
+        return links.length >= 6 ? (10 + 2 + 38) * links.length + (3 * links.length) : 900
+      })
+      setColumnHeights(heights)
+    }
+  }, [desktopName, desktopColumns, desktopLinks])
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 0
       }
@@ -50,11 +65,6 @@ export default function ListOfLinks () {
   const getLinksIds = (columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }
-  useEffect(() => {
-    if (numberOfPastedLinks > 1) {
-      setNumberOfPastedLinks(1)
-    }
-  }, [desktopLinks])
   const isDesktop = windowSize.width > 1536
   return (
     <main className={styles.listOfLinks}>
@@ -87,20 +97,29 @@ export default function ListOfLinks () {
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               onDragOver={handleDragOver}
+              onDragCancel={handleDragCancel}
             >
               <SortableContext strategy={rectSortingStrategy} items={columnsId}>
               {desktopColumns
                 ? (
                     desktopColumns.map((columna) => (
-                        <Columna key={columna._id} data={{ columna }}>
+                        <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length}>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
-                              !activeColumn &&
+                              !activeColumn && !openedColumns.includes(columna._id) &&// Es esto pero hay problemas si se quita, deberia poder activarse lo de abajo
                                 desktopLinks.map((link) =>
                                   link.idpanel === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
                                     : null
-                                ).filter(link => link !== null)
+                                ).filter(link => link !== null).slice(0, 6)
+                            }
+                            {
+                              // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col
+                              !activeColumn && openedColumns && openedColumns.includes(columna._id) && desktopLinks.map((link) =>
+                                link.idpanel === columna._id
+                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
+                                  : null
+                              ).filter(link => link !== null)
                             }
                             {
                               linkLoader && columna._id === columnLoaderTarget?.id && (numberOfLinkLoaders.map((item, index) => (
@@ -125,7 +144,7 @@ export default function ListOfLinks () {
                   {activeColumn && (
                     <Columna data={{ activeColumn }}>
                       {/* {
-                        linksStore.map((link) =>
+                        desktopLinks.map((link) =>
                           link.idpanel === activeColumn._id
                             ? (<CustomLink key={link._id} data={{ link }} idpanel={activeColumn._id} />)
                             : null

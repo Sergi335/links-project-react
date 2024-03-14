@@ -1,20 +1,20 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
-import styles from './Nav.module.css'
-import { DndContext, useSensor, useSensors, PointerSensor, DragOverlay, closestCorners } from '@dnd-kit/core'
-import { SortableContext, useSortable, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
+import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { moveDesktops } from '../services/dbQueries'
+import styles from './Nav.module.css'
 // import { useDesktops } from '../hooks/useDesktops'
-import { usePreferencesStore } from '../store/preferences'
-import { useDesktopsStore } from '../store/desktops'
-import { handleResponseErrors } from '../services/functions'
 import { toast } from 'react-toastify'
+import useResizeWindow from '../hooks/useResizeWindow'
+import { handleResponseErrors } from '../services/functions'
+import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
+import { usePreferencesStore } from '../store/preferences'
 import NavLoader from './NavLoader'
 import SideInfo from './SideInfo'
-import useResizeWindow from '../hooks/useResizeWindow'
 
 function NavItem ({ escritorio, toggleMobileMenu }) {
   const {
@@ -37,7 +37,8 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
   }
   if (isDragging) {
     return (
-      <li ref={setNodeRef} style={style} id={escritorio._id}>
+      <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.draggedDesk}>
+        <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
       </li>
     )
   }
@@ -151,15 +152,15 @@ export default function Nav ({ toggleMobileMenu }) {
                   globalLoading
                     ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
                     : desktopsStore.map(escritorio => (
-                      <NavItem key={escritorio._id} escritorio={escritorio} toggleMobileMenu={toggleMobileMenu}/>
+                      !escritorio.hidden && <NavItem key={escritorio._id} escritorio={escritorio} toggleMobileMenu={toggleMobileMenu}/>
                     ))
                 }
               </SortableContext>
               {
                 createPortal(
-                  <DragOverlay className={styles.draggedDesk}>
+                  <DragOverlay>
                     {
-                      activeDesk && (<NavItem key={activeDesk._id} escritorio={activeDesk} />)
+                      activeDesk && (<li className={styles.floatLi}><NavItem key={activeDesk._id} escritorio={activeDesk} /></li>)
                     }
                   </DragOverlay>
                   , document.body)

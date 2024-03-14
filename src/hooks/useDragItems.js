@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
-import { moveLink, getLinkById, editColumn } from '../services/dbQueries'
-import { handleResponseErrors } from '../services/functions'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
+import { editColumn, getLinkById, moveLink } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 
 export const useDragItems = ({ desktopName }) => {
@@ -14,19 +14,23 @@ export const useDragItems = ({ desktopName }) => {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-
+  // console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
   function handleDragStart (event) {
+    // Y si es el hecho de esconder los links al hacer drag? --> Correcto
+    // console.log('start')
     if (event.active.data.current?.type === 'Column') {
+      // console.log('column')
       setActiveColumn(event.active.data.current.columna)
     }
     if (event.active.data.current?.type === 'link') {
+      // console.log('link')
       setActiveLink(event.active.data.current.link)
     }
   }
   const updateLinksStore = useRef(setGlobalLinks) // el truco del almendruco actualiza el estado sin renderizar
   function handleDragEnd (event) {
     const { active, over } = event
-    if (event.active.data.current?.type === 'link') {
+    if (event.active.data.current?.type === 'link' && over !== null) {
       if (active.id !== over.id) {
         const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
         const newIndex = globalLinks.findIndex((t) => t._id === over.id)
@@ -34,7 +38,7 @@ export const useDragItems = ({ desktopName }) => {
         setMovedLink(activeLink)
       }
     }
-    if (event.active.data.current?.type === 'Column') {
+    if (event.active.data.current?.type === 'Column' && over !== null) {
       if (active.id !== over.id) {
         const oldIndex = globalColumns.findIndex((t) => t._id === active.id)
         const newIndex = globalColumns.findIndex((t) => t._id === over.id)
@@ -46,10 +50,28 @@ export const useDragItems = ({ desktopName }) => {
     setActiveLink(null)
     setActiveColumn(null)
   }
-
+  function handleDragCancel () {
+    setActiveLink(null)
+    setActiveColumn(null)
+    setGlobalColumns(globalColumns)
+    setGlobalLinks(globalLinks)
+  }
   function handleDragOver (event) {
     const { active, over } = event
-    if (active.data.current?.type === 'link') {
+    // --- NUEVO ---
+    if (!over) return
+    const activeId = active.id
+    const overId = over.id
+
+    if (activeId === overId) return
+    // -- NUEVO ---
+
+    const isActiveLink = active.data.current?.type === 'link'
+    const isOverALink = over.data.current?.type === 'link'
+
+    if (!isActiveLink) return
+
+    if (isActiveLink && isOverALink) {
       if (active.id !== over.id) {
         const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
         const newIndex = globalLinks.findIndex((t) => t._id === over.id)
@@ -61,11 +83,20 @@ export const useDragItems = ({ desktopName }) => {
         }
       }
     }
+
+    const isOverAColumn = over.data.current?.type === 'Column'
+    // Im dropping a Task over a column
+    if (activeLink && isOverAColumn) {
+      const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
+      const newState = [...globalLinks]
+      newState[oldIndex].idpanel = over.id // ojo no solo cambiar el idpanel, sino también el panel
+      setGlobalLinks(arrayMove(newState, oldIndex, oldIndex))
+      setMovedLink(activeLink)
+    }
   }
   const handleSortItems = async () => {
     if (movedLink) {
       const prevData = await getLinkById({ id: movedLink._id })
-      console.log('🚀 ~ file: useDragItems.js:71 ~ handleSortItems ~ prevData:', prevData)
       const ids = globalLinks.filter(link => link.idpanel === movedLink.idpanel).map(link => link._id)
       const body = {
         id: movedLink._id,
@@ -109,5 +140,5 @@ export const useDragItems = ({ desktopName }) => {
     }
   }, [movedLink, movedColumn])
 
-  return { handleDragStart, handleDragOver, handleDragEnd, activeLink, activeColumn }
+  return { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn }
 }

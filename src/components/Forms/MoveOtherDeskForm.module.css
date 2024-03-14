@@ -4,13 +4,15 @@
 }
 .menuMoveTo {
     position: fixed;
-    top: 91px;
+    top: calc(2rem + 46px);
     right: 2rem;
     background-color: var(--mainColor);
     height: calc(87vh + 34px);
     min-width: 443px;
     backdrop-filter: blur(20px);
     border-radius: 5px;
+    box-shadow: 0px 10px 12px var(--firstShadow);
+    overflow-y: auto;
 }
 .menuMoveTo p:first-child {
     text-align: left;
@@ -54,4 +56,5 @@ li.accordion svg {
     display: flex;
     gap: 15px;
     justify-content: center;
+    padding: 32px 16px;
 }

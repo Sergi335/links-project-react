@@ -1,12 +1,12 @@
-import { useRef, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './customlink.module.css'
-import { ArrowDown, MaximizeIcon } from './Icons/icons'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useFormsStore } from '../store/forms'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
+import { ArrowDown, MaximizeIcon } from './Icons/icons'
+import styles from './customlink.module.css'
 
 export default function CustomLink ({ data, className }) {
   const link = data.link || data.activeLink
@@ -102,6 +102,7 @@ export default function CustomLink ({ data, className }) {
     transform: CSS.Transform.toString(transform),
     ...linkStyle
   }
+  // Lo que hace es retornar el link vacio si está siendo arrastrado
   if (isDragging) {
     return (
       <div ref={setNodeRef}
@@ -118,7 +119,9 @@ export default function CustomLink ({ data, className }) {
           {...attributes}
           {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
-            <input type='checkbox' className={linkSelectMode ? `${styles.checkbox}` : `${styles.hidden}`} onChange={handleSelectChange}/>
+            {
+              linkSelectMode && <input type='checkbox' className={linkSelectMode ? `${styles.checkbox}` : `${styles.hidden}`} onChange={handleSelectChange}/>
+            }
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
           </a>
@@ -127,11 +130,11 @@ export default function CustomLink ({ data, className }) {
               <div className={styles.lcontrols} style={controlStyle}>
                 <button className='buttonIcon'>
                   <Link to={`/desktop/link/${link._id}`} state={link._id}>
-                    <MaximizeIcon />
+                    <MaximizeIcon className='uiIcon_small'/>
                   </Link>
                   </button>
                   {
-                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown /></button>)
+                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown className='uiIcon_small' /></button>)
                   }
 
                 </div>

@@ -1,13 +1,13 @@
 import { useRef } from 'react'
 // import { useLinksStore } from '../../store/links'
 import { useParams } from 'react-router-dom'
-import { usePreferencesStore } from '../../store/preferences'
-import styles from './DeleteLinkForm.module.css'
+import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
 import { deleteLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { toast } from 'react-toastify'
 import { useGlobalStore } from '../../store/global'
+import { usePreferencesStore } from '../../store/preferences'
+import styles from './AddLinkForm.module.css'
 
 export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
   const { desktopName } = useParams()
@@ -39,7 +39,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
 
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
-      toast(message)
+      toast.error(message)
       // devolver estado anterior
     }
   }

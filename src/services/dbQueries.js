@@ -1,65 +1,5 @@
 import { constants } from './constants'
 
-// Organizar por links, columns, desktops, etc
-// Poner donde se llama a cada funcion
-
-// LinkDetails, useColumns, useLinks, useDragItems ---> Activo solo en LinkDetails
-// Necesario para crear el mapa de links para la navegación de linkdetails
-// export async function getDataForDesktops (desktop) {
-//   try {
-//     const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columns/getbydesk/${desktop}`, {
-//       method: 'GET',
-//       ...constants.FETCH_OPTIONS
-//     })
-//     const linksResponsePromise = fetch(`${constants.BASE_API_URL}/links/desktop/?desk=${desktop}`, {
-//       method: 'GET',
-//       ...constants.FETCH_OPTIONS
-//     })
-
-//     const [columnsResponse, linksResponse] = await Promise.all([columnsResponsePromise, linksResponsePromise])
-
-//     if (columnsResponse.ok && linksResponse.ok) {
-//       const [columnsData, linksData] = await Promise.all([columnsResponse.json(), linksResponse.json()])
-//       // respuesta ok solo se ocupa de errores de red, comprobar el success de la respuesta
-//       return [columnsData, linksData]
-//     } else {
-//       // Manejar el caso en el que columnsResponse o linksResponse no estén bien
-//       return ({ error: 'Fallo al obtener datos para el escritorio' })
-//     }
-//   } catch (error) {
-//     console.log(error)
-//     return error
-//   }
-// }
-// MoveOtherDeskForm ---> Necesario para crear el menu con todos los escritorios y columnas a donde mover el link
-// export async function getDesktopsAndColumns () {
-//   try {
-//     const desktopsResponsePromise = fetch(`${constants.BASE_API_URL}/desktops`, {
-//       method: 'GET',
-//       ...constants.FETCH_OPTIONS
-//     })
-//     const columnsResponsePromise = fetch(`${constants.BASE_API_URL}/columns`, {
-//       method: 'GET',
-//       ...constants.FETCH_OPTIONS
-//     })
-
-//     const [desktopsResponse, columnsResponse] = await Promise.all([desktopsResponsePromise, columnsResponsePromise])
-
-//     if (desktopsResponse.ok && columnsResponse.ok) {
-//       const [desktopsData, columnsData] = await Promise.all([desktopsResponse.json(), columnsResponse.json()])
-//       const desktops = desktopsData.data
-//       const columns = columnsData.columns
-//       return [desktops, columns]
-//     } else {
-//       console.log(desktopsResponse, columnsResponse)
-//       return { error: 'Error al obtener datos' }
-//     }
-//   } catch (error) {
-//     console.log(error)
-//     return error
-//   }
-// }
-
 /* ------------ LINKS ------------------- */
 
 // ProfilePage
@@ -219,6 +159,7 @@ export async function findDuplicateLinks () {
     return error
   }
 }
+
 /* --------------- COLUMNS -------------------- */
 
 // Column, ContectualColMenu, useDragItems
@@ -293,27 +234,7 @@ export async function createColumn ({ name, escritorio, order }) {
 }
 
 /* --------------- DESKTOPS -------------------- */
-// useDesktops
-// export async function getDesktops () {
-//   try {
-//     const res = await fetch(`${constants.BASE_API_URL}/desktops`, {
-//       method: 'GET',
-//       ...constants.FETCH_OPTIONS
-//     })
-//     if (res.ok) {
-//       const data = await res.json()
-//       console.log(data)
-//       return data
-//     } else {
-//       const data = await res.json()
-//       console.log(data)
-//       return data
-//     }
-//   } catch (error) {
-//     console.error('Error al obtener datos:', error)
-//     return error
-//   }
-// }
+
 // Nav
 export async function moveDesktops (items) {
   try {
@@ -399,6 +320,7 @@ export async function deleteDesktop ({ body }) {
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
+    console.log('fetch')
     return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
@@ -414,9 +336,7 @@ export async function changeBackgroundImage (event) {
         return error
       })
   } else {
-    document.body.style.backgroundImage = ''
-    document.body.style.backgroundSize = 'initial'
-    window.localStorage.setItem('bodyBackground', '')
+    return { error: 'Error al cambiar la imagen de fondo' }
   }
 }
 // CustomizeDesktopPanel
@@ -461,7 +381,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     }
   } catch (error) {
     console.error('Error al obtener la imagen:', error)
-    return { error }
+    return { error: 'Sin conexión con servidor, inténtalo más tarde' } // TODO hacerlo con todos
   }
 }
 // DeleteImageConfirmForm
@@ -675,4 +595,23 @@ export async function editUserAditionalInfo ({ email, fields }) {
       console.log(err)
       return err
     })
+}
+export async function deleteAccount ({ email }) {
+  try {
+    const query = await fetch(`${constants.BASE_API_URL}/auth/deleteuser`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ email })
+    })
+    const result = await query.json()
+    if (!query.ok) {
+      console.error(result)
+      return result
+    } else {
+      return result
+    }
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }

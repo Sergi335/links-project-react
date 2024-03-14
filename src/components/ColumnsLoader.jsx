@@ -6,7 +6,7 @@ const ColumnsLoader = (props) => {
   const width = '90%'
   return (
     <ContentLoader // No se adapta
-      speed={1}
+      speed={5}
       width={width}
       height={323}
       viewBox={`0 0 ${width} 460`}

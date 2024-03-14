@@ -6,50 +6,65 @@
     align-items: flex-start;
     flex-direction: column;
     background-color: var(--mainColor);
-    width: 200px;
+    backdrop-filter: blur(20px);
     padding: 5px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 30px var(--firstShadow);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 10px 16px var(--firstShadow);
     position: absolute;
-    font-size: 1.1em;
+    font-size: .875rem;
     border: var(--firstBorder);
 }
 .flex p, .flex span {
     margin: 0;
-    width: 90%;
+    min-width: 186px;
     text-align: left;
-    padding: 8px 10px;
-    border-radius: 5px;
+    padding: 5px 10px 5px 25px;
+    border-radius: var(--button-radius);
     display: flex;
     gap: 13px;
     align-items: center;
+    justify-content: space-between;
 }
 /* .flex p:first-of-type {
-    margin-top: 10px;
+    padding-bottom: 0;
 } */
 .flex p:nth-child(2) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 85%;
+    width: 186px;
     border-bottom: var(--firstBorder);
     padding-bottom: 10px;
+    padding-top: 0;
     display: block;
     border-radius: 0;
     margin-bottom: 8px;
 }
+.rotate {
+    transform: rotate(270deg);
+}
+/* .flex p:nth-child(2)::after {
+    content: '';
+    height: 3px;
+    border-bottom: 1px solid var(--firstBorderColor);
+    display: block;
+} */
 .moveList {
     position: absolute;
     left: 95%;
-    display: none;
+    /* display: none; */
     flex-direction: column;
     background-color: var(--mainColor);
+    backdrop-filter: blur(20px);
     padding: 5px;
     border-radius: 5px;
-    top: 94px;
+    top: 88px;
     width: max-content;
     box-shadow: 0px 0px 30px var(--firstShadow);
     border: var(--firstBorder);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.1s, opacity 0.1s linear;
     
 }
 .moveList li {
@@ -69,5 +84,7 @@
     cursor:default;
 }
 .moveTo:hover .moveList {
-    display: flex;
+    /* display: flex; */
+    visibility: visible;
+    opacity: 1;
 }

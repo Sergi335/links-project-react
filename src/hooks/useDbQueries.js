@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { constants } from '../services/constants'
 import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
-import { useNavigate } from 'react-router-dom'
 import { useSessionStore } from '../store/session'
 
-const useDbQueries = ({ desktopName }) => {
+const useDbQueries = () => {
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)
@@ -34,6 +34,7 @@ const useDbQueries = ({ desktopName }) => {
         await Promise.all([desktopsResponse.json(), columnsResponse.json(), linksResponse.json()])
           .then((response) => {
             const desktops = response[0].data
+            // console.log(desktops.filter(desktop => desktop.hidden === false))
             const columns = response[1].columns
             const links = response[2].links
             setDesktopsStore(desktops)
@@ -56,13 +57,13 @@ const useDbQueries = ({ desktopName }) => {
       }
     }
     getData()
-      // .then(res => { console.log(res) })
-      .catch(error => {
-        console.log(error + ', desde el .catch')
-        setUser(null)
-        setGlobalLoading(false)
-        navigate('/login')
-      })
+    // .then(res => { console.log(res) })
+    // .catch(error => {
+    //   console.log(error + ', desde el .catch')
+    //   setUser(null)
+    //   setGlobalLoading(false)
+    //   navigate('/login')
+    // })
   }, [])
 
   // useEffect(() => {

@@ -9,6 +9,7 @@
     transition: max-height .3s ease-in-out;
     overflow: hidden;
     height: 43px;
+    flex-grow: 1;
 }
 
 .progress {

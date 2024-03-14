@@ -1,18 +1,19 @@
-import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
-import { useDesktopsStore } from '../store/desktops'
-import { constants } from '../services/constants'
-import { formatPath, handleResponseErrors } from '../services/functions'
-import { usePreferencesStore } from '../store/preferences'
-import { editDesktop, changeBackgroundImage, getBackgroundMiniatures } from '../services/dbQueries'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import styles from './CustomizeDesktopPanel.module.css'
 import useHideForms from '../hooks/useHideForms'
+import { constants } from '../services/constants'
+import { changeBackgroundImage, editDesktop, getBackgroundMiniatures } from '../services/dbQueries'
+import { formatPath, handleResponseErrors } from '../services/functions'
+import { useDesktopsStore } from '../store/desktops'
 import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
+import { usePreferencesStore } from '../store/preferences'
+import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
-  const [hiddenDesktops, setHiddenDesktops] = useState([]) // store
+  const navigate = useNavigate()
   const inputRef = useRef()
   const formRef = useRef()
   const { desktopName } = useParams()
@@ -21,9 +22,13 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
+  const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
-  const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
+  // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
@@ -42,12 +47,27 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       return
     }
     const { data } = response
-    const url = new URL(window.location.href)
-    url.pathname = `desktop/${name}`
-    window.history.pushState(null, null, url)
-    const changeUrlEvent = new Event('changeurl')
-    window.dispatchEvent(changeUrlEvent)
     setDesktopsStore(data)
+    const newColsState = globalColumns.map(column => {
+      if (column.escritorio === desktopName) {
+        column.escritorio = name
+      }
+      return column
+    })
+    setGlobalColumns(newColsState)
+    const newLinksState = globalLinks.map(link => {
+      if (link.escritorio === desktopName) {
+        link.escritorio = name
+      }
+      return link
+    })
+    setGlobalLinks(newLinksState)
+    // const changeUrlEvent = new Event('changeurl')
+    // window.dispatchEvent(changeUrlEvent)
+    // const url = new URL(window.location.href)
+    // url.pathname = `desktop/${name}`
+    // window.history.pushState(null, null, url)
+    navigate(`/desktop/${name}`)
   }
   const handleNumberColumnsChange = (event) => {
     setNumberOfColumns(event.target.value)
@@ -56,37 +76,85 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     localStorage.setItem('numberOfColumns', JSON.stringify(event.target.value))
   }
   const handleChangeBackgroundImage = async (event) => {
+    event.target.classList.add(`${styles.optionSelected}`)
+    const miniatures = document.getElementById('bgMiniatures')
+    miniatures.childNodes.forEach(miniature => {
+      if (miniature !== event.target) {
+        miniature.classList.remove(`${styles.optionSelected}`)
+      }
+    })
     const response = await changeBackgroundImage(event)
+    console.log(response)
+    // console.log('🚀 ~ handleChangeBackgroundImage ~ response:', response)
     // Error de red
-    if (!response.startsWith('http') && !response.ok && response.error === undefined) {
+    if (!response?.startsWith('http') && !response?.ok && response?.error === undefined) {
       toast('Error de red')
       return
     }
     // Error http
-    if (!response.startsWith('http') && !response.ok && response.status !== undefined) {
+    if (!response?.startsWith('http') && !response?.ok && response?.status !== undefined) {
       toast(`${response.status}: ${response.statusText}`)
       return
     }
     // Error personalizado
-    if (!response.startsWith('http') && response.error) {
+    if (!response?.startsWith('http') && response.error) {
       toast(`Error: ${response.error}`)
     }
+    console.log(event.target.src ?? event.target.id)
+    window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.src))
   }
-  const handleChangePanelStyles = (event) => {
-    const currentStyle = event?.target.id
-    const panel = document.getElementById('sideinfo')
-    constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
-    window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
+  const handleRemoveBackgroundImage = (event) => {
+    event.target.classList.add(`${styles.optionSelected}`)
+    const miniatures = document.getElementById('bgMiniatures')
+    miniatures.childNodes.forEach(miniature => {
+      if (miniature !== event.target) {
+        miniature.classList.remove(`${styles.optionSelected}`)
+      }
+    })
+    document.body.style.backgroundImage = ''
+    document.body.style.backgroundSize = 'initial'
+    window.localStorage.setItem('bodyBackground', null)
+    window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.id))
   }
+  // const handleChangePanelStyles = (event) => {
+  //   event.target.classList.add(`${styles.optionSelected}`)
+  //   const options = document.getElementById('infoColor')
+  //   options.childNodes.forEach(option => {
+  //     if (option !== event.target) {
+  //       option.classList.remove(`${styles.optionSelected}`)
+  //     }
+  //   })
+  //   const currentStyle = event?.target.id
+  //   const panel = document.getElementById('sideinfo')
+  //   constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
+  //   window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
+  // }
   const handleChangeAccentColor = (event) => {
+    event.target.classList.add(`${styles.optionSelected}`)
+    const options = document.getElementById('accentColor')
+    options.childNodes.forEach(option => {
+      if (option !== event.target) {
+        option.classList.remove(`${styles.optionSelected}`)
+      }
+    })
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
   }
   const handleChangeThemeVariant = (event) => {
+    event.target.classList.add(`${styles.optionSelected}`)
     const style = event.target.id
     const element = document.documentElement
+    const options = document.getElementById('themeVariant')
+    options.childNodes.forEach(option => {
+      if (option !== event.target) {
+        option.classList.remove(`${styles.optionSelected}`)
+      }
+    })
     // element.classList.add('transparent')
     constants.THEME_VARIANTS[style].applyStyles(element)
+    const currentStyle = event?.target.id
+    constants.THEME_VARIANTS[currentStyle].applyStyles(element)
+    window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
   }
   const handleHideDesktops = async (event) => {
     const name = formatPath(event.target.value)
@@ -97,14 +165,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const newState = [...desktopsStore].filter(desktop => desktop.displayName !== event.target.value)
+    const deskIndex = desktopsStore.findIndex(desktop => desktop.name === name)
+    const newState = [...desktopsStore]
+    newState[deskIndex].hidden = true
     setDesktopsStore(newState)
-    const newHiddenState = [...hiddenDesktops, event.target.value]
-    setHiddenDesktops(newHiddenState)
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
-    const name = formatPath(event.target.value)
+    const name = formatPath(event.target.textContent)
     const body = { name, hidden: false }
     const response = await editDesktop(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -112,11 +180,36 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const newState = [...response].filter(desktop => desktop.hidden !== true)
+    const newState = [...desktopsStore]
+    const deskIndex = newState.findIndex(desktop => desktop.name === name)
+    newState[deskIndex].hidden = false
     setDesktopsStore(newState)
-    const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
-    setHiddenDesktops(newHiddenState)
+    // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
+    // setHiddenDesktops(newHiddenState)
   }
+  // Useeffect para aplicar las opciones marcadas en el panel de personalización
+  useEffect(() => {
+    const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
+    const optionsContainer = document.getElementById('themeVariant')
+    optionsContainer.querySelector(`#${themeVariant}`).classList.add(`${styles.optionSelected}`)
+
+    const accentColor = JSON.parse(window.localStorage.getItem('accentColorName')) ?? accentColors[0]
+    const colorOptions = document.getElementById('accentColor')
+    colorOptions.querySelector(`#${accentColor}`).classList.add(`${styles.optionSelected}`)
+
+    const background = JSON.parse(window.localStorage.getItem('backgroundMiniature')) ?? 'color'
+    // console.log('🚀 ~ useEffect ~ background:', background)
+    const backgroundOptions = Array.from(document.getElementById('bgMiniatures').childNodes)
+    // console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
+    backgroundOptions.forEach(option => {
+      // console.log(option.src)
+      if (option.src && option.src === background) {
+        option.classList.add(`${styles.optionSelected}`)
+      } else if (option.id && option.id === background) {
+        option.classList.add(`${styles.optionSelected}`)
+      }
+    })
+  }, [miniatures])
   useEffect(() => {
     getBackgroundMiniatures()
       .then(response => {
@@ -140,14 +233,13 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         toast({ error })
       })
   }, [])
-  // Ocultar escritorios con select?
-  // const visibleClass = customizePanelVisible ? styles.flex : styles.hidden
+
   return (
     <>
              <div ref={formRef} className={`${styles.customizePanel} ${visibleClassName}`}>
                 <div className={styles.wrapper}>
-                  <h3>Personaliza Escritorio</h3>
-                  <form style={{ display: 'flex', flexDirection: 'column', marginBottom: '25px' }} onSubmit={handleSubmit}>
+                  <h3>Personalizar Escritorio</h3>
+                  <form onSubmit={handleSubmit}>
                     <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                       <div className={styles.rowGroup} style={{ position: 'relative' }}>
                           <label htmlFor="changeDesktopName" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Nombre:</label>
@@ -155,7 +247,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           <button className={styles.inputButton} type='submit'>Modificar</button>
                       </div>
                       <div className={styles.rowGroup}>
-                          <label htmlFor="" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Número de columnas:&nbsp;<strong>{numberOfColumns}</strong></label>
+                          <label htmlFor="" style={{ marginBottom: '6px', width: '100%' }}>Número de columnas:&nbsp;<strong>{numberOfColumns}</strong></label>
                           <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} />
                           <datalist id="steplist">
                             <option>1</option>
@@ -173,22 +265,28 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           <select name="" id="" onChange={handleHideDesktops}>
                           {
                               desktopsStore?.map(desktop => {
-                                return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                                if (!desktop.hidden) {
+                                  return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                                }
+                                return null // Add this line to return null if the condition is not met
                               })
                           }
                           </select>
                          </div>
-                         <div className={styles.rowGroup}>
-                         {
-                            hiddenDesktops?.length > 0 && hiddenDesktops?.map(desktop => {
-                              return <button onClick={handleRestoreDesktop} key={desktop} className={styles.hiddenDesktops}>{desktop}</button>
-                            })
-                          }
-                         </div>
+                        <div className={styles.rowGroup}>
+                        {
+                          desktopsStore?.map(desktop => {
+                            if (desktop.hidden) {
+                              return <button onClick={handleRestoreDesktop} key={desktop._id} className={styles.hiddenDesktops}>{desktop.displayName}</button>
+                            }
+                            return null // Add this line to return null if the condition is not met
+                          })
+                        }
+                        </div>
                       </div>
                   </form>
-                  <h3>Cambiar Fondo</h3>
-                  <div className={styles.selectBackground}>
+                  <h3>Fondos</h3>
+                  <div id='bgMiniatures' className={styles.selectBackground}>
                       {
                         miniatures
                           ? miniatures.map(img => {
@@ -196,26 +294,26 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           })
                           : <div>Cargando ...</div>
                       }
-                      <div className={styles.removeBackground} onClick={handleChangeBackgroundImage}></div>
+                      <div id='color' className={styles.removeBackground} onClick={handleRemoveBackgroundImage}></div>
                   </div>
-                  <h3>Cambiar Variante del tema</h3>
-                  <div className={styles.selectThemeVariant}>
+                  <h3>Estilo del tema</h3>
+                  <div id='themeVariant' className={styles.selectThemeVariant}>
                       {
                         themeVariants && themeVariants.map(style => {
                           return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
                         })
                       }
                   </div>
-                  <h3>Cambiar Color del Panel</h3>
-                  <div className={styles.selectInfoColor}>
+                  {/* <h3>Estilo del Panel</h3>
+                  <div id='infoColor' className={styles.selectInfoColor}>
                       {
                         sideInfoStyles && sideInfoStyles.map(style => {
                           return <div key={style} className="infoColors" onClick={handleChangePanelStyles} id={style} style={{ background: constants.SIDE_INFO_STYLES[style].background }}></div>
                         })
                       }
-                  </div>
-                  <h3>Cambiar Color de Acento</h3>
-                  <div className={styles.selectAccentColor}>
+                  </div> */}
+                  <h3>Color de Acento</h3>
+                  <div id='accentColor' className={styles.selectAccentColor}>
                       {
                         accentColors && accentColors.map(color => {
                           return <div key={color} className="accentColors" onClick={handleChangeAccentColor} id={color} style={{ backgroundColor: constants.ACCENT_COLORS[color].color }}></div>
