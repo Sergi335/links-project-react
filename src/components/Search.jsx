@@ -1,9 +1,9 @@
-import { useRef, useState, useMemo, useCallback } from 'react'
-import styles from './Search.module.css'
-import { searchLinks } from '../services/functions'
-import CustomLink from './customlink'
 import debounce from 'just-debounce-it'
-import { SearchIcon, CloseIcon } from './Icons/icons'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { searchLinks } from '../services/functions'
+import { CloseIcon, SearchIcon } from './Icons/icons'
+import styles from './Search.module.css'
+import CustomLink from './customlink'
 
 export default function Search () {
   const [search, updateSearch] = useState('')

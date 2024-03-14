@@ -9,7 +9,7 @@ export default function AppLayout ({ children }) {
   const { desktopName } = useParams()
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
-  console.log(localStorage.getItem('bodyBackground') !== 'null')
+  // console.log(localStorage.getItem('bodyBackground') !== 'null')
   // Cambiar el fondo del body en la aplicación únicamente, no en el homepage ya que appLayout no afecta a HomePage
   if (localStorage.getItem('bodyBackground') !== 'null') {
     document.body.style.backgroundImage = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`

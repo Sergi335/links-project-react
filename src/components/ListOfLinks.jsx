@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
@@ -38,7 +38,12 @@ export default function ListOfLinks () {
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-  console.log('🚀 ~ ListOfLinks ~ openedColumns:', openedColumns)
+  // console.log('render')
+  const renderCount = useRef(0)
+  renderCount.current += 1
+  useEffect(() => {
+    // console.log('renderCount:', renderCount.current)
+  }, [globalLinks, desktopLinks, globalColumns, desktopColumns, linkLoader, numberOfPastedLinks, columnLoaderTarget, styleOfColumns, numberOfColumns, customizePanelVisible, globalLoading, setColumnHeights, openedColumns])
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
@@ -62,9 +67,11 @@ export default function ListOfLinks () {
     })
   )
   const columnsId = desktopColumns?.map((col) => col._id)
-  const getLinksIds = (columna) => {
+  const getLinksIds = useCallback((columna) => {
+    // console.log(desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id))
+    // console.log('getLinksIds')
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
-  }
+  }, [desktopLinks])
   const isDesktop = windowSize.width > 1536
   return (
     <main className={styles.listOfLinks}>
@@ -111,7 +118,7 @@ export default function ListOfLinks () {
                                   link.idpanel === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
                                     : null
-                                ).filter(link => link !== null).slice(0, 6)
+                                ).filter(link => link !== null)
                             }
                             {
                               // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col

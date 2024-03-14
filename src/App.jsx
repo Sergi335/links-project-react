@@ -9,6 +9,7 @@ import { useDesktopsStore } from '../src/store/desktops'
 import { useSessionStore } from '../src/store/session'
 import ListOfLinks from './components/ListOfLinks'
 import NotFound from './components/Pages/404'
+import InternalError from './components/Pages/500'
 import AppLayout from './components/Pages/AppLayout'
 import HomePage from './components/Pages/HomePage'
 import LinkDetails from './components/Pages/LinkDetails'
@@ -59,54 +60,54 @@ function App () {
     {
       path: '/',
       element: <HomePage />,
-      errorElement: <NotFound />
+      errorElement: <InternalError />
     },
     {
       path: '/desktop',
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
-      errorElement: <NotFound />,
+      errorElement: <InternalError />,
       children: [
         {
           path: '/desktop/:desktopName',
           element: <ListOfLinks />,
-          errorElement: <NotFound />
+          errorElement: <InternalError />
         },
         {
           path: '/desktop/readinglist',
           element: <ReadingList />,
-          errorElement: <NotFound />
+          errorElement: <InternalError />
         },
         {
           path: '/desktop/link/:id',
           element: <LinkDetails />,
-          errorElement: <NotFound />
+          errorElement: <InternalError />
         },
         {
           path: '/desktop/profile',
           element: <ProfilePage />,
-          errorElement: <NotFound />
+          errorElement: <InternalError />
         },
         {
           path: '/desktop/',
           element: <ListOfLinks />,
-          errorElement: <NotFound />
+          errorElement: <InternalError />
         }
       ]
     },
     {
       path: '/link/:id',
       element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />,
-      errorElement: <NotFound />
+      errorElement: <InternalError />
     },
     {
       path: '/login',
       element: user === null ? <Login /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
-      errorElement: <NotFound />
+      errorElement: <InternalError />
     },
     {
       path: '/recovery-password',
       element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
-      errorElement: <NotFound />
+      errorElement: <InternalError />
     },
     {
       path: '*',

@@ -74,7 +74,9 @@ export default function LinkDetails () {
       </>
         )
       : (
-          <div>Cargando ...</div>
+        <div className={styles.loaderWrapper}>
+          <span className={styles.loader}></span>
+        </div>
         )}
   </main>
   )

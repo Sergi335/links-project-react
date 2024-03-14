@@ -77,7 +77,7 @@
     top: 101px;
     background: var(--mainColor);
     max-height: 87vh;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border: var(--firstBorder);
     box-shadow: 0px 0px 18px var(--firstShadow);
     padding: 5px 0;
@@ -123,14 +123,47 @@
     align-items: center !important;
 }
 
-.searchResults::-webkit-scrollbar {
+/* .searchResults::-webkit-scrollbar {
     width: 8px;
-}
+} */
 
-.searchResults::-webkit-scrollbar-thumb {
+/* .searchResults::-webkit-scrollbar-thumb {
     background-color: var(--accentColor);
-}
-
+} */
+.searchResults {
+    --scrollbar-width: 8px;
+    --scrollbar-border-thickness: 0px;
+    --scrollbar-border-radius: 12px;
+    --scrollbar-height: 30px;
+  }
+  
+  .searchResults::-webkit-scrollbar {
+    width: var(--scrollbar-width, 20px);
+    height: var(--scrollbar-height, 20px);
+  }
+  
+  .searchResults::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color, var(--accentColor));
+    border: var(--scrollbar-border-thickness, 3px) solid var(--scrollbar-border-color, rgba(255, 255, 255, 0));
+    border-radius: var(--scrollbar-border-radius, 4px);
+  }
+  
+  .searchResults::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color, transparent);
+  }
+  
+  .searchResults::-webkit-scrollbar-corner {
+    background: var(--scrollbar-corner-color, transparent);
+    border: var(--scrollbar-border-thickness, 3px) solid var(--scrollbar-border-color, transparent);
+    border-radius: var(--scrollbar-border-radius, 4px);
+  }
+  
+  .searchResults::-webkit-scrollbar-button:vertical:start:increment,
+  #preview::-webkit-scrollbar-button:vertical:end:decrement,
+  #preview::-webkit-scrollbar-button:horizontal:start:increment,
+  #preview::-webkit-scrollbar-button:horizontal:end:decrement {
+    display: var(--show-double-buttons, none);
+  }
 /* input[type='text'].active {
     background: var(--bgGradient);
     border: 1px solid #9a9a9a;
@@ -155,6 +188,7 @@
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+    margin: 16px 0;
 }
 .resControls .cleanButton {
     margin-right: 10px;
@@ -174,40 +208,34 @@
     font-size: 13.3333px;
 }
 
-.loader,
-.loader:before,
-.loader:after {
-    border-radius: 50%;
-    width: 2.5em;
-    height: 2.5em;
-    animation-fill-mode: both;
-    animation: bblFadInOut 1.8s infinite ease-in-out;
-}
-
 .loader {
-    color: var(--firstTextColor);
-    font-size: 7px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     position: relative;
-    text-indent: -9999em;
-    transform: translateZ(0);
-    animation-delay: -0.16s;
-}
-
-.loader:before,
-.loader:after {
-    content: '';
+    animation: rotate 1s linear infinite;
+    padding: 12px;
+    margin: 25px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .loader::before,
+  .loader::after {
+    content: "";
+    box-sizing: border-box;
     position: absolute;
-    top: 0;
-}
-
-.loader:before {
-    left: -3.5em;
-    animation-delay: -0.32s;
-}
-
-.loader:after {
-    left: 3.5em;
-}
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid var(--inputBackgroundColor);
+    animation: prixClipFix 2s linear infinite;
+  }
+  
+  .loader::after {
+    border-color: var(--accentColor);
+    animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+    inset: 6px;
+  }
 
 @keyframes bblFadInOut {
 
@@ -221,7 +249,37 @@
         box-shadow: 0 2.5em 0 0
     }
 }
-
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+  
+    100% {
+        transform: rotate(360deg)
+    }
+  }
+  
+  @keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    }
+  
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    }
+  
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+    }
+  
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+    }
+  
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+    }
+  }
 @media (min-width: 768px) {
     .searchForm input.searchInput {
         display: initial;
@@ -264,7 +322,7 @@
         top: 58px;
         background: var(--columnBgColor);
         max-height: 550px;
-        border-radius: 5px;
+        border-radius: var(--border-radius);
         border: var(--firstBorder);
         box-shadow: 0px 0px 18px var(--firstShadow);
         padding: 5px 0;

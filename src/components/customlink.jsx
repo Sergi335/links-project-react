@@ -97,6 +97,7 @@ export default function CustomLink ({ data, className }) {
       link
     }
   })
+  // console.log('🚀 ~ CustomLink ~ isDragging:', isDragging)
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
