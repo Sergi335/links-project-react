@@ -26,6 +26,8 @@
   display: grid;
   gap: 15px;
   order: 2;
+  flex-grow: 1;
+  max-height: 60%;
   /* padding: 5px; */
 }
 
@@ -51,7 +53,7 @@
 
 .videoPlayer iframe {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  /* aspect-ratio: 16 / 9; */
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
   border: 0;
@@ -87,7 +89,45 @@
   height: -webkit-fill-available;
   border-radius: 0;
 }
+.loaderWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+.loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+  padding: 12px;
+  margin: 25px;
+  display: block;
+  margin: 0 auto;
+}
 
+.loader::before,
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid var(--inputBackgroundColor);
+  animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+  border-color: var(--accentColor);
+  animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+  inset: 6px;
+}
 .imageGalleryContainer {
   display: flex;
   flex-direction: column;
@@ -196,7 +236,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  background-color: var(--thirdColor);
+  /* background-color: var(--thirdColor); */
   /* border: 1px solid var(--firstBorderColor); */
   gap: 14px;
 }
@@ -478,7 +518,7 @@
   display: flex;
   /* border: 1px solid var(--firstBorderColor); */
   border-radius: var(--border-radius);
-  padding: 5px;
+  padding: 5px 0;
   background-color: var(--thirdColor);
   height: 30px;
   border-top: 0;
@@ -502,7 +542,9 @@
   font-size: .75rem;
   padding: 2px 12px;
 }
-
+.details_nav_link:nth-of-type(2) {
+  padding: 5px 12px;
+}
 .details_nav_link_disabled {
   background-color: transparent;
   padding: 2px 12px;
@@ -827,7 +869,37 @@
     visibility: hidden;
   }
 }
+@keyframes rotate {
+  0% {
+      transform: rotate(0deg)
+  }
 
+  100% {
+      transform: rotate(360deg)
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+      clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+  }
+
+  25% {
+      clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+  }
+
+  50% {
+      clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+  }
+
+  75% {
+      clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+  }
+
+  100% {
+      clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+  }
+}
 @media (min-width: 1536px) {
   .mainSection {
     grid-template-columns: calc(50% - (15px / 2)) calc(50% - (15px / 2));

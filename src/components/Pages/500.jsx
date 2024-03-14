@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import styles from './404.module.css'
 
-export default function NotFound () {
+export default function InternalError () {
   return (
     <div className={styles.main}>
       <div className={styles.wrapper}>
-        <h1>404</h1>
+        <h1>500</h1>
         <p>
-          Sorry, we couldn’t find the page you’re looking for.
+          Oops something went wrong, please try again later.
         </p>
       </div>
       <Link to={-1}>

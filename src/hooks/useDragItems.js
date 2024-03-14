@@ -14,7 +14,8 @@ export const useDragItems = ({ desktopName }) => {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  // console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
+  console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
+  // console.log(activeLink)
   function handleDragStart (event) {
     // Y si es el hecho de esconder los links al hacer drag? --> Correcto
     // console.log('start')
@@ -30,11 +31,13 @@ export const useDragItems = ({ desktopName }) => {
   const updateLinksStore = useRef(setGlobalLinks) // el truco del almendruco actualiza el estado sin renderizar
   function handleDragEnd (event) {
     const { active, over } = event
+    console.log(active.data.current?.type, over?.data.current?.type)
     if (event.active.data.current?.type === 'link' && over !== null) {
       if (active.id !== over.id) {
         const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
         const newIndex = globalLinks.findIndex((t) => t._id === over.id)
         setGlobalLinks(arrayMove(globalLinks, oldIndex, newIndex))
+        console.log(activeLink)
         setMovedLink(activeLink)
       }
     }
@@ -49,21 +52,32 @@ export const useDragItems = ({ desktopName }) => {
     }
     setActiveLink(null)
     setActiveColumn(null)
+    console.log('end')
   }
   function handleDragCancel () {
     setActiveLink(null)
     setActiveColumn(null)
     setGlobalColumns(globalColumns)
     setGlobalLinks(globalLinks)
+    console.log('cancel')
   }
   function handleDragOver (event) {
     const { active, over } = event
-    // --- NUEVO ---
-    if (!over) return
-    const activeId = active.id
-    const overId = over.id
+    // console.log('🚀 ~ handleDragOver ~ over:', over)
+    // console.log('🚀 ~ handleDragOver ~ active:', active)
 
-    if (activeId === overId) return
+    // --- NUEVO ---
+    // if (!over) {
+    //   console.log('no over')
+    //   return
+    // }
+    // const activeId = active.id
+    // const overId = over.id
+
+    // if (activeId === overId) {
+    //   console.log('same')
+    //   return
+    // }
     // -- NUEVO ---
 
     const isActiveLink = active.data.current?.type === 'link'
@@ -76,6 +90,9 @@ export const useDragItems = ({ desktopName }) => {
         const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
         const newIndex = globalLinks.findIndex((t) => t._id === over.id)
         if (globalLinks[oldIndex].idpanel !== globalLinks[newIndex].idpanel) {
+          console.log('other column')
+          // console.log(globalLinks[oldIndex].idpanel)
+          // console.log(globalLinks[newIndex].idpanel)
           const updatedLinksStore = [...globalLinks]
           updatedLinksStore[oldIndex].idpanel = globalLinks[newIndex].idpanel
           updatedLinksStore[oldIndex].panel = globalLinks[newIndex].panel
@@ -90,6 +107,7 @@ export const useDragItems = ({ desktopName }) => {
       const oldIndex = globalLinks.findIndex((t) => t._id === active.id)
       const newState = [...globalLinks]
       newState[oldIndex].idpanel = over.id // ojo no solo cambiar el idpanel, sino también el panel
+      newState[oldIndex].panel = over.data.current.columna.name
       setGlobalLinks(arrayMove(newState, oldIndex, oldIndex))
       setMovedLink(activeLink)
     }
