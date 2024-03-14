@@ -1,0 +1,257 @@
+.home * {
+    box-sizing: border-box;
+}
+
+.home {
+    font-size: 1.2rem;
+}
+
+.home header {
+    min-height: 100vh;
+}
+
+.home p {
+    max-width: 60ch;
+    text-wrap: pretty;
+}
+
+.home .headingText {
+    text-wrap: balance;
+    margin: 65px 0 75px 0;
+    max-width: 100ch;
+    font-size: 1.5rem;
+}
+
+.home h2,
+.home h3 {
+    margin-bottom: 0;
+}
+
+.home a:hover {
+    color: coral;
+}
+
+.home video {
+    max-width: 988px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: var(--secondNeumoShadow);
+}
+
+.main {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+}
+
+.main h2 {
+    margin: 0;
+    color: var(--homeH2Color);
+}
+
+.logo {
+    position: relative;
+    font-family: k2d;
+    font-size: 2em;
+    display: flex;
+
+    & h2 {
+        font-size: 96px;
+        margin-top: 0;
+        background-image: linear-gradient(180deg, rgba(84, 212, 228, 1) 0.2%, rgba(68, 36, 164, 1) 100%);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.logo::after {
+    content: 'Beta';
+    position: relative;
+    color: coral;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-style: italic;
+    top: 17px;
+    height: fit-content;
+}
+
+.logo svg {
+    width: 84px;
+    height: 60px;
+    transform: rotate(34deg);
+    color: coral;
+    position: relative;
+    top: 41px;
+    left: 27px;
+}
+
+.heroSection .subtitle {
+    margin: 0;
+    color: coral;
+    font-weight: 300;
+    letter-spacing: 2.5px;
+
+}
+
+.navlinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 54px;
+    position: relative;
+
+    & a {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+}
+
+.heroSection {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    mask-image: var(--homeMaskImage);
+    background-size: 14px 14px;
+    background-image: var(--homeHeroGradient);
+}
+
+.heroSection p {
+    text-align: center;
+}
+
+.background {
+    position: absolute;
+    width: 383px;
+    height: 1167px;
+    background: linear-gradient(108deg, rgba(255, 255, 255, 0) 49%, var(--inverseColor) 55%);
+    z-index: -1;
+    clip-path: polygon(0 0, 100% 0, 52% 50%, 48% 50%);
+    animation: rotate 7s ease-in-out infinite;
+    top: -552px;
+    left: 36px;
+    z-index: 1;
+}
+
+.actionLinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin-top: 65px;
+}
+
+.heroSection img {
+    width: 21px;
+    position: relative;
+    top: 1px;
+}
+
+.section {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    gap: 50px;
+}
+
+.nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 65px;
+    align-items: center;
+}
+
+.start {
+    padding: 12px 0;
+    background-color: #f9f9f9;
+    color: #121212;
+    border-radius: 5px;
+    font-size: 1rem;
+    position: relative;
+    width: 272px;
+    display: flex;
+    justify-content: center;
+    /* box-shadow: 0px 0px 25px var(--firstShadow); */
+    border: var(--firstBorder);
+}
+
+.start.try {
+    background-color: black;
+    color: #ccc;
+}
+
+.textColumn {
+    display: flex;
+    flex-direction: column;
+    text-wrap: balance;
+    width: calc(50% - 25px);
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.textColumn p {
+    border-left: 2px solid coral;
+    padding-left: 15px;
+    margin-left: 3px;
+}
+
+.mediaColumn {
+    display: flex;
+    width: calc(50% - 25px);
+}
+
+.strong {
+    color: coral;
+}
+
+.mediaColumn img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    aspect-ratio: 3/2;
+}
+
+.footer {
+    display: flex;
+    min-height: 14vh;
+    background-color: var(--homeFooterColor);
+    margin-top: 85px;
+    justify-content: center;
+    align-items: center;
+
+    & .copy {
+        font-size: .8rem;
+    }
+}
+
+@media (max-width: 1325px) {
+    .section {
+        flex-direction: column;
+    }
+
+    .section:nth-of-type(2) {
+        flex-direction: column-reverse;
+    }
+
+    .fakelinks {
+        flex-direction: column;
+    }
+
+    .textColumn,
+    .mediaColumn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+    .home h2,
+    .home h3 {
+        text-align: center;
+
+    }
+}

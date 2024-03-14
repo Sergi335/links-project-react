@@ -1,0 +1,60 @@
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+.menuMoveTo {
+    position: fixed;
+    top: calc(2rem + 46px);
+    right: 2rem;
+    background-color: var(--mainColor);
+    height: calc(87vh + 34px);
+    min-width: 443px;
+    backdrop-filter: blur(20px);
+    border-radius: 5px;
+    box-shadow: 0px 10px 12px var(--firstShadow);
+    overflow-y: auto;
+}
+.menuMoveTo p:first-child {
+    text-align: left;
+    padding-left: 30px;
+    width: 374px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.hidden {
+    display: none;
+}
+.destDeskMoveTo {
+    list-style-type: none;
+    cursor: pointer;
+    overflow-y: auto;
+    padding: 0;
+    color: var(--firstTextColor);
+    padding-left: 30px;
+}
+li.accordion {
+    padding: 5px 0 0;
+    text-align: left;
+}
+li.accordion svg {
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+.menuMoveTo ul li ul {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height .2s ease-out;
+    margin-top: 5px;
+}
+.menuMoveTo ul li ul li {
+    padding: 0 5px;
+    width: fit-content;
+    border-radius: 2px;
+}
+.moveToControls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 32px 16px;
+}

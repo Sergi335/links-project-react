@@ -1,0 +1,23 @@
+.listOfLinks {
+    min-width: auto;
+    display: grid;
+    margin-top: calc(2rem + 45px);
+    gap: 40px;
+
+}
+.mainContent {
+    display: grid;
+    max-width: auto;
+    gap: 40px;
+    margin-left: 0;
+}
+@media (min-width: 1536px) {
+    .listOfLinks {
+        min-width: 1400px;
+    
+    }
+    .mainContent {
+        max-width: 75vw;
+        margin-left: var(--main-content-margin-left);
+    }
+}

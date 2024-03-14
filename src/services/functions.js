@@ -30,6 +30,13 @@ export const videoUrlsObj = {
       }
     }
   },
+  YoutubeShort: {
+    url: /^https:\/\/www\.youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
+    embedURL: 'https://www.youtube.com/embed/',
+    extractParam: function (url) {
+      return url.split('/')[4]
+    }
+  },
   Pornhub: {
     url: 'https://es.pornhub.com/view_video',
     embedURL: 'https://www.pornhub.com/embed/',
@@ -65,69 +72,6 @@ export function checkUrlMatch (url) {
   }
   return null // Si no hay coincidencia
 }
-export async function editColumn (name, desk, idPanel) {
-  try {
-    const body = { nombre: name, escritorio: desk, id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-    } else {
-      const data = await res.json()
-      console.log(data)
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
-export async function moveColumn (deskOrigen, deskDestino, idPanel) {
-  try {
-    const body = { deskOrigen, deskDestino, colId: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/moveCols`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-    } else {
-      const data = await res.json()
-      console.log(data)
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
-export async function deleteColumn (idPanel) {
-  try {
-    const body = { id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columnas`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-    } else {
-      const data = await res.json()
-      console.log(data)
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
 export function saludo (user) {
   const fecha = new Date()
   const hora = fecha.getHours()
@@ -154,10 +98,13 @@ export function hora () {
 export const searchLinks = async ({ search }) => {
   if (search === '') return null
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/search?query=${search}`)
+    const response = await fetch(`${constants.BASE_API_URL}/search?query=${search}`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await response.json()
@@ -167,3 +114,83 @@ export const searchLinks = async ({ search }) => {
     return { error }
   }
 }
+export function formatPath (path) {
+  const decodedPath = decodeURIComponent(path)
+  const formattedPath = decodedPath.replace(/\s+/g, '-').toLowerCase()
+  console.log('🚀 ~ file: formatUrl.js:6 ~ formatUrl ~ formattedUrl:', formattedPath)
+  const normalizedPath = formattedPath.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  return normalizedPath
+}
+export function formatDate (date) {
+  const fecha = new Date(date)
+
+  const opcionesFecha = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+
+  const opcionesHora = {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false
+  }
+
+  const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha)
+  const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora)
+
+  const resultado = fechaFormateada + ' ' + horaFormateada
+  // console.log(resultado)
+  return resultado
+}
+export async function getUrlStatus (url) {
+  // console.log('🚀 ~ file: sidepanel.js:644 ~ getUrlStatus ~ url:', url)
+  // console.log('Funciona Status')
+  const query = await fetch(`${constants.BASE_API_URL}/links/status?url=${url}`, {
+    method: 'GET',
+    ...constants.FETCH_OPTIONS
+  })
+  const res = await query.json()
+  // console.log(res)
+  // const holder = document.getElementById('lactive')
+  const firstKey = Object.keys(res)[0]
+  const firstValue = res[firstKey]
+  let icon
+  if (firstKey === 'error' || firstKey === 'errors') {
+    if (firstKey === 'errors') {
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = false
+    } else {
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = false
+    }
+    return icon
+  } else {
+    if (firstValue === 'success' || firstValue === 'redirect') {
+      // icon = convertHtmlEntityToEmoji('&#x1F197;')
+      icon = true
+    }
+    if (firstValue === 'clientErr' || firstValue === 'serverErr') {
+      // icon = convertHtmlEntityToEmoji('&#x1F198;')
+      icon = true
+    }
+    return icon
+  }
+}
+export function handleResponseErrors (response) {
+  if (response.status !== 'success' || !response.status) {
+    // return { hasError: true, message: 'Error al efectuar la operación' }
+    return { hasError: true, message: response.error || 'Error al efectuar la operación' }
+  }
+  // if (response.status === 'error') {
+  //   // return { hasError: true, message: 'Error al efectuar la operación' }
+  //   return { hasError: true, message: response.error?.message }
+  // }
+  return { hasError: false, message: '' }
+}
+// function convertHtmlEntityToEmoji (htmlEntity) {
+//   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
+//   const codePoint = parseInt(htmlEntity.slice(3, -1), 16)
+//   return String.fromCodePoint(codePoint)
+// }
