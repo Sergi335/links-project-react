@@ -100,7 +100,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   }
   const handleNavigate = () => {
     // <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
-    navigate('/desktop/readinglist')
+    navigate('/readinglist')
   }
   const handleHideColumns = () => {
     const container = document.getElementById('maincontent')

@@ -146,7 +146,7 @@ export default function Header () {
             )
           }
 
-            <Link to={'/desktop/profile'} className={styles.settingsImg}><img src={user.profileImage ? user.profileImage : '/img/avatar.svg' } alt={user.realName}/></Link>
+            <Link to={'/profile'} className={styles.settingsImg}><img src={user.profileImage ? user.profileImage : '/img/avatar.svg' } alt={user.realName}/></Link>
 
           <div className={styles.settings} onClick={handleGoogleLogOut}>
             <svg className="uiIcon icofont-exit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"></path></svg>

@@ -4,6 +4,7 @@
   font-weight: 500;
   font-style: normal;
 }
+
 :root {
   font-family: 'Inter Variable', sans-serif;
   line-height: 1.5;
@@ -50,14 +51,17 @@
   --linkFontWeight: 400;
 
 }
+
 /*Todo lo que quieras aplicar al modo blur debe ir con el maincolor*/
 html.transparent {
   --mainColor: #ffffff99;
 }
+
 html.dark.transparent {
   --mainColor: #1d1d1d6b;
 
 }
+
 html.dark {
   /* --bgGradient: url('/img/fondo.png'); */
   --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(0% 0.5 360) 0%, oklch(32% 0 0) 100%);
@@ -87,6 +91,7 @@ html.dark {
   --inputBackgroundColor: black;
   --linkFontWeight: 400;
 }
+
 html.dark {
   background-color: #1D1D1D;
 }
@@ -106,16 +111,20 @@ body {
   text-align: center;
   overflow: hidden;
 }
+
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--frostHvColor) inset !important;
-    -webkit-text-fill-color: var(--firstTextColor) !important;
-    border: 0 !important;
-    /* border-radius: 0 !important; */
+  -webkit-box-shadow: 0 0 0 30px var(--frostHvColor) inset !important;
+  -webkit-text-fill-color: var(--firstTextColor) !important;
+  border: 0 !important;
+  /* border-radius: 0 !important; */
 }
-input[type='text'], input[type='password'], input[type='email'] {
+
+input[type='text'],
+input[type='password'],
+input[type='email'] {
   padding-left: 11px;
   background-color: var(--inputBackgroundColor);
   border-radius: var(--button-radius);
@@ -126,24 +135,29 @@ input[type='text'], input[type='password'], input[type='email'] {
   font-weight: 500;
   height: 36px;
 }
-input[type='text']::placeholder, input[type='password']::placeholder {
+
+input[type='text']::placeholder,
+input[type='password']::placeholder {
   color: var(--firstTextColor);
   font-family: inherit;
   font-weight: 500;
   font-style: italic;
 }
+
 input[type='text']:focus,
 input[type='text']:visited,
 input[type='password']:focus,
-input[type='password']:visited  {
+input[type='password']:visited {
   background: var(--frostHvColor);
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   background-color: var(--thirdColor) !important;
   -webkit-box-shadow: 0 0 0px 1000px rgba(222, 225, 230, 1) inset;
   border: 1px solid #9a9a9a;
 }
+
 a {
   font-weight: var(--linkFontWeight);
   color: var(--firstTextColor);
@@ -151,28 +165,38 @@ a {
   font-size: 14px;
   transition: height .3s ease-in-out;
 }
-a:hover svg, span:hover svg {
+
+a:hover svg,
+span:hover svg {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
-a.active, .link.active {
+
+a.active,
+.link.active {
   background-color: var(--inputBackgroundColor);
 }
+
 .selectMode .link img {
   margin-left: 0;
 }
+
 .selectMode .link a {
-    flex-wrap: nowrap;
+  flex-wrap: nowrap;
 }
+
 .selectMode .column h2 {
   margin-left: 0;
 }
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
 ul {
   list-style-type: none;
 }
+
 button {
   display: flex;
   justify-content: center;
@@ -191,39 +215,47 @@ button {
   transition: background-color .3s ease-out, color .3s ease-out;
   gap: 6px;
 }
+
 button:disabled {
   opacity: .5;
   cursor: not-allowed;
 }
+
 button:disabled:hover {
   background-color: transparent;
   color: var(--firstTextColor);
 }
+
 button:hover {
   background-color: var(--frostHvColor);
   /* transition: background-color .3s; */
   color: var(--accentColor);
   /* box-shadow: var(--secondNeumoShadow); */
 }
+
 button:hover svg {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
+
 .uiIcon {
   width: 23px;
   cursor: pointer;
   color: var(--accentColor);
   transition: transform .150s ease-in-out;
 }
+
 .uiIcon-button {
   width: 16px;
   cursor: pointer;
   /* padding-top: 1px; */
 }
+
 .uiIcon-menu {
   width: 1rem;
   color: var(--accentColor);
   cursor: pointer;
 }
+
 .uiIcon_small {
   width: 17px;
   height: 17px;
@@ -231,9 +263,11 @@ button:hover svg {
   color: var(--accentColor);
   transition: filter .3s ease-out, transform .150s ease-in-out;
 }
+
 .uiIcon_small:hover {
   filter: drop-shadow(0px 0px 2px var(--accentColor));
 }
+
 .buttonIcon {
   display: flex;
   justify-content: center;
@@ -245,10 +279,12 @@ button:hover svg {
   transition: background-color .3s;
   border-radius: 3px;
 }
+
 .buttonIcon:hover {
   background-color: var(--frostHvColor);
   box-shadow: none;
 }
+
 .deskForm {
   min-width: 525px;
   height: auto;
@@ -272,15 +308,18 @@ button:hover svg {
     width: 80%;
     margin-bottom: 15px;
   }
+
   & legend {
     padding: 0 16px;
     margin-bottom: 15px;
     font-size: .84rem;
   }
+
   & h2 {
     font-size: 1.2rem;
     margin-bottom: 0;
   }
+
   & fieldset {
     display: flex;
     flex-direction: column;
@@ -293,12 +332,14 @@ button:hover svg {
     align-items: center;
     border-top: 1px solid var(--firstBorderColor);
   }
+
   & label {
     display: flex;
     width: 80%;
     font-size: .84rem;
     font-weight: 600;
   }
+
   & .button_group {
     display: flex;
     justify-content: center;
@@ -307,11 +348,13 @@ button:hover svg {
     margin: 15px;
   }
 }
+
 textarea {
   background-color: transparent;
   color: var(--firstTextColor);
   padding: 10px;
 }
+
 .newSection {
   padding: 38px;
   background-color: var(--mainColor);
@@ -328,6 +371,7 @@ textarea {
   .root {
     padding: 1rem 2rem;
   }
+
   /* .newSection {
     width: 21.8%;
     left: 390px;

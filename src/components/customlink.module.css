@@ -107,7 +107,9 @@
   font-weight: var(--linkFontWeight);
 
 }
-
+.link:nth-of-type(n+9) {
+  display: none;
+}
 .link a span:first-of-type,
 .link_dragged a span:first-of-type {
   overflow: hidden;

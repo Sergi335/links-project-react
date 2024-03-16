@@ -8,7 +8,7 @@ import { usePreferencesStore } from '../store/preferences'
 import { ArrowDown, MaximizeIcon } from './Icons/icons'
 import styles from './customlink.module.css'
 
-export default function CustomLink ({ data, className }) {
+export default function CustomLink ({ data, className, desktopName }) {
   const link = data.link || data.activeLink
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const setPoints = useFormsStore(state => state.setPoints)
@@ -20,6 +20,7 @@ export default function CustomLink ({ data, className }) {
   const controlStyle = className === 'searchResult' ? { width: 'auto', position: 'relative', top: '25%' } : {}
   const linkStyle = className === 'searchResult' ? { flexWrap: 'wrap', height: '77px' } : {}
   const anchorStyle = className === 'searchResult' ? { height: '20px', paddingTop: '10px' } : {}
+  const visibleStyle = className === 'flex' ? { display: 'flex' } : {} // el display none debe esperar unas decimas de segundo
   // Ref del link y descripción
   const linkRef = useRef(null)
   const linkDesc = useRef(null)
@@ -101,7 +102,8 @@ export default function CustomLink ({ data, className }) {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-    ...linkStyle
+    ...linkStyle,
+    ...visibleStyle
   }
   // Lo que hace es retornar el link vacio si está siendo arrastrado
   if (isDragging) {
@@ -130,7 +132,7 @@ export default function CustomLink ({ data, className }) {
             className !== 'searchResult' && (
               <div className={styles.lcontrols} style={controlStyle}>
                 <button className='buttonIcon'>
-                  <Link to={`/desktop/link/${link._id}`} state={link._id}>
+                  <Link to={`/desktop/${desktopName}/link/${link._id}`} state={link._id}>
                     <MaximizeIcon className='uiIcon_small'/>
                   </Link>
                   </button>

@@ -38,13 +38,10 @@ export default function Columna ({ data, children, childCount }) {
   const stylesOnHeader = { height: 'auto' }
   const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-
+  // console.log(childCount, children)
   useEffect(() => {
-    if (openedColumns.includes(columna._id)) {
-      setMaxHeight((10 + 2 + 38) * childCount + (3 * childCount))
-      // console.log(`Se ha hecho click en ${columna.name} y se ha abierto con ${childCount} links`)
-    }
-  }, [openedColumns, children])
+    setMaxHeight((10 + 2 + 38) * childCount + (3 * childCount))
+  }, [openedColumns, childCount])
   // console.log({ localColSelectMode: selectMode, globalColSelectMode: selectModeGlobal, selectModeColumnsIds: columnSelectModeId, selectedLinks })
   const handleChangeColumnHeight = (e) => {
     const opener = e.currentTarget
@@ -54,9 +51,11 @@ export default function Columna ({ data, children, childCount }) {
       column.classList.toggle(styles.colOpen)
       opener.childNodes[0].classList.toggle(styles.rotate)
       if (column.classList.contains(styles.colOpen)) {
+        setTimeout(() => {
+          column.style.maxHeight = `${maxHeight}px`
+        }, 100)
         newState.push(columna._id)
         setOpenedColumns(newState)
-        column.style.maxHeight = `${maxHeight}px`
         if (spanCountRef.current) spanCountRef.current.style.display = 'none'
       } else {
         column.style.maxHeight = ''

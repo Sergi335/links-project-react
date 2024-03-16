@@ -73,31 +73,35 @@ function App () {
           errorElement: <InternalError />
         },
         {
-          path: '/desktop/readinglist',
-          element: <ReadingList />,
-          errorElement: <InternalError />
-        },
-        {
-          path: '/desktop/link/:id',
+          path: '/desktop/:desktopName/link/:id',
           element: <LinkDetails />,
-          errorElement: <InternalError />
-        },
-        {
-          path: '/desktop/profile',
-          element: <ProfilePage />,
-          errorElement: <InternalError />
-        },
-        {
-          path: '/desktop/',
-          element: <ListOfLinks />,
           errorElement: <InternalError />
         }
       ]
     },
     {
-      path: '/link/:id',
-      element: user === null ? <Navigate to="/" replace={true} /> : <LinkDetails />,
-      errorElement: <InternalError />
+      path: '/profile',
+      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <InternalError />,
+      children: [
+        {
+          path: '/profile',
+          element: <ProfilePage />,
+          errorElement: <InternalError />
+        }
+      ]
+    },
+    {
+      path: '/readinglist',
+      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <InternalError />,
+      children: [
+        {
+          path: '/readinglist',
+          element: <ReadingList />,
+          errorElement: <InternalError />
+        }
+      ]
     },
     {
       path: '/login',

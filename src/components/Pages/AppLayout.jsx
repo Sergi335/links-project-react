@@ -5,7 +5,7 @@ import { useFormsStore } from '../../store/forms'
 import Header from '../Header'
 import styles from './HomePage.module.css'
 
-export default function AppLayout ({ children }) {
+export default function AppLayout () {
   const { desktopName } = useParams()
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
@@ -29,7 +29,6 @@ export default function AppLayout ({ children }) {
   return (
     <div className="root">
       <Header />
-      {/* <ListOfLinks /> */}
       <Outlet />
     </div>
   )

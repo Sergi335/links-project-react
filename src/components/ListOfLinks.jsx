@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
@@ -38,12 +38,8 @@ export default function ListOfLinks () {
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-  // console.log('render')
-  const renderCount = useRef(0)
-  renderCount.current += 1
-  useEffect(() => {
-    // console.log('renderCount:', renderCount.current)
-  }, [globalLinks, desktopLinks, globalColumns, desktopColumns, linkLoader, numberOfPastedLinks, columnLoaderTarget, styleOfColumns, numberOfColumns, customizePanelVisible, globalLoading, setColumnHeights, openedColumns])
+  const isDesktop = windowSize.width > 1536
+
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
@@ -59,6 +55,7 @@ export default function ListOfLinks () {
       setColumnHeights(heights)
     }
   }, [desktopName, desktopColumns, desktopLinks])
+  // DND
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -66,26 +63,14 @@ export default function ListOfLinks () {
       }
     })
   )
+  // Obtener ids para DND
   const columnsId = desktopColumns?.map((col) => col._id)
   const getLinksIds = useCallback((columna) => {
-    // console.log(desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id))
-    // console.log('getLinksIds')
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }, [desktopLinks])
-  const isDesktop = windowSize.width > 1536
+
   return (
     <main className={styles.listOfLinks}>
-      {/* <div style={{ display: 'flex', gap: '25px', marginTop: '50px' }}>
-        <h3 style={{ position: 'absolute', left: '427px', top: '115px' }}>Favoritos</h3>
-        <div className='newSection' style={{ display: 'flex', gap: '25px', flexDirection: 'column' }}>
-          <div>New Section</div>
-        </div>
-
-          <h3 style={{ position: 'absolute', left: '952px', top: '115px' }}>Artículos</h3>
-          <div className='newSection' style={{ display: 'flex', gap: '25px', flexDirection: 'column' }}>
-            <div>New Section</div>
-          </div>
-      </div> */}
       {isDesktop && <SideInfo environment={'listoflinks'}/>}
       {
         globalLoading
@@ -116,7 +101,7 @@ export default function ListOfLinks () {
                               !activeColumn && !openedColumns.includes(columna._id) &&// Es esto pero hay problemas si se quita, deberia poder activarse lo de abajo
                                 desktopLinks.map((link) =>
                                   link.idpanel === columna._id
-                                    ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
+                                    ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
                                     : null
                                 ).filter(link => link !== null)
                             }
@@ -124,7 +109,7 @@ export default function ListOfLinks () {
                               // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col
                               !activeColumn && openedColumns && openedColumns.includes(columna._id) && desktopLinks.map((link) =>
                                 link.idpanel === columna._id
-                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} />)
+                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName}/>)
                                   : null
                               ).filter(link => link !== null)
                             }

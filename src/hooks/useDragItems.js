@@ -14,8 +14,7 @@ export const useDragItems = ({ desktopName }) => {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
-  // console.log(activeLink)
+  // console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
   function handleDragStart (event) {
     // Y si es el hecho de esconder los links al hacer drag? --> Correcto
     // console.log('start')
@@ -67,17 +66,17 @@ export const useDragItems = ({ desktopName }) => {
     // console.log('🚀 ~ handleDragOver ~ active:', active)
 
     // --- NUEVO ---
-    // if (!over) {
-    //   console.log('no over')
-    //   return
-    // }
-    // const activeId = active.id
-    // const overId = over.id
+    if (!over) {
+      console.log('no over')
+      return
+    }
+    const activeId = active.id
+    const overId = over.id
 
-    // if (activeId === overId) {
-    //   console.log('same')
-    //   return
-    // }
+    if (activeId === overId) {
+      console.log('same')
+      return
+    }
     // -- NUEVO ---
 
     const isActiveLink = active.data.current?.type === 'link'
