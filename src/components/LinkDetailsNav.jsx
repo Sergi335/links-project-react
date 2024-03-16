@@ -23,7 +23,7 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
           {prevId
             ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${prevId}`}>Prev<ArrowLeft/></NavLink>
             : <a className={styles.details_nav_link_disabled}>Prev<ArrowLeft/></a>}
-          <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}`}>Volver</NavLink>
+          <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}`} end>Volver</NavLink>
           {nextId
             ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${nextId}`}><ArrowRight/>Next</NavLink>
             : <a className={styles.details_nav_link_disabled}><ArrowRight/>Next</a>}

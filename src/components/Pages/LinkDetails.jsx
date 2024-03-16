@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTitle } from '../../hooks/useTitle'
 import { formatDate, getUrlStatus } from '../../services/functions'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
@@ -28,6 +29,7 @@ export default function LinkDetails () {
   }, [globalColumns])
 
   const data = links.find(link => link._id === linkId.id)
+  useTitle({ title: `${data?.name}` })
   // console.log('🚀 ~ LinkDetails ~ data:', data)
 
   useEffect(() => {

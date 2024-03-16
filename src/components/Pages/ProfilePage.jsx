@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
+import { useTitle } from '../../hooks/useTitle'
 import { constants } from '../../services/constants'
 import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
@@ -648,6 +649,7 @@ export default function ProfilePage () {
   const statsRef = useRef()
   const secRef = useRef()
   const prefRef = useRef()
+  useTitle({ title: `${user.name} - Profile` })
   useEffect(() => {
     openTab('info', 'infoTab')
   }, [])

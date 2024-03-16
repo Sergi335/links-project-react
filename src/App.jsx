@@ -35,6 +35,7 @@ function App () {
         setCsfrtoken(csrfToken)
       })
   }, [])
+  // TODO la desktops store se guarda en memoria pero la sesion sigue iniciada si se recarga la pagina no existe desktops store
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
   // Obtenemos el tema para el toast -> no funciona?

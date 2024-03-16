@@ -64,7 +64,7 @@ html.dark.transparent {
 
 html.dark {
   /* --bgGradient: url('/img/fondo.png'); */
-  --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(0% 0.5 360) 0%, oklch(32% 0 0) 100%);
+  --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(0% 0.5 360) 0%, oklch(0 0 0 / 0.27) 100%);
   --mainColor: #1D1D1D;
   --columnBgColor: #1d1d1d;
   --placeholderImg: url('/img/placeholderImg.png');

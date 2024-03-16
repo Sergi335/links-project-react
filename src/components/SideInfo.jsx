@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useTitle } from '../hooks/useTitle'
 import { createColumn } from '../services/dbQueries'
 import { saludo } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
@@ -56,6 +57,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     const newDeskName = (window.location.pathname).replace('/desktop/', '')
     const newDeskObject = desktopsStore.find(desk => desk.name === decodeURIComponent(newDeskName))
     setDesktopDisplayName(newDeskObject?.displayName)
+    useTitle({ title: newDeskObject?.displayName })
   }, [desktopsStore, desktopName])
 
   useEffect(() => {
