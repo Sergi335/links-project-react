@@ -4,10 +4,12 @@
 
 .home {
     font-size: 1.2rem;
+    background-size: 14px 14px;
+    background-image: var(--homeHeroGradient);
 }
 
 .home header {
-    min-height: 100vh;
+    min-height: 50vh;
 }
 
 .home p {
@@ -40,7 +42,7 @@
 }
 
 .main {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -90,8 +92,8 @@
 
 .heroSection .subtitle {
     margin: 0;
-    color: coral;
-    font-weight: 300;
+    /* color: coral; */
+    font-weight: 400;
     letter-spacing: 2.5px;
 
 }
@@ -115,9 +117,9 @@
     position: relative;
     flex-direction: column;
     align-items: center;
-    mask-image: var(--homeMaskImage);
-    background-size: 14px 14px;
-    background-image: var(--homeHeroGradient);
+    /* mask-image: var(--homeMaskImage); */
+    /* background-size: 14px 14px;
+    background-image: var(--homeHeroGradient); */
 }
 
 .heroSection p {
@@ -143,7 +145,7 @@
     align-items: center;
     gap: 50px;
     flex-wrap: wrap;
-    margin-top: 65px;
+    margin-top: 96px;
 }
 
 .heroSection img {
@@ -157,8 +159,8 @@
     justify-content: center;
     padding: 16px;
     gap: 50px;
-    background-size: 14px 14px;
-    background-image: var(--homeHeroGradient);
+    /* background-size: 14px 14px;
+    background-image: var(--homeHeroGradient); */
 }
 
 .nav {
@@ -205,6 +207,7 @@
 .mediaColumn {
     display: flex;
     width: calc(50% - 25px);
+    text-align: center;
 }
 
 .strong {
@@ -212,7 +215,7 @@
 }
 
 .mediaColumn img {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     border-radius: 5px;
     aspect-ratio: 3/2;

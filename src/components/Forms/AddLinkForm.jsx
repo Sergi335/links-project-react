@@ -51,10 +51,10 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
         <label htmlFor="linkName">Nombre</label>
         <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required/>
         <label htmlFor="linkURL">URL</label>
-        <input ref={urlRef} id="linkURL" type="text" name="linkURL"/>
+        <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000"/>
         <div className="button_group">
           <button type="submit">Enviar</button>
-          <button onClick={() => setFormVisible(false)}>Cancelar</button>
+          <button type="button" onClick={() => setFormVisible(false)}>Cancelar</button>
         </div>
       </form>
   )

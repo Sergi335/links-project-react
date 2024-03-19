@@ -37,6 +37,7 @@ function App () {
   }, [])
   // TODO la desktops store se guarda en memoria pero la sesion sigue iniciada si se recarga la pagina no existe desktops store
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
   // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
   // Obtenemos el tema para el toast -> no funciona?
   const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
@@ -106,12 +107,12 @@ function App () {
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
+      element: user === null ? <Login /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {
       path: '/recovery-password',
-      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${desktopsStore[0]?.name}`} replace={true} />,
+      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {

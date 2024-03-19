@@ -519,7 +519,7 @@ export function UserInfo ({ user, setUser }) {
     const file = e.target.files[0]
     console.log(file.size)
     if (file.size > 2e+6) {
-      toast('Imagen demasiado grande')
+      toast.error('Imagen demasiado grande, max. 2MB')
       return
     }
     const previewImage = document.getElementById('preview-image')

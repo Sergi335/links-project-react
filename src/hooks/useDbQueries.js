@@ -41,6 +41,7 @@ const useDbQueries = () => {
             setGlobalColumns(columns)
             setGlobalLinks(links)
             setGlobalLoading(false)
+            localStorage.setItem('firstDesktop', JSON.stringify(desktops[0]?.name))
           })
           .catch((error) => {
             console.log(error)

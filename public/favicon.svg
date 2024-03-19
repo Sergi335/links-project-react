@@ -7,6 +7,9 @@
 <path class="st1" d="M2.6,14.3L12.9,2"></path>
 <path class="st1" d="M7.2,18.1L17.5,5.9"></path>
 <path class="st1" d="M11.8,22L22,9.7"></path>
-</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+</svg>
+<style>
+@media (prefers-color-scheme: light) { :root { filter: none; } }
 @media (prefers-color-scheme: dark) { :root { filter: invert(100%); } }
-</style></svg>
+</style>
+</svg>

@@ -218,6 +218,11 @@ export function LinksInfo ({ data, links, setLinks }) {
   }
   const handleCreateImageUrlFromFile = async () => {
     const file = inputRef.current.files[0]
+    console.log(file.size)
+    if (file.size > 500000) {
+      toast.error('Imagen muy grande, máximo 500KB')
+      return
+    }
     const imageUrl = URL.createObjectURL(file)
     currentImageRef.current.src = imageUrl
     saveButtonRef.current.disabled = false
@@ -412,6 +417,11 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
           if (type.startsWith('image/')) {
             // es una imagen
             clipboardItem.getType(type).then(async blob => {
+              // TODO a constante limitar a 10MB el tamaño de la imagen subida
+              if (blob.size > 1e+7) {
+                toast.update(pasteLoading, { render: 'Imagen muy grande', type: 'error', isLoading: false, autoClose: 3000 })
+                return
+              }
               const imageUrl = URL.createObjectURL(blob)
               const elementIndex = links.findIndex(link => link._id === data._id)
               const newState = [...links]

@@ -70,7 +70,7 @@ export default function HomePage () {
               <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
             </div>
             <p className={styles.headingText}>Bienvenido a <strong className={styles.strong}>Zenmarks</strong>, la herramienta definitiva para gestionar tus enlaces y maximizar tu productividad. Con funciones intuitivas y personalizables, para simplificar tu experiencia digital.</p>
-            <video src="img/zenmarks2.webm" autoPlay loop muted></video>
+            {/* <video src="img/zenmarks2.webm" autoPlay loop muted></video> */}
           </div>
         </header>
         <main className={styles.main}>
