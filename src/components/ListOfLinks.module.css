@@ -1,8 +1,8 @@
 .listOfLinks {
     min-width: auto;
-    display: grid;
+    display: flex;
     margin-top: calc(2rem + 45px);
-    gap: 40px;
+    /* gap: 40px; */
 
 }
 .mainContent {
@@ -10,6 +10,10 @@
     max-width: auto;
     gap: 40px;
     margin-left: 0;
+    margin-top: 50px;
+    background-color: #f5f5f5;
+    border-radius: 16px;
+    padding: 32px;
 }
 @media (min-width: 1536px) {
     .listOfLinks {

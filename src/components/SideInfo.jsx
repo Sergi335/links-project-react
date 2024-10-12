@@ -12,8 +12,9 @@ import { useSessionStore } from '../store/session'
 import Clock from './Clock'
 import columnStyles from './Column.module.css'
 import { ExpandHeightIcon } from './Icons/icons'
-import SideInfoLoader from './Loaders/SideInfoLoader'
+// import SideInfoLoader from './Loaders/SideInfoLoader'
 import NameLoader from './NameLoader'
+import Nav from './nav'
 import styles from './SideInfo.module.css'
 
 export default function SideInfo ({ environment, className = 'listoflinks' }) {
@@ -34,7 +35,7 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const [salut, setSalut] = useState('')
   const navigate = useNavigate()
   const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
-  const globalLoading = useGlobalStore(state => state.globalLoading)
+  // const globalLoading = useGlobalStore(state => state.globalLoading)
   const sideInfoRef = useRef()
   const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
   const desktopColumnsIds = desktopColumns.map(col => col._id)
@@ -109,15 +110,15 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     // const visible = container.style.display === 'none'
     container.style.display === 'none' ? container.style.display = 'grid' : container.style.display = 'none'
   }
-  const handleScrollIntoView = (event) => {
-    event.preventDefault()
-    const element = document.getElementById(`${event.target.id.replace('Side', '')}`)
-    element.scrollIntoView({ block: 'center', behavior: 'smooth' })
-    element.classList.add(`${styles.sideInfoSelectedCol}`)
-    setTimeout(() => {
-      element.classList.remove(`${styles.sideInfoSelectedCol}`)
-    }, 1000)
-  }
+  // const handleScrollIntoView = (event) => {
+  //   event.preventDefault()
+  //   const element = document.getElementById(`${event.target.id.replace('Side', '')}`)
+  //   element.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  //   element.classList.add(`${styles.sideInfoSelectedCol}`)
+  //   setTimeout(() => {
+  //     element.classList.remove(`${styles.sideInfoSelectedCol}`)
+  //   }, 1000)
+  // }
   const handleExpandAllColumns = () => {
     const columns = document.querySelectorAll(`.${columnStyles.columnWrapper}`)
     const newState = [...desktopColumnsIds]
@@ -185,8 +186,8 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
                   </div>
                 )}
           </div>
-
-              {
+          <Nav />
+              {/* {
                 environment === 'listoflinks' && (
                   <div id="sectContainer" className={styles.sectContainer}>
                   {
@@ -205,9 +206,9 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
                         )
 
                   }
-          </div>
+                  </div>
                 )
-              }
+              } */}
 
           </div>
   )

@@ -22,7 +22,8 @@
   --button-radius: 4.5px;
 
 
-  --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%);
+  /* --bgGradient: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
+  --bgGradient: white;
   --mainColor: white;
   --columnBgColor: white;
   --placeholderImg: url(/img/placeholderImgLight.png);

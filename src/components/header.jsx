@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import useGoogleAuth from '../hooks/useGoogleAuth'
 import { useFormsStore } from '../store/forms'
-import { usePreferencesStore } from '../store/preferences'
+// import { usePreferencesStore } from '../store/preferences'
 import { useSessionStore } from '../store/session'
 import styles from './Header.module.css'
 import { MenuIcon } from './Icons/icons'
-import Nav from './Nav'
+// import Nav from './Nav'
 import Search from './Search'
 
 export default function Header () {
@@ -16,10 +16,10 @@ export default function Header () {
   const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const { handleGoogleLogOut } = useGoogleAuth()
-  const navScroll = usePreferencesStore(state => state.navScroll)
-  const setNavScroll = usePreferencesStore(state => state.setNavScroll)
-  const navElement = usePreferencesStore(state => state.navElement)
-  const limit = navElement?.scrollWidth - navElement?.offsetWidth || 0
+  // const navScroll = usePreferencesStore(state => state.navScroll)
+  // const setNavScroll = usePreferencesStore(state => state.setNavScroll)
+  // const navElement = usePreferencesStore(state => state.navElement)
+  // const limit = navElement?.scrollWidth - navElement?.offsetWidth || 0
   const location = useLocation()
 
   const handleChangeTheme = () => {
@@ -65,18 +65,18 @@ export default function Header () {
       window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', setTheme)
     }
   }, [])
-  const handleScrollNav = (e) => {
-    console.log(navElement.scrollWidth - navElement.offsetWidth)
-    // console.log(navElement.offsetWidth)
-    console.log(navScroll)
-    if (e.currentTarget.childNodes[0].id === 'prev') {
-      setNavScroll(navElement.scrollLeft)
-      navElement.scrollLeft -= 100
-    } else if (e.currentTarget.childNodes[0].id === 'next') {
-      setNavScroll(navElement.scrollLeft)
-      navElement.scrollLeft += 100
-    }
-  }
+  // const handleScrollNav = (e) => {
+  //   console.log(navElement.scrollWidth - navElement.offsetWidth)
+  //   // console.log(navElement.offsetWidth)
+  //   console.log(navScroll)
+  //   if (e.currentTarget.childNodes[0].id === 'prev') {
+  //     setNavScroll(navElement.scrollLeft)
+  //     navElement.scrollLeft -= 100
+  //   } else if (e.currentTarget.childNodes[0].id === 'next') {
+  //     setNavScroll(navElement.scrollLeft)
+  //     navElement.scrollLeft += 100
+  //   }
+  // }
   const toggleMobileMenu = () => {
     const menu = document.getElementById('mobileMenu')
     menu.classList.toggle(styles.show)
@@ -98,7 +98,7 @@ export default function Header () {
             </div>
             <Search />
           </div>
-          <div className={styles.headCenter} id='mobileMenu'>
+          {/* <div className={styles.headCenter} id='mobileMenu'>
           {
             navScroll > 0 && (
               <div className={`${styles.settings} ${styles.directional}`} style={{ position: 'absolute', left: '25px' }} onClick={handleScrollNav}>
@@ -114,7 +114,7 @@ export default function Header () {
               </div>
             )
            }
-          </div>
+          </div> */}
           <div className={styles.headRight}>
           <div className={styles.settings} onClick={handleChangeTheme}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="uiIcon">
