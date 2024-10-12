@@ -145,7 +145,7 @@ export const constants = {
     2: 'repeat(auto-fill, minmax(826px, 1fr))',
     3: 'repeat(auto-fill, minmax(537px, 1fr))',
     4: 'repeat(auto-fill, minmax(393px, 1fr))',
-    5: 'repeat(auto-fill, minmax(306px, 1fr))'
+    5: 'repeat(auto-fill, minmax(240px, 1fr))'
   },
   DEFAULT_BACKGROUNDS: {
     light: {

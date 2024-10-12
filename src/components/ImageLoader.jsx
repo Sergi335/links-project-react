@@ -31,7 +31,7 @@ export default function ImageLoader ({ src, alt, handleDeleteImage }) {
         data-pswp-width={width}
         data-pswp-height={height}
         target='_blank' rel="noreferrer"
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', display: 'block' }}
       >
       <img
         src={src}

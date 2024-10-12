@@ -2,13 +2,13 @@
   margin-top: calc(1rem + 45px);
   max-width: -webkit-fill-available;
   color: var(--firstTextColor);
-  background-color: var(--mainColor);
+  /* background-color: var(--mainColor); */
   backdrop-filter: blur(20px);
   /* margin-left: calc(var(--main-content-margin-left) - 135px); */
   padding: 20px 20px;
   border-radius: var(--border-radius);
-  /* height: calc(87vh + -7px); */
-  border: var(--firstBorder);
+  height: calc(88vh + 16px);
+  /* border: var(--firstBorder); */
   /* overflow-y: scroll; */
   display: flex;
   flex-direction: column;
@@ -42,7 +42,7 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--border-radius);
-  border: var(--firstBorder);
+  /* border: var(--firstBorder); */
   background-color: var(--frostHvColor);
 }
 
@@ -374,7 +374,7 @@
 
 .textControls {
   display: flex;
-  border-top: 1px solid var(--firstBorderColor);
+  /* border-top: 1px solid var(--firstBorderColor); */
   padding: 5px;
   border-bottom-left-radius: var(--border-radius);
   background-color: var(--thirdColor);
@@ -403,14 +403,14 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--border-radius);
-  border: var(--firstBorder);
+  /* border: var(--firstBorder); */
   min-height: 295px;
 }
 
 .notesContainer {
   /* margin-top: 25px; */
   /* width: 100%; */
-  order: 1;
+  /* order: 1; */
   display: flex;
   flex-direction: column;
   border-top-right-radius: var(--border-radius);
@@ -445,12 +445,12 @@
   display: flex;
   /* flex-direction: column; */
   font-size: 13px;
-  justify-content: center;
+  /* justify-content: center; */
   position: relative;
   /* width: 50%; */
 }
 .editFieldsColumn {
-  width: 50%;
+  /* width: 50%; */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -910,13 +910,13 @@
     margin-top: calc(1rem + 45px);
     max-width: -webkit-fill-available;
     color: var(--firstTextColor);
-    background-color: var(--mainColor);
+    /* background-color: var(--mainColor); */
     backdrop-filter: blur(20px);
     /* margin-left: calc(var(--main-content-margin-left) - 135px); */
     padding: 20px 20px;
     border-radius: var(--border-radius);
     height: calc(88vh + 16px);
-    border: var(--firstBorder);
+    /* border: var(--firstBorder); */
     overflow-y: hidden;
   }
 
@@ -967,6 +967,10 @@
 
   .infoContainer {
     align-items: center;
+    justify-content: center;
+  }
+  .editFieldsColumn{
+    width: 50%;
   }
 
   /* .infoContainer p {

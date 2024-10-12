@@ -5,7 +5,7 @@
     max-width: 1400px;
     margin-top: 45px;
     /* min-height: calc(100vh - 45px); */
-    background-color: var(--mainColor);
+    /* background-color: var(--mainColor); */
     backdrop-filter: blur(20px);
     border-radius: var(--border-radius);
     gap: 25px;
@@ -648,7 +648,7 @@ tr:nth-child(odd) {
         grid-template-areas: 
         "header header"
         "sidebar content";
-        border-left: 5px solid var(--accentColor);
+        /* border-left: 5px solid var(--accentColor); */
     }
     .content {
         display: flex;

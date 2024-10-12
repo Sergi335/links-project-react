@@ -47,7 +47,8 @@
   --homeH2Color: coral;
   --homeFooterColor: #f1f1f1;
   --sidePanelsBgColor: white;
-  --inputBackgroundColor: #f3f3f3c9;
+  /* --inputBackgroundColor: #f3f3f3c9; */
+  --inputBackgroundColor: white;
   --linkFontWeight: 400;
 
 }
@@ -289,7 +290,7 @@ button:hover svg {
   min-width: 525px;
   height: auto;
   top: 15%;
-  background: var(--mainColor);
+  background: var(--bgGradient);
   flex-direction: column;
   justify-content: center;
   align-items: center;

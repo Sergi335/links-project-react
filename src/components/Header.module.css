@@ -4,11 +4,11 @@
     justify-content: space-between;
     right: 0;
     left: 0;
-    background: var(--mainColor);
+    /* background: var(--mainColor); */
     height: 43px;
     z-index: 5;
     /* border-radius: var(--border-radius); */
-    border: var(--firstBorder);
+    /* border: var(--firstBorder); */
     backdrop-filter: blur(20px);
 }
 
@@ -89,7 +89,7 @@
     display: none;
 }
 .logo:hover {
-    background-color: var(--frostHvColor);
+    background-color: var(--inputBackgroundColor);
 }
 
 .logo svg {
