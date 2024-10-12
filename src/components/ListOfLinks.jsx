@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
-import useResizeWindow from '../hooks/useResizeWindow'
+// import useResizeWindow from '../hooks/useResizeWindow'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
@@ -15,13 +15,13 @@ import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
-import SideInfo from './SideInfo'
+// import SideInfo from './SideInfo'
 import CustomLink from './customlink'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
-  const windowSize = useResizeWindow()
+  // const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
@@ -38,7 +38,7 @@ export default function ListOfLinks () {
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-  const isDesktop = windowSize.width > 1536
+  // const isDesktop = windowSize.width > 1536
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function ListOfLinks () {
 
   return (
     <main className={styles.listOfLinks}>
-      {isDesktop && <SideInfo environment={'listoflinks'}/>}
+      {/* {isDesktop && <SideInfo environment={'listoflinks'}/>} */}
       {
         globalLoading
           ? <div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>
