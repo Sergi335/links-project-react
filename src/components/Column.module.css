@@ -1,31 +1,33 @@
 .column {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     padding: 5px;
     gap: 3px;
     border-radius: var(--border-radius);
-    height: max-content;
-    /* background-color: var(--columnBgColor); */
+    min-height: max-content;
+    background-color: var(--columnBgColor);
     overflow: hidden;
     width: 100%;
 }
 
 .columnWrapper {
-    max-height: 317.4px; /*estaba en 321*/
+    interpolate-size: allow-keywords;
     overflow: hidden;
     border-radius: var(--border-radius);
-    /* border: var(--firstBorder); */
+    border: var(--firstBorder);
     display: flex;
     /* border-left: 1px solid var(--accentColor); */
-    transition: max-height .5s ease-in-out, box-shadow .5s ease-in, transform 250ms cubic-bezier(0.25, 1, 0.5, 1);
-    height: max-content;
+    /* transition: max-height .5s ease-in-out, box-shadow .5s ease-in, transform 250ms cubic-bezier(0.25, 1, 0.5, 1); */
+    height: 317px;
     /* background-color: var(--mainColor); */
     backdrop-filter: blur(42px);
-    width: 325px;
+    transition: var(--columns_transition);
+    /* width: 325px; */
+    /* margin-bottom: 43px; */
 }
 .colOpen {
-    max-height: 900px;
+    height: auto;
 }
 
 .opener {

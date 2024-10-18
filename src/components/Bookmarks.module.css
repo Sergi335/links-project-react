@@ -1,0 +1,31 @@
+.bookmarks {
+    flex: 1;
+    justify-content: flex-end;
+    display: flex;
+    gap: 5px;
+    position: fixed;
+    flex-direction: column;
+    right: 76px;
+    top: 100px;
+    background-color: var(--bgGradient);
+    padding: 20px;
+    border-radius: 5px;
+}
+.bookmarks img {
+    width: var(--bookmarks_image_width);
+    border-radius: 2px;
+}
+.bookmarks a {
+    display: flex;
+}
+.book_dragged {
+    background-color: var(--accentColor);
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+}
+.bookmark {
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+}

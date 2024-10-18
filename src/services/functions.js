@@ -121,6 +121,16 @@ export function formatPath (path) {
   const normalizedPath = formattedPath.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   return normalizedPath
 }
+export function kebabToTitleCase (kebabStr) {
+  // Dividir la cadena en palabras separadas por guiones
+  const words = kebabStr.split('-')
+
+  // Convertir la primera letra de cada palabra a mayúscula y el resto en minúscula
+  const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+
+  // Unir las palabras con un espacio
+  return capitalizedWords.join(' ')
+}
 export function formatDate (date) {
   const fecha = new Date(date)
 

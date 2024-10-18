@@ -1,20 +1,26 @@
 import { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
+import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
 import Header from '../Header'
+import SideInfo from '../SideInfo'
 import styles from './HomePage.module.css'
 
 export default function AppLayout () {
-  const { desktopName } = useParams()
+  const { desktopName, id } = useParams()
+
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
+  const windowSize = useResizeWindow()
+  const isDesktop = windowSize.width > 1536
   // console.log(localStorage.getItem('bodyBackground') !== 'null')
   // Cambiar el fondo del body en la aplicación únicamente, no en el homepage ya que appLayout no afecta a HomePage
-  if (localStorage.getItem('bodyBackground') !== 'null') {
-    document.body.style.backgroundImage = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
-    document.body.style.backgroundSize = 'cover'
-  }
+  // if (localStorage.getItem('bodyBackground') !== 'null') {
+  //   const element = document.getElementById('mainContentWrapper')
+  //   element.style.background = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
+  //   element.style.backgroundSize = 'cover'
+  // }
   useEffect(() => {
     if (desktopName !== undefined) {
       const root = document.getElementById('root')
@@ -27,9 +33,12 @@ export default function AppLayout () {
   }, [desktopName])
 
   return (
-    <div className="root">
-      <Header />
-      <Outlet />
-    </div>
+    <>
+      {isDesktop && <SideInfo environment={'listoflinks'}/>}
+      <div className="root">
+        {id === undefined && <Header />}
+        <Outlet />
+      </div>
+    </>
   )
 }

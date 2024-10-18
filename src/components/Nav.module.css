@@ -1,11 +1,5 @@
 .nav {
-    display: flex;
-    font-size: .875rem;
-    max-width: fit-content;
-    transition: transform .5s;
-    padding: 25px;
-    overflow: hidden;
-    background-color: var(--columnBgColor);
+    
 }
 .nav_side_info {
     display: flex;
@@ -14,47 +8,34 @@
     align-items: center;
 
 }
-.nav ul {
-    /* list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    gap: 4px;
-    margin: 0; */
-    max-width: fit-content;
-    margin-left: 15px;
-    padding: 0;
-    /* align-items: center; */
-}
 
 .nav ul li {
     height: var(--navBarContentHeight);
     min-width: fit-content;
+    margin-bottom: 5px;
 }
 
 .nav ul li a {
-    font-size: .84rem;
+    font-size: .875rem;
     padding: 5px 10px;
     color: var(--firstTextColor);
     text-decoration: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    transition: background-color .3s ease-out;
     border-radius: var(--button-radius);
     height: -webkit-fill-available;
     display: flex;
-    /* justify-content: center; */
     align-items: center;
-    font-weight: var(--linkFontWeight);
+    font-weight: 500;
 }
 
 .nav ul li a.active {
-    background-color: var(--firstHvColor);
+    background-color: var(--frostHvColor);
 }
 
 .nav ul li a:hover {
-    background-color: var(--inputBackgroundColor);
+    background-color: var(--frostHvColor);
     cursor: pointer;
 }
 .draggedDesk {
@@ -88,24 +69,21 @@
 }
 @media (min-width: 1536px) {
     .nav {
-        /* display: flex; */
-        /* transform: none; */
-        background-color: transparent;
-        /* height: 43px; */
-        z-index: 1;
-        /* width: 90%;
-        align-items: center; */
-        gap: 5px;
-        padding: 0;
-        scroll-behavior: smooth;
+        flex: 1;
+        border-top: var(--firstBorder);
+
+        & ul {
+            margin-left: 8px;
+            padding: 0;
+        }
     }
     /* .nav ul {
         flex-direction: row;
     } */
-    .nav ul li a {
+    /* .nav ul li a {
         max-width: 180px;
     }
     .nav ul li {
         width: 94px;
-    }
+    } */
 }

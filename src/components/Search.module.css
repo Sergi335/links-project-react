@@ -1,9 +1,15 @@
 .searchForm {
-    width: auto;
-    display: flex;
-    height: var(--navBarContentHeight);
+    display: none;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    z-index: 10;
+    top: 35%;
+    left: 50dvw;
+    background-color: var(--secondColor);
+    height: 100px;
+    width: 395px;
+    border-radius: 8px;
 }
 
 .searchForm input.searchInput {
@@ -295,10 +301,10 @@
         z-index: 0;
     }
 
-    .searchForm {
+    /* .searchForm {
         width: 100%;
-        /* margin-left: 25px; */
-    }
+        margin-left: 25px;
+    } */
 
     .searchButton {
         background-color: var(--inputBackgroundColor);

@@ -1,45 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { useTitle } from '../hooks/useTitle'
-import { createColumn } from '../services/dbQueries'
-import { saludo } from '../services/functions'
-import { useDesktopsStore } from '../store/desktops'
+import { useEffect, useRef } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import useGoogleAuth from '../hooks/useGoogleAuth'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import { useSessionStore } from '../store/session'
-import Clock from './Clock'
-import columnStyles from './Column.module.css'
-import { ExpandHeightIcon } from './Icons/icons'
-// import SideInfoLoader from './Loaders/SideInfoLoader'
-import NameLoader from './NameLoader'
+import { SearchIcon } from './Icons/icons'
 import Nav from './nav'
 import styles from './SideInfo.module.css'
+import Sideinfopaneltop from './Sideinfopaneltop'
 
 export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const { desktopName } = useParams()
-  const user = useSessionStore(state => state.user)
+  // const user = useSessionStore(state => state.user)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden) // memo
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
-  const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const desktop = desktopsStore.find(desk => desk.name === desktopName) // memo
-  const [desktopDisplayName, setDesktopDisplayName] = useState()
+  // const [desktopDisplayName, setDesktopDisplayName] = useState()
   const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
-  const columnHeights = usePreferencesStore(state => state.columnHeights)
   const numRows = Math.ceil(desktopColumns.length / numberCols)
   const result = []
-  const [salut, setSalut] = useState('')
-  const navigate = useNavigate()
+
   const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
   // const globalLoading = useGlobalStore(state => state.globalLoading)
   const sideInfoRef = useRef()
-  const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
-  const desktopColumnsIds = desktopColumns.map(col => col._id)
-  const openFlag = useRef(false)
+
+  const user = useSessionStore(state => state.user)
+  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
+  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
+  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
+  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  const { handleGoogleLogOut } = useGoogleAuth()
+  const location = useLocation()
   // console.log('🚀 ~ SideInfo ~ desktopColumnsIds:', desktopColumnsIds)
 
   // Agrupa las columnas del escritorio en funcion del numero de columnas seleccionado -> memo
@@ -48,18 +39,13 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     const row = [...desktopColumns].slice(startIdx, startIdx + numberCols)
     result.push(row)
   }
-  // TODO: No se actualiza con el cambio de hora, puede ser de noche y decirte buenos días
-  useEffect(() => {
-    setSalut(saludo(user?.realName || 'Usuario'))
-    // const sideInfoStyles = localStorage.getItem('sideInfoStyles') === null ? 'theme' : JSON.parse(localStorage.getItem('sideInfoStyles'))
-    // if (sideInfoRef) constants.SIDE_INFO_STYLES[sideInfoStyles].applyStyles(sideInfoRef.current)
-  }, [])
-  useEffect(() => {
-    const newDeskName = (window.location.pathname).replace('/desktop/', '')
-    const newDeskObject = desktopsStore.find(desk => desk.name === decodeURIComponent(newDeskName))
-    setDesktopDisplayName(newDeskObject?.displayName)
-    useTitle({ title: newDeskObject?.displayName })
-  }, [desktopsStore, desktopName])
+
+  // useEffect(() => {
+  //   const newDeskName = (window.location.pathname).replace('/desktop/', '')
+  //   const newDeskObject = desktopsStore.find(desk => desk.name === decodeURIComponent(newDeskName))
+  //   setDesktopDisplayName(newDeskObject?.displayName)
+  //   useTitle({ title: newDeskObject?.displayName })
+  // }, [desktopsStore, desktopName])
 
   useEffect(() => {
     const sideBlocks = Array.from(document.querySelectorAll('.block'))
@@ -92,24 +78,6 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     }
   }, [result])
 
-  const handleClick = async () => {
-    if (desktop === undefined) {
-      toast.error('Debes crear un escritorio primero')
-      return
-    }
-    const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
-    const { column } = response
-    setGlobalColumns((() => { return [...globalColumns, ...column] })())
-  }
-  const handleNavigate = () => {
-    // <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
-    navigate('/readinglist')
-  }
-  const handleHideColumns = () => {
-    const container = document.getElementById('maincontent')
-    // const visible = container.style.display === 'none'
-    container.style.display === 'none' ? container.style.display = 'grid' : container.style.display = 'none'
-  }
   // const handleScrollIntoView = (event) => {
   //   event.preventDefault()
   //   const element = document.getElementById(`${event.target.id.replace('Side', '')}`)
@@ -119,74 +87,77 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   //     element.classList.remove(`${styles.sideInfoSelectedCol}`)
   //   }, 1000)
   // }
-  const handleExpandAllColumns = () => {
-    const columns = document.querySelectorAll(`.${columnStyles.columnWrapper}`)
-    const newState = [...desktopColumnsIds]
-    if (!openFlag.current) {
-      columns.forEach((column, index) => {
-        if (column.classList.contains(columnStyles.colOpen)) {
-          column.style.maxHeight = `${columnHeights[index]}px`
-        } else {
-          column.classList.add(columnStyles.colOpen)
-          column.style.maxHeight = `${columnHeights[index]}px`
-        }
-      })
-      openFlag.current = true
-      setOpenedColumns(newState)
-      return
-    }
-    if (openFlag.current) {
-      columns.forEach((column, index) => {
-        if (column.classList.contains(columnStyles.colOpen)) {
-          column.classList.remove(columnStyles.colOpen)
-          column.style.maxHeight = ''
-        } else {
-          column.style.maxHeight = ''
-        }
-        setTimeout(() => {
-          openFlag.current = false
-          setOpenedColumns([])
-        }, 500)
-      })
+
+  const toggleSearch = () => {
+    const search = document.getElementById('searchForm')
+    search.classList.toggle('show')
+  }
+  const handleChangeTheme = () => {
+    const root = document.documentElement
+    // if (window.matchMedia('prefers-color-scheme: dark').matches) {
+    //   document.root.classList.add('dark')
+    // }
+    if (root.classList.contains('dark')) {
+      root.classList.remove('dark')
+      root.classList.add('light')
+      // constants.DEFAULT_BACKGROUNDS.light.applyBackground()
+      window.localStorage.setItem('theme', JSON.stringify('light'))
+    } else if (root.classList.contains('light')) {
+      root.classList.remove('light')
+      root.classList.add('dark')
+      // constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
+      window.localStorage.setItem('theme', JSON.stringify('dark'))
+    } else {
+      root.classList.add('dark')
+      // constants.DEFAULT_BACKGROUNDS.dark.applyBackground()
+      window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
   }
   return (
       <div ref={sideInfoRef} id='sideinfo' className={`${styles.sideInfo} ${localClass}`}>
-          <div className={styles.deskInfos}>
-              <Clock />
-              <p className={styles.saludo}>{salut}</p>
-              {
-                environment === 'listoflinks'
-                  ? desktopDisplayName
-                    ? <p className={styles.deskTitle} id="deskTitle" style={{ color: 'var(--firstTextColor)' }}>{desktopDisplayName}</p>
-                    : <NameLoader className={styles.deskTitle}/>
-                  : null
-
-              }
-              {/* <p className={styles.deskTitle} id="deskTitle" style={{ color: 'var(--firstTextColor)' }}>{desktopDisplayName}</p> */}
-              {
-                environment === 'listoflinks' && (
-                <div className={styles.deskControls}>
-
-                    <button className={styles.sideButtons}>
-                      <svg className={styles.uiIcon} id="hidePanels" onClick={handleHideColumns} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"></path></svg>
-                    </button>
-                    <button className={styles.sideButtons}>
-                      <svg className={styles.uiIcon} id="readingList" onClick={handleNavigate} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"></path></svg>
-                    </button>
-                    <button className={styles.sideButtons}>
-                      <svg className={styles.uiIcon} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }} id="editDesk" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path></svg>
-                    </button>
-                    <button className={styles.sideButtons}>
-                      <svg className={styles.uiIcon} onClick={handleClick} id="addCol" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"></path></svg>
-                    </button>
-                    <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
-                      <ExpandHeightIcon className={styles.uiIcon}/>
-                    </button>
-                  </div>
-                )}
-          </div>
+          <Sideinfopaneltop />
           <Nav />
+          <section className={styles.bottom_controls}>
+          <div className={styles.settings} onClick={toggleSearch}>
+            <SearchIcon />
+          </div>
+          <div className={styles.settings} onClick={handleChangeTheme}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="uiIcon">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+            </svg>
+
+          </div>
+          {
+            location.pathname !== '/desktop/profile' && (
+              <div className={styles.settings}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="uiIcon">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
+              </svg>
+              <div className={styles.bodcontrols}>
+                <span id="addDesk" onClick={() => setAddDeskFormVisible(!addDeskFormVisible)}>
+                  <svg className="uiIcon icofont-plus" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <span>Añade escritorio</span>
+                </span>
+                <span id="selectLayout">
+                  <svg className="uiIcon icofont-edit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"></path></svg>
+                  <span>Cambiar vista</span>
+                </span>
+                <span id="removeDesk" onClick={() => setDeleteConfFormVisible(!deleteConfFormVisible)}>
+                  <svg className="uiIcon icofont-recycle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+                  <span>Eliminar escritorio</span>
+                </span>
+              </div>
+            </div>
+            )
+          }
+
+            <Link to={'/profile'} className={styles.settingsImg}><img src={user.profileImage ? user.profileImage : '/img/avatar.svg' } alt={user.realName}/></Link>
+
+          <div className={styles.settings} onClick={handleGoogleLogOut}>
+            <svg className="uiIcon icofont-exit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"></path></svg>
+
+          </div>
+          </section>
               {/* {
                 environment === 'listoflinks' && (
                   <div id="sectContainer" className={styles.sectContainer}>

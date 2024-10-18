@@ -56,6 +56,12 @@ function App () {
       const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
       constants.THEME_VARIANTS[themeVariant].applyStyles()
     }
+    if (localStorage.getItem('bodyBackground') !== 'null') {
+      const element = document.querySelector('.root')
+      element.style.background = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
+      element.style.backgroundSize = 'cover'
+      element.style.backgroundAttachment = 'fixed'
+    }
   }, [])
 
   const router = createBrowserRouter([

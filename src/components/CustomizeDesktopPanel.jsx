@@ -111,8 +111,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         miniature.classList.remove(`${styles.optionSelected}`)
       }
     })
-    document.body.style.backgroundImage = ''
-    document.body.style.backgroundSize = 'initial'
+    const element = document.querySelector('.root')
+    element.style.background = ''
+    // element.style.backgroundSize = 'initial'
     window.localStorage.setItem('bodyBackground', null)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.id))
   }

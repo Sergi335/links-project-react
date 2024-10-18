@@ -17,7 +17,7 @@ export default function Columna ({ data, children, childCount }) {
   const columna = data.columna || data.activeColumn
   const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
-  const [maxHeight, setMaxHeight] = useState((10 + 2 + 38) * childCount + (3 * childCount))
+  // const [maxHeight, setMaxHeight] = useState((10 + 2 + 38) * childCount + (3 * childCount))
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
@@ -39,9 +39,9 @@ export default function Columna ({ data, children, childCount }) {
   const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
   // console.log(childCount, children)
-  useEffect(() => {
-    setMaxHeight((10 + 2 + 38) * childCount + (3 * childCount))
-  }, [openedColumns, childCount])
+  // useEffect(() => {
+  //   setMaxHeight((10 + 2 + 38) * childCount + (3 * childCount))
+  // }, [openedColumns, childCount])
   // console.log({ localColSelectMode: selectMode, globalColSelectMode: selectModeGlobal, selectModeColumnsIds: columnSelectModeId, selectedLinks })
   const handleChangeColumnHeight = (e) => {
     const opener = e.currentTarget
@@ -51,20 +51,20 @@ export default function Columna ({ data, children, childCount }) {
       column.classList.toggle(styles.colOpen)
       opener.childNodes[0].classList.toggle(styles.rotate)
       if (column.classList.contains(styles.colOpen)) {
-        setTimeout(() => {
-          column.style.maxHeight = `${maxHeight}px`
-        }, 100)
+        // setTimeout(() => {
+        //   column.style.maxHeight = `${maxHeight}px`
+        // }, 100)
         newState.push(columna._id)
         setOpenedColumns(newState)
         if (spanCountRef.current) spanCountRef.current.style.display = 'none'
       } else {
-        column.style.maxHeight = ''
+        // column.style.maxHeight = ''
         setTimeout(() => {
           const index = newState.findIndex(id => id === columna._id)
           newState.splice(index, 1)
           setOpenedColumns(newState)
           if (spanCountRef.current) spanCountRef.current.style.display = 'inline'
-        }, 500)
+        }, 300)
       }
     }
     openColumn()

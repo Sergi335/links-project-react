@@ -57,7 +57,7 @@ export default function Search () {
 
   return (
         <>
-          <form className={styles.searchForm} onSubmit={handleSubmit}>
+          <form id='searchForm' className={styles.searchForm} onSubmit={handleSubmit}>
               <input ref={inputRef}
                 className={sortedLinks?.length > 0 ? `${styles.active} ${styles.searchInput}` : `${styles.searchInput}`}
                 type="text"

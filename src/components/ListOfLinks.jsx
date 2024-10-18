@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
-import useResizeWindow from '../hooks/useResizeWindow'
+// import useResizeWindow from '../hooks/useResizeWindow'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
@@ -15,14 +15,14 @@ import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
-import SideInfo from './SideInfo'
+// import SideInfo from './SideInfo'
 import CustomLink from './customlink'
 // import Nav from './nav'
 
 export default function ListOfLinks () {
   const { desktopName } = useParams()
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
-  const windowSize = useResizeWindow()
+  // const windowSize = useResizeWindow()
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
@@ -32,30 +32,31 @@ export default function ListOfLinks () {
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
-  const setColumnHeights = usePreferencesStore(state => state.setColumnHeights)
+  // const setColumnHeights = usePreferencesStore(state => state.setColumnHeights)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-  const isDesktop = windowSize.width > 1536
+  // console.log('🚀 ~ ListOfLinks ~ openedColumns:', openedColumns)
+  // const isDesktop = windowSize.width > 1536
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
   }, [globalLinks])
   // Almacenar en variable global las alturas de las columnas
-  useEffect(() => {
-    if (desktopColumns) {
-      const heights = desktopColumns.map((column) => {
-        const links = desktopLinks.filter(link => link.idpanel === column._id)
-        // TODO mucho magic number
-        return links.length >= 6 ? (10 + 2 + 38) * links.length + (3 * links.length) : 900
-      })
-      setColumnHeights(heights)
-    }
-  }, [desktopName, desktopColumns, desktopLinks])
+  // useEffect(() => {
+  //   if (desktopColumns) {
+  //     const heights = desktopColumns.map((column) => {
+  //       const links = desktopLinks.filter(link => link.idpanel === column._id)
+  //       // TODO mucho magic number
+  //       return links.length >= 6 ? (10 + 2 + 38) * links.length + (3 * links.length) : 900
+  //     })
+  //     setColumnHeights(heights)
+  //   }
+  // }, [desktopName, desktopColumns, desktopLinks])
   // DND
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -72,17 +73,18 @@ export default function ListOfLinks () {
 
   return (
     <main className={styles.listOfLinks}>
-      {isDesktop && <SideInfo environment={'listoflinks'}/>}
+      {/* {isDesktop && <SideInfo environment={'listoflinks'}/>} */}
       {
         globalLoading
-          ? <div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>
+          ? <div className={styles.mainContentWrapper}><div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>
               {
                 numberOfLoaders.map((item, index) => (
                   <ColumnsLoader key={index} />
                 ))
               }
-            </div>
+            </div></div>
           : (
+            <div id='mainContentWrapper' className={styles.mainContentWrapper}>
             <div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>
             <DndContext
               sensors={sensors}
@@ -154,6 +156,7 @@ export default function ListOfLinks () {
                 document.body
               )}
             </DndContext>
+            </div>
             </div>
             )
       }

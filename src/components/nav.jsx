@@ -1,20 +1,18 @@
 import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
-import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { moveDesktops } from '../services/dbQueries'
 import styles from './Nav.module.css'
 // import { useDesktops } from '../hooks/useDesktops'
 import { toast } from 'react-toastify'
-import useResizeWindow from '../hooks/useResizeWindow'
+// import useResizeWindow from '../hooks/useResizeWindow'
 import { handleResponseErrors } from '../services/functions'
 import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
-import { usePreferencesStore } from '../store/preferences'
-import NavLoader from './NavLoader'
-import SideInfo from './SideInfo'
+// import { usePreferencesStore } from '../store/preferences'
 
 function NavItem ({ escritorio, toggleMobileMenu }) {
   const {
@@ -52,20 +50,20 @@ export default function Nav ({ toggleMobileMenu }) {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const navRef = useRef()
-  const windowSize = useResizeWindow()
+  // const windowSize = useResizeWindow()
   // const { desktopName } = useParams()
   // useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
   // const navScroll = usePreferencesStore(state => state.navScroll)
   // console.log('🚀 ~ file: Nav.jsx:55 ~ Nav ~ navScroll:', navScroll)
-  const setNavScroll = usePreferencesStore(state => state.setNavScroll)
-  const setNavElement = usePreferencesStore(state => state.setNavElement)
+  // const setNavScroll = usePreferencesStore(state => state.setNavScroll)
+  // const setNavElement = usePreferencesStore(state => state.setNavElement)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   // const setLimit = usePreferencesStore(state => state.setLimit)
-  const isMobile = windowSize.width < 1536
-  const params = useParams()
-  const isLinkDetails = params?.id !== undefined
+  // const isMobile = windowSize.width < 1536
+  // const params = useParams()
+  // const isLinkDetails = params?.id !== undefined
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
@@ -116,29 +114,29 @@ export default function Nav ({ toggleMobileMenu }) {
   )
   const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
 
-  useEffect(() => {
-    setNavElement(navRef.current)
-    // console.log(navRef)
-    // console.log(navRef.current?.scrollWidth - navRef.current?.offsetWidth)
-    // setLimit(navRef.current.scrollWidth - navRef.current.offsetWidth)
-    const navHorizontalScroll = (evt) => {
-      evt.preventDefault()
-      navRef.current.scrollLeft += evt.deltaY
-      // console.log(navRef.current.scrollLeft)
-      setNavScroll(navRef.current.scrollLeft)
-    }
-    navRef.current?.addEventListener('wheel', navHorizontalScroll)
+  // useEffect(() => {
+  //   setNavElement(navRef.current)
+  //   // console.log(navRef)
+  //   // console.log(navRef.current?.scrollWidth - navRef.current?.offsetWidth)
+  //   // setLimit(navRef.current.scrollWidth - navRef.current.offsetWidth)
+  //   const navHorizontalScroll = (evt) => {
+  //     evt.preventDefault()
+  //     navRef.current.scrollLeft += evt.deltaY
+  //     // console.log(navRef.current.scrollLeft)
+  //     setNavScroll(navRef.current.scrollLeft)
+  //   }
+  //   navRef.current?.addEventListener('wheel', navHorizontalScroll)
 
-    return () => {
-      navRef.current?.removeEventListener('wheel', navHorizontalScroll)
-    }
-  }, [navRef.current])
+  //   return () => {
+  //     navRef.current?.removeEventListener('wheel', navHorizontalScroll)
+  //   }
+  // }, [navRef.current])
 
   return (
 
         <nav ref={navRef} className={styles.nav}>
             {/* // deshabilitar en profile y en link details */}
-            {isMobile && !isLinkDetails && <SideInfo environment={'listoflinks'} className='nav_side_info' />}
+            {/* {isMobile && !isLinkDetails && <SideInfo environment={'listoflinks'} className='nav_side_info' />} */}
             <ul>
             <DndContext
               sensors={sensors}
@@ -147,10 +145,10 @@ export default function Nav ({ toggleMobileMenu }) {
               onDragEnd={onDragEnd}
               onDragOver={onDragOver}
             >
-              <SortableContext items={desktopsId} strategy={horizontalListSortingStrategy}>
+              <SortableContext items={desktopsId} strategy={verticalListSortingStrategy}>
                 {
                   globalLoading
-                    ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
+                    ? <></> // <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
                     : desktopsStore.map(escritorio => (
                       !escritorio.hidden && <NavItem key={escritorio._id} escritorio={escritorio} toggleMobileMenu={toggleMobileMenu}/>
                     ))
