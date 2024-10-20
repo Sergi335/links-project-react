@@ -110,15 +110,22 @@ body {
   background-attachment: fixed;
 }
 #root {
-  display: grid;
-  grid-template-columns: 225px auto;
+  display: flex;
+  /* grid-template-columns: 225px auto; */
 }
 .root {
-  max-width: 100%;
+  flex: 1;
   background-color: var(--frostHvColor);
   background-attachment: fixed;
+  display: flex;
 }
-
+.pinned {
+  width: 199px;
+}
+.pinned > .info_wrapper {
+  visibility: visible;
+  opacity: 1;
+}
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

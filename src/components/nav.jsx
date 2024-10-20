@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useMemo, useRef, useState } from 'react'
@@ -108,29 +108,11 @@ export default function Nav ({ toggleMobileMenu }) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3
+        distance: 0
       }
     })
   )
   const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
-
-  // useEffect(() => {
-  //   setNavElement(navRef.current)
-  //   // console.log(navRef)
-  //   // console.log(navRef.current?.scrollWidth - navRef.current?.offsetWidth)
-  //   // setLimit(navRef.current.scrollWidth - navRef.current.offsetWidth)
-  //   const navHorizontalScroll = (evt) => {
-  //     evt.preventDefault()
-  //     navRef.current.scrollLeft += evt.deltaY
-  //     // console.log(navRef.current.scrollLeft)
-  //     setNavScroll(navRef.current.scrollLeft)
-  //   }
-  //   navRef.current?.addEventListener('wheel', navHorizontalScroll)
-
-  //   return () => {
-  //     navRef.current?.removeEventListener('wheel', navHorizontalScroll)
-  //   }
-  // }, [navRef.current])
 
   return (
 
@@ -140,7 +122,6 @@ export default function Nav ({ toggleMobileMenu }) {
             <ul>
             <DndContext
               sensors={sensors}
-              collisionDetection={closestCorners}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
               onDragOver={onDragOver}

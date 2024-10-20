@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { kebabToTitleCase } from '../services/functions'
+import styles from './Header.module.css'
 import NameLoader from './NameLoader'
-import styles from './SideInfo.module.css'
 
 export default function DesktopNameDisplay () {
   const { desktopName } = useParams()

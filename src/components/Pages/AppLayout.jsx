@@ -3,7 +3,8 @@ import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
 import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
-import Header from '../Header'
+import Bookmarks from '../Bookmarks'
+import SideControl from '../SideControl'
 import SideInfo from '../SideInfo'
 import styles from './HomePage.module.css'
 
@@ -36,9 +37,10 @@ export default function AppLayout () {
     <>
       {isDesktop && <SideInfo environment={'listoflinks'}/>}
       <div className="root">
-        {id === undefined && <Header />}
+        {id === undefined && <SideControl />}
         <Outlet />
       </div>
+      {id === undefined && <Bookmarks />}
     </>
   )
 }

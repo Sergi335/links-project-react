@@ -4,6 +4,7 @@
     flex-wrap: wrap;
     /* margin-top: calc(2rem + 45px); */
     /* gap: 40px; */
+    flex: 1;
 
 }
 .mainContent {

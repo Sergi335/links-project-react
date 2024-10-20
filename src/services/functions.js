@@ -122,6 +122,7 @@ export function formatPath (path) {
   return normalizedPath
 }
 export function kebabToTitleCase (kebabStr) {
+  if (kebabStr === undefined || kebabStr === null) return ''
   // Dividir la cadena en palabras separadas por guiones
   const words = kebabStr.split('-')
 

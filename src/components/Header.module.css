@@ -1,17 +1,12 @@
-.header {
-    position: sticky;
+.sideControl {
+    position: fixed;
+    top: 0;
+    height: calc(100dvh - 20px);
     display: flex;
-    justify-content: space-between;
-    right: 0;
-    left: 0;
-    /* background: var(--bgGradient); */
-    height: 43px;
-    z-index: 5;
-    /* border-radius: var(--border-radius); */
-    /* border: var(--firstBorder); */
-    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 10px;
+    overflow-x: visible;
 }
-
 .mobile_menu {
     width: 24px;
     height: 24px;
@@ -25,50 +20,24 @@
 
 }
 
-.headCenter.show {
-    transform: translateX(0);
-}
-
-.headCenter {
-    position: fixed;
-    top: calc(2rem + 30px);
-    transform: translateX(-132%);
-    transition: transform .3s ease-out;
-    width: 100%;
-    overflow-y: scroll;
-    height: 100vh;
-}
-
-.headLeft {
-    grid-area: headLeft;
+.logo_container {
+    /* height: var(--navBarContentHeight); */
     display: flex;
-    gap: 0;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 5px;
-    height: 43px;
-    flex-grow: 1;
-    border-top-left-radius: var(--border-radius);
-    border-bottom-left-radius: var(--border-radius);
+    padding-top: 6px;
 }
-
-.headRight {
-    grid-area: headRight;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 10px;
-    border-top-right-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
+.icon_pinned {
+    transform: rotate(-45deg);
 }
-
-
-
-.logoContainer {
-    height: var(--navBarContentHeight);
-    display: flex;
+.icon_clicked::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    left: 25px;
+    background-color: var(--accentColor);
+    border-radius: 50%;
 }
-
 .logo {
     display: flex;
     /* gap: 10px; */
@@ -96,12 +65,32 @@
     font-family: K2d;
     color: var(--accentColor);
 }
-
+.deskTitle {
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    position: relative;
+    top: -6px;
+    left: 29px;
+}
+.sideButtons {
+    background-color: transparent;
+    padding: 0;
+}
+.sideButtons:hover {
+    background-color: transparent;
+}
+.deskInfos_controls {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 28px;
+    gap: 8px;
+    flex-direction: column;
+}
 .headCenter:hover .next,
 .headCenter:hover .prev {
     visibility: visible;
 }
-
 .next {
     transform: rotate(90deg);
     width: 15px !important;

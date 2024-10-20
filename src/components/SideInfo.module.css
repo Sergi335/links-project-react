@@ -1,9 +1,28 @@
-.sideButtons {
-    background-color: transparent;
-    padding: 0;
+.sideInfo {
+    position: sticky;
+    top: 0;
+    height: calc(100dvh - 20px);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    width: 10px;
+    transition: width .3s ease-out;
 }
-.sideButtons:hover {
-    background-color: transparent;
+.sideInfo:hover {
+    width: 199px;
+}
+.sideInfo:hover > .sideInfoWrapper {
+    visibility: visible;
+    opacity: 1;
+}
+.sideInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
 }
 .deskInfos {
     display: flex;
@@ -37,41 +56,9 @@
     justify-content: space-between;
     
 }
-.deskInfos_controls {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 15px;
-    gap: 8px;
-    height: 21px;
-    position: fixed;
-    left: 256px;
-    flex-direction: column;
-    top: 86px;
-}
-.deskTitle {
-    text-align: left;
-    font-size: 14px;
-    margin-top: 0;
-    margin-bottom: 12px;
-    position: fixed;
-    top: 42px;
-    left: 34px;
-}
-
-
 .uiIcon {
     width: 20px;
     cursor: pointer;
-}
-.saludo {
-    /* font-size: .8rem;
-    margin: 0;
-    color: var(--accentColor);
-    text-wrap: balance;
-    text-align: right;
-    font-weight: 500;
-    margin-bottom: 5px; */
-    /* padding-right: 31px; */
 }
 .bottom_controls {
     display: flex;
@@ -159,7 +146,7 @@
     object-fit: cover;
     vertical-align: middle;
 }
-@media (min-width: 1536px) {
+/* @media (min-width: 1536px) {
     .sideInfo {
         position: sticky;
         top: 0;
@@ -167,6 +154,15 @@
         display: flex;
         flex-direction: column;
         padding: 10px;
+        overflow-y: auto;
+        width: 199px;
+        transition: width .3s ease-out;
+    }
+    .sideInfoWrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
     }
     .sectContainer {
         display: block;
@@ -174,45 +170,4 @@
     .settings.directional {
         display: flex;
     }
-}
-
-/* VIEJO CSS */
-
-/* .sectContainer {
-    display: none;
-} */
-/* .sect {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 40px;
-    border-left: 4px solid var(--firstBorderColor);
-    padding-left: 10px;
-    padding: 15px;
-    border: 1px solid transparent;
-    border-radius: var(--border-radius);
-    transition: background-color .6s ease-in, border-color .6s ease-in, border-color .6s ease-in;
-    gap: 5px;
-    backdrop-filter: blur(20px);
-} */
-
-/* .sectLoader {
-    margin-bottom: 60px;
-}
-.sectActive {
-    background-color: var(--mainColor);
-}
-.sideInfoSelectedCol {
-    box-shadow: 0px 0px 30px var(--accentColor);
-} */
-
-/* .sideInfo .sect a {
-    text-decoration: none;
-    color: var(--firstTextColor);
-    font-size: 13px;
-    cursor: pointer;
-    text-align: left;
-    transition: color .3s ease-out;
-}
-.sideInfo .sect a:hover {
-    color: var(--accentColor);
 } */
