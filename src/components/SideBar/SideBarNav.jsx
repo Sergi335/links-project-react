@@ -4,14 +4,14 @@ import { CSS } from '@dnd-kit/utilities'
 import { useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router-dom'
-import { moveDesktops } from '../services/dbQueries'
+import { moveDesktops } from '../../services/dbQueries'
 import styles from './Nav.module.css'
 // import { useDesktops } from '../hooks/useDesktops'
 import { toast } from 'react-toastify'
 // import useResizeWindow from '../hooks/useResizeWindow'
-import { handleResponseErrors } from '../services/functions'
-import { useDesktopsStore } from '../store/desktops'
-import { useGlobalStore } from '../store/global'
+import { handleResponseErrors } from '../../services/functions'
+import { useDesktopsStore } from '../../store/desktops'
+import { useGlobalStore } from '../../store/global'
 // import { usePreferencesStore } from '../store/preferences'
 
 function NavItem ({ escritorio, toggleMobileMenu }) {
@@ -46,7 +46,7 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
     </li>
   )
 }
-export default function Nav ({ toggleMobileMenu }) {
+export default function SideBarNav ({ toggleMobileMenu }) {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const navRef = useRef()

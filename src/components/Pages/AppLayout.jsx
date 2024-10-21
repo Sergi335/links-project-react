@@ -4,8 +4,8 @@ import useDbQueries from '../../hooks/useDbQueries'
 import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
 import Bookmarks from '../Bookmarks'
+import SideBar from '../SideBar/SideBar'
 import SideControl from '../SideControl'
-import SideInfo from '../SideInfo'
 import styles from './HomePage.module.css'
 
 export default function AppLayout () {
@@ -35,7 +35,7 @@ export default function AppLayout () {
 
   return (
     <>
-      {isDesktop && <SideInfo environment={'listoflinks'}/>}
+      {isDesktop && <SideBar environment={'listoflinks'}/>}
       <div className="root">
         {id === undefined && <SideControl />}
         <Outlet />

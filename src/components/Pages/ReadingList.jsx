@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import SideInfo from '../SideInfo'
+// import SideInfo from '../SideInfo'
 // import { extract } from '@extractus/article-extractor'
 
 export default function ReadingList () {

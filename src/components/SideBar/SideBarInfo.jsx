@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { saludo } from '../services/functions'
-import { useSessionStore } from '../store/session'
-import Clock from './Clock'
+import { saludo } from '../../services/functions'
+import { useSessionStore } from '../../store/session'
+import Clock from '../Clock'
 import styles from './SideInfo.module.css'
 
-export default function Sideinfopaneltop () {
+export default function SideBarInfo () {
   const [salut, setSalut] = useState('')
   const user = useSessionStore(state => state.user)
 

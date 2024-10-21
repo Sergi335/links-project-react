@@ -1,22 +1,11 @@
-import { useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import useGoogleAuth from '../hooks/useGoogleAuth'
-import { useFormsStore } from '../store/forms'
-import { useSessionStore } from '../store/session'
-import { SearchIcon } from './Icons/icons'
-import Nav from './nav'
+import useGoogleAuth from '../../hooks/useGoogleAuth'
+import { useFormsStore } from '../../store/forms'
+import { useSessionStore } from '../../store/session'
+import { SearchIcon } from '../Icons/icons'
 import styles from './SideInfo.module.css'
-import Sideinfopaneltop from './Sideinfopaneltop'
 
-export default function SideInfo ({ environment, className = 'listoflinks' }) {
-  // const { desktopName } = useParams()
-  // const globalColumns = useGlobalStore(state => state.globalColumns)
-  // const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden) // memo
-  // const numberCols = Number(usePreferencesStore(state => state.numberOfColumns))
-  // const numRows = Math.ceil(desktopColumns.length / numberCols)
-  // const result = []
-  const localClass = Object.hasOwn(styles, className) ? styles[className] : ''
-  const sideInfoRef = useRef()
+export default function SideBarControls () {
   const user = useSessionStore(state => state.user)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
@@ -24,61 +13,6 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
   const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const { handleGoogleLogOut } = useGoogleAuth()
   const location = useLocation()
-
-  // Agrupa las columnas del escritorio en funcion del numero de columnas seleccionado -> memo
-  // for (let i = 0; i < numRows; i++) {
-  //   const startIdx = i * numberCols
-  //   const row = [...desktopColumns].slice(startIdx, startIdx + numberCols)
-  //   result.push(row)
-  // }
-
-  // useEffect(() => {
-  //   const newDeskName = (window.location.pathname).replace('/desktop/', '')
-  //   const newDeskObject = desktopsStore.find(desk => desk.name === decodeURIComponent(newDeskName))
-  //   setDesktopDisplayName(newDeskObject?.displayName)
-  //   useTitle({ title: newDeskObject?.displayName })
-  // }, [desktopsStore, desktopName])
-
-  // useEffect(() => {
-  //   const sideBlocks = Array.from(document.querySelectorAll('.block'))
-  //   const elements = sideBlocks?.map(el => (
-  //     {
-  //       el,
-  //       mappedEls: Array.from(el.children).map(item => (document.getElementById((`${item.id}`).replace('Side', ''))))
-  //     }
-  //   ))
-  //   const handleScroll = () => {
-  //     // console.log(elements)
-  //     if (elements === undefined || elements === null) return
-  //     elements?.forEach(targ => {
-  //       const props = targ.mappedEls.map(elem => (
-  //         elem?.getBoundingClientRect()
-  //       ))
-  //       const elementTopPosition = props[0].top
-  //       // si la posicion de la parte superior de la fila es mayor a 141 y menor a 1414 o la posicion bottom maxima de cada columna es mayor a 141 o menor a 1414
-  //       if (Math.abs(elementTopPosition >= 77) && Math.abs(elementTopPosition <= 1141)) {
-  //         targ.el.classList.add(`${styles.sectActive}`)
-  //       } else {
-  //         targ.el.classList.remove(`${styles.sectActive}`)
-  //       }
-  //     })
-  //   }
-  //   handleScroll()
-  //   window.addEventListener('scroll', handleScroll)
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll)
-  //   }
-  // }, [result])
-
-  // const handleScrollIntoView = (event) => {
-  //   event.preventDefault()
-  //   const element = document.getElementById(`${event.target.id.replace('Side', '')}`)
-  //   element.scrollIntoView({ block: 'center', behavior: 'smooth' })
-  //   element.classList.add(`${styles.sideInfoSelectedCol}`)
-  //   setTimeout(() => {
-  //     element.classList.remove(`${styles.sideInfoSelectedCol}`)
-  //   }, 1000)
-  // }
 
   const toggleSearch = () => {
     const search = document.getElementById('searchForm')
@@ -106,10 +40,6 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
     }
   }
   return (
-      <aside ref={sideInfoRef} id='sideinfo' className={`${styles.sideInfo} ${localClass} pinned`}>
-        <div id='sideinfoWrapper' className={`${styles.sideInfoWrapper} info_wrapper`}>
-        <Sideinfopaneltop />
-        <Nav />
         <section className={styles.bottom_controls}>
           <div className={styles.settings} onClick={toggleSearch}>
             <SearchIcon />
@@ -149,7 +79,5 @@ export default function SideInfo ({ environment, className = 'listoflinks' }) {
             <svg className="uiIcon icofont-exit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"></path></svg>
           </div>
         </section>
-        </div>
-      </aside>
   )
 }
