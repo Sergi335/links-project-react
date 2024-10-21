@@ -125,6 +125,8 @@ body {
 .pinned > .info_wrapper {
   visibility: visible;
   opacity: 1;
+  transition: visibility .1s, opacity .1s;
+  transition-delay: .3s;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

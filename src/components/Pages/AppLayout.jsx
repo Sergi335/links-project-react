@@ -5,7 +5,7 @@ import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
 import Bookmarks from '../Bookmarks'
 import SideBar from '../SideBar/SideBar'
-import SideControl from '../SideControl'
+import ToolBar from '../ToolBar/ToolBar'
 import styles from './HomePage.module.css'
 
 export default function AppLayout () {
@@ -37,7 +37,7 @@ export default function AppLayout () {
     <>
       {isDesktop && <SideBar environment={'listoflinks'}/>}
       <div className="root">
-        {id === undefined && <SideControl />}
+        {id === undefined && <ToolBar />}
         <Outlet />
       </div>
       {id === undefined && <Bookmarks />}

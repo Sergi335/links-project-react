@@ -15,6 +15,8 @@
 .sideInfo:hover > .sideInfoWrapper {
     visibility: visible;
     opacity: 1;
+    transition: visibility .1s, opacity .1s;
+    transition-delay: .3s;
 }
 .sideInfoWrapper {
     display: flex;
@@ -145,6 +147,85 @@
     border-radius: 100%;
     object-fit: cover;
     vertical-align: middle;
+}
+.nav_side_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.nav ul li {
+    height: var(--navBarContentHeight);
+    min-width: fit-content;
+    margin-bottom: 5px;
+}
+
+.nav ul li a {
+    font-size: .875rem;
+    padding: 5px 10px;
+    color: var(--firstTextColor);
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: var(--button-radius);
+    height: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.nav ul li a.active {
+    background-color: var(--frostHvColor);
+}
+
+.nav ul li a:hover {
+    background-color: var(--frostHvColor);
+    cursor: pointer;
+}
+.draggedDesk {
+    list-style-type: none;
+    background-color: var(--accentColor);
+    border-radius: var(--button-radius);
+}
+.draggedDesk a {
+    color: transparent !important;
+}
+/*el componente link crea una clase active automaticamente por eso no funciona, los estilos estan en index.css*/
+.draggedDesk a.active {
+    background-color: transparent !important;
+}
+.floatLi {
+    background-color: var(--linkBgColor);
+    height: var(--navBarContentHeight);
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--button-radius);
+    list-style-type: none;
+}
+/*Esto le da color cuando se arrastra!!! */
+.floatLi:hover {
+    background-color: var(--frostHvColor);
+    cursor: pointer;
+
+}
+@media (min-width: 1536px) {
+    .nav {
+        flex: 1;
+        border-top: var(--firstBorder);
+
+        & ul {
+            margin-left: 8px;
+            padding: 0;
+        }
+    }
+    .reloj {
+        margin-top: 15px;
+    }
 }
 /* @media (min-width: 1536px) {
     .sideInfo {

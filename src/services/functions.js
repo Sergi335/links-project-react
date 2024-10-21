@@ -72,29 +72,29 @@ export function checkUrlMatch (url) {
   }
   return null // Si no hay coincidencia
 }
-export function saludo (user) {
-  const fecha = new Date()
-  const hora = fecha.getHours()
-  let frase
+// export function saludo (user) {
+//   const fecha = new Date()
+//   const hora = fecha.getHours()
+//   let frase
 
-  if (hora >= 7 && hora < 14) {
-    frase = `Buenos días ${user}`
-  } else if (hora >= 14 && hora < 20) {
-    frase = `Buenas tardes ${user}`
-  } else {
-    frase = `Buenas noches ${user}`
-  }
+//   if (hora >= 7 && hora < 14) {
+//     frase = `Buenos días ${user}`
+//   } else if (hora >= 14 && hora < 20) {
+//     frase = `Buenas tardes ${user}`
+//   } else {
+//     frase = `Buenas noches ${user}`
+//   }
 
-  return frase
-}
-export function hora () {
-  const fecha = new Date()
-  const hora = fecha.getHours()
-  const min = fecha.getMinutes()
-  const text = `${hora < 10 ? '0' : ''}${hora}:${min < 10 ? '0' : ''}${min}`
+//   return frase
+// }
+// export function hora () {
+//   const fecha = new Date()
+//   const hora = fecha.getHours()
+//   const min = fecha.getMinutes()
+//   const text = `${hora < 10 ? '0' : ''}${hora}:${min < 10 ? '0' : ''}${min}`
 
-  return text
-}
+//   return text
+// }
 export const searchLinks = async ({ search }) => {
   if (search === '') return null
   try {

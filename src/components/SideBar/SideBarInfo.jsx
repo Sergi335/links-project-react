@@ -1,23 +1,17 @@
-import { useEffect, useState } from 'react'
-import { saludo } from '../../services/functions'
+import { useTime } from '../../hooks/useTime'
 import { useSessionStore } from '../../store/session'
-import Clock from '../Clock'
+import SideBarInfoClock from './SideBarInfoClock'
 import styles from './SideInfo.module.css'
 
 export default function SideBarInfo () {
-  const [salut, setSalut] = useState('')
   const user = useSessionStore(state => state.user)
-
-  // TODO: No se actualiza con el cambio de hora, puede ser de noche y decirte buenos días
-  useEffect(() => {
-    setSalut(saludo(''))
-  }, [])
+  const { saludo } = useTime()
 
   return (
         <section className={styles.deskInfos}>
             <div className={styles.deskInfos_info}>
-                <p className={styles.saludo}>{salut}</p>
-                <Clock />
+              <p className={styles.saludo}>{saludo}</p>
+              <SideBarInfoClock />
             </div>
             <p className={styles.deskInfos_user}>{user.realName}</p>
         </section>

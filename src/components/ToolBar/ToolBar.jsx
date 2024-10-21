@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { createColumn } from '../services/dbQueries'
-import { useDesktopsStore } from '../store/desktops'
-import { useFormsStore } from '../store/forms'
-import { useGlobalStore } from '../store/global'
-import { usePreferencesStore } from '../store/preferences'
-import columnStyles from './Column.module.css'
+import { createColumn } from '../../services/dbQueries'
+import { useDesktopsStore } from '../../store/desktops'
+import { useFormsStore } from '../../store/forms'
+import { useGlobalStore } from '../../store/global'
+import { usePreferencesStore } from '../../store/preferences'
+import columnStyles from '../Column.module.css'
+import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, ReadingListIcon } from '../Icons/icons'
 import DesktopNameDisplay from './DesktopNameDisplay'
 import styles from './Header.module.css'
-import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, ReadingListIcon } from './Icons/icons'
 
-export default function SideControl () {
+export default function ToolBar () {
   const navigate = useNavigate()
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
