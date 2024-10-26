@@ -17,6 +17,8 @@ import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
+import SingleColumnPage from './components/SingleColumnPage'
+import { useStyles } from './hooks/useStyles'
 import { constants } from './services/constants'
 
 function App () {
@@ -38,31 +40,8 @@ function App () {
   // TODO la desktops store se guarda en memoria pero la sesion sigue iniciada si se recarga la pagina no existe desktops store
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
-  // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
-  // Obtenemos el tema para el toast -> no funciona?
-  const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
-  useEffect(() => {
-    const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme'))
-    document.documentElement.classList.add(theme)
 
-    const accentColors = Object.keys(constants.ACCENT_COLORS)
-    const accentColor = JSON.parse(localStorage.getItem('accentColorName')) ?? accentColors[0]
-    constants.ACCENT_COLORS[accentColor].applyStyles()
-
-    if (localStorage.getItem('themeVariant') === null) {
-      localStorage.setItem('themeVariant', JSON.stringify('solid'))
-      constants.THEME_VARIANTS.solid.applyStyles()
-    } else {
-      const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
-      constants.THEME_VARIANTS[themeVariant].applyStyles()
-    }
-    if (localStorage.getItem('bodyBackground') !== 'null') {
-      const element = document.querySelector('.root')
-      element.style.background = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
-      element.style.backgroundSize = 'cover'
-      element.style.backgroundAttachment = 'fixed'
-    }
-  }, [])
+  const { themeforToastify } = useStyles()
 
   const router = createBrowserRouter([
     {
@@ -85,6 +64,23 @@ function App () {
           element: <LinkDetails />,
           errorElement: <InternalError />
         }
+      ]
+    },
+    {
+      path: '/column',
+      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <InternalError />,
+      children: [
+        {
+          path: '/column/:desktopName/:columnId',
+          element: <SingleColumnPage />,
+          errorElement: <InternalError />
+        }
+        // {
+        //   path: '/desktop/:desktopName/link/:id',
+        //   element: <LinkDetails />,
+        //   errorElement: <InternalError />
+        // }
       ]
     },
     {

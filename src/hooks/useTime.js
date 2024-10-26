@@ -12,17 +12,20 @@ export const useTime = () => {
       // setSeconds(date.getSeconds())
       setMinutes(date.getMinutes())
       setHours(date.getHours())
-      if (hours >= 7 && hours < 14) {
-        setSaludo('Buenos días')
-      } else if (hours >= 14 && hours < 20) {
-        setSaludo('Buenas tardes')
-      } else {
-        setSaludo('Buenas noches')
-      }
     }, 1000)
 
     return () => clearInterval(intervalId)
   }, [])
+
+  useEffect(() => {
+    if (hours >= 7 && hours < 14) {
+      setSaludo('Buenos días')
+    } else if (hours >= 14 && hours < 20) {
+      setSaludo('Buenas tardes')
+    } else {
+      setSaludo('Buenas noches')
+    }
+  }, [hours])
 
   return {
     hours,

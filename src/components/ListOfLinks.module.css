@@ -7,25 +7,34 @@
     flex: 1;
 
 }
+
 .mainContent {
     display: grid;
     gap: 5px;
+    max-width: 75%;
+    padding: 32px;
+    margin: 0 auto;
+    margin-top: 32px;
 }
+
 .mainContentWrapper {
     flex: 1;
     border-radius: 16px;
     margin: 16px;
-    /* background-color: var(--frostHvColor); */
+    min-height: 100dvh;
+    /* background-color: var(--color-secondary); */
 }
-@media (min-width: 1536px) {
+
+@media (min-width: 1280px) {
+
     /* .listOfLinks {
         min-width: 1400px;
     
     } */
-    .mainContent {
+    /* .mainContent {
         max-width: 75%;
         padding: 32px;
         margin: 0 auto;
-        margin-top: 50px;
-    }
+        margin-top: 32px;
+    } */
 }

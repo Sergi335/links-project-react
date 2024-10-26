@@ -1,23 +1,23 @@
 .bookmarks {
-    flex: 1;
-    justify-content: flex-end;
     display: flex;
-    gap: 5px;
+    gap: 12px;
     position: fixed;
     flex-direction: column;
-    right: 76px;
-    top: 100px;
-    background-color: var(--bgGradient);
+    right: 0;
     padding: 20px;
     border-radius: 5px;
+    backdrop-filter: blur(32px);
+    height: calc(100dvh - 40px);
+    top: var(--toolbar-mobile-height);
 }
 .bookmarks img {
-    width: var(--bookmarks_image_width);
+    max-width: var(--bookmarks_image_width);
     border-radius: 2px;
+    height: auto;
 }
-.bookmarks a {
+/* .bookmarks a {
     display: flex;
-}
+} */
 .book_dragged {
     background-color: var(--accentColor);
     width: 25px;
@@ -26,6 +26,11 @@
 }
 .bookmark {
     width: 25px;
-    height: 25px;
+    /* height: 25px; */
     border-radius: 2px;
+}
+@media (min-width: 1280px) {
+    .bookmarks {
+        top: 8px;
+    }
 }

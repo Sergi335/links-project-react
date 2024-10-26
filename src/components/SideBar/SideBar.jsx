@@ -5,8 +5,8 @@ import styles from './SideInfo.module.css'
 
 export default function SideBar () {
   return (
-      <aside id='sideinfo' className={`${styles.sideInfo} pinned`}>
-        <div id='sideinfoWrapper' className={`${styles.sideInfoWrapper} info_wrapper`}>
+      <aside id='sidebar' className={`${styles.sidebar} pinned`}>
+        <div className={`${styles.sidebar_wrapper} info_wrapper`}>
           <SideBarInfo />
           <SideBarNav />
           <SideBarControls />

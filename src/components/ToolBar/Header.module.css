@@ -1,11 +1,10 @@
 .sideControl {
-    position: fixed;
+    position: sticky;
     top: 0;
-    height: calc(100dvh - 20px);
     display: flex;
-    flex-direction: column;
     padding: 10px;
-    overflow-x: visible;
+    z-index: 1;
+    background-color: var(--color-primary);
 }
 .mobile_menu {
     width: 24px;
@@ -21,9 +20,7 @@
 }
 
 .logo_container {
-    /* height: var(--navBarContentHeight); */
     display: flex;
-    padding-top: 6px;
 }
 .icon_pinned {
     transform: rotate(-45deg);
@@ -67,11 +64,6 @@
 }
 .deskTitle {
     font-size: 14px;
-    margin-top: 0;
-    margin-bottom: 30px;
-    position: relative;
-    top: -6px;
-    left: 29px;
 }
 .sideButtons {
     background-color: transparent;
@@ -82,10 +74,8 @@
 }
 .deskInfos_controls {
     display: flex;
-    align-items: flex-start;
     margin-left: 28px;
     gap: 8px;
-    flex-direction: column;
 }
 .headCenter:hover .next,
 .headCenter:hover .prev {
@@ -151,55 +141,42 @@
     }
 }
 
-@media (min-width: 1536px) {
-    .headCenter {
-        grid-area: headCenter;
-        display: flex;
-        justify-content: flex-start;
-        transform: none;
-        border: none;
-        border-radius: 0;
-        align-items: center;
-        height: 43px;
-        background-image: none;
-        position: relative;
-        top: auto;
-        width: auto;
-        user-select: none;
-        overflow: hidden;
-    }
-
-    /* .headLeft {
-        justify-content: center;
-    } */
-
-    .nav {
-        display: flex;
+@media (min-width: 1280px) {
+    .sideControl {
         position: fixed;
-        transform: none;
-        height: 43px;
-        width: auto;
-        z-index: 1;
-        top: 83px;
-        left: 0;
-        width: 100%;
-        align-items: center;
-        gap: 5px;
-        padding: 0;
-    }
-
-    .header {
-        backdrop-filter: blur(12px);
-        display: grid;
-        grid-template-columns: 7% 65% 10%;
-        grid-template-areas: "headLeft headCenter headRight";
-        padding-block-start: 10px;
-        position: sticky;
         top: 0;
+        height: calc(100dvh - 20px);
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        overflow-x: visible;
+        background-color: transparent;
     }
-
-    .mobile_menu_button {
+    .deskInfos_controls {
+        display: flex;
+        align-items: flex-start;
+        margin-left: 28px;
+        gap: 8px;
+        flex-direction: column;
+    }
+    .mobile_menu {
         display: none;
+    }
+    .deskTitle {
+        font-size: 14px;
+        margin-top: 0;
+        margin-bottom: 30px;
+        position: relative;
+        top: -6px;
+        left: 29px;
+    }
+    .logo_container {
+        /* height: var(--navBarContentHeight); */
+        display: flex;
+        padding-top: 6px;
+    }
+    .deskInfos_controls {
+        align-items: flex-start;
     }
 
 }

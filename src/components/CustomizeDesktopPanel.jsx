@@ -78,6 +78,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const handleChangeBackgroundImage = async (event) => {
     event.target.classList.add(`${styles.optionSelected}`)
     const miniatures = document.getElementById('bgMiniatures')
+    // Hacer con css, agregar atributo y seleccionar el resto?, claro que hay que quitar el atributo al resto
     miniatures.childNodes.forEach(miniature => {
       if (miniature !== event.target) {
         miniature.classList.remove(`${styles.optionSelected}`)
@@ -87,6 +88,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     console.log(response)
     // console.log('🚀 ~ handleChangeBackgroundImage ~ response:', response)
     // Error de red
+    // Esto se repite mucho, hacer una funcion para esto
     if (!response?.startsWith('http') && !response?.ok && response?.error === undefined) {
       toast('Error de red')
       return
@@ -112,6 +114,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       }
     })
     const element = document.querySelector('.root')
+    element.setAttribute('data-background', 'color')
     element.style.background = ''
     // element.style.backgroundSize = 'initial'
     window.localStorage.setItem('bodyBackground', null)
@@ -126,7 +129,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   //     }
   //   })
   //   const currentStyle = event?.target.id
-  //   const panel = document.getElementById('sideinfo')
+  //   const panel = document.getElementById('sidebar')
   //   constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
   //   window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
   // }

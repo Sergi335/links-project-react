@@ -32,7 +32,7 @@
   flex-direction: column;
   border-radius: var(--border-radius);
   /* border: var(--firstBorder); */
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
 }
 
 .videoPlayerMaximized {
@@ -126,7 +126,7 @@
   background-position: center;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
   /* border: var(--firstBorder); */
   min-height: 295px;
   background-size: 50%;
@@ -170,7 +170,7 @@
   position: absolute;
   left: 5px;
   background-color: var(--mainColor);
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   border-radius: 2px;
   display: none;
   top: 5px;
@@ -318,7 +318,7 @@
 }
 
 .notesContainer p {
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   text-align: left;
 }
 
@@ -404,7 +404,7 @@
   flex-direction: column;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
   /* border: var(--firstBorder); */
 }
 
@@ -527,7 +527,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color .3s ease-out;
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   font-size: .75rem;
   padding: 2px 12px;
 }
@@ -549,7 +549,7 @@
 }
 
 .details_nav_link:hover {
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
   /* box-shadow: var(--secondNeumoShadow); */
   color: var(--accentColor);
 }
@@ -755,7 +755,7 @@
   width: 19px;
   height: 19px;
   border-radius: 1.875rem;
-  background: var(--firstTextColor);
+  background: var(--text-color-primary);
   transition: left 0.25s;
 }
 
@@ -897,8 +897,8 @@
 
   .linkDetails {
     max-width: -webkit-fill-available;
-    color: var(--firstTextColor);
-    background-color: var(--frostHvColor);
+    color: var(--text-color-primary);
+    background-color: var(--color-secondary);
     backdrop-filter: blur(20px);
     padding: 20px 20px;
     min-height: 100dvh;

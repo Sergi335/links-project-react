@@ -1,24 +1,33 @@
-.sideInfo {
-    position: sticky;
-    top: 0;
+/* Bloque: sidebar */
+.sidebar {
+    position: fixed;
+    top: var(--toolbar-mobile-height);
     height: calc(100dvh - 20px);
     display: flex;
     flex-direction: column;
     padding: 10px;
     overflow-y: auto;
-    width: 10px;
-    transition: width .3s ease-out;
+    width: 0px;
+    transition: width 0.3s ease-out;
+    background-color: var(--color-primary);
+    z-index: 1;
+
+        /* Para dispositivos que soportan hover (normalmente no táctiles) */
+    @media (hover: hover) {
+        /* Reglas para dispositivos no táctiles */
+        &:hover {
+            width: 199px;
+    
+            > .sidebar_wrapper {
+                visibility: visible;
+                opacity: 1;
+                transition: visibility 0.1s, opacity 0.1s;
+                transition-delay: 0.3s;
+            }
+        }
+    }
 }
-.sideInfo:hover {
-    width: 199px;
-}
-.sideInfo:hover > .sideInfoWrapper {
-    visibility: visible;
-    opacity: 1;
-    transition: visibility .1s, opacity .1s;
-    transition-delay: .3s;
-}
-.sideInfoWrapper {
+.sidebar_wrapper {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -26,164 +35,214 @@
     visibility: hidden;
     opacity: 0;
 }
-.deskInfos {
+/* Bloque: sidebarinfo */
+.sidebar_info {
     display: flex;
     flex-direction: column;
-    padding-inline: 10px;
-    padding: 0px 10px;
-    border-left: 3px solid var(--secondTextColor);
+    padding: 0 10px;
+    border-left: 3px solid var(--text-color-secondary);
     margin-block: 12px;
 
-    & p {
+    p {
         margin: 0;
         font-size: 15px;
         line-height: 1.4;
-        color: var(--secondTextColor);
+        color: var(--text-color-secondary);
         font-weight: 600;
+
+        &:first-of-type {
+            color: var(--text-color-primary);
+        }
+
+        &.sidebar_info_user {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--accentColor);
+        }
     }
-    & p:first-of-type {
-        color: var(--firstTextColor)
-    }
-    & p.deskInfos_user {
-        font-size: 14px;
-        font-weight: 400;
-        color: var(--accentColor)
-    }
-    & .uiIcon {
-        color: var(--secondTextColor);
+    .sidebar_info_wrapper {
+        display: flex;
+        justify-content: space-between;
+        
     }
 }
-.deskInfos_info {
-    display: flex;
-    justify-content: space-between;
-    
-}
-.uiIcon {
-    width: 20px;
-    cursor: pointer;
-}
-.bottom_controls {
+
+/* Bloque: sidebar_controls */
+.sidebar_controls {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
+
+    img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+        vertical-align: middle;
+    }
 }
-.bodcontrols {
+
+/* Bloque: sidebar_inner_controls */
+.sidebar_inner_controls {
     position: absolute;
     background-color: var(--mainColor);
     backdrop-filter: blur(20px);
-    box-shadow: 0px 15px 25px var(--firstShadow);
+    box-shadow: 0 15px 25px var(--firstShadow);
     border-radius: var(--button-radius);
     bottom: 42px;
-    right: 0%;
+    right: 0;
     padding: 5px;
     z-index: 12;
+    display: none;
     flex-direction: column;
     align-items: center;
-    display: none;
-    color: var(--firstTextColor);
+    color: var(--text-color-primary);
     font-weight: 500;
     justify-content: center;
     gap: 2px;
     width: auto;
     border: var(--firstBorder);
+
+    span {
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        width: -webkit-fill-available;
+        padding: 5px 15px;
+        border-radius: var(--button-radius);
+
+        &:hover {
+            background-color: var(--color-secondary);
+
+            > svg {
+                filter: drop-shadow(0 0 2px var(--accentColor));
+            }
+        }
+
+        svg {
+            width: 20px; /* Ajuste del tamaño del icono */
+            height: 20px;
+        }
+    }
 }
 
-.bodcontrols span {
-
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    width: -webkit-fill-available;
-    padding: 5px 15px;
-    border-radius: var(--button-radius);
-}
-
-.bodcontrols span:hover {
-    background-color: var(--frostHvColor);
-}
-
-.bodcontrols span:hover>svg {
-    filter: drop-shadow(0px 0px 2px var(--accentColor));
-}
-
-.settings,
-.settingsImg {
+/* Bloque: settings */
+.settings {
     padding: 8px;
     display: flex;
     gap: 15px;
-    transition: background-color .3s ease-out, filter .3s ease-out;
-}
-
-.settings:hover,
-.settingsImg:hover {
-    background-color: var(--frostHvColor);
+    transition: background-color 0.3s ease-out, filter 0.3s ease-out;
     cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-secondary);
+
+        > svg {
+            filter: drop-shadow(0 0 2px var(--accentColor));
+        }
+
+        .sidebar_inner_controls {
+            display: flex;
+        }
+    }
+
+    &.directional {
+        display: none;
+    }
+
+    img {
+        padding: 0 10px;
+        display: flex;
+        gap: 15px;
+    }
 }
 
-.settings:hover>svg {
-    filter: drop-shadow(0px 0px 2px var(--accentColor));
-}
-
-.settings Img {
-    padding: 0 10px;
+/* Bloque: settingsImg */
+.settings_image_link {
+    padding: 4px 10px;
     display: flex;
     gap: 15px;
+    transition: background-color 0.3s ease-out, filter 0.3s ease-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-secondary);
+    }
 }
 
-.settings:hover .bodcontrols {
-    display: flex;
-}
-
-.settingsImg {
-    padding: 4px 10px;
-}
-.settings.directional {
-    display: none;
-}
-.bottom_controls img {
-    width: 35px;
-    height: 35px;
-    border-radius: 100%;
-    object-fit: cover;
-    vertical-align: middle;
-}
-.nav_side_info {
+/* Bloque Nav */
+/* .nav_side_info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 
-}
-
-.nav ul li {
-    height: var(--navBarContentHeight);
-    min-width: fit-content;
-    margin-bottom: 5px;
-}
+} */
 
 .nav ul li a {
     font-size: .875rem;
-    padding: 5px 10px;
-    color: var(--firstTextColor);
+    padding: 7px 10px;
+    color: var(--text-color-primary);
     text-decoration: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     border-radius: var(--button-radius);
-    height: -webkit-fill-available;
     display: flex;
     align-items: center;
     font-weight: 500;
-}
+    gap: 8px;
 
+    &:hover {
+        .plus_icon {
+            visibility: visible;
+        }
+    }
+}
+button:has(.plus_icon) {
+    background-color: transparent;
+    padding: 0;
+}
+.plus_icon {
+    width: 12px;
+    cursor: pointer;
+    visibility: hidden;
+}
+/* .nav ul li a::before {
+    content: url('/img/plus.svg');
+    width: 50px; 
+    height: 50px; 
+} */
+.nav ul li ul.show {
+    height: fit-content;
+}
+/* .nav ul li ul li {
+    padding-left: 45px;
+    font-size: .8rem;
+} */
+.nav ul li ul li a {
+    font-size: .8rem;
+    display: block;
+    /* font-weight: 300; */
+}
 .nav ul li a.active {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
 }
 
 .nav ul li a:hover {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
     cursor: pointer;
+}
+.nav ul li ul {
+    
+    height: 0px;
+    overflow: hidden;
+    transition: height .2s ease-out;
+    margin-top: 5px;
+    border-left: 1px solid hsl(from var(--accentColor) h s l / 0.5);
+    margin-left: 38px;
+    padding-left: 5px;
 }
 .draggedDesk {
     list-style-type: none;
@@ -203,24 +262,38 @@
     min-width: fit-content;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     border-radius: var(--button-radius);
     list-style-type: none;
+    font-size: .875rem;
+}
+.floatLi a {
+    padding: 5px 10px;
+    font-size: .875rem;
+    font-weight: 500;
 }
 /*Esto le da color cuando se arrastra!!! */
 .floatLi:hover {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
     cursor: pointer;
 
 }
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
+    .sidebar {
+        position: sticky;
+        top: 0;
+        width: 10px;
+    }
     .nav {
         flex: 1;
         border-top: var(--firstBorder);
+        max-height: calc(100dvh - 20px);
+        overflow: hidden;
 
         & ul {
-            margin-left: 8px;
             padding: 0;
+            height: var(--nav-height);
+            /* overflow-y: auto; */
         }
     }
     .reloj {

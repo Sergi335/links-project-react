@@ -10,18 +10,11 @@ import styles from './HomePage.module.css'
 
 export default function AppLayout () {
   const { desktopName, id } = useParams()
-
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
   const windowSize = useResizeWindow()
-  const isDesktop = windowSize.width > 1536
-  // console.log(localStorage.getItem('bodyBackground') !== 'null')
-  // Cambiar el fondo del body en la aplicación únicamente, no en el homepage ya que appLayout no afecta a HomePage
-  // if (localStorage.getItem('bodyBackground') !== 'null') {
-  //   const element = document.getElementById('mainContentWrapper')
-  //   element.style.background = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
-  //   element.style.backgroundSize = 'cover'
-  // }
+  const isDesktop = windowSize.width > 1280 // Hacerlo en el hook
+
   useEffect(() => {
     if (desktopName !== undefined) {
       const root = document.getElementById('root')
@@ -33,10 +26,23 @@ export default function AppLayout () {
     document.body.classList.remove('home')
   }, [desktopName])
 
+  // if (!isDesktop) {
+  //   return (
+  //     <>
+  //       {id === undefined && <ToolBar />}
+  //       <SideBar />
+  //       {id === undefined && <Bookmarks />}
+  //       <div className={'root root-mobile'}>
+  //         <Outlet />
+  //       </div>
+  //     </>
+  //   )
+  // }
+
   return (
     <>
-      {isDesktop && <SideBar environment={'listoflinks'}/>}
-      <div className="root">
+      <SideBar />
+      <div className={isDesktop ? 'root' : 'root root-mobile'}>
         {id === undefined && <ToolBar />}
         <Outlet />
       </div>

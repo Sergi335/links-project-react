@@ -102,7 +102,7 @@ export default function ToolBar () {
     }
   }
   const handlePinPanel = () => {
-    const panel = document.getElementById('sideinfo')
+    const panel = document.getElementById('sidebar')
     const icon = document.getElementById('pin_icon')
     icon.classList.toggle(styles.icon_pinned)
     panel.classList.toggle('pinned')

@@ -16,7 +16,7 @@
 .description {
   display: flex;
   align-items: center;
-  background: var(--inputBackgroundColor);
+  background-color: hsl(from var(--color-primary) h s l / 40%);
   max-height: 0;
   transition: max-height .3s ease-in-out;
   /* transition-delay: 1s; */
@@ -81,6 +81,7 @@
   margin-left: 15px;
   transition: margin .3s ease-in-out;
   /* margin-top: 0.19rem; */
+  border-radius: 3px;
 }
 
 .link>a:first-of-type,
@@ -94,8 +95,8 @@
   /* justify-content: center; */
   height: 43px;
   text-decoration: none;
-  color: var(--firstTextColor);
-  font-size: .84rem;
+  color: var(--text-color-primary);
+  font-size: .88rem;
   /* text-overflow: ellipsis; */
   overflow: hidden;
   flex-grow: 1;
@@ -119,7 +120,7 @@
 }
 
 .link:hover {
-  background-color: var(--frostHvColor);
+  background-color: hsl(from var(--accentColor) h s l / 30%);
   /* background-color: var(--inputBackgroundColor); */
 }
 

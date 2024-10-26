@@ -1,5 +1,5 @@
 import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
-import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -54,7 +54,7 @@ export default function Bookmarks () {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3
+        distance: 0
       }
     })
   )
@@ -97,7 +97,7 @@ export default function Bookmarks () {
               onDragEnd={onDragEnd}
               // onDragOver={onDragOver}
             >
-              <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
+              <SortableContext items={bookmarksId} strategy={verticalListSortingStrategy}>
         {
             books?.length > 0
               ? (

@@ -1,20 +1,20 @@
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router-dom'
-import { moveDesktops } from '../../services/dbQueries'
-import styles from './SideInfo.module.css'
-// import { useDesktops } from '../hooks/useDesktops'
 import { toast } from 'react-toastify'
-// import useResizeWindow from '../hooks/useResizeWindow'
-import { handleResponseErrors } from '../../services/functions'
+import { useStyles } from '../../hooks/useStyles'
+import { moveDesktops } from '../../services/dbQueries'
+import { formatPath, handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
-// import { usePreferencesStore } from '../store/preferences'
+import { PlusIcon } from '../Icons/icons'
+import styles from './SideInfo.module.css'
 
-function NavItem ({ escritorio, toggleMobileMenu }) {
+function SideBarNavItem ({ escritorio, children }) {
   const {
     setNodeRef,
     attributes,
@@ -33,6 +33,12 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
     transition,
     transform: CSS.Transform.toString(transform)
   }
+  const handleExpandSublist = (e) => {
+    e.preventDefault()
+    const element = e.currentTarget.parentNode.parentNode
+    const list = element.querySelector('ul')
+    list?.classList.toggle(styles.show)
+  }
   if (isDragging) {
     return (
       <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.draggedDesk}>
@@ -41,33 +47,39 @@ function NavItem ({ escritorio, toggleMobileMenu }) {
     )
   }
   return (
-    <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} onClick={toggleMobileMenu}>
-      <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
-    </li>
+      <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} >
+        <NavLink to={`/desktop/${escritorio.name}`}><button onClick={handleExpandSublist}><PlusIcon className={styles.plus_icon}/></button>{escritorio.displayName}</NavLink>
+        {children}
+      </li>
   )
 }
-export default function SideBarNav ({ toggleMobileMenu }) {
+function SideBarNavSubItem ({ escritorio, columna }) {
+  const path = formatPath(columna._id)
+
+  return (
+      <li id={columna._id}>
+        <NavLink to={`/column/${escritorio.name}/${path}`} title={columna.name}>{columna.name}</NavLink>
+      </li>
+  )
+}
+export default function SideBarNav () {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const navRef = useRef()
-  // const windowSize = useResizeWindow()
-  // const { desktopName } = useParams()
-  // useDesktops({ desktopName })
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
-  // const navScroll = usePreferencesStore(state => state.navScroll)
-  // console.log('🚀 ~ file: Nav.jsx:55 ~ Nav ~ navScroll:', navScroll)
-  // const setNavScroll = usePreferencesStore(state => state.setNavScroll)
-  // const setNavElement = usePreferencesStore(state => state.setNavElement)
   const globalLoading = useGlobalStore(state => state.globalLoading)
-  // const setLimit = usePreferencesStore(state => state.setLimit)
-  // const isMobile = windowSize.width < 1536
-  // const params = useParams()
-  // const isLinkDetails = params?.id !== undefined
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const { theme } = useStyles()
+  const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
     if (event.active.data.current?.type === 'Desktop') {
+      const panel = document.getElementById('sidebar')
+      // const icon = document.getElementById('pin_icon')
+      if (!panel.classList.contains('pinned')) panel.classList.add('pinned')
+      // if (!icon.classList.contains('pin_icon')) icon.classList.add('pin_icon')
       setActiveDesk(event.active.data.current.escritorio)
       setMovedDesk(event.active.data.current.escritorio)
     }
@@ -105,20 +117,18 @@ export default function SideBarNav ({ toggleMobileMenu }) {
       setDesktopsStore(arrayMove(desktopsStore, activeIndex, overIndex))
     }
   }
-  const sensors = useSensors(
+  const sensors = useSensors( // Es necesario?
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 0
       }
     })
   )
-  const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
 
   return (
 
         <nav ref={navRef} className={styles.nav}>
-            {/* // deshabilitar en profile y en link details */}
-            {/* {isMobile && !isLinkDetails && <SideInfo environment={'listoflinks'} className='nav_side_info' />} */}
+          <OverlayScrollbarsComponent options={{ scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } }}>
             <ul>
             <DndContext
               sensors={sensors}
@@ -131,7 +141,18 @@ export default function SideBarNav ({ toggleMobileMenu }) {
                   globalLoading
                     ? <></> // <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
                     : desktopsStore.map(escritorio => (
-                      !escritorio.hidden && <NavItem key={escritorio._id} escritorio={escritorio} toggleMobileMenu={toggleMobileMenu}/>
+                      !escritorio.hidden &&
+                        <SideBarNavItem key={escritorio._id} escritorio={escritorio}>
+                          <ul>
+                            {
+                              globalColumns.map(col => (
+                                col.escritorio === escritorio.name
+                                  ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col}>{col.name}</SideBarNavSubItem>
+                                  : null
+                              ))
+                            }
+                          </ul>
+                        </SideBarNavItem>
                     ))
                 }
               </SortableContext>
@@ -139,13 +160,14 @@ export default function SideBarNav ({ toggleMobileMenu }) {
                 createPortal(
                   <DragOverlay>
                     {
-                      activeDesk && (<li className={styles.floatLi}><NavItem key={activeDesk._id} escritorio={activeDesk} /></li>)
+                      activeDesk && (<li className={styles.floatLi}><SideBarNavItem key={activeDesk._id} escritorio={activeDesk} /></li>)
                     }
                   </DragOverlay>
                   , document.body)
               }
             </DndContext>
             </ul>
+          </OverlayScrollbarsComponent>
         </nav>
 
   )

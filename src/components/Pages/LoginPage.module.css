@@ -22,7 +22,7 @@
     padding: 15px 35px;
     font-size: 1.6rem;
     gap: 12px;
-    color: var(--secondTextColor);
+    color: var(--text-color-secondary);
     border-radius: var(--border-radius);
 }
 p.recoveryText {

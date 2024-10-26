@@ -1,20 +1,17 @@
 .customizePanel {
-  top: calc(2rem + 46px);
-  right: 2rem;
+  right: 0;
   left: initial;
   max-width: min-content;
   min-width: 525px;
-  /* height: calc(87vh + 34px); */
+  height: calc(100dvh);
   position: fixed;
   z-index: 7;
   box-shadow: 0px 10px 12px var(--firstShadow);
-  background-color: var(--bgGradient);
+  background-color: var(--color-primary);
   font-size: 13px;
   transform: translate(111%, 0);
   transition: transform .5s ease;
   backdrop-filter: blur(42px);
-  border-radius: 8px;
-  border: var(--firstBorder);
   overflow-y: auto;
 }
 .slideIn {
@@ -50,7 +47,7 @@
   /* border: 1px solid var(--firstBorderColor); */
   /* padding: 15px; */
   border-radius: 5px;
-  /* background-color: var(--bgGradient); */
+  /* background-color: var(--color-primary); */
 }
 
 .selectBackground img {
@@ -72,7 +69,7 @@
   /* border: 1px solid var(--firstBorderColor); */
   /* padding: 15px; */
   border-radius: 5px;
-  /* background-color: var(--bgGradient); */
+  /* background-color: var(--color-primary); */
 }
 
 .selectInfoColor div,
@@ -94,11 +91,11 @@
   /* border: 1px solid var(--firstBorderColor); */
   /* padding: 15px; */
   border-radius: 5px;
-  /* background-color: var(--bgGradient); */
+  /* background-color: var(--color-primary); */
 }
 
 .removeBackground {
-  background: var(--bgGradient);
+  background: var(--color-secondary);
   width: 112px;
   cursor: pointer;
   border-radius: var(--button-radius);
@@ -143,7 +140,7 @@
   padding: 1px 11px;
   background: none;
   /* width: 100%; */
-  /* background-color: var(--frostHvColor); */
+  /* background-color: var(--color-secondary); */
   border-radius: var(--button-radius);
   height: 36px;
   margin: 0;
@@ -227,7 +224,7 @@
   background-color: var(--inputBackgroundColor);
   height: 38px;
   border-radius: 5px;
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   padding: 0 11px;
   /* border: 1px solid var(--firstBorderColor); */
   border: 0;

@@ -8,12 +8,12 @@ export default function SideBarInfo () {
   const { saludo } = useTime()
 
   return (
-        <section className={styles.deskInfos}>
-            <div className={styles.deskInfos_info}>
-              <p className={styles.saludo}>{saludo}</p>
+        <section className={styles.sidebar_info}>
+            <div className={styles.sidebar_info_wrapper}>
+              <p>{saludo}</p>
               <SideBarInfoClock />
             </div>
-            <p className={styles.deskInfos_user}>{user.realName}</p>
+            <p className={styles.sidebar_info_user}>{user.realName}</p>
         </section>
   )
 }
