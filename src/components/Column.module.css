@@ -79,15 +79,24 @@
     font-size: 1.1rem;
     white-space: nowrap;
     text-overflow: ellipsis;
-    padding: 5px 0;
+    padding: 10px 0;
     color: var(--text-color-primary);
     flex-grow: 1;
     margin-left: 15px;
     transition: margin .3s ease-in-out;
     overflow: hidden;
-    font-weight: 500;
+    font-weight: 700;
 }
-
+.scPage .column h2 {
+    font-size: 2rem;
+    margin-left: 0;
+}
+.scPage .column {
+    width: 80ch;
+    margin: 56px auto;
+    gap: 3px;
+    padding-inline: 30px;
+}
 .selectMode .column h2 {
     margin-left: 0;
 }

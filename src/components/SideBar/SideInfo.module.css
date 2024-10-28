@@ -2,7 +2,7 @@
 .sidebar {
     position: fixed;
     top: var(--toolbar-mobile-height);
-    height: calc(100dvh - 20px);
+    height: calc(100dvh - (var(--toolbar-mobile-height) + 20px));
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -11,14 +11,16 @@
     transition: width 0.3s ease-out;
     background-color: var(--color-primary);
     z-index: 1;
+    overscroll-behavior: contain;
 
-        /* Para dispositivos que soportan hover (normalmente no táctiles) */
+    /* Para dispositivos que soportan hover (normalmente no táctiles) */
     @media (hover: hover) {
+
         /* Reglas para dispositivos no táctiles */
         &:hover {
-            width: 199px;
-    
-            > .sidebar_wrapper {
+            width: 225px;
+
+            >.sidebar_wrapper {
                 visibility: visible;
                 opacity: 1;
                 transition: visibility 0.1s, opacity 0.1s;
@@ -27,6 +29,7 @@
         }
     }
 }
+
 .sidebar_wrapper {
     display: flex;
     flex-direction: column;
@@ -35,6 +38,7 @@
     visibility: hidden;
     opacity: 0;
 }
+
 /* Bloque: sidebarinfo */
 .sidebar_info {
     display: flex;
@@ -60,10 +64,11 @@
             color: var(--accentColor);
         }
     }
+
     .sidebar_info_wrapper {
         display: flex;
         justify-content: space-between;
-        
+
     }
 }
 
@@ -72,6 +77,7 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
+    padding-block: 12px;
 
     img {
         width: 35px;
@@ -82,50 +88,7 @@
     }
 }
 
-/* Bloque: sidebar_inner_controls */
-.sidebar_inner_controls {
-    position: absolute;
-    background-color: var(--mainColor);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 15px 25px var(--firstShadow);
-    border-radius: var(--button-radius);
-    bottom: 42px;
-    right: 0;
-    padding: 5px;
-    z-index: 12;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    color: var(--text-color-primary);
-    font-weight: 500;
-    justify-content: center;
-    gap: 2px;
-    width: auto;
-    border: var(--firstBorder);
 
-    span {
-        cursor: pointer;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        width: -webkit-fill-available;
-        padding: 5px 15px;
-        border-radius: var(--button-radius);
-
-        &:hover {
-            background-color: var(--color-secondary);
-
-            > svg {
-                filter: drop-shadow(0 0 2px var(--accentColor));
-            }
-        }
-
-        svg {
-            width: 20px; /* Ajuste del tamaño del icono */
-            height: 20px;
-        }
-    }
-}
 
 /* Bloque: settings */
 .settings {
@@ -136,9 +99,9 @@
     cursor: pointer;
 
     &:hover {
-        background-color: var(--color-secondary);
+        background-color: var(--hover-color-primary);
 
-        > svg {
+        >svg {
             filter: drop-shadow(0 0 2px var(--accentColor));
         }
 
@@ -167,7 +130,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: var(--color-secondary);
+        background-color: var(--hover-color-primary);
     }
 }
 
@@ -179,6 +142,18 @@
     align-items: center;
 
 } */
+.nav {
+    /* flex: 1; */
+    border-block: var(--firstBorder);
+    /* max-height: calc(100dvh - 20px); */
+    overflow-y: auto;
+
+    & ul {
+        padding: 0;
+        /* height: var(--nav-height); */
+        /* overflow-y: auto; */
+    }
+}
 
 .nav ul li a {
     font-size: .875rem;
@@ -200,15 +175,29 @@
         }
     }
 }
+
 button:has(.plus_icon) {
     background-color: transparent;
-    padding: 0;
+    padding: 5px;
 }
+
+button:hover:has(.plus_icon) {
+    background-color: var(--color-primary);
+    border-radius: 50%;
+}
+
 .plus_icon {
     width: 12px;
     cursor: pointer;
     visibility: hidden;
+    transform: rotate(270deg);
+    margin-top: 1px;
 }
+.plus_icon_opened {
+    transform: rotate(0deg);
+    visibility: visible;
+}
+
 /* .nav ul li a::before {
     content: url('/img/plus.svg');
     width: 50px; 
@@ -217,6 +206,7 @@ button:has(.plus_icon) {
 .nav ul li ul.show {
     height: fit-content;
 }
+
 /* .nav ul li ul li {
     padding-left: 45px;
     font-size: .8rem;
@@ -226,16 +216,14 @@ button:has(.plus_icon) {
     display: block;
     /* font-weight: 300; */
 }
-.nav ul li a.active {
-    background-color: var(--color-secondary);
-}
 
 .nav ul li a:hover {
-    background-color: var(--color-secondary);
+    background-color: var(--hover-color-primary);
     cursor: pointer;
 }
+
 .nav ul li ul {
-    
+
     height: 0px;
     overflow: hidden;
     transition: height .2s ease-out;
@@ -244,62 +232,86 @@ button:has(.plus_icon) {
     margin-left: 38px;
     padding-left: 5px;
 }
+
 .draggedDesk {
     list-style-type: none;
     background-color: var(--accentColor);
     border-radius: var(--button-radius);
 }
+
 .draggedDesk a {
     color: transparent !important;
 }
+
 /*el componente link crea una clase active automaticamente por eso no funciona, los estilos estan en index.css*/
 .draggedDesk a.active {
     background-color: transparent !important;
 }
+
 .floatLi {
     background-color: var(--linkBgColor);
     height: var(--navBarContentHeight);
     min-width: fit-content;
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     border-radius: var(--button-radius);
     list-style-type: none;
     font-size: .875rem;
 }
+
 .floatLi a {
-    padding: 5px 10px;
     font-size: .875rem;
+    padding: 7px 10px;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: var(--button-radius);
+    display: flex;
+    align-items: center;
     font-weight: 500;
+    gap: 8px;
 }
+
 /*Esto le da color cuando se arrastra!!! */
 .floatLi:hover {
-    background-color: var(--color-secondary);
+    background-color: var(--color-primary);
+    border: var(--firstBorder);
     cursor: pointer;
 
 }
+
+.icon_pinned {
+    transform: rotate(-45deg);
+}
+
 @media (min-width: 1280px) {
     .sidebar {
         position: sticky;
         top: 0;
         width: 10px;
+        height: 100dvh;
     }
+
     .nav {
-        flex: 1;
+        /* flex: 1; */
         border-top: var(--firstBorder);
         max-height: calc(100dvh - 20px);
         overflow: hidden;
 
         & ul {
             padding: 0;
-            height: var(--nav-height);
+            /* height: var(--nav-height); */
             /* overflow-y: auto; */
         }
     }
+
     .reloj {
         margin-top: 15px;
     }
 }
+
 /* @media (min-width: 1536px) {
     .sideInfo {
         position: sticky;

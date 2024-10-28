@@ -17,13 +17,17 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
   } else {
     prevId = null
   }
+  const handleBack = (event) => {
+    event.preventDefault() // Evita la navegación normal del enlace
+    window.history.back() // Navega hacia atrás en el historial
+  }
   return (
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
             ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${prevId}`}>Prev<ArrowLeft/></NavLink>
             : <a className={styles.details_nav_link_disabled}>Prev<ArrowLeft/></a>}
-          <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}`} end>Volver</NavLink>
+          <NavLink className={styles.details_nav_link} to={'#'} end onClick={handleBack}>Volver</NavLink>
           {nextId
             ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${nextId}`}><ArrowRight/>Next</NavLink>
             : <a className={styles.details_nav_link_disabled}><ArrowRight/>Next</a>}

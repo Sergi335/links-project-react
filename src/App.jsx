@@ -41,7 +41,7 @@ function App () {
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
 
-  const { themeforToastify } = useStyles()
+  const { themeforToastify, theme } = useStyles()
 
   const router = createBrowserRouter([
     {
@@ -127,7 +127,7 @@ function App () {
       defer: true,
       options: {
         scrollbars: {
-          theme: 'os-theme-light'
+          theme: `os-theme-${theme}`
         }
       }
     })

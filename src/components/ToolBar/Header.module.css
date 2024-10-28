@@ -22,9 +22,7 @@
 .logo_container {
     display: flex;
 }
-.icon_pinned {
-    transform: rotate(-45deg);
-}
+
 .icon_clicked::before {
     content: '';
     display: block;
@@ -46,10 +44,6 @@
     font-size: 1rem;
 }
 
-.logo:hover {
-    background-color: var(--inputBackgroundColor);
-}
-
 .logo svg {
     fill: var(--accentColor);
     transform: rotate(34deg);
@@ -64,23 +58,23 @@
 }
 .deskTitle {
     font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .sideButtons {
     background-color: transparent;
-    padding: 0;
+    padding: 8px;
 }
 .sideButtons:hover {
-    background-color: transparent;
+    background-color: var(--hover-color-primary);
 }
 .deskInfos_controls {
     display: flex;
     margin-left: 28px;
-    gap: 8px;
+    gap: 0;
 }
-.headCenter:hover .next,
-.headCenter:hover .prev {
-    visibility: visible;
-}
+
 .next {
     transform: rotate(90deg);
     width: 15px !important;
@@ -104,9 +98,81 @@
     top: 25%;
     background-color: var(--firstBorderColor);
 } */
+.settings {
+    border-radius: var(--button-radius);
+    width: 36px;
+    height: 36px;
+    &:hover {
+        background-color: var(--hover-color-primary);
 
+        >svg {
+            filter: drop-shadow(0 0 2px var(--accentColor));
+        }
 
+        .sidebar_inner_controls {
+            display: flex;
+        }
+    }
+}
+/* Bloque: sidebar_inner_controls */
+.sidebar_inner_controls {
+    position: relative;
+    background-color: var(--color-primary);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 15px 25px var(--firstShadow);
+    border-radius: var(--button-radius);
+    bottom: 70px;
+    right: -27px;
+    padding: 5px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-color-primary);
+    font-weight: 500;
+    justify-content: center;
+    gap: 2px;
+    width: max-content;
+    border: var(--firstBorder);
 
+    & > span {
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        width: -webkit-fill-available;
+        padding: 5px 15px;
+        border-radius: var(--button-radius);
+        gap: 5px;
+
+        &:hover {
+            background-color: var(--hover-color-primary);
+
+            >svg {
+                filter: drop-shadow(0 0 2px var(--accentColor));
+            }
+        }
+
+        svg {
+            width: 20px;
+            /* Ajuste del tamaño del icono */
+            height: 20px;
+        }
+    }
+}
+/* Bloque: sidebar_controls */
+.sidebar_controls {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+
+    img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+        vertical-align: middle;
+    }
+}
 @media (min-width: 768px) {
     .header {
         left: 2rem;

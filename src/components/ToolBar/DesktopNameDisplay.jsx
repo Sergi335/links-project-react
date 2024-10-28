@@ -7,10 +7,10 @@ import styles from './Header.module.css'
 export default function DesktopNameDisplay () {
   const { desktopName } = useParams()
   //   const location = useLocation()
-  console.log(desktopName)
+  // console.log(desktopName)
   const desktopDisplayName = kebabToTitleCase(desktopName)
   useTitle({ title: desktopDisplayName })
-  console.log('🚀 ~ DesktopNameDisplay ~ desktopDisplayName:', desktopDisplayName)
+  // console.log('🚀 ~ DesktopNameDisplay ~ desktopDisplayName:', desktopDisplayName)
 
   return (
             <>

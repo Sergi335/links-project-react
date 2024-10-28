@@ -13,11 +13,10 @@ import { ArrowDown, SelectIcon } from './Icons/icons'
 import LinkLoader from './Loaders/LinkLoader'
 import styles from './column.module.css'
 
-export default function Columna ({ data, children, childCount }) {
+export default function Columna ({ data, children, childCount, context }) {
   const columna = data.columna || data.activeColumn
   const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
-  // const [maxHeight, setMaxHeight] = useState((10 + 2 + 38) * childCount + (3 * childCount))
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
@@ -38,11 +37,7 @@ export default function Columna ({ data, children, childCount }) {
   const stylesOnHeader = { height: 'auto' }
   const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
   const openedColumns = usePreferencesStore(state => state.openedColumns)
-  // console.log(childCount, children)
-  // useEffect(() => {
-  //   setMaxHeight((10 + 2 + 38) * childCount + (3 * childCount))
-  // }, [openedColumns, childCount])
-  // console.log({ localColSelectMode: selectMode, globalColSelectMode: selectModeGlobal, selectModeColumnsIds: columnSelectModeId, selectedLinks })
+
   const handleChangeColumnHeight = (e) => {
     const opener = e.currentTarget
     const column = opener.parentNode.parentNode.parentNode
@@ -157,7 +152,6 @@ export default function Columna ({ data, children, childCount }) {
   const style = {
     transform: CSS.Transform.toString(transform)
   }
-
   if (isDragging) {
     return (
       <div
@@ -170,7 +164,7 @@ export default function Columna ({ data, children, childCount }) {
   return (
     <>
     {/* Debe tener la misma altura y ancho que cuando esta sin arrastrar para no tener problemas */}
-      <div ref={setNodeRef} id={columna._id} style={style} className={styles.columnWrapper} data-order={columna.order}>
+      <div ref={setNodeRef} id={columna._id} style={style} className={context === 'singlecol' ? `${styles.columnWrapper} ${styles.colOpen} ${styles.scPage}` : styles.columnWrapper} data-order={columna.order}>
         <div
           ref={colRef}
           className={`${styles.column} column`}
@@ -185,17 +179,19 @@ export default function Columna ({ data, children, childCount }) {
                   <h2 onClick={() => setEditMode(true) } ref={headRef} style={linkLoader ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
                   {
-                    childCount > 6 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 6}`}</span>
+                    childCount > 10 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 10}`}</span>
                   }
                   </h2>
                   {
-                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 6 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
+                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 10 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
                   }
-                  <div className={styles.opener} onClick={handleChangeColumnHeight}>
-                    {
-                      childCount > 6 && <ArrowDown className='uiIcon_small'/>
-                    }
-                  </div>
+                  {
+                    context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
+                      {
+                        childCount > 10 && <ArrowDown className='uiIcon_small'/>
+                      }
+                    </div>
+                  }
                   <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>

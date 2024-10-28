@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createColumn } from '../../services/dbQueries'
 import { useDesktopsStore } from '../../store/desktops'
@@ -7,12 +7,11 @@ import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import columnStyles from '../Column.module.css'
-import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, ReadingListIcon } from '../Icons/icons'
+import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
 import DesktopNameDisplay from './DesktopNameDisplay'
 import styles from './Header.module.css'
 
 export default function ToolBar () {
-  const navigate = useNavigate()
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden) // memo
@@ -24,6 +23,11 @@ export default function ToolBar () {
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const desktop = desktopsStore.find(desk => desk.name === desktopName) // memo
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
+  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
+  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
+  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  const location = useLocation()
 
   useEffect(() => {
     const setTheme = (e) => {
@@ -61,9 +65,7 @@ export default function ToolBar () {
     const { column } = response
     setGlobalColumns((() => { return [...globalColumns, ...column] })())
   }
-  const handleNavigate = () => {
-    navigate('/readinglist')
-  }
+
   const handleHideColumns = (e) => {
     e.currentTarget.classList.contains(styles.icon_clicked)
       ? e.currentTarget.classList.remove(styles.icon_clicked)
@@ -101,11 +103,16 @@ export default function ToolBar () {
       })
     }
   }
-  const handlePinPanel = () => {
-    const panel = document.getElementById('sidebar')
-    const icon = document.getElementById('pin_icon')
-    icon.classList.toggle(styles.icon_pinned)
-    panel.classList.toggle('pinned')
+
+  const handleShowSearch = () => {
+    const search = document.getElementById('searchForm')
+    search.classList.toggle('show')
+  }
+  const handleShowAddDesktop = () => {
+    setAddDeskFormVisible(!addDeskFormVisible)
+  }
+  const handleShowDeleteDesktop = () => {
+    setDeleteConfFormVisible(!deleteConfFormVisible)
   }
   return (
     <aside className={styles.sideControl}>
@@ -126,9 +133,6 @@ export default function ToolBar () {
                 <button className={styles.sideButtons} onClick={handleHideColumns}>
                   <HidePanels className={styles.uiIcon} id={'hidePanels'} />
                 </button>
-                <button className={styles.sideButtons} onClick={handleNavigate}>
-                  <ReadingListIcon className={styles.uiIcon} id={'readingList'} />
-                </button>
                 <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
                   <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
                 </button>
@@ -138,9 +142,30 @@ export default function ToolBar () {
                 <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
                   <ExpandHeightIcon className={styles.uiIcon} />
                 </button>
-                <button className={styles.sideButtons} onClick={handlePinPanel}>
-                  <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
+                <button className={styles.sideButtons} onClick={handleShowSearch}>
+                  <SearchIcon />
                 </button>
+                {
+                  location.pathname !== '/profile' && (
+                    <div className={`${styles.settings} ${styles.sideButtons}`}>
+                      <SettingsIcon />
+                      <div className={styles.sidebar_inner_controls}>
+                        <span onClick={handleShowAddDesktop}>
+                          <AddDesktopIcon />
+                          <span>Añade escritorio</span>
+                        </span>
+                        <span>
+                          <ChangeLayoutIcon />
+                          <span>Cambiar vista</span>
+                        </span>
+                        <span onClick={handleShowDeleteDesktop}>
+                          <TrashIcon />
+                          <span>Eliminar escritorio</span>
+                        </span>
+                      </div>
+                  </div>
+                  )
+                }
           </div>
     }
   </aside>

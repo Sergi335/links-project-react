@@ -18,7 +18,7 @@ import CustomLink from './customlink'
 
 export default function SingleColumnPage () {
   const { columnId, desktopName } = useParams()
-  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
@@ -33,7 +33,6 @@ export default function SingleColumnPage () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
-  const openedColumns = usePreferencesStore(state => state.openedColumns)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
@@ -64,8 +63,8 @@ export default function SingleColumnPage () {
               }
             </div></div>
           : (
-            <div id='mainContentWrapper' className={styles.mainContentWrapper}>
-            <div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns, maxWidth: '68ch' }}>
+            <div id='spMainContentWrapper' className={styles.mainContentWrapper}>
+            <div id='maincontent' className={`${styles.mainContent} ${styles.spMainContent}`} style={{ gridTemplateColumns: styleOfColumns }}>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
@@ -79,21 +78,13 @@ export default function SingleColumnPage () {
                     desktopColumns.map((columna) => (
                       columna._id === columnId
                         ? (
-                          <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length}>
+                          <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length} context='singlecol'>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
-                              !activeColumn && !openedColumns.includes(columna._id) &&// Es esto pero hay problemas si se quita, deberia poder activarse lo de abajo
-                                desktopLinks.map((link) =>
-                                  link.idpanel === columna._id
-                                    ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
-                                    : null
-                                ).filter(link => link !== null)
-                            }
-                            {
                               // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col
-                              !activeColumn && openedColumns && openedColumns.includes(columna._id) && desktopLinks.map((link) =>
+                              desktopLinks.map((link) =>
                                 link.idpanel === columna._id
-                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName}/>)
+                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName} context='singlecol'/>)
                                   : null
                               ).filter(link => link !== null)
                             }

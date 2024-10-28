@@ -4,9 +4,9 @@
   font-weight: 500;
   font-style: normal;
 }
-/* *, *::before, *::after {
+*, *::before, *::after {
   box-sizing: border-box;
-} */
+}
 :root {
   font-family: 'Inter Variable', sans-serif;
   line-height: 1.5;
@@ -18,6 +18,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior: contain;
   interpolate-size: allow-keywords; /*Ojo ----- */
 
   --main-content-margin-left: calc(350px + 3rem);
@@ -27,15 +28,16 @@
   --columns_transition: height 300ms ease;
   --navBarContentHeight: 35px;
   --nav-height: 1128px;
-  --toolbar-mobile-height: 71px;
+  --toolbar-mobile-height: 69px;
 
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
   --color-primary: white;
-  --color-medium: var(--color-slate-100);
-  --color-secondary: var(--color-slate-50);
+  --color-medium: hsl(220deg 16% 95% / 39%);
+  --color-secondary: hsl(220deg 35% 99% / 83%);
   --text-color-primary: var(--color-zinc-800);
   --text-color-secondary: var(--color-zinc-500);
+  --hover-color-primary: hsl(from var(--accentColor) h s l / 30%);
   
   --placeholderImg: url(/img/placeholderImgLight.png);
   --placeholderVid: url(/img/placeholderVidLight.png);
@@ -126,7 +128,7 @@ body {
   background-attachment: fixed;
   flex-direction: column;
   display: flex;
-  margin: .5rem;
+  margin: 0;
 }
 .pinned {
   width: clamp(300px, 50%, 800px);
@@ -198,7 +200,7 @@ span:hover svg {
 
 a.active,
 .link.active {
-  background-color: var(--color-secondary);
+  background-color: var(--hover-color-primary);
 }
 
 .selectMode .link img {
@@ -400,8 +402,11 @@ textarea {
   #root, .root {
     flex-direction: row;
   }
+  .root {
+    margin: .5rem;
+  }
   .pinned {
-    width: 199px;
+    width: 225px;
   }
   /* .newSection {
     width: 21.8%;

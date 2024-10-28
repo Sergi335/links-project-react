@@ -1,23 +1,23 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
-import { useFormsStore } from '../../store/forms'
 import { useSessionStore } from '../../store/session'
-import { AddDesktopIcon, ChangeLayoutIcon, SearchIcon, SettingsIcon, SwitchOffIcon, ThemeChangeIcon, TrashIcon } from '../Icons/icons'
+import { PinPanelIcon, ReadingListIcon, SwitchOffIcon, ThemeChangeIcon } from '../Icons/icons'
 import styles from './SideInfo.module.css'
 
 export default function SideBarControls () {
   const user = useSessionStore(state => state.user)
-  // Popover API?
-  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const { handleGoogleLogOut } = useGoogleAuth()
-  const location = useLocation()
+  const navigate = useNavigate()
 
-  const handleShowSearch = () => {
-    const search = document.getElementById('searchForm')
-    search.classList.toggle('show')
+  const handleNavigate = () => {
+    navigate('/readinglist')
+  }
+
+  const handlePinPanel = () => {
+    const panel = document.getElementById('sidebar')
+    const icon = document.getElementById('pin_icon')
+    icon.classList.toggle(styles.icon_pinned)
+    panel.classList.toggle('pinned')
   }
   const handleChangeTheme = () => {
     const root = document.documentElement
@@ -40,41 +40,18 @@ export default function SideBarControls () {
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
   }
-  const handleShowAddDesktop = () => {
-    setAddDeskFormVisible(!addDeskFormVisible)
-  }
-  const handleShowDeleteDesktop = () => {
-    setDeleteConfFormVisible(!deleteConfFormVisible)
-  }
+
   return (
         <section className={styles.sidebar_controls}>
-          <div className={styles.settings} onClick={handleShowSearch}>
-            <SearchIcon />
+          <div className={styles.settings} onClick={handlePinPanel}>
+            <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
           </div>
           <div className={styles.settings} onClick={handleChangeTheme}>
             <ThemeChangeIcon />
           </div>
-          {
-            location.pathname !== '/profile' && (
-              <div className={styles.settings}>
-                <SettingsIcon />
-                <div className={styles.sidebar_inner_controls}>
-                  <span onClick={handleShowAddDesktop}>
-                    <AddDesktopIcon />
-                    <span>Añade escritorio</span>
-                  </span>
-                  <span>
-                    <ChangeLayoutIcon />
-                    <span>Cambiar vista</span>
-                  </span>
-                  <span onClick={handleShowDeleteDesktop}>
-                    <TrashIcon />
-                    <span>Eliminar escritorio</span>
-                  </span>
-                </div>
-            </div>
-            )
-          }
+          <div className={styles.settings} onClick={handleNavigate}>
+            <ReadingListIcon />
+          </div>
           <Link to={'/profile'} className={styles.settings_image_link}><img src={user.profileImage ? user.profileImage : '/img/avatar.svg' } alt={user.realName}/></Link>
           <div className={styles.settings} onClick={handleGoogleLogOut}>
             <SwitchOffIcon />

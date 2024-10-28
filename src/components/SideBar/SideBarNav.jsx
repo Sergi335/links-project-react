@@ -1,8 +1,8 @@
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { useMemo, useRef, useState } from 'react'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,7 +11,7 @@ import { moveDesktops } from '../../services/dbQueries'
 import { formatPath, handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
-import { PlusIcon } from '../Icons/icons'
+import { ArrowDown } from '../Icons/icons'
 import styles from './SideInfo.module.css'
 
 function SideBarNavItem ({ escritorio, children }) {
@@ -35,9 +35,11 @@ function SideBarNavItem ({ escritorio, children }) {
   }
   const handleExpandSublist = (e) => {
     e.preventDefault()
-    const element = e.currentTarget.parentNode.parentNode
-    const list = element.querySelector('ul')
+    const lielement = e.currentTarget.parentNode.parentNode
+    const svgelement = e.currentTarget.childNodes[0]
+    const list = lielement.querySelector('ul')
     list?.classList.toggle(styles.show)
+    svgelement?.classList.toggle(styles.plus_icon_opened)
   }
   if (isDragging) {
     return (
@@ -48,7 +50,7 @@ function SideBarNavItem ({ escritorio, children }) {
   }
   return (
       <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} >
-        <NavLink to={`/desktop/${escritorio.name}`}><button onClick={handleExpandSublist}><PlusIcon className={styles.plus_icon}/></button>{escritorio.displayName}</NavLink>
+        <NavLink to={`/desktop/${escritorio.name}`}><button onClick={handleExpandSublist}><ArrowDown className={styles.plus_icon}/></button>{escritorio.displayName}</NavLink>
         {children}
       </li>
   )
@@ -65,13 +67,17 @@ function SideBarNavSubItem ({ escritorio, columna }) {
 export default function SideBarNav () {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
-  const navRef = useRef()
+  const listRef = useRef()
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const { theme } = useStyles()
   const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
+  const { theme } = useStyles()
+  const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
+  useEffect(() => {
+    initialize({ target: listRef.current })
+  }, [])
 
   // Handlers de dnd-kit -> useCallback
   const onDragStart = (event) => {
@@ -127,9 +133,8 @@ export default function SideBarNav () {
 
   return (
 
-        <nav ref={navRef} className={styles.nav}>
-          <OverlayScrollbarsComponent options={{ scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } }}>
-            <ul>
+        <nav className={styles.nav} ref={listRef}>
+            <ul >
             <DndContext
               sensors={sensors}
               onDragStart={onDragStart}
@@ -167,7 +172,6 @@ export default function SideBarNav () {
               }
             </DndContext>
             </ul>
-          </OverlayScrollbarsComponent>
         </nav>
 
   )

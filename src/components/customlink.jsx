@@ -8,7 +8,7 @@ import { usePreferencesStore } from '../store/preferences'
 import { ArrowDown, MaximizeIcon } from './Icons/icons'
 import styles from './customlink.module.css'
 
-export default function CustomLink ({ data, className, desktopName }) {
+export default function CustomLink ({ data, className, desktopName, context }) {
   const link = data.link || data.activeLink
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const setPoints = useFormsStore(state => state.setPoints)
@@ -114,13 +114,13 @@ export default function CustomLink ({ data, className, desktopName }) {
         </div>
     )
   }
-
+  const contextClass = context === 'singlecol' ? `${styles.scPage}` : ''
   return (
       <>
         <div ref={setNodeRef}
           style={style}
           {...attributes}
-          {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
+          {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} ${contextClass} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
           <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
             {
               linkSelectMode && <input type='checkbox' className={linkSelectMode ? `${styles.checkbox}` : `${styles.hidden}`} onChange={handleSelectChange}/>

@@ -10,7 +10,7 @@
 
 .mainContent {
     display: grid;
-    gap: 5px;
+    gap: 16px;
     max-width: 75%;
     padding: 32px;
     margin: 0 auto;
@@ -22,9 +22,14 @@
     border-radius: 16px;
     margin: 16px;
     min-height: 100dvh;
+    max-width: 100%;
     /* background-color: var(--color-secondary); */
 }
-
+.spMainContent.mainContent {
+    margin-top: -56px;
+    min-height: calc(100dvh + 56px);
+    width: 50%;
+}
 @media (min-width: 1280px) {
 
     /* .listOfLinks {
