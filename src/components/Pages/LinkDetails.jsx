@@ -8,7 +8,7 @@ import { CheckIcon, CloseIcon } from '../Icons/icons'
 import LinkDetailsMedia from '../LinkDetailsMedia'
 import styles from './LinkDetails.module.css'
 
-export default function LinkDetails () {
+export default function LinkDetails ({ linkid }) {
   const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?
   const [links, setLinks] = useState([])
   const [urlStatus, setUrlStatus] = useState()

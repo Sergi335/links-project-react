@@ -1,4 +1,4 @@
-import styles from '../components/SideBar/SideInfo.module.css'
+import styles from '../components/SideBar/SideBar.module.css'
 export const constants = {
   BASE_API_URL: 'http://localhost:3001',
   // BASE_API_URL: 'https://zenmarks.xyz',

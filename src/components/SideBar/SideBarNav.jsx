@@ -2,7 +2,7 @@ import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -12,7 +12,8 @@ import { formatPath, handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
 import { ArrowDown } from '../Icons/icons'
-import styles from './SideInfo.module.css'
+import NavLoader from './NavLoader'
+import styles from './SideBar.module.css'
 
 function SideBarNavItem ({ escritorio, children }) {
   const {
@@ -70,60 +71,51 @@ export default function SideBarNav () {
   const listRef = useRef()
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const desktopsOrderRef = useRef()
+  desktopsOrderRef.current = desktopsStore
+
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
   const { theme } = useStyles()
   const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
+
   useEffect(() => {
     initialize({ target: listRef.current })
-  }, [])
+  }, [initialize])
 
-  // Handlers de dnd-kit -> useCallback
-  const onDragStart = (event) => {
+  const onDragStart = useCallback((event) => {
     if (event.active.data.current?.type === 'Desktop') {
       const panel = document.getElementById('sidebar')
-      // const icon = document.getElementById('pin_icon')
       if (!panel.classList.contains('pinned')) panel.classList.add('pinned')
-      // if (!icon.classList.contains('pin_icon')) icon.classList.add('pin_icon')
       setActiveDesk(event.active.data.current.escritorio)
       setMovedDesk(event.active.data.current.escritorio)
     }
-  }
-  const onDragEnd = async (event) => {
+  }, [])
+  const onDragOver = useCallback((event) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const activeIndex = desktopsOrderRef.current.findIndex((t) => t._id === active.id)
+    const overIndex = desktopsOrderRef.current.findIndex((t) => t._id === over.id)
+
+    desktopsOrderRef.current = arrayMove(desktopsOrderRef.current, activeIndex, overIndex)
+  }, [])
+  const onDragEnd = useCallback(async (event) => {
     setActiveDesk(null)
-    if (movedDesk) {
+    if (movedDesk) { // Siempre hará la llamada a la API
       setMovedDesk(null)
-      const response = await moveDesktops(desktopsStore)
+      const newOrder = desktopsOrderRef.current
+      setDesktopsStore(newOrder)
+      const response = await moveDesktops(newOrder)
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
         toast(message)
       }
-      // localStorage.setItem('Desktops', JSON.stringify(desktopsStore.toSorted((a, b) => (a.order - b.order))))
     }
-  }
-  const onDragOver = (event) => {
-    const { active, over } = event
-    if (!over) return
+  }, [movedDesk, desktopsStore])
 
-    const activeId = active.id
-    const overId = over.id
-
-    if (activeId === overId) return
-
-    const isActiveATask = active.data.current?.type === 'Desktop'
-    const isOverATask = over.data.current?.type === 'Desktop'
-
-    if (!isActiveATask) return
-
-    // Im dropping a Task over another Task
-    if (isActiveATask && isOverATask) {
-      const activeIndex = desktopsStore.findIndex((t) => t._id === activeId)
-      const overIndex = desktopsStore.findIndex((t) => t._id === overId)
-      setDesktopsStore(arrayMove(desktopsStore, activeIndex, overIndex))
-    }
-  }
-  const sensors = useSensors( // Es necesario?
+  const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 0
@@ -144,7 +136,7 @@ export default function SideBarNav () {
               <SortableContext items={desktopsId} strategy={verticalListSortingStrategy}>
                 {
                   globalLoading
-                    ? <></> // <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
+                    ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
                     : desktopsStore.map(escritorio => (
                       !escritorio.hidden &&
                         <SideBarNavItem key={escritorio._id} escritorio={escritorio}>

@@ -1,12 +1,12 @@
 import ContentLoader from 'react-content-loader'
 
 export default function NavLoader (props) {
-  const width = '170px'
+  const width = '205px'
   return (
     <ContentLoader // No se adapta
         speed={2}
         width={width}
-        height={35}
+        height={37}
         viewBox={`0 0 ${width} 460`}
         backgroundColor="var(--secondColor)"
         foregroundColor="var(--thirdColor)"

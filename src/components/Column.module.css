@@ -88,14 +88,14 @@
     font-weight: 700;
 }
 .scPage .column h2 {
-    font-size: 2rem;
-    margin-left: 0;
+    font-size: 1.5rem;
+    /* margin-left: 0; */
 }
 .scPage .column {
-    width: 80ch;
-    margin: 56px auto;
+    /* width: 80ch;
+    margin: 56px auto; */
     gap: 3px;
-    padding-inline: 30px;
+    /* padding-inline: 30px; */
 }
 .selectMode .column h2 {
     margin-left: 0;

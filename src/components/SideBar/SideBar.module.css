@@ -295,7 +295,7 @@ button:hover:has(.plus_icon) {
     }
 
     .nav {
-        /* flex: 1; */
+        flex: 1;
         border-top: var(--firstBorder);
         max-height: calc(100dvh - 20px);
         overflow: hidden;

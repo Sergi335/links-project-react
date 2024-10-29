@@ -33,8 +33,8 @@
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
   --color-primary: white;
-  --color-medium: hsl(220deg 16% 95% / 39%);
-  --color-secondary: hsl(220deg 35% 99% / 83%);
+  --color-medium: var(--color-slate-100);
+  --color-secondary: var(--color-slate-50);
   --text-color-primary: var(--color-zinc-800);
   --text-color-secondary: var(--color-zinc-500);
   --hover-color-primary: hsl(from var(--accentColor) h s l / 30%);
@@ -133,7 +133,7 @@ body {
 .pinned {
   width: clamp(300px, 50%, 800px);
 }
-.pinned > .info_wrapper {
+.pinned > .sidebar_wrapper_gc {
   visibility: visible;
   opacity: 1;
   transition: visibility .1s, opacity .1s;

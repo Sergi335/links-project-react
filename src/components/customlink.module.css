@@ -85,7 +85,7 @@
 }
 .scPage.link>a:first-of-type,
 .scPage.link_dragged>a:first-of-type {
-  font-size: 1rem;
+  font-size: .9rem;
   height: 43px;
 }
 .scPage.link a span:first-of-type,

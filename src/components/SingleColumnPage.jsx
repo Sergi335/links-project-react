@@ -11,10 +11,10 @@ import { usePreferencesStore } from '../store/preferences'
 import Columna from './Column'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
+import CustomLink from './customlink'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
-import CustomLink from './customlink'
 
 export default function SingleColumnPage () {
   const { columnId, desktopName } = useParams()
@@ -22,7 +22,7 @@ export default function SingleColumnPage () {
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  const styleOfColumns = 'repeat(auto-fill, minmax(100%, 1fr))'
+  const styleOfColumns = 'auto auto'
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
@@ -119,6 +119,7 @@ export default function SingleColumnPage () {
             </div>
             )
       }
+      {/* <LinkDetails linkid={getLinksIds[0]}/> */}
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
       <FormsContainer />
     </main>

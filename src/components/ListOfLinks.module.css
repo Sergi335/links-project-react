@@ -25,11 +25,11 @@
     max-width: 100%;
     /* background-color: var(--color-secondary); */
 }
-.spMainContent.mainContent {
+/* .spMainContent.mainContent {
     margin-top: -56px;
     min-height: calc(100dvh + 56px);
     width: 50%;
-}
+} */
 @media (min-width: 1280px) {
 
     /* .listOfLinks {

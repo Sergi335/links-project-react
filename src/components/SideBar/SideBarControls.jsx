@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
 import { useSessionStore } from '../../store/session'
 import { PinPanelIcon, ReadingListIcon, SwitchOffIcon, ThemeChangeIcon } from '../Icons/icons'
-import styles from './SideInfo.module.css'
+import styles from './SideBar.module.css'
 
 export default function SideBarControls () {
   const user = useSessionStore(state => state.user)

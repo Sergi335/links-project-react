@@ -222,7 +222,7 @@
         display: flex;
         align-items: flex-start;
         margin-left: 28px;
-        gap: 8px;
+        /* gap: 8px; */
         flex-direction: column;
     }
     .mobile_menu {
