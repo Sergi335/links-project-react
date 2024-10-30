@@ -135,26 +135,16 @@
 }
 
 /* Bloque Nav */
-/* .nav_side_info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-
-} */
 .nav {
     /* flex: 1; */
     border-block: var(--firstBorder);
-    /* max-height: calc(100dvh - 20px); */
     overflow-y: auto;
 
     & ul {
         padding: 0;
-        /* height: var(--nav-height); */
-        /* overflow-y: auto; */
     }
 }
-
+/*cambiar por una clase por temas de especificidad*/
 .nav ul li a {
     font-size: .875rem;
     padding: 7px 10px;
@@ -198,19 +188,10 @@ button:hover:has(.plus_icon) {
     visibility: visible;
 }
 
-/* .nav ul li a::before {
-    content: url('/img/plus.svg');
-    width: 50px; 
-    height: 50px; 
-} */
 .nav ul li ul.show {
     height: fit-content;
 }
 
-/* .nav ul li ul li {
-    padding-left: 45px;
-    font-size: .8rem;
-} */
 .nav ul li ul li a {
     font-size: .8rem;
     display: block;
@@ -238,7 +219,6 @@ button:hover:has(.plus_icon) {
     background-color: var(--accentColor);
     border-radius: var(--button-radius);
 }
-
 .draggedDesk a {
     color: transparent !important;
 }
@@ -249,16 +229,13 @@ button:hover:has(.plus_icon) {
 }
 
 .floatLi {
-    background-color: var(--linkBgColor);
-    height: var(--navBarContentHeight);
+    list-style-type: none;
+    height: fit-content;
+    border-radius: var(--button-radius);
     min-width: fit-content;
     display: flex;
     align-items: center;
-    border-radius: var(--button-radius);
-    list-style-type: none;
-    font-size: .875rem;
 }
-
 .floatLi a {
     font-size: .875rem;
     padding: 7px 10px;
@@ -279,9 +256,10 @@ button:hover:has(.plus_icon) {
     background-color: var(--color-primary);
     border: var(--firstBorder);
     cursor: pointer;
-
 }
-
+a.active:hover {
+    background-color: var(--color-primary) !important;
+}
 .icon_pinned {
     transform: rotate(-45deg);
 }
@@ -311,29 +289,3 @@ button:hover:has(.plus_icon) {
         margin-top: 15px;
     }
 }
-
-/* @media (min-width: 1536px) {
-    .sideInfo {
-        position: sticky;
-        top: 0;
-        height: calc(100dvh - 20px);
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-        overflow-y: auto;
-        width: 199px;
-        transition: width .3s ease-out;
-    }
-    .sideInfoWrapper {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        overflow: hidden;
-    }
-    .sectContainer {
-        display: block;
-    }
-    .settings.directional {
-        display: flex;
-    }
-} */

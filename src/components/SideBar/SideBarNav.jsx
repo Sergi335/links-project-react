@@ -15,7 +15,8 @@ import { ArrowDown } from '../Icons/icons'
 import NavLoader from './NavLoader'
 import styles from './SideBar.module.css'
 
-function SideBarNavItem ({ escritorio, children }) {
+function SideBarNavItem ({ escritorio, children, className }) {
+  const [isExpanded, setIsExpanded] = useState(false)
   const {
     setNodeRef,
     attributes,
@@ -36,11 +37,7 @@ function SideBarNavItem ({ escritorio, children }) {
   }
   const handleExpandSublist = (e) => {
     e.preventDefault()
-    const lielement = e.currentTarget.parentNode.parentNode
-    const svgelement = e.currentTarget.childNodes[0]
-    const list = lielement.querySelector('ul')
-    list?.classList.toggle(styles.show)
-    svgelement?.classList.toggle(styles.plus_icon_opened)
+    setIsExpanded(prev => !prev)
   }
   if (isDragging) {
     return (
@@ -50,9 +47,18 @@ function SideBarNavItem ({ escritorio, children }) {
     )
   }
   return (
-      <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} >
-        <NavLink to={`/desktop/${escritorio.name}`}><button onClick={handleExpandSublist}><ArrowDown className={styles.plus_icon}/></button>{escritorio.displayName}</NavLink>
-        {children}
+      <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} className={className}>
+        <NavLink to={`/desktop/${escritorio.name}`}>
+          <button onClick={handleExpandSublist} aria-expanded={isExpanded}>
+            <ArrowDown
+              className={isExpanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
+            />
+          </button>
+            {escritorio.displayName}
+        </NavLink>
+        <ul className={isExpanded ? styles.show : null}>
+          {children}
+        </ul>
       </li>
   )
 }
@@ -126,7 +132,7 @@ export default function SideBarNav () {
   return (
 
         <nav className={styles.nav} ref={listRef}>
-            <ul >
+          <ul>
             <DndContext
               sensors={sensors}
               onDragStart={onDragStart}
@@ -140,7 +146,6 @@ export default function SideBarNav () {
                     : desktopsStore.map(escritorio => (
                       !escritorio.hidden &&
                         <SideBarNavItem key={escritorio._id} escritorio={escritorio}>
-                          <ul>
                             {
                               globalColumns.map(col => (
                                 col.escritorio === escritorio.name
@@ -148,7 +153,6 @@ export default function SideBarNav () {
                                   : null
                               ))
                             }
-                          </ul>
                         </SideBarNavItem>
                     ))
                 }
@@ -157,13 +161,13 @@ export default function SideBarNav () {
                 createPortal(
                   <DragOverlay>
                     {
-                      activeDesk && (<li className={styles.floatLi}><SideBarNavItem key={activeDesk._id} escritorio={activeDesk} /></li>)
+                      activeDesk && (<SideBarNavItem key={activeDesk._id} escritorio={activeDesk} className={styles.floatLi} />)
                     }
                   </DragOverlay>
                   , document.body)
               }
             </DndContext>
-            </ul>
+          </ul>
         </nav>
 
   )

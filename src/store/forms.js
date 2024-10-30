@@ -47,6 +47,10 @@ export const useFormsStore = create(
       setDeleteConfFormVisible: (deleteConfFormVisible) => {
         set({ deleteConfFormVisible })
       },
+      searchBoxVisible: false,
+      setSearchBoxVisible: (searchBoxVisible) => {
+        set({ searchBoxVisible })
+      },
       activeLink: null,
       setActiveLink: (activeLink) => {
         set({ activeLink })

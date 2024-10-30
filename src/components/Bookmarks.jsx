@@ -48,8 +48,6 @@ export default function Bookmarks () {
   useEffect(() => {
     setBooks(bookmarks)
   }, [bookmarks])
-  // console.log('🚀 ~ Bookmarks ~ bookmarksId:', bookmarksId)
-  // console.log(bookmarks)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

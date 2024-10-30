@@ -1,6 +1,21 @@
-.searchForm {
+.searchbox {
+    position: fixed;
+    left: 37%;
+    background-color: var(--color-primary);
+    top: 150px;
     display: none;
-    align-items: center;
+    flex-direction: column;
+    width: 60ch;
+    padding: 10px;
+    border-radius: var(--button-radius);
+    min-height: 115px;
+}
+.flex {
+    display: flex;
+}
+.searchForm {
+    display: flex;
+    /* align-items: center;
     justify-content: center;
     position: absolute;
     z-index: 10;
@@ -9,11 +24,12 @@
     background-color: var(--color-primary);
     height: 100px;
     width: 395px;
-    border-radius: 8px;
+    border-radius: 8px; */
 }
 
 .searchForm input.searchInput {
-    padding-left: 11px;
+    flex: 1;
+    /* padding-left: 11px;
     background-color: var(--inputBackgroundColor);
     border: 0;
     color: var(--text-color-primary);
@@ -27,17 +43,17 @@
     width: auto;
     border-radius: 8px;
     height: 41px;
-    /* transform: translateY(-52px); */
+    transform: translateY(-52px);
     z-index: 1;
     opacity: 0;
     visibility: hidden;
-    transition: transform .3s ease-out, opacity .3s ease-out, visibility .3s ease-out;
+    transition: transform .3s ease-out, opacity .3s ease-out, visibility .3s ease-out; */
 }
-.searchForm input.searchInput.show {
+/* .searchForm input.searchInput.show {
     transform: translateY(45px);
     opacity: 1;
     visibility: visible;
-}
+} */
 .searchForm input.searchInput::placeholder {
     /* font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
     font-weight: 500;
@@ -72,7 +88,7 @@
 }
 
 .searchResults {
-    flex-direction: column;
+    /* flex-direction: column;
     margin: auto;
     position: fixed;
     width: auto;
@@ -90,7 +106,7 @@
     gap: 3px;
     min-height: 50px;
     left: 0rem;
-    right: 0rem;
+    right: 0rem; */
 }
 
 .searchResults .lcontrols {
@@ -176,7 +192,7 @@
 } */
 
 .resControls {
-    display: flex;
+    /* display: flex;
     gap: 5px;
     padding: 10px 0;
     border: 1px dashed var(--firstBorderColor);
@@ -185,7 +201,7 @@
     position: fixed;
     width: 96%;
     background-color: var(--mainColor);
-    align-items: center;
+    align-items: center; */
 }
 .loaderWrapper {
     display: flex;
@@ -287,7 +303,7 @@
     }
   }
 @media (min-width: 768px) {
-    .searchForm input.searchInput {
+    /* .searchForm input.searchInput {
         display: initial;
         position: initial;
         border-radius: 0;
@@ -295,11 +311,11 @@
         border-bottom-left-radius: var(--button-radius);
         border-top-left-radius: var(--button-radius);
         height: 33px;
-        /* transform: translateY(45px); */
+        transform: translateY(45px);
         visibility: visible;
         opacity: 1;
         z-index: 0;
-    }
+    } */
 
     /* .searchForm {
         width: 100%;
@@ -314,12 +330,13 @@
         height: 35px;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+        display: none;
     }
 
     .searchResults {
-        flex-direction: column;
+        /* flex-direction: column; */
         /* margin: 12% 30%; */
-        position: fixed;
+        /* position: fixed;
         max-width: 1023px;
         overflow-y: auto;
         display: flex;
@@ -333,10 +350,10 @@
         box-shadow: 0px 0px 18px var(--firstShadow);
         padding: 5px 0;
         gap: 3px;
-        min-height: 69px;
+        min-height: 69px; */
     }
     .resControls {
-        display: flex;
+        /* display: flex;
         gap: 5px;
         padding: 10px 0;
         border: 1px dashed var(--firstBorderColor);
@@ -345,7 +362,7 @@
         position: fixed;
         max-width: 994px;
         background-color: var(--mainColor);
-        align-items: center;
+        align-items: center; */
     }
     .cleanButton {
         background-color: var(--color-secondary);

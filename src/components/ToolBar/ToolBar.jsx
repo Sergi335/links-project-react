@@ -28,6 +28,9 @@ export default function ToolBar () {
   const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const location = useLocation()
+  const isDesktopLocation = location.pathname !== '/profile' && location.pathname !== '/readinglist'
+  const searchBoxVisible = useFormsStore(state => state.searchBoxVisible)
+  const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
 
   useEffect(() => {
     const setTheme = (e) => {
@@ -65,7 +68,6 @@ export default function ToolBar () {
     const { column } = response
     setGlobalColumns((() => { return [...globalColumns, ...column] })())
   }
-
   const handleHideColumns = (e) => {
     e.currentTarget.classList.contains(styles.icon_clicked)
       ? e.currentTarget.classList.remove(styles.icon_clicked)
@@ -103,10 +105,8 @@ export default function ToolBar () {
       })
     }
   }
-
   const handleShowSearch = () => {
-    const search = document.getElementById('searchForm')
-    search.classList.toggle('show')
+    setSearchBoxVisible(!searchBoxVisible)
   }
   const handleShowAddDesktop = () => {
     setAddDeskFormVisible(!addDeskFormVisible)
@@ -129,44 +129,58 @@ export default function ToolBar () {
       </div>
       <DesktopNameDisplay />
     {
-          <div className={styles.deskInfos_controls}>
-                <button className={styles.sideButtons} onClick={handleHideColumns}>
-                  <HidePanels className={styles.uiIcon} id={'hidePanels'} />
-                </button>
-                <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
-                  <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
-                </button>
+
+        <div className={styles.deskInfos_controls}>
+          {
+            isDesktopLocation && (
+              <button className={styles.sideButtons} onClick={handleHideColumns}>
+                <HidePanels className={styles.uiIcon} id={'hidePanels'} />
+              </button>
+            )
+          }
+          <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
+            <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
+          </button>
+          {
+            isDesktopLocation &&
+            (
+              <>
                 <button className={styles.sideButtons} onClick={handleAddColumn}>
                   <AddColumnIcon className={styles.uiIcon} id={'addCol'} />
                 </button>
                 <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
                   <ExpandHeightIcon className={styles.uiIcon} />
                 </button>
-                <button className={styles.sideButtons} onClick={handleShowSearch}>
-                  <SearchIcon />
-                </button>
-                {
-                  location.pathname !== '/profile' && (
-                    <div className={`${styles.settings} ${styles.sideButtons}`}>
-                      <SettingsIcon />
-                      <div className={styles.sidebar_inner_controls}>
-                        <span onClick={handleShowAddDesktop}>
-                          <AddDesktopIcon />
-                          <span>Añade escritorio</span>
-                        </span>
-                        <span>
-                          <ChangeLayoutIcon />
-                          <span>Cambiar vista</span>
-                        </span>
-                        <span onClick={handleShowDeleteDesktop}>
-                          <TrashIcon />
-                          <span>Eliminar escritorio</span>
-                        </span>
-                      </div>
-                  </div>
-                  )
-                }
-          </div>
+              </>
+            )
+          }
+          <button className={styles.sideButtons} onClick={handleShowSearch}>
+            <SearchIcon />
+          </button>
+          {
+            isDesktopLocation && (
+              <div className={`${styles.settings} ${styles.sideButtons}`}>
+                <SettingsIcon />
+                <div className={styles.sidebar_inner_controls}>
+                  <span onClick={handleShowAddDesktop}>
+                    <AddDesktopIcon />
+                    <span>Añade escritorio</span>
+                  </span>
+                  <span>
+                    <ChangeLayoutIcon />
+                    <span>Cambiar vista</span>
+                  </span>
+                  <span onClick={handleShowDeleteDesktop}>
+                    <TrashIcon />
+                    <span>Eliminar escritorio</span>
+                  </span>
+                </div>
+            </div>
+            )
+          }
+
+        </div>
+
     }
   </aside>
   )

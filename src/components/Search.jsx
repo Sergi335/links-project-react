@@ -1,6 +1,8 @@
 import debounce from 'just-debounce-it'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import useHideForms from '../hooks/useHideForms'
 import { searchLinks } from '../services/functions'
+import { useFormsStore } from '../store/forms'
 import { CloseIcon, SearchIcon } from './Icons/icons'
 import styles from './Search.module.css'
 import CustomLink from './customlink'
@@ -14,7 +16,11 @@ export default function Search () {
   const [placeholder, setPlaceholder] = useState('Links, descriptions, notes ...')
   const resRef = useRef()
   const inputRef = useRef()
+  const boxRef = useRef()
   const [media] = useState(window.matchMedia('(max-width: 768px)'))
+  const searchBoxVisible = useFormsStore(state => state.searchBoxVisible)
+  const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
+  useHideForms({ form: boxRef.current, setFormVisible: setSearchBoxVisible })
   // console.log('render')
 
   const handleSubmit = async (event) => {
@@ -55,8 +61,27 @@ export default function Search () {
       : results
   }, [sort, results])
 
+  useEffect(() => {
+    if (searchBoxVisible) inputRef.current.focus()
+  }, [searchBoxVisible])
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === 'k') {
+        event.preventDefault()
+        setSearchBoxVisible(!searchBoxVisible)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [searchBoxVisible, setSearchBoxVisible])
+
   return (
-        <>
+        <section ref={boxRef} id='searchbox' className={searchBoxVisible ? `${styles.searchbox} ${styles.flex}` : `${styles.searchbox}`}>
           <form id='searchForm' className={styles.searchForm} onSubmit={handleSubmit}>
               <input ref={inputRef}
                 className={sortedLinks?.length > 0 ? `${styles.active} ${styles.searchInput}` : `${styles.searchInput}`}
@@ -64,6 +89,7 @@ export default function Search () {
                 name="query"
                 id=""
                 value={search}
+                autoFocus
                 onFocus={() => setPlaceholder('')}
                 onBlur={() => setPlaceholder('Links, descriptions, notes ...')}
                 onChange={handleInputChange}
@@ -134,6 +160,6 @@ export default function Search () {
                 )
               : null
           }
-        </>
+        </section>
   )
 }
