@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
-import useResizeWindow from '../../hooks/useResizeWindow'
+// import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
 import Bookmarks from '../Bookmarks'
+import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
+import SideBarInfo from '../SideBar/SideBarInfo'
 import ToolBar from '../ToolBar/ToolBar'
 import styles from './HomePage.module.css'
 
@@ -12,8 +14,8 @@ export default function AppLayout () {
   const { desktopName, id } = useParams()
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
-  const windowSize = useResizeWindow()
-  const isDesktop = windowSize.width > 1280 // Hacerlo en el hook
+  // const windowSize = useResizeWindow()
+  // const isDesktop = windowSize.width > 1280 // Hacerlo en el hook
 
   useEffect(() => {
     if (desktopName !== undefined) {
@@ -42,11 +44,11 @@ export default function AppLayout () {
   return (
     <>
       <SideBar />
-      <div className={isDesktop ? 'root' : 'root root-mobile'}>
-        {id === undefined && <ToolBar />}
-        <Outlet />
-      </div>
+      {id === undefined && <ToolBar />}
       {id === undefined && <Bookmarks />}
+      <SideBarInfo />
+      <Outlet />
+      <ScrollToTop />
     </>
   )
 }

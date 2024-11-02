@@ -13,6 +13,7 @@
     position: absolute;
     font-size: .875rem;
     border: var(--firstBorder);
+    z-index: 1;
 }
 .flex p, .flex span {
     margin: 0;

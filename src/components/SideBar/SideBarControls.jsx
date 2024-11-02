@@ -1,11 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
-import { useSessionStore } from '../../store/session'
 import { PinPanelIcon, ReadingListIcon, SwitchOffIcon, ThemeChangeIcon } from '../Icons/icons'
 import styles from './SideBar.module.css'
 
 export default function SideBarControls () {
-  const user = useSessionStore(state => state.user)
   const { handleGoogleLogOut } = useGoogleAuth()
   const navigate = useNavigate()
 
@@ -52,7 +50,6 @@ export default function SideBarControls () {
           <div className={styles.settings} onClick={handleNavigate}>
             <ReadingListIcon />
           </div>
-          <Link to={'/profile'} className={styles.settings_image_link}><img src={user.profileImage ? user.profileImage : '/img/avatar.svg' } alt={user.realName}/></Link>
           <div className={styles.settings} onClick={handleGoogleLogOut}>
             <SwitchOffIcon />
           </div>

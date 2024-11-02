@@ -85,8 +85,9 @@
 }
 .scPage.link>a:first-of-type,
 .scPage.link_dragged>a:first-of-type {
-  font-size: .9rem;
+  font-size: 1rem;
   height: 43px;
+  font-weight: 500;
 }
 .scPage.link a span:first-of-type,
 .scPage.link_dragged a span:first-of-type {
@@ -109,6 +110,7 @@
 .link:nth-of-type(n+12) {
   display: none;
 }
+
 .link a span:first-of-type,
 .link_dragged a span:first-of-type {
   overflow: hidden;

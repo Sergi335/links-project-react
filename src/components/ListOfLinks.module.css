@@ -5,16 +5,18 @@
     /* margin-top: calc(2rem + 45px); */
     /* gap: 40px; */
     flex: 1;
+    grid-area: main;
 
 }
 
 .mainContent {
     display: grid;
     gap: 16px;
-    max-width: 75%;
+    max-width: 80%;
     padding: 32px;
     margin: 0 auto;
-    margin-top: 32px;
+    margin-top: 66px;
+    place-content: center;
 }
 
 .mainContentWrapper {

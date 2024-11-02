@@ -23,7 +23,7 @@ export default function DesktopNameDisplay () {
             <>
                 {
                     desktopDisplayName
-                      ? (<p className={styles.deskTitle} id="deskTitle" style={{ color: 'var(--text-color-primary)' }}>{desktopDisplayName}</p>)
+                      ? (<p className={styles.deskTitle} id="deskTitle">{desktopDisplayName}</p>)
                       : (<NameLoader className={styles.deskTitle}/>)
 
                 }

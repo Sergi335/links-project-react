@@ -20,7 +20,7 @@ export const useStyles = () => {
       const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
       constants.THEME_VARIANTS[themeVariant].applyStyles()
     }
-    const element = document.querySelector('.root')
+    const element = document.querySelector('#root')
     if (localStorage.getItem('bodyBackground') !== 'null') {
       if (element) {
         element.setAttribute('data-background', 'image')
@@ -32,6 +32,27 @@ export const useStyles = () => {
       if (element) {
         element.setAttribute('data-background', 'color')
       }
+    }
+  }, [])
+
+  // Detectar cambio de tema de sistema
+  useEffect(() => {
+    const setTheme = (e) => {
+      const root = document.documentElement
+      if (e.matches) {
+        root.classList.add('dark')
+        root.classList.remove('light')
+        window.localStorage.setItem('theme', JSON.stringify('dark'))
+      } else {
+        root.classList.add('light')
+        root.classList.remove('dark')
+        window.localStorage.setItem('theme', JSON.stringify('light'))
+      }
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme)
+
+    return () => {
+      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', setTheme)
     }
   }, [])
 

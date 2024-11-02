@@ -39,6 +39,10 @@ export const usePreferencesStore = create(
       openedColumns: [],
       setOpenedColumns: (openedColumns) => {
         set({ openedColumns })
+      },
+      globalOpenColumns: false,
+      setGlobalOpenColumns: (globalOpenColumns) => {
+        set({ globalOpenColumns })
       }
     }
   }

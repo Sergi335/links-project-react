@@ -9,9 +9,22 @@
     padding: 10px;
     border-radius: var(--button-radius);
     min-height: 115px;
+    z-index: 1;
 }
 .flex {
     display: flex;
+    /* animation: appear .1s ease-in-out; */
+}
+@keyframes appear {
+    from {
+        display: none;
+        opacity: 0;
+    }
+
+    to {
+        display: flex;
+        opacity: 1;
+    }
 }
 .searchForm {
     display: flex;
@@ -87,28 +100,6 @@
     /* margin-right: 10px; */
 }
 
-.searchResults {
-    /* flex-direction: column;
-    margin: auto;
-    position: fixed;
-    width: auto;
-    overflow-y: auto;
-    display: flex;
-    z-index: 6;
-    align-items: center;
-    top: 101px;
-    background: var(--color-primary);
-    max-height: 87vh;
-    border-radius: var(--border-radius);
-    border: var(--firstBorder);
-    box-shadow: 0px 0px 18px var(--firstShadow);
-    padding: 5px 0;
-    gap: 3px;
-    min-height: 50px;
-    left: 0rem;
-    right: 0rem; */
-}
-
 .searchResults .lcontrols {
     width: auto;
 }
@@ -135,9 +126,11 @@
 } */
 
 .searchResults>div:nth-child(2) {
-    margin-top: 60px;
+    margin-top: 25px;
 }
-
+.searchResults>div:nth-child(n+12) {
+    display: flex;
+}
 .searchResults a {
     overflow: visible !important;
     width: 100%;
@@ -191,18 +184,6 @@
     border: 1px solid #9a9a9a;
 } */
 
-.resControls {
-    /* display: flex;
-    gap: 5px;
-    padding: 10px 0;
-    border: 1px dashed var(--firstBorderColor);
-    margin-bottom: 5px;
-    justify-content: space-between;
-    position: fixed;
-    width: 96%;
-    background-color: var(--mainColor);
-    align-items: center; */
-}
 .loaderWrapper {
     display: flex;
     width: -webkit-fill-available;
@@ -334,35 +315,15 @@
     }
 
     .searchResults {
-        /* flex-direction: column; */
-        /* margin: 12% 30%; */
-        /* position: fixed;
-        max-width: 1023px;
         overflow-y: auto;
-        display: flex;
-        z-index: 6;
-        align-items: center;
-        top: 58px;
-        background: var(--color-primary);
-        max-height: 550px;
-        border-radius: var(--border-radius);
-        border: var(--firstBorder);
-        box-shadow: 0px 0px 18px var(--firstShadow);
-        padding: 5px 0;
-        gap: 3px;
-        min-height: 69px; */
+        max-height: 60dvh;
     }
     .resControls {
-        /* display: flex;
-        gap: 5px;
-        padding: 10px 0;
-        border: 1px dashed var(--firstBorderColor);
-        margin-bottom: 5px;
+        display: flex;
         justify-content: space-between;
-        position: fixed;
-        max-width: 994px;
-        background-color: var(--mainColor);
-        align-items: center; */
+        align-items: center;
+        border-bottom: 1px dashed var(--firstBorderColor);
+        padding: 8px 0;
     }
     .cleanButton {
         background-color: var(--color-secondary);

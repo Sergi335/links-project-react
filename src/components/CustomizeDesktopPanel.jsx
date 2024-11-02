@@ -113,7 +113,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         miniature.classList.remove(`${styles.optionSelected}`)
       }
     })
-    const element = document.querySelector('.root')
+    const element = document.querySelector('#root')
     element.setAttribute('data-background', 'color')
     element.style.background = ''
     // element.style.backgroundSize = 'initial'

@@ -17,6 +17,8 @@ export default function Columna ({ data, children, childCount, context }) {
   const columna = data.columna || data.activeColumn
   const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
+  const [localOpenColumn, setLocalOpenColumn] = useState(false)
+  const [classNames, setClassNames] = useState('')
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
@@ -35,34 +37,10 @@ export default function Columna ({ data, children, childCount, context }) {
   const linkLoader = useLinksStore(state => state.linkLoader)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const stylesOnHeader = { height: 'auto' }
-  const setOpenedColumns = usePreferencesStore(state => state.setOpenedColumns)
-  const openedColumns = usePreferencesStore(state => state.openedColumns)
+  const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
 
   const handleChangeColumnHeight = (e) => {
-    const opener = e.currentTarget
-    const column = opener.parentNode.parentNode.parentNode
-    const openColumn = () => {
-      const newState = [...openedColumns]
-      column.classList.toggle(styles.colOpen)
-      opener.childNodes[0].classList.toggle(styles.rotate)
-      if (column.classList.contains(styles.colOpen)) {
-        // setTimeout(() => {
-        //   column.style.maxHeight = `${maxHeight}px`
-        // }, 100)
-        newState.push(columna._id)
-        setOpenedColumns(newState)
-        if (spanCountRef.current) spanCountRef.current.style.display = 'none'
-      } else {
-        // column.style.maxHeight = ''
-        setTimeout(() => {
-          const index = newState.findIndex(id => id === columna._id)
-          newState.splice(index, 1)
-          setOpenedColumns(newState)
-          if (spanCountRef.current) spanCountRef.current.style.display = 'inline'
-        }, 300)
-      }
-    }
-    openColumn()
+    setLocalOpenColumn(prev => !prev)
   }
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
@@ -130,12 +108,30 @@ export default function Columna ({ data, children, childCount, context }) {
       }
     }
   }
+
+  useEffect(() => {
+    setLocalOpenColumn(globalOpenColumns)
+  }, [globalOpenColumns])
+
+  useEffect(() => {
+    if (context === 'singlecol') {
+      setClassNames(`${styles.columnWrapper} colOpen ${styles.scPage}`)
+      return
+    }
+    if (localOpenColumn) {
+      setClassNames(`${styles.columnWrapper} colOpen`)
+      return
+    }
+    setLocalOpenColumn(false)
+    setClassNames(`${styles.columnWrapper}`)
+  }, [localOpenColumn])
+
   useEffect(() => {
     setSelectModeGlobal(false)
     setSelectedLinks([])
     setColumnSelectModeId([])
-    setOpenedColumns([])
   }, [desktopName])
+
   const {
     setNodeRef,
     attributes,
@@ -164,7 +160,7 @@ export default function Columna ({ data, children, childCount, context }) {
   return (
     <>
     {/* Debe tener la misma altura y ancho que cuando esta sin arrastrar para no tener problemas */}
-      <div ref={setNodeRef} id={columna._id} style={style} className={context === 'singlecol' ? `${styles.columnWrapper} ${styles.colOpen} ${styles.scPage}` : styles.columnWrapper} data-order={columna.order}>
+      <div ref={setNodeRef} id={columna._id} style={style} className={classNames} data-order={columna.order}>
         <div
           ref={colRef}
           className={`${styles.column} column`}
@@ -179,16 +175,16 @@ export default function Columna ({ data, children, childCount, context }) {
                   <h2 onClick={() => setEditMode(true) } ref={headRef} style={linkLoader ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
                   {
-                    childCount > 10 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 10}`}</span>
+                    childCount > 7 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 7}`}</span>
                   }
                   </h2>
                   {
-                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 10 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
+                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
                   }
                   {
                     context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
                       {
-                        childCount > 10 && <ArrowDown className='uiIcon_small'/>
+                        childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>
                       }
                     </div>
                   }

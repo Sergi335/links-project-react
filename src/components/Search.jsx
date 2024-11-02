@@ -21,14 +21,10 @@ export default function Search () {
   const searchBoxVisible = useFormsStore(state => state.searchBoxVisible)
   const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
   useHideForms({ form: boxRef.current, setFormVisible: setSearchBoxVisible })
-  // console.log('render')
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     console.log('entramos')
-    // if (search.length < 3) {
-    //   setError('Introduce al menos 3 carcateres')
-    // }
   }
   const handleChange = useCallback(
     debounce(async (search) => {
@@ -97,11 +93,11 @@ export default function Search () {
                 autoComplete='off'
                 minLength={3}
               />
-              {
+              {/* {
                 search.length > 0 && <button type='button' className={styles.cleanButton} onClick={() => updateSearch('')}>
                                       <CloseIcon className='uiIcon'/>
                                      </button>
-              }
+              } */}
               {
                 media.matches
                   ? <button type='button' className={styles.searchButton} onClick={handleShowMobileSearch}>

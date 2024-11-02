@@ -14,31 +14,39 @@
 .columnWrapper {
     overflow: hidden;
     border-radius: var(--border-radius);
-    /* border: var(--firstBorder); */
+    border: 1px solid transparent;
     display: flex;
     /* border-left: 1px solid var(--accentColor); */
     /* transition: max-height .5s ease-in-out, box-shadow .5s ease-in, transform 250ms cubic-bezier(0.25, 1, 0.5, 1); */
     height: 317px;
     /* background-color: var(--mainColor); */
-    backdrop-filter: blur(42px);
+    /* backdrop-filter: blur(42px); */
     transition: var(--columns_transition);
     /* width: 325px; */
     /* margin-bottom: 43px; */
+    z-index: 1;
+}
+.columnWrapper:hover {
+    border: 1px dashed var(--firstBorderColor);
 }
 [data-background='image'] .columnWrapper {
     background-color: var(--color-primary);
 }
-[data-background='color'] .columnWrapper {
+/* [data-background='color'] .columnWrapper {
     background-color: var(--color-medium);
-}
+} */
 .colOpen {
     height: auto;
 }
-
+.colOpen .linkCount {
+    display: none;
+}
 .opener {
     display: flex;
 }
-
+.opener svg {
+    transform: rotate(90deg);
+}
 .selector {
     display: flex;
     margin-right: 11px;
@@ -122,8 +130,8 @@ input[type='text'].editInput:focus {
     background: var(--inputBackgroundColor);
 }
 
-.rotate {
-    transform: rotate(180deg);
+.opener svg.rotate {
+    transform: rotate(0deg);
     /* view-transition-name: column-height; 
     No puede haber dos animaciones con el mismo nombre
     */

@@ -3,9 +3,12 @@
     top: 0;
     display: flex;
     padding: 10px;
-    z-index: 1;
+    z-index: 2;
     background-color: var(--color-primary);
+    grid-area: toolbar;
+    /* Add height for larger screens directly */
 }
+
 .mobile_menu {
     width: 24px;
     height: 24px;
@@ -16,11 +19,11 @@
     padding: 10px 10px 9px;
     background-color: transparent;
     border-radius: 0;
-
 }
 
 .logo_container {
     display: flex;
+    padding-bottom: 10px;
 }
 
 .icon_clicked::before {
@@ -33,9 +36,9 @@
     background-color: var(--accentColor);
     border-radius: 50%;
 }
+
 .logo {
     display: flex;
-    /* gap: 10px; */
     align-items: center;
     border-radius: var(--button-radius);
     padding: 0 5px;
@@ -55,24 +58,34 @@
     text-align: left;
     font-family: K2d;
     color: var(--accentColor);
+    font-weight: 700;
+    font-size: 1.25rem;
 }
+
 .deskTitle {
     font-size: 14px;
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
+    /* overflow: hidden; */
+    color: var(--color-medium);
 }
+
 .sideButtons {
     background-color: transparent;
     padding: 8px;
 }
+
 .sideButtons:hover {
     background-color: var(--hover-color-primary);
 }
+
 .deskInfos_controls {
     display: flex;
     margin-left: 28px;
     gap: 0;
+    /* Add styles for larger screens directly */
+    /* flex-direction: column; */
+    align-items: center;
 }
 
 .next {
@@ -89,19 +102,11 @@
     height: 23px;
 }
 
-/* .logoText::before {
-    content: " ";
-    width: 1px;
-    height: 24px;
-    position: absolute;
-    transform: translateX(-10px);
-    top: 25%;
-    background-color: var(--firstBorderColor);
-} */
 .settings {
     border-radius: var(--button-radius);
     width: 36px;
     height: 36px;
+
     &:hover {
         background-color: var(--hover-color-primary);
 
@@ -114,7 +119,7 @@
         }
     }
 }
-/* Bloque: sidebar_inner_controls */
+
 .sidebar_inner_controls {
     position: relative;
     background-color: var(--color-primary);
@@ -134,7 +139,7 @@
     width: max-content;
     border: var(--firstBorder);
 
-    & > span {
+    &>span {
         cursor: pointer;
         font-size: 14px;
         display: flex;
@@ -154,12 +159,11 @@
 
         svg {
             width: 20px;
-            /* Ajuste del tamaño del icono */
             height: 20px;
         }
     }
 }
-/* Bloque: sidebar_controls */
+
 .sidebar_controls {
     display: flex;
     flex-direction: row-reverse;
@@ -173,12 +177,14 @@
         vertical-align: middle;
     }
 }
+
 @media (min-width: 768px) {
     .header {
         left: 2rem;
         right: 2rem;
         border-radius: var(--border-radius);
     }
+
     .headLeft {
         grid-area: headLeft;
         display: flex;
@@ -188,61 +194,58 @@
         padding-left: 5px;
         height: 43px;
         flex-grow: 1;
-        /* background-color: var(--mainColor); */
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
     }
+
     .headCenter {
         border-radius: var(--border-radius);
         border: var(--firstBorder);
     }
+
     .logo {
         display: flex;
-        /* gap: 10px; */
         align-items: center;
         padding: 0 15px;
         height: -webkit-fill-available;
         transition: background-color .3s ease-out;
-        /* font-size: 14px; */
     }
 }
 
 @media (min-width: 1280px) {
     .sideControl {
-        position: fixed;
-        top: 0;
-        height: calc(100dvh - 20px);
-        display: flex;
+        /* Already defined above */
         flex-direction: column;
-        padding: 10px;
         overflow-x: visible;
         background-color: transparent;
+        /* position: fixed; */
+        height: calc(100dvh - 20px);
+        z-index: initial;
+        /* Ensure it stays fixed */
     }
+
     .deskInfos_controls {
-        display: flex;
-        align-items: flex-start;
-        margin-left: 28px;
-        /* gap: 8px; */
         flex-direction: column;
+        align-items: flex-start;
+        margin-top: -87px;
     }
+
     .mobile_menu {
         display: none;
     }
+
     .deskTitle {
-        font-size: 14px;
-        margin-top: 0;
-        margin-bottom: 30px;
+        font-size: 6rem;
+        margin: 0;
         position: relative;
-        top: -6px;
-        left: 29px;
-    }
-    .logo_container {
-        /* height: var(--navBarContentHeight); */
-        display: flex;
-        padding-top: 6px;
-    }
-    .deskInfos_controls {
-        align-items: flex-start;
+        top: 30px;
+        left: 100px;
+        font-weight: 900;
+        font-family: system-ui;
+        text-transform: uppercase;
+        font-style: italic;
     }
 
+    /* .logo_container {
+    } */
 }

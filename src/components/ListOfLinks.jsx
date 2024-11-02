@@ -38,7 +38,7 @@ export default function ListOfLinks () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
-  const openedColumns = usePreferencesStore(state => state.openedColumns)
+  // const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
   // console.log('🚀 ~ ListOfLinks ~ openedColumns:', openedColumns)
   // const isDesktop = windowSize.width > 1536
 
@@ -101,21 +101,21 @@ export default function ListOfLinks () {
                         <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length}>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
-                              !activeColumn && !openedColumns.includes(columna._id) &&// Es esto pero hay problemas si se quita, deberia poder activarse lo de abajo
+                              !activeColumn &&
                                 desktopLinks.map((link) =>
                                   link.idpanel === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
                                     : null
                                 ).filter(link => link !== null)
                             }
-                            {
+                            {/* {
                               // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col
-                              !activeColumn && openedColumns && openedColumns.includes(columna._id) && desktopLinks.map((link) =>
+                              !activeColumn && globalOpenColumns && desktopLinks.map((link) =>
                                 link.idpanel === columna._id
                                   ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName}/>)
                                   : null
                               ).filter(link => link !== null)
-                            }
+                            } */}
                             {
                               linkLoader && columna._id === columnLoaderTarget?.id && (numberOfLinkLoaders.map((item, index) => (
                                 <LinkLoader key={index} />

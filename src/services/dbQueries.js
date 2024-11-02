@@ -328,7 +328,7 @@ export async function changeBackgroundImage (event) {
     })
       .then(res => res.text())
       .then(data => {
-        const element = document.querySelector('.root')
+        const element = document.querySelector('#root')
         element.setAttribute('data-background', 'image')
         element.style.background = `url(${data})`
         element.style.backgroundSize = 'cover'
