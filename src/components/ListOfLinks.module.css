@@ -1,9 +1,6 @@
 .listOfLinks {
-    /* min-width: auto; */
     display: flex;
-    flex-wrap: wrap;
-    /* margin-top: calc(2rem + 45px); */
-    /* gap: 40px; */
+    flex-direction: column;
     flex: 1;
     grid-area: main;
 
@@ -12,10 +9,10 @@
 .mainContent {
     display: grid;
     gap: 16px;
-    max-width: 80%;
+    max-width: 69%;
     padding: 32px;
     margin: 0 auto;
-    margin-top: 66px;
+    margin-top: 70px;
     place-content: center;
 }
 
@@ -27,11 +24,10 @@
     max-width: 100%;
     /* background-color: var(--color-secondary); */
 }
-/* .spMainContent.mainContent {
-    margin-top: -56px;
-    min-height: calc(100dvh + 56px);
-    width: 50%;
-} */
+.spMainContent {
+    display: grid;
+    gap: 16px;  
+}
 @media (min-width: 1280px) {
 
     /* .listOfLinks {

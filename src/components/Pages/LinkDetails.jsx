@@ -15,7 +15,9 @@ export default function LinkDetails ({ linkid }) {
   const [badgeClass, setBadgeClass] = useState()
   const [maximizeVideo, setMaximizeVideo] = useState(false)
   const [notesState, setNotesState] = useState()
+
   const linkId = useParams()
+  console.log('🚀 ~ LinkDetails ~ linkId:', linkId)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === actualDesktop).toSorted((a, b) => a.orden - b.orden) // memo?

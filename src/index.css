@@ -52,7 +52,8 @@
   --secondColor: #f9f9f9;
   --thirdColor: white;
   --firstBorder: 1px solid #e7e7e7;
-  --firstBorderColor: #e7e7e7;
+  --firstBorderColor: var(--color-slate-200);
+  --secondBorderColor: var(--color-slate-300);
   --firstColorOpacity: rgb(255 255 255 / 89%);
   --buttonColor: #f6f6f6;
   --buttonHoverColor: #d6d6d6;
@@ -63,7 +64,6 @@
   --homeH2Color: coral;
   --homeFooterColor: #f1f1f1;
   --sidePanelsBgColor: white;
-  /* --inputBackgroundColor: #f3f3f3c9; */
   --inputBackgroundColor: var(--color-secondary);
   --linkFontWeight: 600;
 
@@ -95,7 +95,8 @@ html.dark {
   --secondColor: #242424;
   --thirdColor: #1e1e1e;
   --firstBorder: 1px solid #323232cc;
-  --firstBorderColor: #323232cc;
+  --firstBorderColor: var(--color-slate-700);
+  --secondBorderColor: var(--color-slate-600);
   --firstColorOpacity: #292929e3;
   --buttonColor: var(--color-slate-700);
   --buttonHoverColor: #353434;
@@ -137,6 +138,15 @@ body {
   flex-direction: column;
   display: flex;
   margin: 0;
+  width: 100%;
+}
+.grid {
+  display: grid;
+  grid-template-areas: "toolbar favopt2 favopt2"
+      "toolbar main favopt1";
+  grid-template-columns: 100px 1fr 80px;
+  grid-template-rows: 60px 1fr;
+  width: 100%;
 }
 .pinned {
   width: clamp(300px, 50%, 800px);
@@ -424,20 +434,4 @@ favopt1 {
   .pinned {
     width: 225px;
   }
-  #root {
-    display: grid;
-    grid-template-areas: 
-      "sidebar toolbar favopt2 favopt2"
-      "sidebar toolbar main favopt1";
-    grid-template-columns: 225px 100px 1fr 80px;
-    grid-template-rows: 60px 1fr;
-    width: 100%;
-  }
-  /* .newSection {
-    width: 21.8%;
-    left: 390px;
-  }
-  .deskForm {
-    min-width: 525px;
-  } */
 }

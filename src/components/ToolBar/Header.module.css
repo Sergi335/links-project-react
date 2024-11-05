@@ -6,7 +6,7 @@
     z-index: 2;
     background-color: var(--color-primary);
     grid-area: toolbar;
-    /* Add height for larger screens directly */
+    align-items: center;
 }
 
 .mobile_menu {
@@ -66,13 +66,14 @@
     font-size: 14px;
     white-space: nowrap;
     text-overflow: ellipsis;
-    /* overflow: hidden; */
+    overflow: hidden;
     color: var(--color-medium);
 }
 
 .sideButtons {
-    background-color: transparent;
+    background-color: var(--color-primary);
     padding: 8px;
+    border: 1px solid var(--firstBorderColor);
 }
 
 .sideButtons:hover {
@@ -81,8 +82,8 @@
 
 .deskInfos_controls {
     display: flex;
-    margin-left: 28px;
-    gap: 0;
+    /* margin-left: 28px; */
+    gap: 4px;
     /* Add styles for larger screens directly */
     /* flex-direction: column; */
     align-items: center;
@@ -227,7 +228,7 @@
     .deskInfos_controls {
         flex-direction: column;
         align-items: flex-start;
-        margin-top: -87px;
+        margin-top: 62px;
     }
 
     .mobile_menu {
@@ -237,13 +238,16 @@
     .deskTitle {
         font-size: 6rem;
         margin: 0;
-        position: relative;
-        top: 30px;
-        left: 100px;
+        /* position: relative;
+        top: 18px;
+        left: 500px; */
         font-weight: 900;
         font-family: system-ui;
         text-transform: uppercase;
         font-style: italic;
+        position: fixed;
+        padding-left: 6px;
+        line-height: 1;
     }
 
     /* .logo_container {

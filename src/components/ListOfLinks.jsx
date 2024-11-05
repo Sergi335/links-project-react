@@ -17,6 +17,7 @@ import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 // import SideInfo from './SideInfo'
 import CustomLink from './customlink'
+import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 // import Nav from './nav'
 
 export default function ListOfLinks () {
@@ -74,6 +75,7 @@ export default function ListOfLinks () {
   return (
     <main className={styles.listOfLinks}>
       {/* {isDesktop && <SideInfo environment={'listoflinks'}/>} */}
+      <DesktopNameDisplay />
       {
         globalLoading
           ? <div className={styles.mainContentWrapper}><div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>

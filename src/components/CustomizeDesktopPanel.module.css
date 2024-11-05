@@ -1,4 +1,5 @@
 .customizePanel {
+  top: 0;
   right: 0;
   left: initial;
   max-width: min-content;

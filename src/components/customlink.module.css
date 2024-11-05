@@ -107,7 +107,7 @@
   letter-spacing: .2px;
 
 }
-.link:nth-of-type(n+12) {
+.link:nth-of-type(n+10) {
   display: none;
 }
 

@@ -44,10 +44,12 @@ export default function AppLayout () {
   return (
     <>
       <SideBar />
-      {id === undefined && <ToolBar />}
-      {id === undefined && <Bookmarks />}
-      <SideBarInfo />
-      <Outlet />
+      <div id="grid" className="grid">
+        {id === undefined && <ToolBar />}
+        <Bookmarks />
+        <SideBarInfo />
+        <Outlet />
+      </div>
       <ScrollToTop />
     </>
   )

@@ -1,7 +1,7 @@
 import styles from '../components/SideBar/SideBar.module.css'
 export const constants = {
-  // BASE_API_URL: 'http://localhost:3001',
-  BASE_API_URL: 'https://zenmarks-api.onrender.com',
+  BASE_API_URL: 'http://localhost:3001',
+  // BASE_API_URL: 'https://zenmarks-api.onrender.com',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -45,7 +45,7 @@ export const constants = {
       }
     },
     green: {
-      color: 'hsl(150, 100%, 40%)',
+      color: 'hsl(150deg 6.38% 44.55%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.green.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
@@ -142,10 +142,10 @@ export const constants = {
   },
   COLUMNS_COUNT: {
     1: '76ch',
-    2: 'repeat(auto-fill, minmax(826px, 1fr))',
-    3: 'repeat(auto-fill, minmax(537px, 1fr))',
-    4: 'repeat(auto-fill, minmax(393px, 1fr))',
-    5: 'repeat(auto-fill, minmax(240px, 1fr))'
+    2: 'repeat(auto-fill, minmax(760px, 1fr))',
+    3: 'repeat(auto-fill, minmax(500px, 1fr))',
+    4: 'repeat(auto-fill, minmax(320px, 1fr))',
+    5: 'repeat(auto-fill, minmax(295px, 1fr))'
   },
   DEFAULT_BACKGROUNDS: {
     light: {

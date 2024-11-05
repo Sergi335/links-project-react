@@ -63,7 +63,7 @@ export async function addLink (body) {
     })
 }
 // EditlinkForm, linkDetails -- Validar datos
-export async function editLink ({ id, name, URL, description, notes, bookmark }) {
+export async function editLink ({ id, name, URL, description, notes, bookmark, bookmarkOrder }) {
   return fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
     ...constants.FETCH_OPTIONS,
@@ -75,9 +75,25 @@ export async function editLink ({ id, name, URL, description, notes, bookmark })
         description,
         imgURL: URL ? constants.BASE_LINK_IMG_URL(URL) : undefined,
         notes,
-        bookmark
+        bookmark,
+        bookmarkOrder
       }
     })
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    })
+}
+export async function setBookMarksOrder ({ links }) {
+  return fetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
+    method: 'PATCH',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({ links })
   })
     .then(res => res.json())
     .then(data => {

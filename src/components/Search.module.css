@@ -10,6 +10,8 @@
     border-radius: var(--button-radius);
     min-height: 115px;
     z-index: 1;
+    box-shadow: 0px 1px 15px var(--firstShadow);
+    border: 1px dashed var(--firstBorderColor);
 }
 .flex {
     display: flex;

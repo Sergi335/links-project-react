@@ -17,13 +17,12 @@ export default function DesktopNameDisplay () {
     desktopDisplayName = 'Profile'
   }
   useTitle({ title: desktopDisplayName })
-  // console.log('🚀 ~ DesktopNameDisplay ~ desktopDisplayName:', desktopDisplayName)
 
   return (
             <>
                 {
                     desktopDisplayName
-                      ? (<p className={styles.deskTitle} id="deskTitle">{desktopDisplayName}</p>)
+                      ? (<h1 className={styles.deskTitle} id="deskTitle">{desktopDisplayName}</h1>)
                       : (<NameLoader className={styles.deskTitle}/>)
 
                 }

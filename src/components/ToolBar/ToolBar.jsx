@@ -8,7 +8,6 @@ import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
-import DesktopNameDisplay from './DesktopNameDisplay'
 import styles from './Header.module.css'
 
 export default function ToolBar () {
@@ -33,7 +32,7 @@ export default function ToolBar () {
   const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
   // const navigate = useNavigate()
   const [newColumnId, setNewColumnId] = useState(null) // Added line
-  console.log(location.pathname)
+  // console.log(location.pathname)
 
   const handleAddColumn = async () => {
     if (desktop === undefined) {
@@ -85,8 +84,6 @@ export default function ToolBar () {
   }
   return (
     <aside className={styles.sideControl}>
-
-      <DesktopNameDisplay />
     {
 
         <div className={styles.deskInfos_controls}>

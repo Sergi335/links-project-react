@@ -64,7 +64,7 @@ export default function SingleColumnPage () {
             </div></div>
           : (
             <div id='spMainContentWrapper' className={styles.mainContentWrapper}>
-            <div id='maincontent' className={`${styles.mainContent} ${styles.spMainContent}`} style={{ gridTemplateColumns: styleOfColumns }}>
+            <div id='maincontent' className={styles.spMainContent} style={{ gridTemplateColumns: styleOfColumns }}>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
@@ -115,6 +115,7 @@ export default function SingleColumnPage () {
                 document.body
               )}
             </DndContext>
+            {/* <LinkDetails linkid={desktopLinks[0]._id}/> */}
             </div>
             </div>
             )

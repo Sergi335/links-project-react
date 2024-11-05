@@ -1,8 +1,11 @@
 import { DndContext, DragOverlay, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { toast } from 'react-toastify'
+import { setBookMarksOrder } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 import styles from './Bookmarks.module.css'
 
@@ -32,22 +35,18 @@ function BookmarkItem ({ bookmark }) {
     )
   }
   return (
-    <a ref={setNodeRef} style={style} href={bookmark.URL} target='_blank' rel="noreferrer" {...attributes} {...listeners}>
+    <a ref={setNodeRef} style={style} href={bookmark.URL} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
       <img className={styles.bookmark} src={bookmark.imgURL} alt="" />
     </a>
   )
 }
 
 export default function Bookmarks () {
-  const [activeBook, setActiveBook] = useState(null)
-  const [books, setBooks] = useState([])
   const globalLinks = useGlobalStore(state => state.globalLinks)
-
-  const bookmarks = useMemo(() => globalLinks.filter(link => link.bookmark !== false), [globalLinks])
-  const bookmarksId = useMemo(() => bookmarks.map((book) => book._id), [bookmarks, globalLinks])
-  useEffect(() => {
-    setBooks(bookmarks)
-  }, [bookmarks])
+  const [books, setBooks] = useState([])
+  const [booksOrder, setBooksOrder] = useState([])
+  const [activeBook, setActiveBook] = useState(null)
+  const bookmarksId = books.map((book) => book._id)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -56,6 +55,26 @@ export default function Bookmarks () {
       }
     })
   )
+
+  // Estado Inicial
+  useEffect(() => {
+    setBooks(globalLinks.filter(link => link.bookmark !== false).toSorted((a, b) => a.bookmarkOrder - b.bookmarkOrder))
+    setBooksOrder(Array.from(new Map(globalLinks.filter(link => link.bookmark !== false).map((item, index) => [item._id, index]))))
+  }, [globalLinks])
+
+  // Detectar si se ha movido un elemento para llamar al backend
+  useEffect(() => {
+    if (activeBook) {
+      // console.log(`Has movido un elemento: ${activeBook.name}`)
+      // console.log(`El nuevo orden es: ${booksOrder}`)
+      handleSetOrder()
+    }
+  }, [booksOrder])
+
+  // Actualizar el orden cada vez que cambie books al soltar el elemento activo
+  useEffect(() => {
+    setBooksOrder(Array.from(new Map(books.map((item, index) => [item._id, index]))))
+  }, [books])
 
   const onDragStart = (event) => {
     if (event.active.data.current?.type === 'bookmark') {
@@ -81,11 +100,25 @@ export default function Bookmarks () {
       const activeIndex = books.findIndex((t) => t._id === activeId)
       const overIndex = books.findIndex((t) => t._id === overId)
       setBooks(arrayMove(books, activeIndex, overIndex))
+      // setMovedBookmark(activeBook)
     }
-    setActiveBook(null)
+    // setActiveBook(null)
   }
-  // const onDragOver = (event) => {
-  // }
+
+  const handleSetOrder = async () => {
+    const response = await setBookMarksOrder({ links: booksOrder })
+    const { hasError, message } = handleResponseErrors(response)
+    let error
+    if (response.message !== undefined) {
+      error = response.message.join('\n')
+    } else {
+      error = message
+    }
+    if (hasError) {
+      toast(error)
+      // return
+    }
+  }
   return (
     <div className={styles.bookmarks}>
       <DndContext
@@ -95,7 +128,7 @@ export default function Bookmarks () {
               onDragEnd={onDragEnd}
               // onDragOver={onDragOver}
             >
-              <SortableContext items={bookmarksId} strategy={verticalListSortingStrategy}>
+              <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
         {
             books?.length > 0
               ? (

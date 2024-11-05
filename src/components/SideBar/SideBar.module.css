@@ -12,7 +12,6 @@
     background-color: var(--color-primary);
     z-index: 2;
     overscroll-behavior: contain;
-    grid-area: sidebar;
 
     /* Para dispositivos que soportan hover (normalmente no táctiles) */
     @media (hover: hover) {

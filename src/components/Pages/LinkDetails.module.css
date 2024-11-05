@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 15px;
   flex: 1;
+  grid-area: main;
+  grid-column: span 3;
 }
 .linkDetails h3 {
   color: var(--accentColor);
