@@ -74,6 +74,7 @@
     background-color: var(--color-primary);
     padding: 8px;
     border: 1px solid var(--firstBorderColor);
+    border-radius: 2px;
 }
 
 .sideButtons:hover {
