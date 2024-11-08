@@ -2,11 +2,10 @@
     position: sticky;
     top: 0;
     display: flex;
-    padding: 10px;
     z-index: 2;
     background-color: var(--color-primary);
     grid-area: toolbar;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .mobile_menu {
@@ -30,11 +29,10 @@
     content: '';
     display: block;
     width: 5px;
-    height: 5px;
+    height: 36px;
     position: absolute;
-    left: 25px;
+    left: -2px;
     background-color: var(--accentColor);
-    border-radius: 50%;
 }
 
 .logo {
@@ -69,13 +67,20 @@
     text-overflow: ellipsis;
     overflow: hidden;
     color: var(--color-medium);
+    display: none;
 }
 
 .sideButtons {
     background-color: var(--color-primary);
     padding: 8px;
-    border: 1px solid var(--firstBorderColor);
-    border-radius: 2px;
+    /* border: 1px solid var(--firstBorderColor); */
+    border-radius: 0;
+}
+.sideButtons:nth-child(1) {
+    border-top-right-radius: 11px;
+}
+.sideButtons:nth-child(6) {
+    border-bottom-right-radius: 11px;
 }
 
 .sideButtons:hover {
@@ -85,10 +90,10 @@
 .deskInfos_controls {
     display: flex;
     /* margin-left: 28px; */
-    gap: 4px;
+    /* gap: 4px; */
     /* Add styles for larger screens directly */
     /* flex-direction: column; */
-    align-items: center;
+    /* align-items: center; */
 }
 
 .next {
@@ -231,8 +236,14 @@
 
     .deskInfos_controls {
         flex-direction: column;
-        align-items: flex-start;
-        margin-top: 62px;
+        /* align-items: flex-start; */
+        margin-top: 52px;
+        position: relative;
+        left: -1px;
+        gap: 0;
+        box-shadow: 1px 0px 8px var(--firstShadow);
+        border-top-right-radius: 11px;
+        border-bottom-right-radius: 11px;
     }
 
     .mobile_menu {

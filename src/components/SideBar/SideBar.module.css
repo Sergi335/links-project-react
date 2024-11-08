@@ -53,7 +53,7 @@
     p {
         margin: 0;
         font-size: 15px;
-        line-height: 1.4;
+        line-height: 1;
         color: var(--text-color-secondary);
         font-weight: 600;
 
@@ -78,6 +78,10 @@
         display: flex;
         align-items: flex-end;
         flex-direction: column;
+
+        & svg {
+            width: 14px;
+        }
     }
 }
 
@@ -87,6 +91,7 @@
     flex-direction: row-reverse;
     justify-content: center;
     padding-block: 12px;
+    align-items: center;
 
 }
 
@@ -125,7 +130,7 @@
 
 /* Bloque: settingsImg */
 .settings_image_link {
-    padding: 4px 10px;
+    padding: 4px 4px 4px 10px;
     display: flex;
     gap: 15px;
     transition: background-color 0.3s ease-out, filter 0.3s ease-out;
@@ -135,8 +140,8 @@
         filter: drop-shadow(0px 0px 20px hsl(150deg 6.38% 44.55%));
     }
     img {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         object-fit: cover;
         vertical-align: middle;

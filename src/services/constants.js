@@ -1,7 +1,8 @@
 import styles from '../components/SideBar/SideBar.module.css'
 export const constants = {
-  BASE_API_URL: 'http://localhost:3001',
+  // BASE_API_URL: 'http://localhost:3001',
   // BASE_API_URL: 'https://zenmarks-api.onrender.com',
+  BASE_API_URL: import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://zenmarks-api.onrender.com',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -145,7 +146,7 @@ export const constants = {
     2: 'repeat(auto-fill, minmax(760px, 1fr))',
     3: 'repeat(auto-fill, minmax(500px, 1fr))',
     4: 'repeat(auto-fill, minmax(320px, 1fr))',
-    5: 'repeat(auto-fill, minmax(295px, 1fr))'
+    5: 'repeat(auto-fill, minmax(269px, 1fr))'
   },
   DEFAULT_BACKGROUNDS: {
     light: {

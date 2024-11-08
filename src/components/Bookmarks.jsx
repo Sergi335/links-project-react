@@ -48,6 +48,8 @@ export default function Bookmarks () {
   const [activeBook, setActiveBook] = useState(null)
   const bookmarksId = books.map((book) => book._id)
 
+  // console.log(import.meta.env.MODE)
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

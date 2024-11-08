@@ -9,25 +9,29 @@
 .mainContent {
     display: grid;
     gap: 16px;
-    max-width: 69%;
+    /* max-width: 69%;
     padding: 32px;
     margin: 0 auto;
     margin-top: 70px;
-    place-content: center;
+    place-content: center; */
 }
 
 .mainContentWrapper {
-    flex: 1;
-    border-radius: 16px;
     margin: 16px;
-    min-height: 100dvh;
+    /* min-height: 100dvh; */
     max-width: 100%;
-    /* background-color: var(--color-secondary); */
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, var(--color-primary) 5px, var(--color-primary) 6px);
+    background-color: var(--color-medium);
+    padding: 16px;
+    border-radius: 7px;
+    border: 1px solid hsl(from var(--accentColor) h s l / 30%);
 }
+
 .spMainContent {
     display: grid;
-    gap: 16px;  
+    gap: 16px;
 }
+
 @media (min-width: 1280px) {
 
     /* .listOfLinks {

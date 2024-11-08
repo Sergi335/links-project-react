@@ -44,9 +44,9 @@ export default function SideBarControls () {
           <div className={styles.settings} onClick={handlePinPanel}>
             <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
           </div>
-          <div className={styles.settings} onClick={handleChangeTheme}>
+          <button className={`${styles.settings} ${styles.settings_theme_changer}`} onClick={handleChangeTheme}>
             <ThemeChangeIcon />
-          </div>
+          </button>
           <div className={styles.settings} onClick={handleNavigate}>
             <ReadingListIcon />
           </div>
