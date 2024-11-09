@@ -7,7 +7,7 @@ import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
+import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, PinPanelIcon, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
 import styles from './Header.module.css'
 
 export default function ToolBar () {
@@ -66,8 +66,14 @@ export default function ToolBar () {
   }, [newColumnId])
   const handleHideColumns = (e) => {
     e.currentTarget.classList.toggle(styles.icon_clicked)
-    const container = document.getElementById('maincontent')
-    container.style.display === 'none' ? container.style.display = 'grid' : container.style.display = 'none'
+    const containerSp = document.getElementById('spMainContentWrapper')
+    if (containerSp) {
+      containerSp.style.display === 'none' ? containerSp.style.display = 'grid' : containerSp.style.display = 'none'
+    }
+    const container = document.getElementById('mainContentWrapper')
+    if (container) {
+      container.style.display === 'none' ? container.style.display = 'grid' : container.style.display = 'none'
+    }
   }
   const handleExpandAllColumns = (e) => {
     e.currentTarget.classList.toggle(styles.icon_clicked)
@@ -81,6 +87,13 @@ export default function ToolBar () {
   }
   const handleShowDeleteDesktop = () => {
     setDeleteConfFormVisible(!deleteConfFormVisible)
+  }
+  // Al recargar la página se queda con el panel abierto
+  const handlePinPanel = () => {
+    const panel = document.getElementById('sidebar')
+    const icon = document.getElementById('pin_icon')
+    icon.classList.toggle(styles.icon_pinned)
+    panel.classList.toggle('pinned')
   }
   return (
     <aside className={styles.sideControl}>
@@ -137,6 +150,9 @@ export default function ToolBar () {
             </div>
             )
           }
+          <button className={styles.sideButtons} onClick={handlePinPanel}>
+            <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
+          </button>
 
         </div>
 

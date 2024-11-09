@@ -42,9 +42,7 @@
 /* Bloque: sidebarinfo */
 .sidebar_info {
     display: flex;
-    padding: 0 20px;
-    grid-area: favopt2;
-    justify-self: flex-end;
+    padding: 0;
     align-items: center;
     gap: 2px;
     position: sticky;
@@ -72,8 +70,10 @@
         display: flex;
         justify-content: space-between;
         flex-direction: column;
+        margin-right: 25px;
 
     }
+
     .sidebar_info_meteo_info {
         display: flex;
         align-items: flex-end;
@@ -83,6 +83,14 @@
             width: 14px;
         }
     }
+
+    .sidebar_info_link {
+        margin-right: 25px;
+
+        &:hover {
+            color: var(--accentColor);
+        }
+    }
 }
 
 /* Bloque: sidebar_controls */
@@ -90,8 +98,10 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
-    padding-block: 12px;
+    /* padding-block: 12px; */
     align-items: center;
+    padding-left: 25px;
+    border-left: 1px solid var(--firstBorderColor);
 
 }
 
@@ -99,14 +109,13 @@
 
 /* Bloque: settings */
 .settings {
-    padding: 8px;
+    /* padding: 8px; */
     display: flex;
     gap: 15px;
     transition: background-color 0.3s ease-out, filter 0.3s ease-out;
     cursor: pointer;
 
     &:hover {
-        background-color: var(--hover-color-primary);
 
         >svg {
             filter: drop-shadow(0 0 2px var(--accentColor));
@@ -137,8 +146,9 @@
     cursor: pointer;
 
     &:hover {
-        filter: drop-shadow(0px 0px 20px hsl(150deg 6.38% 44.55%));
+        filter: drop-shadow(0px 0px 20px var(--accentColor));
     }
+
     img {
         width: 40px;
         height: 40px;
@@ -151,11 +161,16 @@
 /* Bloque Nav */
 .nav {
     /* flex: 1; */
-    border-block: var(--firstBorder);
+    /* border-block: var(--firstBorder); */
     overflow-y: auto;
 
     & ul {
         padding: 0;
+    }
+
+    .nav_first_level_ul {
+        padding-top: 64px;
+        margin: 0;
     }
 }
 
@@ -163,8 +178,8 @@
 .nav ul li {
     >a {
         font-size: .875rem;
-        padding: 7px 10px;
-        color: var(--text-color-primary);
+        /* padding: 7px 10px; */
+        /* color: var(--text-color-primary); */
         text-decoration: none;
         overflow: hidden;
         white-space: nowrap;
@@ -176,7 +191,8 @@
         gap: 8px;
 
         &:hover {
-            background-color: var(--hover-color-primary);
+            /* background-color: var(--hover-color-primary); */
+            color: var(--accentColor);
             cursor: pointer;
 
             .plus_icon {
@@ -197,6 +213,7 @@
         &.show {
             height: fit-content;
         }
+
         li {
             margin-bottom: 5px;
         }
@@ -284,10 +301,6 @@ a.active:hover {
     background-color: var(--color-primary) !important;
 }
 
-.icon_pinned {
-    transform: rotate(-45deg);
-}
-
 @media (min-width: 1280px) {
     .sidebar {
         position: sticky;
@@ -298,11 +311,11 @@ a.active:hover {
 
     .nav {
         flex: 1;
-        border-top: var(--firstBorder);
+        /* border-top: var(--firstBorder); */
         max-height: calc(100dvh - 20px);
         overflow: hidden;
 
-        ul {
+        >ul {
             padding: 0;
             /* height: var(--nav-height); */
             /* overflow-y: auto; */

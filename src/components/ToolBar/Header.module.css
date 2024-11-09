@@ -1,6 +1,6 @@
 .sideControl {
     position: sticky;
-    top: 0;
+    top: 60px;
     display: flex;
     z-index: 2;
     background-color: var(--color-primary);
@@ -22,7 +22,6 @@
 
 .logo_container {
     display: flex;
-    padding-bottom: 10px;
 }
 
 .icon_clicked::before {
@@ -56,9 +55,8 @@
 .logoText {
     text-align: left;
     font-family: K2d;
-    color: var(--accentColor);
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .deskTitle {
@@ -79,14 +77,17 @@
 .sideButtons:nth-child(1) {
     border-top-right-radius: 11px;
 }
-.sideButtons:nth-child(6) {
+/*Cuando hay cinco¿?*/
+.sideButtons:nth-child(7) {
     border-bottom-right-radius: 11px;
 }
 
 .sideButtons:hover {
     background-color: var(--hover-color-primary);
 }
-
+.icon_pinned {
+    transform: rotate(-45deg);
+}
 .deskInfos_controls {
     display: flex;
     /* margin-left: 28px; */
@@ -111,7 +112,7 @@
 }
 
 .settings {
-    border-radius: var(--button-radius);
+    /* border-radius: var(--button-radius); */
     width: 38px;
     height: 38px;
 
@@ -215,7 +216,6 @@
     .logo {
         display: flex;
         align-items: center;
-        padding: 0 15px;
         height: -webkit-fill-available;
         height: -moz-available;
         transition: background-color .3s ease-out;
@@ -229,7 +229,7 @@
         overflow-x: visible;
         background-color: transparent;
         /* position: fixed; */
-        height: calc(100dvh - 20px);
+        height: calc(100dvh - 80px);
         z-index: initial;
         /* Ensure it stays fixed */
     }
@@ -237,7 +237,7 @@
     .deskInfos_controls {
         flex-direction: column;
         /* align-items: flex-start; */
-        margin-top: 52px;
+        margin-top: 15px;
         position: relative;
         left: -1px;
         gap: 0;

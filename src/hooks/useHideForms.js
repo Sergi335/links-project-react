@@ -9,7 +9,7 @@ const useHideForms = ({ form, setFormVisible }) => {
       // console.log(form)
       // console.log(setFormVisible)
       if (e.target !== form && !tags.includes(e.target.nodeName) && !form?.contains(e.target)) {
-        console.log('entramos')
+        // console.log('entramos')
         setFormVisible(false)
       }
     }

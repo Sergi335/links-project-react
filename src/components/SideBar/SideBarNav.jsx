@@ -132,7 +132,7 @@ export default function SideBarNav () {
   return (
 
         <nav className={styles.nav} ref={listRef}>
-          <ul>
+          <ul className={styles.nav_first_level_ul}>
             <DndContext
               sensors={sensors}
               onDragStart={onDragStart}

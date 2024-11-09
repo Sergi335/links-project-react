@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
-// import useResizeWindow from '../../hooks/useResizeWindow'
 import { useFormsStore } from '../../store/forms'
 import Bookmarks from '../Bookmarks'
+import LogoDisplay from '../NavBar/LogoDisplay'
 import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
 import SideBarInfo from '../SideBar/SideBarInfo'
@@ -14,8 +14,6 @@ export default function AppLayout () {
   const { desktopName, id } = useParams()
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
-  // const windowSize = useResizeWindow()
-  // const isDesktop = windowSize.width > 1280 // Hacerlo en el hook
 
   useEffect(() => {
     if (desktopName !== undefined) {
@@ -28,26 +26,16 @@ export default function AppLayout () {
     document.body.classList.remove('home')
   }, [desktopName])
 
-  // if (!isDesktop) {
-  //   return (
-  //     <>
-  //       {id === undefined && <ToolBar />}
-  //       <SideBar />
-  //       {id === undefined && <Bookmarks />}
-  //       <div className={'root root-mobile'}>
-  //         <Outlet />
-  //       </div>
-  //     </>
-  //   )
-  // }
-
   return (
     <>
       <SideBar />
       <div id="grid" className="grid">
         {id === undefined && <ToolBar />}
+      <header>
+        <LogoDisplay />
         <Bookmarks />
         <SideBarInfo />
+      </header>
         <Outlet />
       </div>
       <ScrollToTop />
