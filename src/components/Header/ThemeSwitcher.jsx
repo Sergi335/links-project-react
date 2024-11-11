@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStyles } from '../../hooks/useStyles'
 import { MoonIcon, SunIcon } from '../Icons/icons'
-import styles from './NavBar.module.css'
+import styles from './Header.module.css'
 
 export default function ThemeSwitcher () {
   const [darkTheme, setDarkTheme] = useState(false)
@@ -34,7 +34,7 @@ export default function ThemeSwitcher () {
     setDarkTheme(!darkTheme)
   }
   return (
-        <div className={styles.themeSwitcher}>
+        <div className={`${styles.divider_right} ${styles.flex_center}`}>
             <button className={styles.themeSwitcherButton} onClick={handleChangeTheme}>
                 <span className={darkTheme ? styles.themeSwitcherThumb : `${styles.themeSwitcherThumb} ${styles.light}`}>
                     {darkTheme ? <MoonIcon /> : <SunIcon />}

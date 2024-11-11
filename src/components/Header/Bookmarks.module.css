@@ -1,0 +1,35 @@
+.bookmarks {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    order: 2;
+    /* flex: 1; */
+    padding: 10px;
+    justify-content: space-evenly;
+
+    & img {
+        max-width: var(--bookmarks_image_width);
+        border-radius: 2px;
+        height: auto;
+    }
+    & a {
+        display: flex;
+    }
+}
+@media (min-width: 1024px) {
+    .bookmarks {
+        order: initial;
+        justify-content: initial;
+    }
+}
+.book_dragged {
+    background-color: var(--accentColor);
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+}
+/*El que se arrastra*/
+.bookmark {
+    max-width: var(--bookmarks_image_width);
+    border-radius: 2px;
+}

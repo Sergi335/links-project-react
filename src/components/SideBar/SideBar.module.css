@@ -38,126 +38,38 @@
     visibility: hidden;
     opacity: 0;
 }
+/*Bloque Logo */
 
-/* Bloque: sidebarinfo */
-.sidebar_info {
+
+.logo_container {
     display: flex;
-    padding: 0;
+    justify-content: center;
     align-items: center;
-    gap: 2px;
-    position: sticky;
-    top: 0;
 
-    p {
-        margin: 0;
-        font-size: 15px;
-        line-height: 1;
-        color: var(--text-color-secondary);
-        font-weight: 600;
-
-        &:first-of-type {
-            color: var(--text-color-primary);
-        }
-
-        &.sidebar_info_user {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--accentColor);
-        }
-    }
-
-    .sidebar_info_wrapper {
+    .logo {
         display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        margin-right: 25px;
+        align-items: center;
+        border-radius: var(--button-radius);
+        padding: 0 5px;
+        height: -webkit-fill-available;
+        height: -moz-available;
+        font-size: 1rem;
 
-    }
-
-    .sidebar_info_meteo_info {
-        display: flex;
-        align-items: flex-end;
-        flex-direction: column;
+        .logo_text {
+            text-align: left;
+            font-family: K2d;
+            font-weight: 700;
+            font-size: 1rem;
+        }
 
         & svg {
+            fill: var(--accentColor);
+            transform: rotate(34deg);
             width: 14px;
-        }
-    }
-
-    .sidebar_info_link {
-        margin-right: 25px;
-
-        &:hover {
             color: var(--accentColor);
         }
     }
 }
-
-/* Bloque: sidebar_controls */
-.sidebar_controls {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    /* padding-block: 12px; */
-    align-items: center;
-    padding-left: 25px;
-    border-left: 1px solid var(--firstBorderColor);
-
-}
-
-
-
-/* Bloque: settings */
-.settings {
-    /* padding: 8px; */
-    display: flex;
-    gap: 15px;
-    transition: background-color 0.3s ease-out, filter 0.3s ease-out;
-    cursor: pointer;
-
-    &:hover {
-
-        >svg {
-            filter: drop-shadow(0 0 2px var(--accentColor));
-        }
-
-        .sidebar_inner_controls {
-            display: flex;
-        }
-    }
-
-    &.directional {
-        display: none;
-    }
-
-    img {
-        padding: 0 10px;
-        display: flex;
-        gap: 15px;
-    }
-}
-
-/* Bloque: settingsImg */
-.settings_image_link {
-    padding: 4px 4px 4px 10px;
-    display: flex;
-    gap: 15px;
-    transition: background-color 0.3s ease-out, filter 0.3s ease-out;
-    cursor: pointer;
-
-    &:hover {
-        filter: drop-shadow(0px 0px 20px var(--accentColor));
-    }
-
-    img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        vertical-align: middle;
-    }
-}
-
 /* Bloque Nav */
 .nav {
     /* flex: 1; */
@@ -169,7 +81,7 @@
     }
 
     .nav_first_level_ul {
-        padding-top: 64px;
+        padding-top: 35px;
         margin: 0;
     }
 }
@@ -184,7 +96,7 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        border-radius: var(--button-radius);
+        /* border-radius: var(--button-radius); */
         display: flex;
         align-items: center;
         font-weight: 500;
@@ -221,6 +133,7 @@
         li a {
             font-size: .8rem;
             display: block;
+            padding-left: 5px;
             /* font-weight: 300; */
         }
     }
@@ -320,9 +233,5 @@ a.active:hover {
             /* height: var(--nav-height); */
             /* overflow-y: auto; */
         }
-    }
-
-    .reloj {
-        margin-top: 15px;
     }
 }

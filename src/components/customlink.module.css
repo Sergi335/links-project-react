@@ -98,7 +98,7 @@
   display: flex;
   align-items: center;
   height: 35px;
-  color: var(--text-color-primary);
+  /* color: var(--text-color-primary); */
   font-size: .875rem;
   overflow: hidden;
   flex-grow: 1;
@@ -107,8 +107,12 @@
   letter-spacing: .2px;
 
 }
+/*Debe ser n+9 al principio para evitar el shift y al pasar 1s añadir n+10*/
 .link:nth-of-type(n+10) {
   display: none;
+}
+.link:nth-of-type(9) {  
+  pointer-events: none;
 }
 
 .link a span:first-of-type,
@@ -119,9 +123,10 @@
   width: 77%;
 }
 
-.link:hover {
-  background-color: var(--hover-color-primary)
+.link:hover > a {
+  /* background-color: var(--hover-color-primary) */
   /* background-color: var(--inputBackgroundColor); */
+  color: var(--accentColor);
 }
 
 .lcontrols {

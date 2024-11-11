@@ -2,11 +2,10 @@ import { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
 import { useFormsStore } from '../../store/forms'
-import Bookmarks from '../Bookmarks'
-import LogoDisplay from '../NavBar/LogoDisplay'
+import Bookmarks from '../Header/Bookmarks'
+import HeaderInfo from '../Header/HeaderInfo'
 import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
-import SideBarInfo from '../SideBar/SideBarInfo'
 import ToolBar from '../ToolBar/ToolBar'
 import styles from './HomePage.module.css'
 
@@ -32,9 +31,8 @@ export default function AppLayout () {
       <div id="grid" className="grid">
         {id === undefined && <ToolBar />}
       <header>
-        <LogoDisplay />
         <Bookmarks />
-        <SideBarInfo />
+        <HeaderInfo />
       </header>
         <Outlet />
       </div>

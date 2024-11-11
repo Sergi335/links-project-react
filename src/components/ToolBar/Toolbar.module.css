@@ -1,0 +1,168 @@
+/*Bloque Toolbar*/
+.toolbar {
+    position: sticky;
+    top: 60px;
+    display: flex;
+    z-index: 2;
+    background-color: var(--color-primary);
+    grid-area: toolbar;
+    align-items: flex-start;
+
+    .toolbar_controls {
+        display: flex;
+
+        .icon_clicked::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 36px;
+            position: absolute;
+            left: -2px;
+            background-color: var(--accentColor);
+        }
+
+        .sideButtons {
+            background-color: var(--color-primary);
+            padding: 8px;
+            border-radius: 0;
+
+            &:nth-child(1) {
+                border-top-right-radius: 11px;
+            }
+
+            /*Cuando hay cinco¿?*/
+            &:nth-child(7) {
+                border-bottom-right-radius: 11px;
+            }
+
+            &:hover {
+                background-color: var(--hover-color-primary);
+            }
+        }
+
+        .settings {
+            width: 38px;
+            height: 38px;
+
+            &:hover {
+                background-color: var(--hover-color-primary);
+
+                >svg {
+                    filter: drop-shadow(0 0 2px var(--accentColor));
+                }
+
+                .sidebar_inner_controls {
+                    display: flex;
+                }
+            }
+
+            .sidebar_inner_controls {
+                position: relative;
+                background-color: var(--color-primary);
+                box-shadow: 0 15px 25px var(--firstShadow);
+                border-radius: var(--button-radius);
+                bottom: 70px;
+                right: -27px;
+                padding: 5px;
+                display: none;
+                flex-direction: column;
+                font-weight: 500;
+                gap: 2px;
+                width: max-content;
+                border: var(--firstBorder);
+
+                &>span {
+                    cursor: pointer;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    padding: 5px 15px;
+                    border-radius: var(--button-radius);
+                    gap: 5px;
+
+                    &:hover {
+                        background-color: var(--hover-color-primary);
+
+                        >svg {
+                            filter: drop-shadow(0 0 2px var(--accentColor));
+                        }
+                    }
+
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+        }
+
+        /*Bloque boton menu*/
+        .mobile_menu_button {
+            padding: 10px;
+            background-color: transparent;
+            border-radius: 0;
+
+            .mobile_menu_icon {
+                width: 24px;
+                height: 24px;
+                color: var(--accentColor);
+            }
+        }
+
+    }
+
+    @media (min-width: 1280px) {
+        .toolbar_controls {
+            flex-direction: column;
+            margin-top: 15px;
+            position: relative;
+            left: -1px;
+            gap: 0;
+            box-shadow: 1px 0px 8px var(--firstShadow);
+            border-top-right-radius: 11px;
+            border-bottom-right-radius: 11px;
+        }
+    }
+}
+
+
+/*No se usa, componente: desktopdisplayname*/
+.deskTitle {
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--color-medium);
+    display: none;
+}
+
+
+.icon_pinned {
+    transform: rotate(-45deg);
+}
+
+@media (min-width: 1280px) {
+    .toolbar {
+        flex-direction: column;
+        overflow-x: visible;
+        background-color: transparent;
+        height: calc(100dvh - 80px);
+        z-index: initial;
+    }
+
+    .mobile_menu_button {
+        display: none;
+    }
+
+    /* .deskTitle {
+        font-size: 6rem;
+        margin: 0;
+        font-weight: 900;
+        font-family: system-ui;
+        text-transform: uppercase;
+        font-style: italic;
+        position: fixed;
+        padding-left: 6px;
+        line-height: 1;
+    } */
+}

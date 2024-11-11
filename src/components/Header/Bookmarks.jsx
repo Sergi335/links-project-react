@@ -4,9 +4,10 @@ import { CSS } from '@dnd-kit/utilities'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { toast } from 'react-toastify'
-import { setBookMarksOrder } from '../services/dbQueries'
-import { handleResponseErrors } from '../services/functions'
-import { useGlobalStore } from '../store/global'
+import { setBookMarksOrder } from '../../services/dbQueries'
+import { handleResponseErrors } from '../../services/functions'
+import { useGlobalStore } from '../../store/global'
+import BookmarkLoader from './BookmarkLoader'
 import styles from './Bookmarks.module.css'
 
 function BookmarkItem ({ bookmark }) {
@@ -47,6 +48,7 @@ export default function Bookmarks () {
   const [booksOrder, setBooksOrder] = useState([])
   const [activeBook, setActiveBook] = useState(null)
   const bookmarksId = books.map((book) => book._id)
+  const globalLoading = useGlobalStore(state => state.globalLoading)
 
   // console.log(import.meta.env.MODE)
 
@@ -124,23 +126,25 @@ export default function Bookmarks () {
   return (
     <div className={styles.bookmarks}>
       <DndContext
-              sensors={sensors}
-              collisionDetection={closestCorners}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              // onDragOver={onDragOver}
-            >
-              <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        // onDragOver={onDragOver}
+      >
+      <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
         {
-            books?.length > 0
-              ? (
-                  books?.map((book) =>
-                    (
-                        <BookmarkItem key={book._id} bookmark={book} />
-                    )
-                  )
+          globalLoading && <><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /></>
+        }
+        {
+          books?.length > 0 &&
+            (
+              books?.map((book) =>
+                (
+                      <BookmarkItem key={book._id} bookmark={book} />
                 )
-              : <p>No hay favoritos</p>
+              )
+            )
 
         }
         </SortableContext>

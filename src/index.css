@@ -16,6 +16,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  /* outline: 2px solid lime; */
 }
 
 :root {
@@ -40,7 +41,7 @@
   --columns_transition: height 300ms ease;
   --navBarContentHeight: 42px;
   --nav-height: 1128px;
-  --toolbar-mobile-height: 69px;
+  --toolbar-mobile-height: 93px;
 
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
@@ -150,24 +151,48 @@ body {
 
 .grid {
   display: grid;
-  grid-template-areas: "header header header"
-    "toolbar main favopt1";
-  grid-template-columns: 100px 1fr 100px;
-  grid-template-rows: 60px 1fr;
+  grid-template-areas: "header"
+    "toolbar"
+    "main";
+  grid-template-columns: 100%;
+  grid-template-rows: auto auto 1fr;
   width: 100%;
 }
 
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-areas: "header header header"
+      "toolbar main favopt1";
+    grid-template-columns: 100px 1fr 100px;
+    grid-template-rows: 60px 1fr;
+  }
+}
+
+/* Bloque Header */
 header {
   grid-area: header;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-auto-flow: row;
+  justify-items: stretch;
   align-items: center;
   top: 0;
   position: sticky;
-  padding-inline: 100px;
   z-index: 2;
   animation: blurAnimation 1s linear forwards;
   animation-timeline: scroll();
+}
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    padding-inline: 16px;
+    justify-content: space-between;
+  }
+}
+@media (min-width: 1280px) {
+  header {
+    padding-inline: 100px;
+
+  }
 }
 
 @keyframes blurAnimation {
@@ -264,6 +289,7 @@ a.active,
 .link.active {
   /* background-color: var(--hover-color-primary); */
   color: var(--accentColor);
+  border-left: 2px solid var(--accentColor);
 }
 
 .selectMode .link img {
@@ -291,19 +317,9 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--buttonColor);
-  /* background-color: var(--accentColor); */
-  color: var(--text-color-primary);
-  /* color: var(--buttonTextColor); */
   border: 0;
   padding: 8px 19px;
-  border-radius: var(--button-radius);
-  font-family: 'Inter Variable';
-  font-weight: 500;
-  font-size: .75rem;
   cursor: pointer;
-  transition: background-color .3s ease-out, color .3s ease-out;
-  gap: 6px;
 }
 
 button:disabled {
@@ -313,11 +329,10 @@ button:disabled {
 
 button:disabled:hover {
   background-color: transparent;
-  color: var(--text-color-primary);
 }
 
 button:hover {
-  background-color: var(--color-secondary);
+  /* background-color: var(--color-secondary); */
   /* transition: background-color .3s; */
   color: var(--accentColor);
   /* box-shadow: var(--secondNeumoShadow); */

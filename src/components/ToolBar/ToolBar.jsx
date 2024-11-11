@@ -7,8 +7,8 @@ import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, PinPanelIcon, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
-import styles from './Header.module.css'
+import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
+import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
   const { desktopName } = useParams()
@@ -95,11 +95,15 @@ export default function ToolBar () {
     icon.classList.toggle(styles.icon_pinned)
     panel.classList.toggle('pinned')
   }
+  const toggleMobileMenu = () => {
+    const menu = document.getElementById('sidebar')
+    menu.classList.toggle('pinned')
+  }
   return (
-    <aside className={styles.sideControl}>
+    <aside className={styles.toolbar}>
     {
 
-        <div className={styles.deskInfos_controls}>
+        <div className={styles.toolbar_controls}>
           {
             isDesktopLocation && (
               <button className={styles.sideButtons} onClick={handleHideColumns}>
@@ -152,6 +156,9 @@ export default function ToolBar () {
           }
           <button className={styles.sideButtons} onClick={handlePinPanel}>
             <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
+          </button>
+          <button className={styles.mobile_menu_button} onClick={toggleMobileMenu}>
+            <MenuIcon className={styles.mobile_menu_icon} />
           </button>
 
         </div>

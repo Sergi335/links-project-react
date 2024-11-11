@@ -2,7 +2,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
 import { kebabToTitleCase } from '../../services/functions'
 import NameLoader from '../NameLoader'
-import styles from './Header.module.css'
+import styles from './Toolbar.module.css'
 
 export default function DesktopNameDisplay () {
   const { desktopName } = useParams()
