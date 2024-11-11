@@ -9,9 +9,9 @@ import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
+import styles from './Column.module.css'
 import { ArrowDown, SelectIcon } from './Icons/icons'
 import LinkLoader from './Loaders/LinkLoader'
-import styles from './column.module.css'
 
 export default function Columna ({ data, children, childCount, context }) {
   const columna = data.columna || data.activeColumn
