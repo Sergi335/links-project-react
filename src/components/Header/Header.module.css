@@ -64,8 +64,22 @@
         align-items: flex-end;
         flex-direction: column;
 
-        & svg {
-            width: 14px;
+        .weather {
+            display: flex;
+            gap: 5px;
+        
+            & p {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                font-weight: 300;
+        
+                & i {
+                    font-size: 14px;
+                    color: var(--accentColor);
+                }
+            }
         }
     }
 
@@ -131,6 +145,7 @@
         }
     }
 }
+
 
 @media (min-width: 1024px) {
     .header_info {

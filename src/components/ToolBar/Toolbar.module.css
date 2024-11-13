@@ -1,12 +1,14 @@
 /*Bloque Toolbar*/
 .toolbar {
     position: sticky;
-    top: 60px;
+    top: var(--toolbar-mobile-height);
     display: flex;
     z-index: 2;
-    background-color: var(--color-primary);
+    justify-content: center;
     grid-area: toolbar;
     align-items: flex-start;
+    animation: blurAnimation 1s linear forwards;
+    animation-timeline: scroll();
 
     .toolbar_controls {
         display: flex;
@@ -27,7 +29,14 @@
             border-radius: 0;
 
             &:nth-child(1) {
-                border-top-right-radius: 11px;
+                border-bottom-left-radius: 11px;
+            }
+
+            @media (min-width: 1280px) {
+                &:nth-child(1) {
+                    border-top-right-radius: 11px;
+                    border-bottom-left-radius: 0;
+                }
             }
 
             /*Cuando hay cinco¿?*/
@@ -41,8 +50,9 @@
         }
 
         .settings {
-            width: 38px;
-            height: 38px;
+            /* width: 38px;
+            height: 38px; */
+            position: relative;
 
             &:hover {
                 background-color: var(--hover-color-primary);
@@ -57,12 +67,12 @@
             }
 
             .sidebar_inner_controls {
-                position: relative;
+                position: absolute;
                 background-color: var(--color-primary);
                 box-shadow: 0 15px 25px var(--firstShadow);
                 border-radius: var(--button-radius);
-                bottom: 70px;
-                right: -27px;
+                bottom: -36px;
+                right: -178px;
                 padding: 5px;
                 display: none;
                 flex-direction: column;
@@ -98,9 +108,10 @@
 
         /*Bloque boton menu*/
         .mobile_menu_button {
-            padding: 10px;
             background-color: transparent;
             border-radius: 0;
+            position: fixed;
+            left: 0;
 
             .mobile_menu_icon {
                 width: 24px;
@@ -140,14 +151,27 @@
 .icon_pinned {
     transform: rotate(-45deg);
 }
-
+@keyframes blurAnimation {
+    0% {
+      backdrop-filter: blur(0px);
+      background-color: hsl(from var(--color-primary) h s l / 0%);
+    }
+  
+    100% {
+      backdrop-filter: blur(15px);
+      background-color: hsl(from var(--color-primary) h s l / 75%);
+    }
+  }
 @media (min-width: 1280px) {
     .toolbar {
+        top: 60px;
+        background-color: var(--color-primary);
         flex-direction: column;
         overflow-x: visible;
         background-color: transparent;
         height: calc(100dvh - 80px);
         z-index: initial;
+        justify-content: initial;
     }
 
     .mobile_menu_button {

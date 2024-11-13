@@ -41,7 +41,8 @@
   --columns_transition: height 300ms ease;
   --navBarContentHeight: 42px;
   --nav-height: 1128px;
-  --toolbar-mobile-height: 93px;
+  --toolbar-mobile-height: 92px;
+  --sidebar-top-onmobile: 153px;
 
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
@@ -289,7 +290,7 @@ a.active,
 .link.active {
   /* background-color: var(--hover-color-primary); */
   color: var(--accentColor);
-  border-left: 2px solid var(--accentColor);
+  border-left: 1px solid var(--accentColor);
 }
 
 .selectMode .link img {
@@ -320,6 +321,7 @@ button {
   border: 0;
   padding: 8px 19px;
   cursor: pointer;
+  color: var(--text-color-primary);
 }
 
 button:disabled {

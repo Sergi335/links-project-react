@@ -48,7 +48,7 @@ function SideBarNavItem ({ escritorio, children, className }) {
   }
   return (
       <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} className={className}>
-        <NavLink to={`/desktop/${escritorio.name}`}>
+        <NavLink to={`/desktop/${escritorio.name}`} className={({ isActive }) => isActive ? styles.active : ''}>
           <button onClick={handleExpandSublist} aria-expanded={isExpanded}>
             <ArrowDown
               className={isExpanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
@@ -67,7 +67,13 @@ function SideBarNavSubItem ({ escritorio, columna }) {
 
   return (
       <li id={columna._id}>
-        <NavLink to={`/column/${escritorio.name}/${path}`} title={columna.name}>{columna.name}</NavLink>
+        <NavLink
+          to={`/column/${escritorio.name}/${path}`}
+          title={columna.name}
+          className={({ isActive }) => isActive ? styles.active : ''}
+        >
+            {columna.name}
+          </NavLink>
       </li>
   )
 }

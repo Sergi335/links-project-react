@@ -135,7 +135,7 @@ export default function ToolBar () {
           </button>
           {
             isDesktopLocation && (
-              <div className={`${styles.settings} ${styles.sideButtons}`}>
+              <button className={`${styles.settings} ${styles.sideButtons}`}>
                 <SettingsIcon />
                 <div className={styles.sidebar_inner_controls}>
                   <span onClick={handleShowAddDesktop}>
@@ -151,7 +151,7 @@ export default function ToolBar () {
                     <span>Eliminar escritorio</span>
                   </span>
                 </div>
-            </div>
+            </button>
             )
           }
           <button className={styles.sideButtons} onClick={handlePinPanel}>
@@ -159,6 +159,7 @@ export default function ToolBar () {
           </button>
           <button className={styles.mobile_menu_button} onClick={toggleMobileMenu}>
             <MenuIcon className={styles.mobile_menu_icon} />
+              Escritorios
           </button>
 
         </div>
