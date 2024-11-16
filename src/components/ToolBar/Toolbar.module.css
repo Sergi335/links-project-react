@@ -172,6 +172,7 @@
         height: calc(100dvh - 80px);
         z-index: initial;
         justify-content: initial;
+        animation: none;
     }
 
     .mobile_menu_button {

@@ -14,15 +14,16 @@ import { ArrowDown, SelectIcon } from './Icons/icons'
 import LinkLoader from './Loaders/LinkLoader'
 
 export default function Columna ({ data, children, childCount, context }) {
+  const { desktopName } = useParams()
   const columna = data.columna || data.activeColumn
-  const setPoints = useFormsStore(state => state.setPoints)
   const [editMode, setEditMode] = useState(false)
   const [localOpenColumn, setLocalOpenColumn] = useState(false)
   const [classNames, setClassNames] = useState('')
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
-  const { desktopName } = useParams()
+  const stylesOnHeader = { height: 'auto' }
+  const setPoints = useFormsStore(state => state.setPoints)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
@@ -36,7 +37,6 @@ export default function Columna ({ data, children, childCount, context }) {
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  const stylesOnHeader = { height: 'auto' }
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
 
   const handleChangeColumnHeight = (e) => {
@@ -115,15 +115,15 @@ export default function Columna ({ data, children, childCount, context }) {
 
   useEffect(() => {
     if (context === 'singlecol') {
-      setClassNames(`${styles.columnWrapper} colOpen ${styles.scPage}`)
+      setClassNames(`${styles.column_wrapper} colOpen ${styles.scPage}`)
       return
     }
     if (localOpenColumn) {
-      setClassNames(`${styles.columnWrapper} colOpen`)
+      setClassNames(`${styles.column_wrapper} colOpen`)
       return
     }
     setLocalOpenColumn(false)
-    setClassNames(`${styles.columnWrapper}`)
+    setClassNames(`${styles.column_wrapper}`)
   }, [localOpenColumn])
 
   useEffect(() => {
@@ -154,13 +154,20 @@ export default function Columna ({ data, children, childCount, context }) {
         ref={setNodeRef}
         style={style}
         className={styles.dragginColumn}
-      ><h2></h2></div>
+      >
+      </div>
     )
   }
   return (
     <>
     {/* Debe tener la misma altura y ancho que cuando esta sin arrastrar para no tener problemas */}
-      <div ref={setNodeRef} id={columna._id} style={style} className={classNames} data-order={columna.order}>
+      <div
+        ref={setNodeRef}
+        id={columna._id}
+        style={style}
+        className={classNames}
+        data-order={columna.order}
+      >
         <div
           ref={colRef}
           className={`${styles.column} column`}
@@ -170,24 +177,24 @@ export default function Columna ({ data, children, childCount, context }) {
           {
             editMode
               ? <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
-              : <div className={styles.headContainer} onContextMenu={(e) => handleContextMenu(e) }>
+              : <div className={styles.column_header} onContextMenu={(e) => handleContextMenu(e) }>
                 {columnSelectModeId.includes(columna._id) && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange}/>}
                   <h2 onClick={() => setEditMode(true) } ref={headRef} style={linkLoader ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
-                  {
-                    childCount > 7 && <span ref={spanCountRef} className={styles.linkCount}>{`+${childCount - 7}`}</span>
-                  }
+                    {
+                      childCount > 7 && <span ref={spanCountRef} className='linkCount'>{`+${childCount - 7}`}</span>
+                    }
                   </h2>
-                  {
-                    linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && <LinkLoader stylesOnHeader={stylesOnHeader}/>
-                  }
-                  {
-                    context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
-                      {
-                        childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>
-                      }
-                    </div>
-                  }
+                    {
+                      linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && !localOpenColumn && <LinkLoader stylesOnHeader={stylesOnHeader}/>
+                    }
+                    {
+                      context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
+                        {
+                          childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>
+                        }
+                      </div>
+                    }
                   <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>

@@ -143,10 +143,10 @@ export const constants = {
   },
   COLUMNS_COUNT: {
     1: '76ch',
-    2: 'repeat(auto-fill, minmax(760px, 1fr))',
-    3: 'repeat(auto-fill, minmax(500px, 1fr))',
-    4: 'repeat(auto-fill, minmax(320px, 1fr))',
-    5: 'repeat(auto-fill, minmax(269px, 1fr))'
+    2: 'repeat(auto-fill, minmax(687px, 1fr))',
+    3: 'repeat(auto-fill, minmax(511px, 1fr))',
+    4: 'repeat(auto-fill, minmax(406px, 1fr))',
+    5: 'repeat(auto-fill, minmax(336px, 1fr))'
   },
   DEFAULT_BACKGROUNDS: {
     light: {

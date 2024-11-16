@@ -34,18 +34,18 @@ const useDbQueries = () => {
         await Promise.all([desktopsResponse.json(), columnsResponse.json(), linksResponse.json()])
           .then((response) => {
             const desktops = response[0].data
-            // console.log(desktops.filter(desktop => desktop.hidden === false))
             const columns = response[1].columns
             const links = response[2].links
             setDesktopsStore(desktops)
             setGlobalColumns(columns)
             setGlobalLinks(links)
-            setGlobalLoading(false)
             localStorage.setItem('firstDesktop', JSON.stringify(desktops[0]?.name))
           })
           .catch((error) => {
             console.log(error)
             setGlobalError({ error: 'Error al recuperar los datos' })
+          })
+          .finally(() => {
             setGlobalLoading(false)
           })
       } else {
@@ -58,20 +58,6 @@ const useDbQueries = () => {
       }
     }
     getData()
-    // .then(res => { console.log(res) })
-    // .catch(error => {
-    //   console.log(error + ', desde el .catch')
-    //   setUser(null)
-    //   setGlobalLoading(false)
-    //   navigate('/login')
-    // })
   }, [])
-
-  // useEffect(() => {
-  //   console.log('Info de un solo desktop')
-  //   // const newColumnsState = [...columnsState].filter(col => col.escritorio === desktopName).toSorted((a, b) => (a.orden - b.orden))
-  //   // setColumnsStore(globalColumns.filter(col => col.escritorio === desktopName).toSorted((a, b) => (a.orden - b.orden)))
-  //   // setLinksStore(globalLinks.toSorted((a, b) => (a.orden - b.orden)))
-  // }, [desktopName])
 }
 export default useDbQueries

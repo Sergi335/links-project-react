@@ -1,5 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { editColumn, getLinkById, moveLink } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
@@ -14,20 +14,17 @@ export const useDragItems = ({ desktopName }) => {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const updateLinksStore = useRef(setGlobalLinks) // el truco del almendruco actualiza el estado sin renderizar
+
   // console.log({ activeLink, activeColumn, movedLink, movedColumn, globalLinks, globalColumns, desktopName })
-  function handleDragStart (event) {
-    // Y si es el hecho de esconder los links al hacer drag? --> Correcto
-    // console.log('start')
+  const handleDragStart = useCallback((event) => {
     if (event.active.data.current?.type === 'Column') {
-      // console.log('column')
       setActiveColumn(event.active.data.current.columna)
     }
     if (event.active.data.current?.type === 'link') {
-      // console.log('link')
       setActiveLink(event.active.data.current.link)
     }
-  }
-  const updateLinksStore = useRef(setGlobalLinks) // el truco del almendruco actualiza el estado sin renderizar
+  }, [])
   function handleDragEnd (event) {
     const { active, over } = event
     console.log(active.data.current?.type, over?.data.current?.type)

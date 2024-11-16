@@ -12,6 +12,7 @@ import Columna from './column'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import CustomLink from './customlink'
+import linkStyles from './customlink.module.css'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
@@ -52,10 +53,10 @@ export default function SingleColumnPage () {
   }, [desktopLinks])
 
   return (
-    <main className={styles.listOfLinks}>
+    <main className={styles.list_of_links}>
       {
         globalLoading
-          ? <div className={styles.mainContentWrapper}><div id='maincontent' className={styles.mainContent} style={{ gridTemplateColumns: styleOfColumns }}>
+          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
               {
                 numberOfLoaders.map((item, index) => (
                   <ColumnsLoader key={index} />
@@ -63,8 +64,8 @@ export default function SingleColumnPage () {
               }
             </div></div>
           : (
-            <div id='spMainContentWrapper' className={styles.mainContentWrapper}>
-            <div id='maincontent' className={styles.spMainContent} style={{ gridTemplateColumns: styleOfColumns }}>
+            <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
+            <div id='maincontent' className={styles.sp_lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
@@ -109,6 +110,7 @@ export default function SingleColumnPage () {
                   {activeLink && (
                     <CustomLink
                       data={{ activeLink }}
+                      className={linkStyles.floatLink}
                     />
                   )}
                 </DragOverlay>,

@@ -18,7 +18,7 @@
 
         /* Reglas para dispositivos no táctiles */
         &:hover {
-            width: 225px;
+            width: var(--sidebar-desktop-width);
 
             >.sidebar_wrapper {
                 visibility: visible;
@@ -44,7 +44,7 @@
 .logo_container {
     display: flex;
     align-items: center;
-    height: 40px;
+    min-height: 40px;
 
     .logo {
         display: flex;
@@ -73,20 +73,19 @@
 
 /* Bloque Nav */
 .nav {
-    --navlink-padding: 2px;
-    overflow-y: auto;
+    --navlinks-block-padding: 7px;
+    /* overflow-y: auto; */
 
     & ul {
         padding: 0;
     }
 
     .nav_first_level_ul {
-        padding-top: 30px;
+        padding: 30px 0 40px 0;
         margin: 0;
 
         & li {
             >a {
-                font-size: .875rem;
                 text-decoration: none;
                 overflow: hidden;
                 white-space: nowrap;
@@ -94,8 +93,8 @@
                 display: flex;
                 align-items: center;
                 font-weight: 500;
-                border-left: 1px solid transparent;
-                padding: var(--navlink-padding);
+                border-left: 1px solid var(--firstBorderColor);
+                padding: var(--navlinks-block-padding) 0;
                 transition: border-color .5s,color .5s;
 
                 &:hover {
@@ -104,7 +103,7 @@
                     border-left-color: var(--accentColor);
 
                     .plus_icon {
-                        visibility: visible; 
+                        color: var(--accentColor); 
                     }
                 }
             }
@@ -119,7 +118,7 @@
                 overflow: hidden;
                 transition: height .2s ease-out;
                 /* margin: 5px 0; */
-                margin-left: 29px;
+                margin-left: 27px;
                 padding-left: 5px;
 
                 &.show {
@@ -127,9 +126,9 @@
                 }
 
                 li a {
-                    font-size: .8rem;
+                    /* font-size: .8rem; */
                     display: block;
-                    padding: 5px 10px;
+                    padding: var(--navlinks-block-padding) 10px var(--navlinks-block-padding) 22px;
                     position: relative;
                     border-left: 1px solid var(--firstBorderColor);
                     transition: border-color .5s,color .5s;
@@ -161,14 +160,14 @@ button:has(.plus_icon) {
 .plus_icon {
     width: 12px;
     cursor: pointer;
-    visibility: hidden;
+    color: transparent;
     transform: rotate(270deg);
     margin-top: 1px;
-    transition: visibility .1s;
+    transition: color .5s;
 
     &.plus_icon_opened {
         transform: rotate(0deg);
-        visibility: visible;
+        color: var(--accentColor);
     }
 }
 
@@ -234,10 +233,13 @@ a.active:hover {
     .nav {
         flex: 1;
         max-height: calc(100dvh - 20px);
-        overflow: hidden;
+        /* overflow: hidden; */
 
         >ul {
             padding: 0;
+        }
+        &[data-overlayscrollbars="host"] {
+            overflow: initial;
         }
     }
 }
