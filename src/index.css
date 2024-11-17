@@ -178,7 +178,7 @@ body {
 }
 
 /* Bloque Header */
-header {
+header.main_header {
   grid-area: header;
   display: grid;
   grid-auto-flow: row;
@@ -192,7 +192,7 @@ header {
 }
 
 @media (min-width: 1024px) {
-  header {
+  header.main_header {
     display: flex;
     padding-inline: 16px;
     justify-content: space-between;
@@ -200,7 +200,7 @@ header {
 }
 
 @media (min-width: 1280px) {
-  header {
+  header.main_header {
     padding-inline: 100px;
 
   }

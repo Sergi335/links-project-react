@@ -22,27 +22,26 @@
             left: -2px;
             background-color: var(--accentColor);
         }
+        & > .sideButtons:is(:first-child) {
+            border-bottom-left-radius: 11px;
+        }
+
+        @media (min-width: 1280px) {
+            & > .sideButtons:is(:first-child) {
+                border-top-right-radius: 11px;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        /*Cuando hay cinco¿?*/
+        & > .sideButtons:is(:last-child) {
+            border-bottom-right-radius: 11px;
+        }
 
         .sideButtons {
             background-color: var(--color-primary);
             padding: 8px;
             border-radius: 0;
-
-            &:nth-child(1) {
-                border-bottom-left-radius: 11px;
-            }
-
-            @media (min-width: 1280px) {
-                &:nth-child(1) {
-                    border-top-right-radius: 11px;
-                    border-bottom-left-radius: 0;
-                }
-            }
-
-            /*Cuando hay cinco¿?*/
-            &:nth-child(7) {
-                border-bottom-right-radius: 11px;
-            }
 
             &:hover {
                 background-color: var(--hover-color-primary);

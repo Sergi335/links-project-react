@@ -2,9 +2,15 @@ import { NavLink } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from './Icons/icons'
 import styles from './Pages/LinkDetails.module.css'
 
-export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
-  const nextIndex = links.findIndex(link => linkId.id === link._id) + 1 // > length
-  const prevIndex = links.findIndex(link => linkId.id === link._id) - 1 // -2
+export default function LinkDetailsNav ({ links, actualDesktop, linkId, context }) {
+  console.log('🚀 ~ LinkDetailsNav ~ links:', links)
+  console.log(linkId)
+
+  if (linkId === undefined) return
+  const nextIndex = links.findIndex(link => linkId === link?._id) + 1 // > length
+  console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
+  const prevIndex = links.findIndex(link => linkId === link?._id) - 1 // -2
+  console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
   let nextId
   if (typeof links[nextIndex] === 'object' && links[nextIndex]._id !== undefined) {
     nextId = links[nextIndex]._id
@@ -17,6 +23,7 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId }) {
   } else {
     prevId = null
   }
+  const path = context === 'singlecol' ? `/column/${actualDesktop}/${linkId}` : `/desktop/${actualDesktop}/link/${linkId}`
   const handleBack = (event) => {
     event.preventDefault() // Evita la navegación normal del enlace
     window.history.back() // Navega hacia atrás en el historial

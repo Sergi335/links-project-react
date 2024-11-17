@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
@@ -14,11 +14,13 @@ import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
 import FormsContainer from './FormsContainer'
+import LinkDetailsColumn from './LinkDetailsColumn'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 
 export default function SingleColumnPage () {
   const { columnId, desktopName } = useParams()
+  const [navigationLinks, setNavigationLinks] = useState([])
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
@@ -34,6 +36,8 @@ export default function SingleColumnPage () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const firstColumnLink = desktopLinks.map(link => (link.idpanel === columnId) ? link : null).filter(link => link !== null)[0]
+  console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
@@ -48,6 +52,15 @@ export default function SingleColumnPage () {
       }
     })
   )
+  useEffect(() => {
+    if (desktopName) {
+      let dataFinal = []
+      desktopColumns.forEach((column) => {
+        dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+      })
+      setNavigationLinks(dataFinal)
+    }
+  }, [desktopName])
   const getLinksIds = useCallback((columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }, [desktopLinks])
@@ -118,11 +131,11 @@ export default function SingleColumnPage () {
               )}
             </DndContext>
             {/* <LinkDetails linkid={desktopLinks[0]._id}/> */}
+            <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} />
             </div>
             </div>
             )
       }
-      {/* <LinkDetails linkid={getLinksIds[0]}/> */}
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
       <FormsContainer />
     </main>

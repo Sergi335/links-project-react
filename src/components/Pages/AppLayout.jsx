@@ -30,7 +30,7 @@ export default function AppLayout () {
       <SideBar />
       <div id="grid" className="grid">
         {id === undefined && <ToolBar />}
-      <header>
+      <header className='main_header'>
         <Bookmarks />
         <HeaderInfo />
       </header>

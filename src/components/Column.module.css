@@ -1,6 +1,7 @@
 .column_wrapper {
     height: 322.39px;
     transition: var(--columns_transition);
+    z-index: 0;
 }
 
 .column {
@@ -98,7 +99,7 @@ input[type='text'].editInput:focus {
         transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
     }
 
-    .headContainer:hover .opener {
+    .column_header:hover .opener {
         visibility: visible;
         opacity: 1;
     }
@@ -109,7 +110,7 @@ input[type='text'].editInput:focus {
         transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
     }
 
-    .headContainer:hover .selector {
+    .column_header:hover .selector {
         visibility: visible;
         opacity: 1;
     }

@@ -7,7 +7,7 @@ import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SearchIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
+import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
@@ -28,8 +28,6 @@ export default function ToolBar () {
   const location = useLocation()
   const isDesktopLocation = location.pathname !== '/profile' && location.pathname !== '/readinglist'
   const isColumnLocation = window.location.pathname.startsWith('/column')
-  const searchBoxVisible = useFormsStore(state => state.searchBoxVisible)
-  const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
   // const navigate = useNavigate()
   const [newColumnId, setNewColumnId] = useState(null) // Added line
   // console.log(location.pathname)
@@ -79,9 +77,6 @@ export default function ToolBar () {
     e.currentTarget.classList.toggle(styles.icon_clicked)
     setGlobalOpenColumns(!globalOpenColumns)
   }
-  const handleShowSearch = () => {
-    setSearchBoxVisible(!searchBoxVisible)
-  }
   const handleShowAddDesktop = () => {
     setAddDeskFormVisible(!addDeskFormVisible)
   }
@@ -130,9 +125,6 @@ export default function ToolBar () {
               </>
             )
           }
-          <button className={styles.sideButtons} onClick={handleShowSearch}>
-            <SearchIcon />
-          </button>
           {
             isDesktopLocation && (
               <button className={`${styles.settings} ${styles.sideButtons}`}>
@@ -157,14 +149,14 @@ export default function ToolBar () {
           <button className={styles.sideButtons} onClick={handlePinPanel}>
             <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
           </button>
-          <button className={styles.mobile_menu_button} onClick={toggleMobileMenu}>
-            <MenuIcon className={styles.mobile_menu_icon} />
-              Escritorios
-          </button>
 
         </div>
 
     }
+    <button className={styles.mobile_menu_button} onClick={toggleMobileMenu}>
+      <MenuIcon className={styles.mobile_menu_icon} />
+        Escritorios
+    </button>
   </aside>
   )
 }

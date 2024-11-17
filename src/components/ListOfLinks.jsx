@@ -34,7 +34,7 @@ export default function ListOfLinks () {
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
+  const desktopLinks = globalLinks?.filter(link => link.escritorio === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
 
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)

@@ -71,9 +71,9 @@ export default function CustomLink ({ data, className, desktopName }) {
 
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
-      linkRef.current?.parentNode.classList.add(`${styles.conic}`)
+      linkRef.current?.parentNode.classList.add(`${styles.animated_paste}`)
       setTimeout(() => {
-        linkRef.current?.parentNode.classList.remove(`${styles.conic}`)
+        linkRef.current?.parentNode.classList.remove(`${styles.animated_paste}`)
       }, 4000)
       setPastedLinkId([])
     }
