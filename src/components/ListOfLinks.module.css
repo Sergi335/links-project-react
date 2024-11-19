@@ -18,8 +18,9 @@
         }
 
         & .sp_lol_content {
-            display: grid;
-            gap: 16px;
+            display: flex;
+            /* gap: 16px; */
+            flex-wrap: wrap;
         }
     }
 }

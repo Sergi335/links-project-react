@@ -141,7 +141,7 @@ export default function CustomLink ({ data, className, desktopName }) {
                     <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
                   </button>
                   <button className='buttonIcon'>
-                    <Link to={`/desktop/${desktopName}/link/${link._id}`} state={link._id}>
+                    <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
                       <MaximizeIcon className='uiIcon_small'/>
                     </Link>
                   </button>

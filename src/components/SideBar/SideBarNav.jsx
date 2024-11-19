@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useStyles } from '../../hooks/useStyles'
 import { moveDesktops } from '../../services/dbQueries'
-import { formatPath, handleResponseErrors } from '../../services/functions'
+import { handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
 import { ArrowDown } from '../Icons/icons'
@@ -17,6 +17,8 @@ import styles from './SideBar.module.css'
 
 function SideBarNavItem ({ escritorio, children, className }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
   const {
     setNodeRef,
     attributes,
@@ -42,13 +44,13 @@ function SideBarNavItem ({ escritorio, children, className }) {
   if (isDragging) {
     return (
       <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.draggedDesk}>
-        <NavLink to={`/desktop/${escritorio.name}`}>{escritorio.displayName}</NavLink>
+        <NavLink to={`${rootPath}${basePath}/${escritorio.name}`}>{escritorio.displayName}</NavLink>
       </li>
     )
   }
   return (
       <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} className={className}>
-        <NavLink to={`/desktop/${escritorio.name}`} className={({ isActive }) => isActive ? styles.active : ''}>
+        <NavLink to={`${rootPath}${basePath}/${escritorio.name}`} className={({ isActive }) => isActive ? styles.active : ''}>
           <button onClick={handleExpandSublist} aria-expanded={isExpanded}>
             <ArrowDown
               className={isExpanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
@@ -63,12 +65,23 @@ function SideBarNavItem ({ escritorio, children, className }) {
   )
 }
 function SideBarNavSubItem ({ escritorio, columna }) {
-  const path = formatPath(columna._id)
+  // const path = formatPath(columna._id)
+  const [firstColumnLink, setFirstColumnLink] = useState(null)
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === escritorio.name)
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === escritorio.name)
+  useEffect(() => {
+    const actualColumn = desktopColumns.find(column => column.slug === columna.slug)
+    setFirstColumnLink(desktopLinks.map(link => (link.idpanel === actualColumn._id) ? link : null).filter(link => link !== null)[0])
+  }, [columna._id])
 
   return (
       <li id={columna._id}>
         <NavLink
-          to={`/column/${escritorio.name}/${path}`}
+          to={`${rootPath}${basePath}/${escritorio.name}/${columna.slug}/${firstColumnLink?._id}`}
           title={columna.name}
           className={({ isActive }) => isActive ? styles.active : ''}
         >

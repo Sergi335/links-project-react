@@ -7,8 +7,8 @@ import LinkDetailsMedia from '../LinkDetailsMedia'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetails ({ linkid, context }) {
-  const { desktopName, id } = useParams()
   // const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?
+  const { desktopName, id } = useParams()
   console.log('🚀 ~ LinkDetails ~ actualDesktop:', desktopName)
   const linkId = id
   console.log('🚀 ~ LinkDetails ~ linkId:', linkId)
@@ -24,13 +24,15 @@ export default function LinkDetails ({ linkid, context }) {
 
   useEffect(() => {
     if (desktopName) {
+      console.log('entramos')
+
       let dataFinal = []
       desktopColumns.forEach((column) => {
         dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
       })
       setLinks(dataFinal)
     }
-  }, [desktopName])
+  }, [desktopName, globalColumns])
 
   console.log(links)
 

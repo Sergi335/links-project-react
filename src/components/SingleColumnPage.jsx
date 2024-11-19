@@ -19,13 +19,15 @@ import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 
 export default function SingleColumnPage () {
-  const { columnId, desktopName } = useParams()
+  const { slug, desktopName, id } = useParams()
+  console.log('🚀 ~ SingleColumnPage ~ id:', id)
   const [navigationLinks, setNavigationLinks] = useState([])
+  const [firstColumnLink, setFirstColumnLink] = useState(null)
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  const styleOfColumns = 'auto auto'
+  const styleOfColumns = '415px 1fr'
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
@@ -36,13 +38,21 @@ export default function SingleColumnPage () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
-  const firstColumnLink = desktopLinks.map(link => (link.idpanel === columnId) ? link : null).filter(link => link !== null)[0]
-  console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
+  // const rootPath = import.meta.env.VITE_ROOT_PATH
+  // const basePath = import.meta.env.VITE_BASE_PATH
+  // window.history.pushState(null, null, `${rootPath}${basePath}/${desktopName}/${slug}/${firstColumnLink._id}`)
+  // const firstColumnLink = desktopLinks.map(link => (link.idpanel === desktopColumns[0]._id) ? link : null).filter(link => link !== null)[0]
+  // console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
   }, [globalLinks])
+  useEffect(() => {
+    // const actualColumn = desktopColumns.find(column => column.slug === slug)
+    // setFirstColumnLink(desktopLinks.map(link => (link.idpanel === actualColumn._id) ? link : null).filter(link => link !== null)[0])
+    setFirstColumnLink(desktopLinks.find(link => link._id === id))
+  }, [id, globalColumns])
 
   // DND
   const sensors = useSensors(
@@ -60,7 +70,7 @@ export default function SingleColumnPage () {
       })
       setNavigationLinks(dataFinal)
     }
-  }, [desktopName])
+  }, [desktopName, globalColumns])
   const getLinksIds = useCallback((columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }, [desktopLinks])
@@ -90,7 +100,7 @@ export default function SingleColumnPage () {
               {desktopColumns
                 ? (
                     desktopColumns.map((columna) => (
-                      columna._id === columnId
+                      columna.slug === slug
                         ? (
                           <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length} context='singlecol'>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
@@ -131,7 +141,7 @@ export default function SingleColumnPage () {
               )}
             </DndContext>
             {/* <LinkDetails linkid={desktopLinks[0]._id}/> */}
-            <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} />
+            <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
             </div>
             </div>
             )

@@ -58,11 +58,11 @@
 
 .scPage .column {
     gap: 3px;
-    width: auto;
+    /* width: 600px; */
 }
 
 .scPage.column_wrapper {
-    max-width: max-content;
+    max-width: 33%;
 }
 
 .selectMode .column h2 {

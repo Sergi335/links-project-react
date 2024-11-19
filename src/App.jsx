@@ -42,25 +42,34 @@ function App () {
   const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
 
   const { themeforToastify, theme } = useStyles()
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
+  console.log('🚀 ~ App ~ basePath:', basePath)
+  console.log('🚀 ~ App ~ basePath:', rootPath)
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: rootPath,
       element: <HomePage />,
       errorElement: <InternalError />
     },
     {
-      path: '/desktop',
+      path: `${rootPath}${basePath}`,
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
       errorElement: <InternalError />,
       children: [
         {
-          path: '/desktop/:desktopName',
+          path: `${rootPath}${basePath}/:desktopName`,
           element: <ListOfLinks />,
           errorElement: <InternalError />
         },
         {
-          path: '/desktop/:desktopName/link/:id',
+          path: `${rootPath}${basePath}/:desktopName/:slug/:id`,
+          element: <SingleColumnPage />,
+          errorElement: <InternalError />
+        },
+        {
+          path: '/app/:desktopName/link/:id',
           element: <LinkDetails />,
           errorElement: <InternalError />
         }

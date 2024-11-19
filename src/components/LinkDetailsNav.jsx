@@ -2,9 +2,11 @@ import { NavLink } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from './Icons/icons'
 import styles from './Pages/LinkDetails.module.css'
 
-export default function LinkDetailsNav ({ links, actualDesktop, linkId, context }) {
+export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
   console.log('🚀 ~ LinkDetailsNav ~ links:', links)
   console.log(linkId)
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
 
   if (linkId === undefined) return
   const nextIndex = links.findIndex(link => linkId === link?._id) + 1 // > length
@@ -23,7 +25,7 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context 
   } else {
     prevId = null
   }
-  const path = context === 'singlecol' ? `/column/${actualDesktop}/${linkId}` : `/desktop/${actualDesktop}/link/${linkId}`
+  const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
   const handleBack = (event) => {
     event.preventDefault() // Evita la navegación normal del enlace
     window.history.back() // Navega hacia atrás en el historial
@@ -32,11 +34,11 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context 
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${prevId}`}>Prev<ArrowLeft/></NavLink>
+            ? <NavLink className={styles.details_nav_link} to={`${path}${prevId}`}>Prev<ArrowLeft/></NavLink>
             : <a className={styles.details_nav_link_disabled}>Prev<ArrowLeft/></a>}
           <NavLink className={styles.details_nav_link} to={'#'} end onClick={handleBack}>Volver</NavLink>
           {nextId
-            ? <NavLink className={styles.details_nav_link} to={`/desktop/${actualDesktop}/link/${nextId}`}><ArrowRight/>Next</NavLink>
+            ? <NavLink className={styles.details_nav_link} to={`${path}${nextId}`}><ArrowRight/>Next</NavLink>
             : <a className={styles.details_nav_link_disabled}><ArrowRight/>Next</a>}
       </div>
     </section>
