@@ -14,7 +14,7 @@ import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
 import FormsContainer from './FormsContainer'
-import LinkDetailsColumn from './LinkDetailsColumn'
+import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 
@@ -89,7 +89,7 @@ export default function SingleColumnPage () {
           : (
             <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
             <div id='maincontent' className={styles.sp_lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
-            <DndContext
+            <DndContext // quitar
               sensors={sensors}
               collisionDetection={closestCorners}
               onDragStart={handleDragStart}

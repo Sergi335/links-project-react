@@ -6,7 +6,7 @@ import LinkDetailsHeader from '../LinkDetailsHeader'
 import LinkDetailsMedia from '../LinkDetailsMedia'
 import styles from './LinkDetails.module.css'
 
-export default function LinkDetails ({ linkid, context }) {
+export default function LinkDetailsPage ({ linkid, context }) {
   // const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?
   const { desktopName, id } = useParams()
   console.log('🚀 ~ LinkDetails ~ actualDesktop:', desktopName)

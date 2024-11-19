@@ -7,12 +7,12 @@ import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useDesktopsStore } from '../src/store/desktops'
 import { useSessionStore } from '../src/store/session'
+import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
 import ListOfLinks from './components/ListOfLinks'
 import NotFound from './components/Pages/404'
 import InternalError from './components/Pages/500'
 import AppLayout from './components/Pages/AppLayout'
 import HomePage from './components/Pages/HomePage'
-import LinkDetails from './components/Pages/LinkDetails'
 import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
@@ -70,7 +70,7 @@ function App () {
         },
         {
           path: '/app/:desktopName/link/:id',
-          element: <LinkDetails />,
+          element: <LinkDetailsPage />,
           errorElement: <InternalError />
         }
       ]
@@ -87,7 +87,7 @@ function App () {
         }
         // {
         //   path: '/desktop/:desktopName/link/:id',
-        //   element: <LinkDetails />,
+        //   element: <LinkDetailsPage />,
         //   errorElement: <InternalError />
         // }
       ]
