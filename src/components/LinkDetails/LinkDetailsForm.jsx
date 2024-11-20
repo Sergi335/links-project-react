@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import useHideForms from '../hooks/useHideForms'
-import { constants } from '../services/constants'
-import { deleteLinkImage, editLink, fetchLinkIconFile, saveLinkIcon } from '../services/dbQueries'
-import { handleResponseErrors } from '../services/functions'
-import styles from './Pages/LinkDetails.module.css'
+import useHideForms from '../../hooks/useHideForms'
+import { constants } from '../../services/constants'
+import { deleteLinkImage, editLink, fetchLinkIconFile, saveLinkIcon } from '../../services/dbQueries'
+import { handleResponseErrors } from '../../services/functions'
+import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsForm ({ data, links, setLinks }) {
   // Cuando borras una imagen al pasar al siguiente link el boton de borrar imagen sigue activo a veces

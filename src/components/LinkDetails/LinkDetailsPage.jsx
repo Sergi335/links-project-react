@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
 import { useGlobalStore } from '../../store/global'
-import LinkDetailsHeader from '../LinkDetailsHeader'
-import LinkDetailsMedia from '../LinkDetailsMedia'
 import styles from './LinkDetails.module.css'
+import LinkDetailsHeader from './LinkDetailsHeader'
+import LinkDetailsMedia from './LinkDetailsMedia'
 
 export default function LinkDetailsPage ({ linkid, context }) {
   // const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?

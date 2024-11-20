@@ -2,10 +2,10 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect, useState } from 'react'
-import DeleteImageConfirmForm from '../components/Forms/DeleteImageConfirmForm'
-import { useGlobalStore } from '../store/global'
+import { useGlobalStore } from '../../store/global'
+import DeleteImageConfirmForm from '../Forms/DeleteImageConfirmForm'
 import ImageLoader from './ImageLoader'
-import styles from './Pages/LinkDetails.module.css'
+import styles from './LinkDetails.module.css'
 
 export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
   const [deleteConfFormVisible, setDeleteConfFormVisible] = useState(false)

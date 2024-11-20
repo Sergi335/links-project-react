@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import { ArrowLeft, ArrowRight } from './Icons/icons'
-import styles from './Pages/LinkDetails.module.css'
+import { ArrowLeft, ArrowRight } from '../Icons/icons'
+import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
   console.log('🚀 ~ LinkDetailsNav ~ links:', links)

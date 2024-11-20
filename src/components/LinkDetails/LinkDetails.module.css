@@ -1,3 +1,24 @@
+.link_details_panel {
+  container-type: inline-size;
+
+  width: 33%;
+  padding: 5px;
+
+  & iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+  }
+}
+@container (max-width: 600px) {
+  .link_details_panel .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .link_details_panel .editFieldsColumn {
+    width: auto;
+  }
+}
 .linkDetails {
   display: flex;
   flex-direction: column;

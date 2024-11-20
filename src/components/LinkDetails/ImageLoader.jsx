@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { CloseIcon } from './Icons/icons'
-import ImagesLoader from './Loaders/ImagesLoader'
+import { CloseIcon } from '../Icons/icons'
+import ImagesLoader from '../Loaders/ImagesLoader'
 export default function ImageLoader ({ src, alt, handleDeleteImage }) {
   const [loading, setLoading] = useState(true)
   const [width, setWidth] = useState()

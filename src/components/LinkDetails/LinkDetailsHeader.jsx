@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { CheckIcon, CloseIcon } from '../components/Icons/icons'
-import { formatDate, getUrlStatus } from '../services/functions'
-import styles from './Pages/LinkDetails.module.css'
+import { formatDate, getUrlStatus } from '../../services/functions'
+import { CheckIcon, CloseIcon } from '../Icons/icons'
+import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsHeader ({ data }) {
   const [urlStatus, setUrlStatus] = useState()
