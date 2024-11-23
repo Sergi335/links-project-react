@@ -98,18 +98,18 @@
                 transition: border-color .5s,color .5s;
 
                 &:hover {
-                    color: var(--accentColor);
+                    color: var(--text-color-primary);
                     cursor: pointer;
                     border-left-color: var(--accentColor);
 
                     .plus_icon {
-                        color: var(--accentColor); 
+                        color: var(--text-color-primary); 
                     }
                 }
             }
 
             >a.active {
-                color: var(--accentColor);
+                color: var(--text-color-primary);
                 border-left-color: var(--accentColor);
             }
 

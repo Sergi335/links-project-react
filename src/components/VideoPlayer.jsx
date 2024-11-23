@@ -12,7 +12,9 @@ export default function VideoPlayer ({ src, width, height }) {
   return (
     <>
       {
-        isVideo && (<iframe src={checkUrlMatch(src)} width={width} height={height}></iframe>)
+        isVideo
+          ? <iframe src={checkUrlMatch(src)} width={width} height={height}></iframe>
+          : <img src="/img/placeholderVid.png" alt="" />
       }
     </>
   )

@@ -11,6 +11,7 @@ import styles from './HomePage.module.css'
 
 export default function AppLayout () {
   const { desktopName, id } = useParams()
+  console.log('🚀 ~ AppLayout ~ id:', id)
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 
@@ -29,7 +30,7 @@ export default function AppLayout () {
     <>
       <SideBar />
       <div id="grid" className="grid">
-        {id === undefined && <ToolBar />}
+        <ToolBar />
       <header className='main_header'>
         <Bookmarks />
         <HeaderInfo />

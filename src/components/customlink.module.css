@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  border-left: 1px solid transparent;
+  border-left: 1px solid var(--firstBorderColor);
 
   .description {
     display: flex;
@@ -43,7 +43,7 @@
   }
 
   &:hover>a {
-    color: var(--accentColor);
+    color: var(--text-color-primary);
   }
 
   &:hover .lcontrols {
@@ -59,14 +59,15 @@
     overflow: hidden;
     gap: 10px;
     letter-spacing: .2px;
-    width: 85%;
+    max-width: 85%;
   }
 
   & a span:first-of-type {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 77%;
+    width: fit-content;
+    padding-right: 8px;
   }
 
   & img {

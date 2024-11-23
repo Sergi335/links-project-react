@@ -1,18 +1,20 @@
-import { NavLink } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from '../Icons/icons'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
-  console.log('🚀 ~ LinkDetailsNav ~ links:', links)
-  console.log(linkId)
+  // console.log('🚀 ~ LinkDetailsNav ~ links:', links)
+  // console.log(linkId)
+  if (linkId === undefined) return
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
+  const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
 
-  if (linkId === undefined) return
   const nextIndex = links.findIndex(link => linkId === link?._id) + 1 // > length
-  console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
+  // console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
   const prevIndex = links.findIndex(link => linkId === link?._id) - 1 // -2
-  console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
+  // console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
   let nextId
   if (typeof links[nextIndex] === 'object' && links[nextIndex]._id !== undefined) {
     nextId = links[nextIndex]._id
@@ -25,20 +27,34 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
   } else {
     prevId = null
   }
-  const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
-  const handleBack = (event) => {
-    event.preventDefault() // Evita la navegación normal del enlace
-    window.history.back() // Navega hacia atrás en el historial
-  }
+  // const handleBack = (event) => {
+  //   event.preventDefault() // Evita la navegación normal del enlace
+  //   window.history.back() // Navega hacia atrás en el historial
+  // }
+  useEffect(() => {
+    const links = Array.from(document.querySelectorAll('.link'))
+    const link = links.find(link => link.id === linkId)
+    if (links && link) {
+      links.forEach(link => {
+        if (link.id === linkId) {
+          link.classList.add('navlink_active')
+        } else {
+          link.classList.remove('navlink_active')
+        }
+      })
+    }
+  }, [linkId])
   return (
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <NavLink className={styles.details_nav_link} to={`${path}${prevId}`}>Prev<ArrowLeft/></NavLink>
+            ? <Link className={styles.details_nav_link} to={`${path}${prevId}`}>Prev<ArrowLeft/></Link>
             : <a className={styles.details_nav_link_disabled}>Prev<ArrowLeft/></a>}
-          <NavLink className={styles.details_nav_link} to={'#'} end onClick={handleBack}>Volver</NavLink>
+          {
+            context !== 'singlecol' && <Link className={styles.details_nav_link} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
+          }
           {nextId
-            ? <NavLink className={styles.details_nav_link} to={`${path}${nextId}`}><ArrowRight/>Next</NavLink>
+            ? <Link className={styles.details_nav_link} to={`${path}${nextId}`}><ArrowRight/>Next</Link>
             : <a className={styles.details_nav_link_disabled}><ArrowRight/>Next</a>}
       </div>
     </section>

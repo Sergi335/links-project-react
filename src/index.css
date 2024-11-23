@@ -302,10 +302,14 @@ input:-webkit-autofill:focus {
 
 a {
   font-weight: var(--linkFontWeight);
-  color: var(--text-color-primary);
+  color: var(--text-color-secondary);
   text-decoration: inherit;
   font-size: .875rem;
   transition: height .3s ease-in-out;
+
+  & :hover {
+    color: var(--text-color-primary);
+  }
 }
 
 a:hover svg,
@@ -314,9 +318,9 @@ span:hover svg {
 }
 
 a.active,
-.link.active {
+.link.active, .link.navlink_active {
   /* background-color: var(--hover-color-primary); */
-  color: var(--accentColor);
+  /* color: var(--accentColor); */
   border-left: 1px solid var(--accentColor);
 }
 

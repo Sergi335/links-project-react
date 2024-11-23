@@ -9,7 +9,7 @@ export default function LinkDetailsColumn ({ data, links, actualDesktop, slug })
   return (
     <section className={styles.link_details_panel}>
         <LinkDetailsHeader data={data} />
-        <VideoPlayer src={data?.URL} width={600} height={300} />
+        <VideoPlayer src={data?.URL} />
         <LinkDetailsNav links={links} actualDesktop={actualDesktop} linkId={data?._id} context={'singlecol'} slug={slug} />
         <LinkDetailsForm data={data} />
         <h2>Related Links</h2>
