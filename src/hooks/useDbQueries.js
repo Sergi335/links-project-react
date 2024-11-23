@@ -35,7 +35,7 @@ const useDbQueries = () => {
           .then((response) => {
             const desktops = response[0].data
             const columns = response[1].columns
-            console.log('🚀 ~ .then ~ columns:', columns)
+            // console.log('🚀 ~ .then ~ columns:', columns)
             const links = response[2].links
             setDesktopsStore(desktops)
             setGlobalColumns(columns)

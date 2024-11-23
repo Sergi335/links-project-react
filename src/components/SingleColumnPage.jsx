@@ -20,7 +20,7 @@ import LinkLoader from './Loaders/LinkLoader'
 
 export default function SingleColumnPage () {
   const { slug, desktopName, id } = useParams()
-  console.log('🚀 ~ SingleColumnPage ~ id:', id)
+  // console.log('🚀 ~ SingleColumnPage ~ id:', id)
   const [navigationLinks, setNavigationLinks] = useState([])
   const [firstColumnLink, setFirstColumnLink] = useState(null)
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })

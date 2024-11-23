@@ -10,8 +10,8 @@ import ToolBar from '../ToolBar/ToolBar'
 import styles from './HomePage.module.css'
 
 export default function AppLayout () {
-  const { desktopName, id } = useParams()
-  console.log('🚀 ~ AppLayout ~ id:', id)
+  const { desktopName } = useParams()
+  // console.log('🚀 ~ AppLayout ~ id:', id)
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 

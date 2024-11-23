@@ -4,9 +4,6 @@ import { ArrowLeft, ArrowRight } from '../Icons/icons'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
-  // console.log('🚀 ~ LinkDetailsNav ~ links:', links)
-  // console.log(linkId)
-  if (linkId === undefined) return
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
@@ -44,6 +41,10 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
       })
     }
   }, [linkId])
+  // if (!Array.isArray(links) || typeof linkId === 'undefined') {
+  //   console.error("Invalid props: 'links' must be an array and 'linkId' must be defined.")
+  //   return null
+  // }
   return (
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
