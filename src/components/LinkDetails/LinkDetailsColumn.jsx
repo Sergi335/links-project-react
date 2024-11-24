@@ -8,7 +8,7 @@ import LinkDetailsNav from './LinkDetailsNav'
 export default function LinkDetailsColumn ({ data, links, actualDesktop, slug }) {
   return (
     <section className={styles.link_details_panel}>
-        <LinkDetailsHeader data={data} />
+        <LinkDetailsHeader data={data} context={'singlecol'} />
         <VideoPlayer src={data?.URL} />
         <LinkDetailsNav links={links} actualDesktop={actualDesktop} linkId={data?._id} context={'singlecol'} slug={slug} />
         <LinkDetailsForm data={data} />

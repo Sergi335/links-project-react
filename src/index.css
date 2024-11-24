@@ -59,7 +59,9 @@
   --color-secondary: var(--color-slate-50);
   --text-color-primary: var(--color-zinc-800);
   --text-color-secondary: var(--color-zinc-500);
-  --hover-color-primary: hsl(from var(--accentColor) h s l / 30%);
+  /* --hover-color-primary: hsl(from var(--accentColor) h s l / 30%); */
+  --text-color-inverse: var(--color-zinc-100);
+  --btn-bg-color: var(--color-slate-900);
 
   --placeholderImg: url(/img/placeholderImgLight.png);
   --placeholderVid: url(/img/placeholderVidLight.png);
@@ -103,6 +105,8 @@ html.dark {
   --color-secondary: var(--color-slate-900);
   --text-color-primary: var(--color-neutral-300);
   --text-color-secondary: var(--color-neutral-400);
+  --text-color-inverse: var(--color-neutral-900);
+  --btn-bg-color: var(--color-slate-100);
 
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
@@ -114,7 +118,6 @@ html.dark {
   --firstBorderColor: var(--color-slate-700);
   --secondBorderColor: var(--color-slate-600);
   --firstColorOpacity: #292929e3;
-  --buttonColor: var(--color-slate-700);
   --buttonHoverColor: #353434;
   --secondNeumoShadow: inset 0 0 1em rgb(141 141 141 / 10%), 0 0 0 2px rgb(68 68 68);
   --inverseColor: white;
@@ -345,14 +348,16 @@ ul {
   list-style-type: none;
 }
 
-button {
+button, .button {
   display: flex;
   justify-content: center;
   align-items: center;
   border: 0;
   padding: 8px 19px;
   cursor: pointer;
-  color: var(--text-color-primary);
+  color: var(--text-color-inverse);
+  background-color: var(--btn-bg-color);
+  border-radius: var(--button-radius);
 }
 
 button:disabled {

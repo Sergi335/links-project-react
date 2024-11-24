@@ -5,12 +5,6 @@
 
     & .lol_content_wrapper {
         margin: 16px;
-        /* max-width: 100%;
-        padding: 16px; */
-        /* border-radius: 7px; */
-        /* background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, var(--color-primary) 5px, var(--color-primary) 6px);
-        background-color: var(--color-medium); */
-        /* border: 1px solid hsl(from var(--accentColor) h s l / 30%); */
 
         & .lol_content {
             display: grid;
@@ -19,7 +13,6 @@
 
         & .sp_lol_content {
             display: flex;
-            /* gap: 16px; */
             flex-wrap: wrap;
         }
     }

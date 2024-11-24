@@ -1,5 +1,3 @@
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -10,18 +8,15 @@ import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import styles from './Column.module.css'
-import { ArrowDown, SelectIcon } from './Icons/icons'
-import LinkLoader from './Loaders/LinkLoader'
+import { SelectIcon } from './Icons/icons'
 
-export default function Columna ({ data, children, childCount, context }) {
+export default function SingleColumn ({ data, children, childCount }) {
   const { desktopName } = useParams()
   const columna = data.columna || data.activeColumn
   const [editMode, setEditMode] = useState(false)
-  const [localOpenColumn, setLocalOpenColumn] = useState(false)
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
-  const stylesOnHeader = { height: 'auto' }
   const setPoints = useFormsStore(state => state.setPoints)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -35,12 +30,7 @@ export default function Columna ({ data, children, childCount, context }) {
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const linkLoader = useLinksStore(state => state.linkLoader)
-  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
 
-  const handleChangeColumnHeight = (e) => {
-    setLocalOpenColumn(prev => !prev)
-  }
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
     const column = document.getElementById(columna._id)
@@ -109,69 +99,21 @@ export default function Columna ({ data, children, childCount, context }) {
   }
 
   useEffect(() => {
-    setLocalOpenColumn(globalOpenColumns)
-  }, [globalOpenColumns])
-  // ---> Esto provoca el layout de la columna a cambiar
-  // useEffect(() => {
-  //   if (context === 'singlecol') {
-  //     setClassNames(`${styles.column_wrapper} colOpen ${styles.scPage}`)
-  //     return
-  //   }
-  //   if (localOpenColumn) {
-  //     setClassNames(`${styles.column_wrapper} colOpen`)
-  //     return
-  //   }
-  //   setLocalOpenColumn(false)
-  //   setClassNames(`${styles.column_wrapper}`)
-  // }, [localOpenColumn])
-
-  useEffect(() => {
     setSelectModeGlobal(false)
     setSelectedLinks([])
     setColumnSelectModeId([])
   }, [desktopName])
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    isDragging
-  } = useSortable({
-    id: columna._id,
-    data: {
-      type: 'Column',
-      columna
-    }
-  })
-  const style = {
-    transform: CSS.Transform.toString(transform)
-  }
-  if (isDragging) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        className={styles.dragginColumn}
-      >
-      </div>
-    )
-  }
   return (
     <>
-    {/* Debe tener la misma altura y ancho que cuando esta sin arrastrar para no tener problemas */}
       <div
-        ref={setNodeRef}
         id={columna._id}
-        style={style}
-        className={localOpenColumn ? `${styles.column_wrapper} colOpen` : styles.column_wrapper}
+        className={`${styles.column_wrapper} colOpen ${styles.scPage}`}
         data-order={columna.order}
       >
         <div
           ref={colRef}
           className={`${styles.column} column`}
-          {...attributes}
-          {...listeners}
         >
           {
             editMode
@@ -184,16 +126,6 @@ export default function Columna ({ data, children, childCount, context }) {
                       childCount > 7 && <span ref={spanCountRef} className='linkCount'>{`+${childCount - 7}`}</span>
                     }
                   </h2>
-                    {
-                      linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && !localOpenColumn && <LinkLoader stylesOnHeader={stylesOnHeader}/>
-                    }
-                    {
-                      context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
-                        {
-                          childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>
-                        }
-                      </div>
-                    }
                   <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>

@@ -8,7 +8,6 @@ import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import Columna from './column'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import CustomLink from './customlink'
@@ -17,20 +16,20 @@ import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
+import SingleColumn from './SingleColumn'
 
 export default function SingleColumnPage () {
   const { slug, desktopName, id } = useParams()
-  // console.log('🚀 ~ SingleColumnPage ~ id:', id)
   const [navigationLinks, setNavigationLinks] = useState([])
   const [firstColumnLink, setFirstColumnLink] = useState(null)
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  const styleOfColumns = '415px 1fr'
-  const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
+  // const styleOfColumns = '415px 1fr'
+  // const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
-  const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
+  const numberOfLoaders = Array(1).fill(null)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const globalLinks = useGlobalStore(state => state.globalLinks)
@@ -38,19 +37,12 @@ export default function SingleColumnPage () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
-  // const rootPath = import.meta.env.VITE_ROOT_PATH
-  // const basePath = import.meta.env.VITE_BASE_PATH
-  // window.history.pushState(null, null, `${rootPath}${basePath}/${desktopName}/${slug}/${firstColumnLink._id}`)
-  // const firstColumnLink = desktopLinks.map(link => (link.idpanel === desktopColumns[0]._id) ? link : null).filter(link => link !== null)[0]
-  // console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
   }, [globalLinks])
   useEffect(() => {
-    // const actualColumn = desktopColumns.find(column => column.slug === slug)
-    // setFirstColumnLink(desktopLinks.map(link => (link.idpanel === actualColumn._id) ? link : null).filter(link => link !== null)[0])
     setFirstColumnLink(desktopLinks.find(link => link._id === id))
   }, [id, globalColumns])
 
@@ -79,7 +71,7 @@ export default function SingleColumnPage () {
     <main className={styles.list_of_links}>
       {
         globalLoading
-          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
+          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content}>
               {
                 numberOfLoaders.map((item, index) => (
                   <ColumnsLoader key={index} />
@@ -88,8 +80,8 @@ export default function SingleColumnPage () {
             </div></div>
           : (
             <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
-            <div id='maincontent' className={styles.sp_lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
-            <DndContext // quitar
+            <div id='maincontent' className={styles.sp_lol_content}>
+            <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
               onDragStart={handleDragStart}
@@ -102,10 +94,9 @@ export default function SingleColumnPage () {
                     desktopColumns.map((columna) => (
                       columna.slug === slug
                         ? (
-                          <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length} context='singlecol'>
+                          <SingleColumn key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length} context='singlecol'>
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
-                              // calcular el childcount a partir de desktoplinks y pasarselo como prop a la col
                               desktopLinks.map((link) =>
                                 link.idpanel === columna._id
                                   ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName} context='singlecol'/>)
@@ -118,7 +109,7 @@ export default function SingleColumnPage () {
                               )))
                             }
                           </SortableContext>
-                        </Columna>
+                        </SingleColumn>
                           )
                         : null
                     ))
@@ -140,7 +131,6 @@ export default function SingleColumnPage () {
                 document.body
               )}
             </DndContext>
-            {/* <LinkDetails linkid={desktopLinks[0]._id}/> */}
             <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
             </div>
             </div>
