@@ -31,7 +31,7 @@
 
 .column_header {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     position: relative;
     gap: 10px;
@@ -45,7 +45,7 @@
     text-overflow: ellipsis;
     padding: 10px 0;
     color: var(--text-color-primary);
-    flex-grow: 1;
+    /* flex-grow: 1; */
     margin-left: 15px;
     transition: margin .3s ease-in-out;
     overflow: hidden;

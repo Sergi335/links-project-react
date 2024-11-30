@@ -76,9 +76,9 @@
     --navlinks-block-padding: 7px;
     /* overflow-y: auto; */
 
-    & ul {
+    /* & ul {
         padding: 0;
-    }
+    } */
 
     .nav_first_level_ul {
         padding: 30px 0 40px 0;
@@ -91,10 +91,12 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
                 font-weight: 500;
                 border-left: 1px solid var(--firstBorderColor);
                 padding: var(--navlinks-block-padding) 0;
+                padding-left: 20px;
                 transition: border-color .5s,color .5s;
 
                 &:hover {
@@ -118,7 +120,7 @@
                 overflow: hidden;
                 transition: height .2s ease-out;
                 /* margin: 5px 0; */
-                margin-left: 27px;
+                margin-left: 16px;
                 padding-left: 5px;
 
                 &.show {
@@ -128,14 +130,14 @@
                 li a {
                     /* font-size: .8rem; */
                     display: block;
-                    padding: var(--navlinks-block-padding) 10px var(--navlinks-block-padding) 22px;
+                    padding: var(--navlinks-block-padding) 10px var(--navlinks-block-padding) 20px;
                     position: relative;
                     border-left: 1px solid var(--firstBorderColor);
                     transition: border-color .5s,color .5s;
                 }
 
                 li a.active {
-                    color: var(--accentColor);
+                    color: var(--text-color-primary);
                     border-left-color: var(--accentColor);
 
                 }
@@ -161,13 +163,13 @@ button:has(.plus_icon) {
     width: 12px;
     cursor: pointer;
     color: transparent;
-    transform: rotate(270deg);
+    transform: rotate(90deg);
     margin-top: 1px;
     transition: color .5s;
 
     &.plus_icon_opened {
         transform: rotate(0deg);
-        color: var(--accentColor);
+        color: var(--text-color-primary);
     }
 }
 

@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useStyles } from '../../hooks/useStyles'
 import { moveDesktops } from '../../services/dbQueries'
@@ -51,12 +51,12 @@ function SideBarNavItem ({ escritorio, children, className }) {
   return (
       <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} className={className}>
         <NavLink to={`${rootPath}${basePath}/${escritorio.name}`} className={({ isActive }) => isActive ? styles.active : ''}>
+            {escritorio.displayName}
           <button onClick={handleExpandSublist} aria-expanded={isExpanded}>
             <ArrowDown
               className={isExpanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
             />
           </button>
-            {escritorio.displayName}
         </NavLink>
         <ul className={isExpanded ? styles.show : null}>
           {children}
@@ -64,8 +64,8 @@ function SideBarNavItem ({ escritorio, children, className }) {
       </li>
   )
 }
-function SideBarNavSubItem ({ escritorio, columna }) {
-  // const path = formatPath(columna._id)
+function SideBarNavSubItem ({ escritorio, columna, slug }) {
+  const [active, setActive] = useState(false)
   const [firstColumnLink, setFirstColumnLink] = useState(null)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
@@ -73,24 +73,28 @@ function SideBarNavSubItem ({ escritorio, columna }) {
   const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === escritorio.name)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === escritorio.name)
+
   useEffect(() => {
     const actualColumn = desktopColumns.find(column => column.slug === columna.slug)
+    setActive(slug === actualColumn.slug)
     setFirstColumnLink(desktopLinks.map(link => (link.idpanel === actualColumn._id) ? link : null).filter(link => link !== null)[0])
-  }, [columna._id])
+  }, [slug])
 
   return (
       <li id={columna._id}>
-        <NavLink
+        <Link
           to={`${rootPath}${basePath}/${escritorio.name}/${columna.slug}/${firstColumnLink?._id}`}
           title={columna.name}
-          className={({ isActive }) => isActive ? styles.active : ''}
+          className={active ? styles.active : ''}
         >
             {columna.name}
-          </NavLink>
+          </Link>
       </li>
   )
 }
 export default function SideBarNav () {
+  const { slug } = useParams()
+  console.log('🚀 ~ SideBarNavSubItem ~ slug:', slug)
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const listRef = useRef()
@@ -168,7 +172,7 @@ export default function SideBarNav () {
                             {
                               globalColumns.map(col => (
                                 col.escritorio === escritorio.name
-                                  ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col}>{col.name}</SideBarNavSubItem>
+                                  ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col} slug={slug}>{col.name}</SideBarNavSubItem>
                                   : null
                               ))
                             }

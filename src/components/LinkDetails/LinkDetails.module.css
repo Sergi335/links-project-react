@@ -1,8 +1,10 @@
 .link_details_panel {
   container-type: inline-size;
-
   width: 33%;
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 
   & iframe {
       width: 100%;
@@ -13,6 +15,9 @@
     height: auto;
     aspect-ratio: 16 / 9;
     object-fit: contain;
+    opacity: .5;
+    background-color: var(--color-primary);
+    border-radius: 5px;
   }
 }
 @container (max-width: 600px) {

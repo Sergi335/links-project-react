@@ -1,64 +1,99 @@
-import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { constants } from '../services/constants'
 import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
 import { useSessionStore } from '../store/session'
 
+// Fetch functions
+const fetchDesktops = async () => {
+  const response = await fetch(`${constants.BASE_API_URL}/desktops`, {
+    method: 'GET',
+    ...constants.FETCH_OPTIONS
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  return response.json()
+}
+
+const fetchColumns = async () => {
+  const response = await fetch(`${constants.BASE_API_URL}/columns`, {
+    method: 'GET',
+    ...constants.FETCH_OPTIONS
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  return response.json()
+}
+
+const fetchLinks = async () => {
+  const response = await fetch(`${constants.BASE_API_URL}/links`, {
+    method: 'GET',
+    ...constants.FETCH_OPTIONS
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  return response.json()
+}
+
 const useDbQueries = () => {
+  const navigate = useNavigate()
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const navigate = useNavigate()
   const setUser = useSessionStore(state => state.setUser)
 
-  useEffect(() => {
-    setGlobalLoading(true)
-    const getData = async () => {
-      const desktopsQuery = fetch(`${constants.BASE_API_URL}/desktops`, {
-        method: 'GET',
-        ...constants.FETCH_OPTIONS
-      })
-      const columnsQuery = fetch(`${constants.BASE_API_URL}/columns`, {
-        method: 'GET',
-        ...constants.FETCH_OPTIONS
-      })
-      const linksQuery = fetch(`${constants.BASE_API_URL}/links`, {
-        method: 'GET',
-        ...constants.FETCH_OPTIONS
-      })
-      const [desktopsResponse, columnsResponse, linksResponse] = await Promise.all([desktopsQuery, columnsQuery, linksQuery])
-      if (desktopsResponse.ok && columnsResponse.ok && linksResponse.ok) {
-        await Promise.all([desktopsResponse.json(), columnsResponse.json(), linksResponse.json()])
-          .then((response) => {
-            const desktops = response[0].data
-            const columns = response[1].columns
-            // console.log('🚀 ~ .then ~ columns:', columns)
-            const links = response[2].links
-            setDesktopsStore(desktops)
-            setGlobalColumns(columns)
-            setGlobalLinks(links)
-            localStorage.setItem('firstDesktop', JSON.stringify(desktops[0]?.name))
-          })
-          .catch((error) => {
-            console.log(error)
-            setGlobalError({ error: 'Error al recuperar los datos' })
-          })
-          .finally(() => {
-            setGlobalLoading(false)
-          })
-      } else {
-        // Diccionario de errores por codigo de respuesta, eg 401: 'Unauthorized'
-        console.log({ error: desktopsResponse.statusText })
-        setGlobalError({ error: desktopsResponse.statusText })
-        setGlobalLoading(false)
+  // Parallel queries using useQueries
+  const { isLoading, isError, error } = useQuery({
+    queryKey: ['dbData'],
+    queryFn: async () => {
+      try {
+        setGlobalLoading(true)
+        const [desktopsResponse, columnsResponse, linksResponse] = await Promise.all([
+          fetchDesktops(),
+          fetchColumns(),
+          fetchLinks()
+        ])
+
+        // Update stores
+        setDesktopsStore(desktopsResponse.data)
+        setGlobalColumns(columnsResponse.data)
+        setGlobalLinks(linksResponse.data)
+
+        // Set first desktop in localStorage
+        localStorage.setItem('firstDesktop', JSON.stringify(desktopsResponse.data[0]?.name))
+
+        return { desktops: desktopsResponse.data }
+      } catch (err) {
+        // Handle error
+        setGlobalError({ error: 'Error al recuperar los datos' })
         setUser(null)
         navigate('/login')
+        throw err
+      } finally {
+        setGlobalLoading(false)
       }
+    },
+    retry: false,
+    gcTime: 1000 * 60 * 60, // 1 hour
+    refetchOnWindowFocus: false,
+    onSettled: () => {
+      setGlobalLoading(false)
     }
-    getData()
-  }, [])
+  })
+
+  return { isLoading, isError, error }
 }
+
 export default useDbQueries
