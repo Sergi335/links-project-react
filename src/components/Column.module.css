@@ -7,7 +7,7 @@
 .column {
     display: flex;
     flex-direction: column;
-    padding: 5px;
+    /* padding: 5px; */
     /* gap: 3px; */
 }
 
@@ -43,10 +43,10 @@
     font-size: 1.1rem;
     white-space: nowrap;
     text-overflow: ellipsis;
-    padding: 10px 0;
+    padding: 5px 0;
     color: var(--text-color-primary);
     /* flex-grow: 1; */
-    margin-left: 15px;
+    /* margin-left: 15px; */
     transition: margin .3s ease-in-out;
     overflow: hidden;
     font-weight: 700;
@@ -56,9 +56,9 @@
     font-size: 1.5rem;
 }
 
-.scPage .column {
+/* .scPage .column {
     gap: 3px;
-}
+} */
 
 .scPage.column_wrapper {
     width: 33%;

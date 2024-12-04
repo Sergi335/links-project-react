@@ -15,10 +15,10 @@
 
     & span {
       opacity: 0;
-      padding: 17px;
       text-align: left;
-      font-size: 0.875rem;
-      color: var(--text-color-primary);
+      font-size: 0.75rem;
+      color: var(--text-color-secondary);
+      padding-left: 41px;
     }
 
     &.link_open {
@@ -72,7 +72,7 @@
 
   & img {
     width: 16px;
-    margin-left: 15px;
+    margin-left: 10px;
     transition: margin .3s ease-in-out;
     border-radius: 3px;
     aspect-ratio: 1/1;

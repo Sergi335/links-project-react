@@ -70,6 +70,7 @@ const useDbQueries = () => {
         setDesktopsStore(desktopsResponse.data)
         setGlobalColumns(columnsResponse.data)
         setGlobalLinks(linksResponse.data)
+        console.log('🚀 ~ queryFn: ~ linksResponse.data:', linksResponse.data)
 
         // Set first desktop in localStorage
         localStorage.setItem('firstDesktop', JSON.stringify(desktopsResponse.data[0]?.name))

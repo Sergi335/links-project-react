@@ -94,7 +94,6 @@ function SideBarNavSubItem ({ escritorio, columna, slug }) {
 }
 export default function SideBarNav () {
   const { slug } = useParams()
-  console.log('🚀 ~ SideBarNavSubItem ~ slug:', slug)
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const listRef = useRef()

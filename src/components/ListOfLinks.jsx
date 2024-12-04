@@ -60,8 +60,7 @@ export default function ListOfLinks () {
 
   return (
     <main className={styles.list_of_links}>
-      <p>{desktopLinks.length}</p>
-      <DesktopNameDisplay />
+      <DesktopNameDisplay numberOfLinks={desktopLinks.length} />
       {
         globalLoading
           ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>

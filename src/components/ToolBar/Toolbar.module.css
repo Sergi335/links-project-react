@@ -22,21 +22,21 @@
             left: -2px;
             background-color: var(--accentColor);
         }
-        & > .sideButtons:is(:first-child) {
+        /* & > .sideButtons:is(:first-child) {
             border-bottom-left-radius: 11px;
-        }
+        } */
 
-        @media (min-width: 1280px) {
+        /* @media (min-width: 1280px) {
             & > .sideButtons:is(:first-child) {
                 border-top-right-radius: 11px;
                 border-bottom-left-radius: 0;
             }
-        }
+        } */
 
         /*Cuando hay cinco¿?*/
-        & > .sideButtons:is(:last-child) {
+        /* & > .sideButtons:is(:last-child) {
             border-bottom-right-radius: 11px;
-        }
+        } */
 
         .sideButtons {
             background-color: var(--color-primary);
@@ -125,12 +125,12 @@
         .toolbar_controls {
             flex-direction: column;
             margin-top: 15px;
-            position: relative;
+            /* position: relative;
             left: -1px;
             gap: 0;
             box-shadow: 1px 0px 8px var(--firstShadow);
             border-top-right-radius: 11px;
-            border-bottom-right-radius: 11px;
+            border-bottom-right-radius: 11px; */
         }
     }
 }
@@ -142,8 +142,19 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: var(--color-medium);
-    display: none;
+    line-height: initial    ;
+    /* color: var(--color-medium); */
+    /* display: none; */
+}
+.desktop_name_container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+    & p {
+        font-size: 14px;
+        font-weight: 500;
+    }
 }
 
 
@@ -169,9 +180,10 @@
         overflow-x: visible;
         background-color: transparent;
         height: calc(100dvh - 80px);
-        z-index: initial;
+        z-index: 1;
         justify-content: initial;
         animation: none;
+        align-items: center;
     }
 
     .mobile_menu_button {

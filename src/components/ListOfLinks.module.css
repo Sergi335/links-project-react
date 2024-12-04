@@ -2,9 +2,10 @@
     display: flex;
     flex-direction: column;
     grid-area: main;
+    padding-inline: 32px;
 
     & .lol_content_wrapper {
-        margin: 16px;
+        /* margin: 16px; */
 
         & .lol_content {
             display: grid;
