@@ -69,7 +69,7 @@ function App () {
           errorElement: <InternalError />
         },
         {
-          path: '/app/:desktopName/link/:id',
+          path: `${rootPath}${basePath}/:desktopName/link/:id`,
           element: <LinkDetailsPage />,
           errorElement: <InternalError />
         }
