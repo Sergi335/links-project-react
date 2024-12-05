@@ -12,6 +12,7 @@ import DeleteConfirmForm from './Forms/DeleteConfirmForm'
 import DeleteLinkForm from './Forms/DeleteLinkForm'
 import EditLinkForm from './Forms/EditLinkForm'
 import MoveOtherDeskForm from './Forms/MoveOtherDeskForm'
+import Search from './Search'
 
 export default function FormsContainer () {
   const { desktopName } = useParams()
@@ -135,6 +136,7 @@ export default function FormsContainer () {
                 />
               : null
           }
+          <Search />
         </>
   )
 }

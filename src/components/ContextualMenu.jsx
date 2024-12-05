@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { moveLink, moveMultipleLinks } from '../services/dbQueries'
+import { editLink, moveLink, moveMultipleLinks } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
@@ -90,6 +90,35 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     setMoveFormVisible(true)
     setVisible(false)
   }
+  const handleAddToFavorites = async () => {
+    console.log(params)
+    setVisible(false)
+    const booked = params.bookmark === true
+    console.log(!booked)
+
+    const response = await editLink({ id: params._id, bookmark: !booked })
+
+    const { hasError, message } = handleResponseErrors(response)
+    let error
+    if (response.message !== undefined) {
+      error = response.message.join('\n')
+    } else {
+      error = message
+    }
+    if (hasError) {
+      toast(error)
+      return
+    }
+    const updatedDesktopLinks = globalLinks.map(link => {
+      if (link._id === params._id) {
+      // Modifica la propiedad del elemento encontrado
+        return { ...link, bookmark: !booked }
+      }
+      return link
+    }).toSorted((a, b) => (a.orden - b.orden))
+    setGlobalLinks(updatedDesktopLinks)
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+  }
   useEffect(() => {
     // console.log(window.innerHeight)
     // console.log(document.body.scrollHeight)
@@ -119,7 +148,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       <p><strong>Opciones Enlace</strong></p>
       <p>{params.name}</p>
       <span onClick={handleEditClick}>Editar</span>
-      <span className={styles.moveTo}>Mover a<ArrowDown className={ `${styles.rotate} uiIcon_small`}/>
+      <span onClick={handleAddToFavorites}>Favoritos</span>
+      <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
           {

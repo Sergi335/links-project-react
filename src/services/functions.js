@@ -72,29 +72,29 @@ export function checkUrlMatch (url) {
   }
   return null // Si no hay coincidencia
 }
-export function saludo (user) {
-  const fecha = new Date()
-  const hora = fecha.getHours()
-  let frase
+// export function saludo (user) {
+//   const fecha = new Date()
+//   const hora = fecha.getHours()
+//   let frase
 
-  if (hora >= 7 && hora < 14) {
-    frase = `Buenos días ${user}`
-  } else if (hora >= 14 && hora < 20) {
-    frase = `Buenas tardes ${user}`
-  } else {
-    frase = `Buenas noches ${user}`
-  }
+//   if (hora >= 7 && hora < 14) {
+//     frase = `Buenos días ${user}`
+//   } else if (hora >= 14 && hora < 20) {
+//     frase = `Buenas tardes ${user}`
+//   } else {
+//     frase = `Buenas noches ${user}`
+//   }
 
-  return frase
-}
-export function hora () {
-  const fecha = new Date()
-  const hora = fecha.getHours()
-  const min = fecha.getMinutes()
-  const text = `${hora < 10 ? '0' : ''}${hora}:${min < 10 ? '0' : ''}${min}`
+//   return frase
+// }
+// export function hora () {
+//   const fecha = new Date()
+//   const hora = fecha.getHours()
+//   const min = fecha.getMinutes()
+//   const text = `${hora < 10 ? '0' : ''}${hora}:${min < 10 ? '0' : ''}${min}`
 
-  return text
-}
+//   return text
+// }
 export const searchLinks = async ({ search }) => {
   if (search === '') return null
   try {
@@ -117,9 +117,20 @@ export const searchLinks = async ({ search }) => {
 export function formatPath (path) {
   const decodedPath = decodeURIComponent(path)
   const formattedPath = decodedPath.replace(/\s+/g, '-').toLowerCase()
-  console.log('🚀 ~ file: formatUrl.js:6 ~ formatUrl ~ formattedUrl:', formattedPath)
+  // console.log('🚀 ~ file: formatUrl.js:6 ~ formatUrl ~ formattedUrl:', formattedPath)
   const normalizedPath = formattedPath.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   return normalizedPath
+}
+export function kebabToTitleCase (kebabStr) {
+  if (kebabStr === undefined || kebabStr === null) return ''
+  // Dividir la cadena en palabras separadas por guiones
+  const words = kebabStr.split('-')
+
+  // Convertir la primera letra de cada palabra a mayúscula y el resto en minúscula
+  const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+
+  // Unir las palabras con un espacio
+  return capitalizedWords.join(' ')
 }
 export function formatDate (date) {
   const fecha = new Date(date)

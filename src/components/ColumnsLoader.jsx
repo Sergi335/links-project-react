@@ -9,9 +9,9 @@ const ColumnsLoader = (props) => {
       speed={5}
       width={width}
       height={323}
-      viewBox={`0 0 ${width} 460`}
-      backgroundColor="var(--secondColor)"
-      foregroundColor="var(--thirdColor)"
+      viewBox={`0 0 ${width} 317`}
+      backgroundColor="var(--color-medium)"
+      foregroundColor="var(--color-secondary)"
       className={styles.columnsLoader}
       {...props}
     >

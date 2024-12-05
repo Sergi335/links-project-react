@@ -10,17 +10,7 @@ import styles from './customlink.module.css'
 
 export default function CustomLink ({ data, className, desktopName }) {
   const link = data.link || data.activeLink
-  const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
-  const setPoints = useFormsStore(state => state.setPoints)
-  const setActiveLink = useFormsStore(state => state.setActiveLink)
-  const setActiveElement = useFormsStore(state => state.setActiveElement)
-  const pastedLinkId = useLinksStore(state => state.pastedLinkId)
-  const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
   const [linkSelectMode, setLinkSelectMode] = useState(false)
-  const controlStyle = className === 'searchResult' ? { width: 'auto', position: 'relative', top: '25%' } : {}
-  const linkStyle = className === 'searchResult' ? { flexWrap: 'wrap', height: '77px' } : {}
-  const anchorStyle = className === 'searchResult' ? { height: '20px', paddingTop: '10px' } : {}
-  const visibleStyle = className === 'flex' ? { display: 'flex' } : {} // el display none debe esperar unas decimas de segundo
   // Ref del link y descripción
   const linkRef = useRef(null)
   const linkDesc = useRef(null)
@@ -28,6 +18,12 @@ export default function CustomLink ({ data, className, desktopName }) {
   const columnSelectModeId = usePreferencesStore(state => state.columnSelectModeId)
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
+  const setPoints = useFormsStore(state => state.setPoints)
+  const setActiveLink = useFormsStore(state => state.setActiveLink)
+  const setActiveElement = useFormsStore(state => state.setActiveElement)
+  const pastedLinkId = useLinksStore(state => state.pastedLinkId)
+  const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
 
   useEffect(() => {
     if (columnSelectModeId.includes(link.idpanel)) {
@@ -46,14 +42,12 @@ export default function CustomLink ({ data, className, desktopName }) {
   }
 
   const handleHeightChange = (e) => {
-    const rotator = e.currentTarget.childNodes[0]
-    e.currentTarget.parentNode.parentNode.classList.toggle('active')
-    const displayNewImage = () => {
-      rotator.classList.toggle(styles.rotate)
-      linkDesc.current.classList.toggle(styles.link_open)
-      linkDesc.current.childNodes[0].classList.toggle(styles.fade)
-    }
-    displayNewImage()
+    const rotator = e.currentTarget
+    const currentLink = document.getElementById(link._id)
+    currentLink.classList.toggle('active')
+    rotator.classList.toggle(styles.rotate)
+    linkDesc.current.classList.toggle(styles.link_open)
+    linkDesc.current.childNodes[0].classList.toggle(styles.fade)
   }
 
   const handleSelectChange = (e) => {
@@ -74,11 +68,12 @@ export default function CustomLink ({ data, className, desktopName }) {
       }
     }
   }
+
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
-      linkRef.current?.parentNode.classList.add(`${styles.conic}`)
+      linkRef.current?.parentNode.classList.add(`${styles.animated_paste}`)
       setTimeout(() => {
-        linkRef.current?.parentNode.classList.remove(`${styles.conic}`)
+        linkRef.current?.parentNode.classList.remove(`${styles.animated_paste}`)
       }, 4000)
       setPastedLinkId([])
     }
@@ -98,67 +93,75 @@ export default function CustomLink ({ data, className, desktopName }) {
       link
     }
   })
-  // console.log('🚀 ~ CustomLink ~ isDragging:', isDragging)
+
   const style = {
     transition,
-    transform: CSS.Transform.toString(transform),
-    ...linkStyle,
-    ...visibleStyle
+    transform: CSS.Transform.toString(transform)
   }
-  // Lo que hace es retornar el link vacio si está siendo arrastrado
+
+  // Este es el que crea el espacio entre los items, no el que flota pegado al raton
   if (isDragging) {
     return (
-      <div ref={setNodeRef}
-          style={style}
-          className={styles.link_dragged} id={link._id}>
-        </div>
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={styles.link_dragged} id={link._id}>
+      </div>
     )
   }
 
   return (
-      <>
         <div ref={setNodeRef}
           style={style}
           {...attributes}
-          {...listeners} className={isDragging ? `${styles.link_dragged} link` : `${styles.link} link`} id={link._id} data-orden={link.orden} onContextMenu={(e) => handleContextMenu(e)}>
-          <a ref={linkRef} href={link.URL} style={ anchorStyle } target='_blank' rel='noreferrer' title={link.name}>
+          {...listeners}
+          id={link._id}
+          className={`${styles.link} ${className !== undefined ? className : ''} link`}
+          data-orden={link.orden}
+          onContextMenu={(e) => handleContextMenu(e)}
+        >
+          <a
+            ref={linkRef}
+            href={link.URL}
+            target='_blank'
+            rel='noreferrer'
+            title={link.name}
+          >
             {
-              linkSelectMode && <input type='checkbox' className={linkSelectMode ? `${styles.checkbox}` : `${styles.hidden}`} onChange={handleSelectChange}/>
+              linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
             }
             <img src={link.imgURL} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
           </a>
           {
             className !== 'searchResult' && (
-              <div className={styles.lcontrols} style={controlStyle}>
-                <button className='buttonIcon'>
-                  <Link to={`/desktop/${desktopName}/link/${link._id}`} state={link._id}>
-                    <MaximizeIcon className='uiIcon_small'/>
-                  </Link>
+              <>
+                <div className={styles.lcontrols}>
+                  <button className='buttonIcon' onClick={handleHeightChange}>
+                    <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
                   </button>
-                  {
-                    className !== 'searchResult' && (<button className='buttonIcon' onClick={handleHeightChange}><ArrowDown className='uiIcon_small' /></button>)
-                  }
-
+                  <button className='buttonIcon'>
+                    <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
+                      <MaximizeIcon className='uiIcon_small'/>
+                    </Link>
+                  </button>
                 </div>
+                <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>
+              </>
             )
           }
 
-        {
-          className === 'searchResult' && (
-            <div className={styles.additionalInfo}>
-              <span>Escritorio: {link.escritorio}</span>
-              <span>Panel: {link.panel}</span>
-              {
-                link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
-              }
-            </div>
-          )
-        }
+          {
+            className === 'searchResult' && (
+              <div className={styles.additionalInfo}>
+                <span>Escritorio: {link.escritorio}</span>
+                <span>Panel: {link.panel}</span>
+                {
+                  link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
+                }
+              </div>
+            )
+          }
         </div>
-        {
-          className !== 'searchResult' && <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>
-        }
-      </>
   )
 }

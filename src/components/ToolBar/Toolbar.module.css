@@ -1,0 +1,204 @@
+/*Bloque Toolbar*/
+.toolbar {
+    position: sticky;
+    top: var(--toolbar-mobile-height);
+    display: flex;
+    z-index: 2;
+    justify-content: center;
+    grid-area: toolbar;
+    align-items: flex-start;
+    animation: blurAnimation 1s linear forwards;
+    animation-timeline: scroll();
+
+    .toolbar_controls {
+        display: flex;
+
+        .icon_clicked::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 36px;
+            position: absolute;
+            left: -2px;
+            background-color: var(--accentColor);
+        }
+        /* & > .sideButtons:is(:first-child) {
+            border-bottom-left-radius: 11px;
+        } */
+
+        /* @media (min-width: 1280px) {
+            & > .sideButtons:is(:first-child) {
+                border-top-right-radius: 11px;
+                border-bottom-left-radius: 0;
+            }
+        } */
+
+        /*Cuando hay cinco¿?*/
+        /* & > .sideButtons:is(:last-child) {
+            border-bottom-right-radius: 11px;
+        } */
+
+        .sideButtons {
+            background-color: var(--color-primary);
+            padding: 8px;
+            border-radius: 0;
+
+            &:hover {
+                background-color: var(--hover-color-primary);
+            }
+        }
+
+        .settings {
+            /* width: 38px;
+            height: 38px; */
+            position: relative;
+
+            &:hover {
+                background-color: var(--hover-color-primary);
+
+                >svg {
+                    filter: drop-shadow(0 0 2px var(--accentColor));
+                }
+
+                .sidebar_inner_controls {
+                    display: flex;
+                }
+            }
+
+            .sidebar_inner_controls {
+                position: absolute;
+                background-color: var(--color-primary);
+                box-shadow: 0 15px 25px var(--firstShadow);
+                border-radius: var(--button-radius);
+                bottom: -36px;
+                right: -178px;
+                padding: 5px;
+                display: none;
+                flex-direction: column;
+                font-weight: 500;
+                gap: 2px;
+                width: max-content;
+                border: var(--firstBorder);
+
+                &>span {
+                    cursor: pointer;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    padding: 5px 15px;
+                    border-radius: var(--button-radius);
+                    gap: 5px;
+
+                    &:hover {
+                        background-color: var(--hover-color-primary);
+
+                        >svg {
+                            filter: drop-shadow(0 0 2px var(--accentColor));
+                        }
+                    }
+
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+        }
+
+        /*Bloque boton menu*/
+        .mobile_menu_button {
+            background-color: transparent;
+            border-radius: 0;
+            position: fixed;
+            left: 0;
+
+            .mobile_menu_icon {
+                width: 24px;
+                height: 24px;
+                color: var(--accentColor);
+            }
+        }
+
+    }
+
+    @media (min-width: 1280px) {
+        .toolbar_controls {
+            flex-direction: column;
+            margin-top: 15px;
+            /* position: relative;
+            left: -1px;
+            gap: 0;
+            box-shadow: 1px 0px 8px var(--firstShadow);
+            border-top-right-radius: 11px;
+            border-bottom-right-radius: 11px; */
+        }
+    }
+}
+
+
+/*No se usa, componente: desktopdisplayname*/
+.deskTitle {
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: initial    ;
+    /* color: var(--color-medium); */
+    /* display: none; */
+}
+.desktop_name_container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+    & p {
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+
+.icon_pinned {
+    transform: rotate(-45deg);
+}
+@keyframes blurAnimation {
+    0% {
+      backdrop-filter: blur(0px);
+      background-color: hsl(from var(--color-primary) h s l / 0%);
+    }
+  
+    100% {
+      backdrop-filter: blur(15px);
+      background-color: hsl(from var(--color-primary) h s l / 75%);
+    }
+  }
+@media (min-width: 1280px) {
+    .toolbar {
+        top: 60px;
+        background-color: var(--color-primary);
+        flex-direction: column;
+        overflow-x: visible;
+        background-color: transparent;
+        height: calc(100dvh - 80px);
+        z-index: 1;
+        justify-content: initial;
+        animation: none;
+        align-items: center;
+    }
+
+    .mobile_menu_button {
+        display: none;
+    }
+
+    /* .deskTitle {
+        font-size: 6rem;
+        margin: 0;
+        font-weight: 900;
+        font-family: system-ui;
+        text-transform: uppercase;
+        font-style: italic;
+        position: fixed;
+        padding-left: 6px;
+        line-height: 1;
+    } */
+}

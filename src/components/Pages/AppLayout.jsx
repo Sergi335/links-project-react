@@ -2,19 +2,19 @@ import { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
 import { useFormsStore } from '../../store/forms'
-import Header from '../Header'
+import Bookmarks from '../Header/Bookmarks'
+import HeaderInfo from '../Header/HeaderInfo'
+import ScrollToTop from '../ScrollToTop'
+import SideBar from '../SideBar/SideBar'
+import ToolBar from '../ToolBar/ToolBar'
 import styles from './HomePage.module.css'
 
 export default function AppLayout () {
   const { desktopName } = useParams()
+  // console.log('🚀 ~ AppLayout ~ id:', id)
   useDbQueries({ desktopName })
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
-  // console.log(localStorage.getItem('bodyBackground') !== 'null')
-  // Cambiar el fondo del body en la aplicación únicamente, no en el homepage ya que appLayout no afecta a HomePage
-  if (localStorage.getItem('bodyBackground') !== 'null') {
-    document.body.style.backgroundImage = `url(${JSON.parse(localStorage.getItem('bodyBackground'))})`
-    document.body.style.backgroundSize = 'cover'
-  }
+
   useEffect(() => {
     if (desktopName !== undefined) {
       const root = document.getElementById('root')
@@ -27,9 +27,17 @@ export default function AppLayout () {
   }, [desktopName])
 
   return (
-    <div className="root">
-      <Header />
-      <Outlet />
-    </div>
+    <>
+      <SideBar />
+      <div id="grid" className="grid">
+        <ToolBar />
+      <header className='main_header'>
+        <Bookmarks />
+        <HeaderInfo />
+      </header>
+        <Outlet />
+      </div>
+      <ScrollToTop />
+    </>
   )
 }

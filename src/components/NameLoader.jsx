@@ -7,7 +7,7 @@ export default function NameLoader ({ className }) {
             height={21}
             viewBox="0 0 100% 21"
             backgroundColor="var(--mainColor)"
-            foregroundColor="var(--frostHvColor)"
+            foregroundColor="var(--color-secondary)"
             className={className}
             >
             <rect x="0" y="0" rx="5" ry="5" width="100%" height="21" />

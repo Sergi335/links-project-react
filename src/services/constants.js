@@ -1,7 +1,8 @@
-import styles from '../components/SideInfo.module.css'
+import styles from '../components/SideBar/SideBar.module.css'
 export const constants = {
   BASE_API_URL: 'http://localhost:3001',
-  // BASE_API_URL: 'https://zenmarks.xyz',
+  // BASE_API_URL: 'https://zenmarks-api.onrender.com',
+  // BASE_API_URL: import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://zenmarks-api.onrender.com',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
@@ -15,51 +16,51 @@ export const constants = {
   },
   ACCENT_COLORS: {
     defaultLight: {
-      color: '#bababa',
+      color: 'hsl(0, 0%, 73%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bababa'))
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.defaultLight.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
       }
     },
     yellow: {
-      color: '#ffff00',
+      color: 'hsl(60, 100%, 50%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.yellow.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#4e4e4e')
-        window.localStorage.setItem('accentColor', JSON.stringify('#ffff00'))
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.yellow.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#4e4e4e'))
         window.localStorage.setItem('accentColorName', JSON.stringify('yellow'))
       }
     },
     blue: {
-      color: 'cornflowerblue',
+      color: 'hsl(218.54deg 79.19% 66.08%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.blue.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
-        window.localStorage.setItem('accentColor', JSON.stringify('cornflowerblue'))
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.blue.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
         window.localStorage.setItem('accentColorName', JSON.stringify('blue'))
       }
     },
     green: {
-      color: '#00cc66',
+      color: 'hsl(150deg 6.38% 44.55%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.green.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
-        window.localStorage.setItem('accentColor', JSON.stringify('#00cc66'))
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.green.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('green'))
       }
     },
     defaultDark: {
-      color: '#bf7272',
+      color: 'hsl(0, 38%, 60%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultDark.color)
         document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
-        window.localStorage.setItem('accentColor', JSON.stringify('#bf7272'))
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.defaultDark.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
         window.localStorage.setItem('accentColorName', JSON.stringify('defaultDark'))
       }
@@ -141,11 +142,11 @@ export const constants = {
     }
   },
   COLUMNS_COUNT: {
-    1: 'repeat(auto-fill, minmax(100%, 1fr))',
-    2: 'repeat(auto-fill, minmax(826px, 1fr))',
-    3: 'repeat(auto-fill, minmax(537px, 1fr))',
-    4: 'repeat(auto-fill, minmax(393px, 1fr))',
-    5: 'repeat(auto-fill, minmax(240px, 1fr))'
+    1: '76ch',
+    2: 'repeat(auto-fill, minmax(687px, 1fr))',
+    3: 'repeat(auto-fill, minmax(511px, 1fr))',
+    4: 'repeat(auto-fill, minmax(406px, 1fr))',
+    5: 'repeat(auto-fill, minmax(336px, 1fr))'
   },
   DEFAULT_BACKGROUNDS: {
     light: {

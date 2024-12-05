@@ -63,7 +63,7 @@ export async function addLink (body) {
     })
 }
 // EditlinkForm, linkDetails -- Validar datos
-export async function editLink ({ id, name, URL, description, notes }) {
+export async function editLink ({ id, name, URL, description, notes, bookmark, bookmarkOrder }) {
   return fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
     ...constants.FETCH_OPTIONS,
@@ -74,9 +74,26 @@ export async function editLink ({ id, name, URL, description, notes }) {
         URL,
         description,
         imgURL: URL ? constants.BASE_LINK_IMG_URL(URL) : undefined,
-        notes
+        notes,
+        bookmark,
+        bookmarkOrder
       }
     })
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    })
+}
+export async function setBookMarksOrder ({ links }) {
+  return fetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
+    method: 'PATCH',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({ links })
   })
     .then(res => res.json())
     .then(data => {
@@ -327,8 +344,11 @@ export async function changeBackgroundImage (event) {
     })
       .then(res => res.text())
       .then(data => {
-        document.body.style.backgroundImage = `url(${data})`
-        document.body.style.backgroundSize = 'cover'
+        const element = document.querySelector('#root')
+        element.setAttribute('data-background', 'image')
+        element.style.background = `url(${data})`
+        element.style.backgroundSize = 'cover'
+        element.style.backgroundAttachment = 'fixed'
         window.localStorage.setItem('bodyBackground', JSON.stringify(`${data}`))
         return data
       })

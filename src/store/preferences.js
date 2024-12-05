@@ -16,14 +16,6 @@ export const usePreferencesStore = create(
       setStyleOfColumns: (styleOfColumns) => {
         set({ styleOfColumns })
       },
-      navScroll: 0,
-      setNavScroll: (navScroll) => {
-        set({ navScroll })
-      },
-      navElement: null,
-      setNavElement: (navElement) => {
-        set({ navElement })
-      },
       limit: 0,
       setLimit: (limit) => {
         set({ limit })
@@ -47,6 +39,10 @@ export const usePreferencesStore = create(
       openedColumns: [],
       setOpenedColumns: (openedColumns) => {
         set({ openedColumns })
+      },
+      globalOpenColumns: false,
+      setGlobalOpenColumns: (globalOpenColumns) => {
+        set({ globalOpenColumns })
       }
     }
   }

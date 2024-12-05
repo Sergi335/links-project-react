@@ -7,16 +7,18 @@ import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useDesktopsStore } from '../src/store/desktops'
 import { useSessionStore } from '../src/store/session'
+import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
 import ListOfLinks from './components/ListOfLinks'
 import NotFound from './components/Pages/404'
 import InternalError from './components/Pages/500'
 import AppLayout from './components/Pages/AppLayout'
 import HomePage from './components/Pages/HomePage'
-import LinkDetails from './components/Pages/LinkDetails'
 import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
+import SingleColumnPage from './components/SingleColumnPage'
+import { useStyles } from './hooks/useStyles'
 import { constants } from './services/constants'
 
 function App () {
@@ -38,47 +40,56 @@ function App () {
   // TODO la desktops store se guarda en memoria pero la sesion sigue iniciada si se recarga la pagina no existe desktops store
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
-  // console.log('🚀 ~ App ~ desktopsStore:', desktopsStore)
-  // Obtenemos el tema para el toast -> no funciona?
-  const themeforToastify = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme')) // no funciona?
-  useEffect(() => {
-    const theme = localStorage.getItem('theme') === null ? 'light' : JSON.parse(localStorage.getItem('theme'))
-    document.documentElement.classList.add(theme)
 
-    const accentColors = Object.keys(constants.ACCENT_COLORS)
-    const accentColor = JSON.parse(localStorage.getItem('accentColorName')) ?? accentColors[0]
-    constants.ACCENT_COLORS[accentColor].applyStyles()
-
-    if (localStorage.getItem('themeVariant') === null) {
-      localStorage.setItem('themeVariant', JSON.stringify('solid'))
-      constants.THEME_VARIANTS.solid.applyStyles()
-    } else {
-      const themeVariant = JSON.parse(localStorage.getItem('themeVariant'))
-      constants.THEME_VARIANTS[themeVariant].applyStyles()
-    }
-  }, [])
+  const { themeforToastify, theme } = useStyles()
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
+  // console.log('🚀 ~ App ~ basePath:', basePath)
+  // console.log('🚀 ~ App ~ basePath:', rootPath)
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: rootPath,
       element: <HomePage />,
       errorElement: <InternalError />
     },
     {
-      path: '/desktop',
+      path: `${rootPath}${basePath}`,
       element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
       errorElement: <InternalError />,
       children: [
         {
-          path: '/desktop/:desktopName',
+          path: `${rootPath}${basePath}/:desktopName`,
           element: <ListOfLinks />,
           errorElement: <InternalError />
         },
         {
-          path: '/desktop/:desktopName/link/:id',
-          element: <LinkDetails />,
+          path: `${rootPath}${basePath}/:desktopName/:slug/:id`,
+          element: <SingleColumnPage />,
+          errorElement: <InternalError />
+        },
+        {
+          path: '/app/:desktopName/link/:id',
+          element: <LinkDetailsPage />,
           errorElement: <InternalError />
         }
+      ]
+    },
+    {
+      path: '/column',
+      element: user === null ? <Navigate to="/" replace={true} /> : <AppLayout />,
+      errorElement: <InternalError />,
+      children: [
+        {
+          path: '/column/:desktopName/:columnId',
+          element: <SingleColumnPage />,
+          errorElement: <InternalError />
+        }
+        // {
+        //   path: '/desktop/:desktopName/link/:id',
+        //   element: <LinkDetailsPage />,
+        //   errorElement: <InternalError />
+        // }
       ]
     },
     {
@@ -125,7 +136,7 @@ function App () {
       defer: true,
       options: {
         scrollbars: {
-          theme: 'os-theme-light'
+          theme: `os-theme-${theme}`
         }
       }
     })

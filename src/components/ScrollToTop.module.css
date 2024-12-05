@@ -1,0 +1,20 @@
+.scrollToTopButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accentColor); /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none;
+    border-radius: 50%; /* Forma circular */
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.8; /* Transparencia */
+    transition: opacity 0.3s ease; /* Transición suave */
+  }
+  
+  .scrollToTopButton:hover {
+    opacity: 1;
+    background-color: var(--accentColor);
+  }

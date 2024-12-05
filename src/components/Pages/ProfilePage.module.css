@@ -10,6 +10,7 @@
     border-radius: var(--border-radius);
     gap: 25px;
     margin-inline: auto;
+    grid-area: main;
 
     & strong {
         font-weight: 600;
@@ -29,7 +30,7 @@
     border-radius: 5px;
     background-color: var(--firstColor);
     margin-bottom: 50px; */
-    color: var(--firstTextColor);
+    color: var(--text-color-primary);
     display: flex;
     width: -webkit-fill-available;
     /* margin-top: 25px; */
@@ -63,14 +64,14 @@
     gap: 8px;
 }
 .tablinks:hover {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
     transition: background-color .3s;
 }
 
 .tabcontent {
     display: flex;
     flex-direction: column;
-    color: var(--firstTextColor);
+    color: var(--text-color-primary);
     text-align: left;
     flex-grow: 1;
     /* padding-right: 25px; */
@@ -121,7 +122,7 @@
 
 .tabcontentRow {
     display: flex;
-    color: var(--firstTextColor);
+    color: var(--text-color-primary);
     text-align: left;
     margin-top: 50px;
     /* background-color: var(--firstColor); */
@@ -145,7 +146,7 @@
 }
 
 .active {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
     /* color: var(--thirdColor); */
 
 }
@@ -252,7 +253,7 @@
     height: 37px;
     border: 1px solid var(--firstBorderColor);
     padding: 0 15px;
-    color: var(--firstTextColor);
+    color: var(--text-color-primary);
 }
 
 .otherInfo form textarea {
@@ -354,7 +355,7 @@ tr:nth-child(odd) {
     gap: 6px;
 }
 .link:hover {
-    background-color: var(--frostHvColor);
+    background-color: var(--color-secondary);
 }
 .link p {
     margin: 0;
@@ -665,7 +666,7 @@ tr:nth-child(odd) {
         
     }
     .profileTitle {
-        color: var(--firstTextColor);
+        color: var(--text-color-primary);
         display: flex;
         width: -webkit-fill-available;
         /* margin-top: 25px; */

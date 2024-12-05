@@ -1,20 +1,44 @@
+.link_details_panel {
+  container-type: inline-size;
+  width: 33%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  & iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+  }
+  & > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    opacity: .5;
+    background-color: var(--color-primary);
+    border-radius: 5px;
+  }
+}
+@container (max-width: 600px) {
+  .link_details_panel .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .link_details_panel .editFieldsColumn {
+    width: auto;
+  }
+
+}
 .linkDetails {
-  margin-top: calc(1rem + 45px);
-  max-width: -webkit-fill-available;
-  color: var(--firstTextColor);
-  /* background-color: var(--mainColor); */
-  backdrop-filter: blur(20px);
-  /* margin-left: calc(var(--main-content-margin-left) - 135px); */
-  padding: 20px 20px;
-  border-radius: var(--border-radius);
-  height: calc(88vh + 16px);
-  /* border: var(--firstBorder); */
-  /* overflow-y: scroll; */
   display: flex;
   flex-direction: column;
   gap: 15px;
+  /* flex: 1; */
+  grid-area: main;
+  grid-column: span 3;
 }
-
 .linkDetails h3 {
   color: var(--accentColor);
   margin: 0;
@@ -43,7 +67,7 @@
   flex-direction: column;
   border-radius: var(--border-radius);
   /* border: var(--firstBorder); */
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
 }
 
 .videoPlayerMaximized {
@@ -137,7 +161,7 @@
   background-position: center;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
   /* border: var(--firstBorder); */
   min-height: 295px;
   background-size: 50%;
@@ -181,7 +205,7 @@
   position: absolute;
   left: 5px;
   background-color: var(--mainColor);
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   border-radius: 2px;
   display: none;
   top: 5px;
@@ -329,7 +353,7 @@
 }
 
 .notesContainer p {
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   text-align: left;
 }
 
@@ -415,7 +439,7 @@
   flex-direction: column;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
-  background-color: var(--frostHvColor);
+  background-color: var(--color-secondary);
   /* border: var(--firstBorder); */
 }
 
@@ -529,22 +553,21 @@
 
 }
 
-.details_nav_link {
+/* .details_nav_link {
   background-color: var(--buttonColor);
-  /* padding: 4px 12px; */
   border-radius: var(--button-radius);
   display: flex;
   gap: 5px;
   align-items: center;
   justify-content: center;
   transition: background-color .3s ease-out;
-  color: var(--firstTextColor);
+  color: var(--text-color-primary);
   font-size: .75rem;
   padding: 2px 12px;
-}
-.details_nav_link:nth-of-type(2) {
+} */
+/* .details_nav_link:nth-of-type(2) {
   padding: 5px 12px;
-}
+} */
 .details_nav_link_disabled {
   background-color: transparent;
   padding: 2px 12px;
@@ -559,11 +582,11 @@
 
 }
 
-.details_nav_link:hover {
-  background-color: var(--frostHvColor);
-  /* box-shadow: var(--secondNeumoShadow); */
+/* .details_nav_link:hover {
+  background-color: var(--color-secondary);
+  box-shadow: var(--secondNeumoShadow);
   color: var(--accentColor);
-}
+} */
 
 .upLinkImage {
   display: flex;
@@ -766,7 +789,7 @@
   width: 19px;
   height: 19px;
   border-radius: 1.875rem;
-  background: var(--firstTextColor);
+  background: var(--text-color-primary);
   transition: left 0.25s;
 }
 
@@ -907,17 +930,12 @@
   }
 
   .linkDetails {
-    margin-top: calc(1rem + 45px);
-    max-width: -webkit-fill-available;
-    color: var(--firstTextColor);
-    /* background-color: var(--mainColor); */
+    /* max-width: -webkit-fill-available;
+    color: var(--text-color-primary);
+    background-color: var(--color-secondary);
     backdrop-filter: blur(20px);
-    /* margin-left: calc(var(--main-content-margin-left) - 135px); */
-    padding: 20px 20px;
-    border-radius: var(--border-radius);
-    height: calc(88vh + 16px);
-    /* border: var(--firstBorder); */
-    overflow-y: hidden;
+    min-height: 100dvh; */
+    padding: 20px;
   }
 
   .header {
@@ -963,6 +981,7 @@
     } */
   .imageGalleryContainer {
     min-height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .infoContainer {
