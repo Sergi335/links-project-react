@@ -17,6 +17,8 @@ export default function useGoogleAuth () {
   // const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setRegisterLoading = useGlobalStore(state => state.setRegisterLoading)
   const setLoginLoading = useGlobalStore(state => state.setLoginLoading)
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -71,7 +73,7 @@ export default function useGoogleAuth () {
             // navigate(`/desktop/${firstDesktop}`)
             setLoginLoading(false)
             // window.location.href = `/desktop/${firstDesktop}` // --> si esto te redirige el login ha sido correcto en Firebase
-            redirect(`/desktop/${firstDesktop}`)
+            redirect(`${rootPath}${basePath}/${firstDesktop}`)
           })
       })
       .catch((error) => {
@@ -149,7 +151,7 @@ export default function useGoogleAuth () {
           const { data } = desks
           const firstDesktop = data[0].name
           // navigate(`/desktop/${firstDesktop}`)
-          window.location.href = `/desktop/${firstDesktop}` // --> si esto te redirige el login ha sido correcto en Firebase
+          window.location.href = `${rootPath}${basePath}/${firstDesktop}` // --> si esto te redirige el login ha sido correcto en Firebase
         })
     })
       .catch((e) => {
@@ -181,7 +183,7 @@ export default function useGoogleAuth () {
             .then(data => {
               console.log(data)
               setRegisterLoading(false)
-              redirect('/desktop/start')
+              redirect(`${rootPath}${basePath}/start`)
               // window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
             })
         }).catch(function (error) {
