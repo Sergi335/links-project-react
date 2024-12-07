@@ -118,12 +118,12 @@ function App () {
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
+      element: user === null ? <Login /> : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {
       path: '/recovery-password',
-      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
+      element: user === null ? <RecoveryPassword /> : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {
