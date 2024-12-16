@@ -44,8 +44,6 @@ function App () {
   const { themeforToastify, theme } = useStyles()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
-  // console.log('🚀 ~ App ~ basePath:', basePath)
-  // console.log('🚀 ~ App ~ basePath:', rootPath)
 
   const router = createBrowserRouter([
     {

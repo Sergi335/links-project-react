@@ -520,9 +520,12 @@ favopt1 {
 
 @media (min-width: 1280px) {
 
-  .rootElement,
   #root {
     flex-direction: row;
+  }
+
+  .home > #root {
+    flex-direction: column;
   }
 
   .root {
