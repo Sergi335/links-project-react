@@ -246,7 +246,7 @@ header.main_header {
 }
 
 .colOpen .linkCount {
-  display: none;
+  visibility: hidden;
 }
 
 .linkCount {
