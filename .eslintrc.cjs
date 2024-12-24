@@ -6,9 +6,7 @@ module.exports = {
   },
   extends: [
     'standard',
-    'plugin:react/recommended',
-    'eslint:recommended',
-    './node_modules/standard/eslintrc.json'
+    'plugin:react/recommended'
   ],
   overrides: [
     {

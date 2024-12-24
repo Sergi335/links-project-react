@@ -64,36 +64,37 @@ export default function ListOfLinks () {
       {
         globalLoading
           ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
-              {
-                numberOfLoaders.map((item, index) => (
-                  <ColumnsLoader key={index} />
-                ))
-              }
-            </div></div>
+            {
+              numberOfLoaders.map((item, index) => (
+                <ColumnsLoader key={index} />
+              ))
+            }
+          </div>
+          </div>
           : (
             <div id='mainContentWrapper' className={styles.lol_content_wrapper}>
               <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCorners}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                onDragOver={handleDragOver}
-                onDragCancel={handleDragCancel}
-              >
-                <SortableContext strategy={rectSortingStrategy} items={columnsId}>
-                {desktopColumns?.length > 0
-                  ? (
-                      desktopColumns.map((columna) => (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCorners}
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={handleDragOver}
+                  onDragCancel={handleDragCancel}
+                >
+                  <SortableContext strategy={rectSortingStrategy} items={columnsId}>
+                    {desktopColumns?.length > 0
+                      ? (
+                          desktopColumns.map((columna) => (
                           <Columna key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length}>
                             <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                               {
                                 !activeColumn &&
-                                  desktopLinks.map((link, index) =>
-                                    link.idpanel === columna._id
-                                      ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
-                                      : null
-                                  ).filter(link => link !== null)
+                                desktopLinks.map((link, index) =>
+                                  link.idpanel === columna._id
+                                    ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
+                                    : null
+                                ).filter(link => link !== null)
                               }
                               {
                                 linkLoader && columna._id === columnLoaderTarget?.id && (numberOfLinkLoaders.map((item, index) => (
@@ -102,42 +103,42 @@ export default function ListOfLinks () {
                               }
                             </SortableContext>
                           </Columna>
-                      ))
-                    )
-                  : (
-                      <>
-                        <p>No se encontraron columnas</p>
-                      </>
-                    )}
-                </SortableContext>
-                {createPortal(
-                  <DragOverlay>
-                    {activeColumn && (
-                      <Columna data={{ activeColumn }}>
-                        {/* {
+                          ))
+                        )
+                      : (
+                        <>
+                          <p>No se encontraron columnas</p>
+                        </>
+                        )}
+                  </SortableContext>
+                  {createPortal(
+                    <DragOverlay>
+                      {activeColumn && (
+                        <Columna data={{ activeColumn }}>
+                          {/* {
                           desktopLinks.map((link) =>
                             link.idpanel === activeColumn._id
                               ? (<CustomLink key={link._id} data={{ link }} idpanel={activeColumn._id} />)
                               : null
                           )
                         } */}
-                      </Columna>
-                    )}
-                    {activeLink && (
-                      <CustomLink
-                        data={{ activeLink }}
-                        className={linkStyles.floatLink}
-                      />
-                    )}
-                  </DragOverlay>,
-                  document.body
-                )}
-              </DndContext>
+                        </Columna>
+                      )}
+                      {activeLink && (
+                        <CustomLink
+                          data={{ activeLink }}
+                          className={linkStyles.floatLink}
+                        />
+                      )}
+                    </DragOverlay>,
+                    document.body
+                  )}
+                </DndContext>
               </div>
             </div>
             )
       }
-      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
+      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
       <FormsContainer />
     </main>
   )
