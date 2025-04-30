@@ -2,7 +2,7 @@ import styles from '../components/SideBar/SideBar.module.css'
 export const constants = {
   // BASE_API_URL: 'http://localhost:3001',
   // BASE_API_URL: 'https://zenmarks-api.onrender.com',
-  BASE_API_URL: import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://zenmarks-api.onrender.com',
+  BASE_API_URL: import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://bumpy-rachel-zenmarks-eaa0c576.koyeb.app/',
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
