@@ -22,6 +22,27 @@ import { useStyles } from './hooks/useStyles'
 import { constants } from './services/constants'
 
 function App () {
+  function keepServerAwake(apiUrl, intervalMinutes = 14) {
+    const wakeUp = async () => {
+      try {
+        await fetch(apiUrl);
+        console.log('Server pinged at:', new Date().toLocaleTimeString());
+      } catch (error) {
+        console.error('Ping failed:', error);
+      }
+    };
+
+    // Ejecutar inmediatamente y luego periódicamente
+    wakeUp();
+    return setInterval(wakeUp, intervalMinutes * 60 * 1000);
+  }
+
+  // Iniciar (guarda el intervalo para limpiarlo luego si es necesario)
+  const intervalId = keepServerAwake(`${constants.BASE_API_URL}/ping`, 10)
+
+  // Para detenerlo:
+  // clearInterval(intervalId);
+
   // TODO la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const user = useSessionStore(state => state.user)
   // TODO Hay que hacer una peticion a / para recibir el csfr token, limitar a solo cuando acceda a / o /login
