@@ -22,19 +22,19 @@ import { useStyles } from './hooks/useStyles'
 import { constants } from './services/constants'
 
 function App () {
-  function keepServerAwake(apiUrl, intervalMinutes = 14) {
+  function keepServerAwake (apiUrl, intervalMinutes = 14) {
     const wakeUp = async () => {
       try {
-        await fetch(apiUrl);
-        console.log('Server pinged at:', new Date().toLocaleTimeString());
+        await fetch(apiUrl)
+        console.log('Server pinged at:', new Date().toLocaleTimeString())
       } catch (error) {
-        console.error('Ping failed:', error);
+        console.error('Ping failed:', error)
       }
-    };
+    }
 
     // Ejecutar inmediatamente y luego periódicamente
-    wakeUp();
-    return setInterval(wakeUp, intervalMinutes * 60 * 1000);
+    wakeUp()
+    return setInterval(wakeUp, intervalMinutes * 60 * 1000)
   }
 
   // Iniciar (guarda el intervalo para limpiarlo luego si es necesario)
