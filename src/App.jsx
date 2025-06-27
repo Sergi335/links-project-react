@@ -1,48 +1,49 @@
 import '@fontsource-variable/inter'
-import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import 'overlayscrollbars/overlayscrollbars.css'
-import { useEffect } from 'react'
+import 'react-toastify/dist/ReactToastify.css'
+import { constants } from './services/constants'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ToastContainer, Zoom } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useDesktopsStore } from '../src/store/desktops'
+import { useEffect } from 'react'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import { useSessionStore } from '../src/store/session'
-import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
-import ListOfLinks from './components/ListOfLinks'
-import NotFound from './components/Pages/404'
-import InternalError from './components/Pages/500'
+import { useStyles } from './hooks/useStyles'
 import AppLayout from './components/Pages/AppLayout'
 import HomePage from './components/Pages/HomePage'
+import InternalError from './components/Pages/500'
+import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
+import ListOfLinks from './components/ListOfLinks'
 import Login from './components/Pages/LoginPage'
+import NotFound from './components/Pages/404'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
 import SingleColumnPage from './components/SingleColumnPage'
-import { useStyles } from './hooks/useStyles'
-import { constants } from './services/constants'
 
 function App () {
-  function keepServerAwake(apiUrl, intervalMinutes = 14) {
-  const wakeUp = async () => {
-    try {
-        await fetch(apiUrl);
-        console.log('Server pinged at:', new Date().toLocaleTimeString());
+  function keepServerAwake (apiUrl, intervalMinutes = 14) {
+    const wakeUp = async () => {
+      try {
+        await fetch(apiUrl)
+        console.log('Server pinged at:', new Date().toLocaleTimeString())
       } catch (error) {
-        console.error('Ping failed:', error);
+        console.error('Ping failed:', error)
       }
     }
 
     // Ejecutar inmediatamente y luego periódicamente
-    wakeUp();
-    return setInterval(wakeUp, intervalMinutes * 60 * 1000);
+    wakeUp()
+    return setInterval(wakeUp, intervalMinutes * 60 * 1000)
   }
 
   // Iniciar (guarda el intervalo para limpiarlo luego si es necesario)
-  const intervalId = keepServerAwake(`${constants.BASE_API_URL}/health`, 10)
+  // const intervalId = keepServerAwake(`${constants.BASE_API_URL}/health`, 10)
+  keepServerAwake(`${constants.BASE_API_URL}/health`, 10)
 
   // Para detenerlo:
   // clearInterval(intervalId)
-  
+
   // TODO la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const user = useSessionStore(state => state.user)
   // TODO Hay que hacer una peticion a / para recibir el csfr token, limitar a solo cuando acceda a / o /login
