@@ -36,7 +36,7 @@ function BookmarkItem ({ bookmark }) {
     )
   }
   return (
-    <a ref={setNodeRef} style={style} href={bookmark.URL} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
+    <a ref={setNodeRef} style={style} href={bookmark.URL} title={bookmark.name} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
       <img className={styles.bookmark} src={bookmark.imgURL} alt="" />
     </a>
   )
@@ -47,10 +47,9 @@ export default function Bookmarks () {
   const [books, setBooks] = useState([])
   const [booksOrder, setBooksOrder] = useState([])
   const [activeBook, setActiveBook] = useState(null)
+  const [prevBooks, setPrevBooks] = useState([]) // Nuevo estado para guardar el orden anterior
   const bookmarksId = books.map((book) => book._id)
   const globalLoading = useGlobalStore(state => state.globalLoading)
-
-  // console.log(import.meta.env.MODE)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -63,21 +62,23 @@ export default function Bookmarks () {
   // Estado Inicial
   useEffect(() => {
     setBooks(globalLinks.filter(link => link.bookmark !== false).toSorted((a, b) => a.bookmarkOrder - b.bookmarkOrder))
-    setBooksOrder(Array.from(new Map(globalLinks.filter(link => link.bookmark !== false).map((item, index) => [item._id, index]))))
   }, [globalLinks])
 
   // Detectar si se ha movido un elemento para llamar al backend
   useEffect(() => {
     if (activeBook) {
-      // console.log(`Has movido un elemento: ${activeBook.name}`)
-      // console.log(`El nuevo orden es: ${booksOrder}`)
       handleSetOrder()
+      setActiveBook(null)
     }
   }, [booksOrder])
 
   // Actualizar el orden cada vez que cambie books al soltar el elemento activo
   useEffect(() => {
-    setBooksOrder(Array.from(new Map(books.map((item, index) => [item._id, index]))))
+    for (let i = 0; i < books.length; i++) {
+      const book = books[i]
+      book.bookmarkOrder = i
+    }
+    setBooksOrder(books.map((item) => [item._id, item.bookmarkOrder]))
   }, [books])
 
   const onDragStart = (event) => {
@@ -99,14 +100,14 @@ export default function Bookmarks () {
 
     if (!isActiveATask) return
 
-    // Im dropping a Task over another Task
+    // Optimistic UI: guarda el estado anterior antes de mover
+    setPrevBooks(books)
+
     if (isActiveATask && isOverATask) {
       const activeIndex = books.findIndex((t) => t._id === activeId)
       const overIndex = books.findIndex((t) => t._id === overId)
       setBooks(arrayMove(books, activeIndex, overIndex))
-      // setMovedBookmark(activeBook)
     }
-    // setActiveBook(null)
   }
 
   const handleSetOrder = async () => {
@@ -120,8 +121,13 @@ export default function Bookmarks () {
     }
     if (hasError) {
       toast(error)
-      // return
+      // Si falla, restaurar el estado anterior
+      setBooks(prevBooks)
+      return
     }
+    // Si todo va bien, limpiar prevBooks
+    setPrevBooks([])
+    console.log(response)
   }
   return (
     <div className={styles.bookmarks}>
@@ -130,32 +136,32 @@ export default function Bookmarks () {
         collisionDetection={closestCorners}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
-        // onDragOver={onDragOver}
+      // onDragOver={onDragOver}
       >
-      <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
-        {
-          globalLoading && <><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /></>
-        }
-        {
-          books?.length > 0 &&
+        <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
+          {
+            globalLoading && <><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /></>
+          }
+          {
+            books?.length > 0 &&
             (
               books?.map((book) =>
                 (
-                      <BookmarkItem key={book._id} bookmark={book} />
+                <BookmarkItem key={book._id} bookmark={book} />
                 )
               )
             )
 
-        }
+          }
         </SortableContext>
         {
-            createPortal(
-                <DragOverlay>
-                {
-                  <BookmarkItem bookmark={activeBook}/>
-                }
-                </DragOverlay>
-                , document.body)
+          createPortal(
+            <DragOverlay>
+              {
+                <BookmarkItem bookmark={activeBook} />
+              }
+            </DragOverlay>
+            , document.body)
         }
       </DndContext>
     </div>
