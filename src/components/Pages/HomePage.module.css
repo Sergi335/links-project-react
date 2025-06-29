@@ -1,7 +1,10 @@
 .home * {
     box-sizing: border-box;
 }
-body.home :where([id='root']) {
+body.home > :where([id='root']) {
+    flex-direction: column;
+}
+.home .rootElement {
     flex-direction: column;
 }
 .home {

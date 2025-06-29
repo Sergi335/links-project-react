@@ -66,8 +66,6 @@ function App () {
   const { themeforToastify, theme } = useStyles()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
-  // console.log('🚀 ~ App ~ basePath:', basePath)
-  // console.log('🚀 ~ App ~ basePath:', rootPath)
 
   const router = createBrowserRouter([
     {
@@ -140,12 +138,12 @@ function App () {
     },
     {
       path: '/login',
-      element: user === null ? <Login /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
+      element: user === null ? <Login /> : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {
       path: '/recovery-password',
-      element: user === null ? <RecoveryPassword /> : <Navigate to={`/desktop/${firstDesktop}`} replace={true} />,
+      element: user === null ? <RecoveryPassword /> : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />,
       errorElement: <InternalError />
     },
     {

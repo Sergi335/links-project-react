@@ -16,6 +16,7 @@ export default function AppLayout () {
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     if (desktopName !== undefined) {
       const root = document.getElementById('root')
       if (root.classList.contains('fullscreen')) root.classList.remove('fullscreen')
