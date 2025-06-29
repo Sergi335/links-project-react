@@ -36,7 +36,7 @@ function BookmarkItem ({ bookmark }) {
     )
   }
   return (
-    <a ref={setNodeRef} style={style} href={bookmark.URL} title={bookmark.name} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
+    <a ref={setNodeRef} style={style} href={bookmark.URL} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
       <img className={styles.bookmark} src={bookmark.imgURL} alt="" />
     </a>
   )
