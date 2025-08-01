@@ -13,7 +13,7 @@ import styles from './Toolbar.module.css'
 export default function ToolBar () {
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
+  const desktopColumns = globalColumns.filter(column => column.name.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)

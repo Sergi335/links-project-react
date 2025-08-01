@@ -1,4 +1,5 @@
 import styles from '../components/SideBar/SideBar.module.css'
+import { getCookie } from './functions'
 export const constants = {
   // BASE_API_URL: 'http://localhost:3001',
   // BASE_API_URL: 'https://zenmarks-api.onrender.com',
@@ -11,7 +12,8 @@ export const constants = {
     headers: {
       'Content-Type': 'application/json',
       'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader'
+      'x-justlinks-token': 'otroheader',
+      'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''
     }
   },
   ACCENT_COLORS: {

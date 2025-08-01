@@ -26,7 +26,11 @@ export default function ListOfLinks () {
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
+  console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
+  const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
+  console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
+  const desktopColumns = globalColumns?.filter(column => column.parentCategory === desktopParent)
+  console.log('🚀 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
 
@@ -34,7 +38,7 @@ export default function ListOfLinks () {
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks?.filter(link => link.escritorio === desktopName)
+  const desktopLinks = globalLinks
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
 
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
@@ -91,7 +95,7 @@ export default function ListOfLinks () {
                               {
                                 !activeColumn &&
                                 desktopLinks.map((link, index) =>
-                                  link.idpanel === columna._id
+                                  link.categoryId === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
                                     : null
                                 ).filter(link => link !== null)

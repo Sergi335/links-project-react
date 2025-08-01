@@ -3,7 +3,7 @@ import 'overlayscrollbars/overlayscrollbars.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { constants } from './services/constants'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { ToastContainer, Zoom } from 'react-toastify'
+import { ToastContainer, Zoom, toast } from 'react-toastify'
 import { useDesktopsStore } from '../src/store/desktops'
 import { useEffect } from 'react'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
@@ -20,6 +20,7 @@ import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
 import SingleColumnPage from './components/SingleColumnPage'
+import { getCookie } from './services/functions'
 
 function App () {
   function keepServerAwake (apiUrl, intervalMinutes = 14) {
@@ -29,10 +30,11 @@ function App () {
         console.log('Server pinged at:', new Date().toLocaleTimeString())
       } catch (error) {
         console.error('Ping failed:', error)
+        toast.error('Servidor no disponible en estos momentos', { toastId: 'server-error' })
       }
     }
 
-    // Ejecutar inmediatamente y luego periódicamente
+    //   // Ejecutar inmediatamente y luego periódicamente
     wakeUp()
     return setInterval(wakeUp, intervalMinutes * 60 * 1000)
   }
@@ -46,22 +48,28 @@ function App () {
 
   // TODO la redireccion no debe depender del estado de la sesion, hay que comprobar si el usuario esta logueado o no en firebase
   const user = useSessionStore(state => state.user)
+  console.log('🚀 ~ App ~ user:', user)
   // TODO Hay que hacer una peticion a / para recibir el csfr token, limitar a solo cuando acceda a / o /login
   const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
   useEffect(() => {
     fetch(constants.BASE_API_URL, {
       method: 'GET',
+      credentials: 'include',
       ...constants.FETCH_OPTIONS
     })
       .then(res => res.json())
       .then(data => {
-        const { csrfToken } = data
+        // const { csrfToken } = data
+        const csrfToken = getCookie('csrfToken')
         setCsfrtoken(csrfToken)
+        localStorage.setItem('csrfToken', JSON.stringify(csrfToken))
       })
   }, [])
+  console.log('🚀 ~ App ~ csrfToken:', useSessionStore(state => state.csfrtoken))
+
   // TODO la desktops store se guarda en memoria pero la sesion sigue iniciada si se recarga la pagina no existe desktops store
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.name : JSON.parse(localStorage.getItem('firstDesktop'))
+  const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.slug : JSON.parse(localStorage.getItem('firstDesktop'))
 
   const { themeforToastify, theme } = useStyles()
   const rootPath = import.meta.env.VITE_ROOT_PATH
@@ -139,6 +147,7 @@ function App () {
     {
       path: '/login',
       element: user === null ? <Login /> : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />,
+      // element: user === null ? <Login /> : <Navigate to={`${rootPath}${basePath}`} replace={true} />,
       errorElement: <InternalError />
     },
     {

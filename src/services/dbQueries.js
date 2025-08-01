@@ -635,3 +635,12 @@ export async function deleteAccount ({ email }) {
     return error
   }
 }
+export const sendLogoutSignal = async ({ idToken, csrfToken }) => {
+  const body = { idToken, csrfToken }
+  return fetch(`${constants.BASE_API_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify(body)
+  })
+}
