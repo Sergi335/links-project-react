@@ -11,7 +11,6 @@ import styles from './HomePage.module.css'
 
 export default function AppLayout () {
   const { desktopName } = useParams()
-  // // console.log('🚀 ~ AppLayout ~ id:', id)
   useDbQueries()
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 

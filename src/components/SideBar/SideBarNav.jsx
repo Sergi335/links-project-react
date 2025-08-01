@@ -4,12 +4,13 @@ import { CSS } from '@dnd-kit/utilities'
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { NavLink, useParams, Link } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useStyles } from '../../hooks/useStyles'
 import { moveDesktops } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useDesktopsStore } from '../../store/desktops'
+// import { useColumnsStore } from '../../store/columns'
 import { useGlobalStore } from '../../store/global'
 import { ArrowDown } from '../Icons/icons'
 import NavLoader from './NavLoader'
@@ -44,14 +45,14 @@ function SideBarNavItem ({ escritorio, children, className }) {
   if (isDragging) {
     return (
       <li ref={setNodeRef} style={style} id={escritorio._id} className={styles.draggedDesk}>
-        <NavLink to={`${rootPath}${basePath}/${escritorio.name}`}>{escritorio.displayName}</NavLink>
+        <NavLink to={`${rootPath}${basePath}/${escritorio.name}`}>{escritorio.name}</NavLink>
       </li>
     )
   }
   return (
       <li ref={setNodeRef} style={style} id={escritorio._id} {...attributes} {...listeners} className={className}>
         <NavLink to={`${rootPath}${basePath}/${escritorio.name}`} className={({ isActive }) => isActive ? styles.active : ''}>
-            {escritorio.displayName}
+            {escritorio.name}
           <button onClick={handleExpandSublist} aria-expanded={isExpanded}>
             <ArrowDown
               className={isExpanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
@@ -70,9 +71,27 @@ function SideBarNavSubItem ({ escritorio, columna, slug }) {
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === escritorio.name)
+  const desktopLinks = globalLinks
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === escritorio.name)
+  const desktopColumns = globalColumns?.filter(column => column.parentCategory === escritorio._id)
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: columna._id,
+    data: {
+      type: 'Desktop',
+      columna
+    }
+  })
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform)
+  }
 
   useEffect(() => {
     const actualColumn = desktopColumns.find(column => column.slug === columna.slug)
@@ -80,8 +99,21 @@ function SideBarNavSubItem ({ escritorio, columna, slug }) {
     setFirstColumnLink(desktopLinks.map(link => (link.idpanel === actualColumn._id) ? link : null).filter(link => link !== null)[0])
   }, [slug])
 
+  if (isDragging) {
+    return (
+      <li ref={setNodeRef} style={style} id={columna._id} className={styles.draggedDesk}>
+        <Link
+          to={`${rootPath}${basePath}/${escritorio.name}/${columna.slug}/${firstColumnLink?._id}`}
+          title={columna.name}
+        >
+            {columna.name}
+          </Link>
+      </li>
+    )
+  }
+
   return (
-      <li id={columna._id}>
+      <li ref={setNodeRef} id={columna._id} style={style} {...attributes} {...listeners}>
         <Link
           to={`${rootPath}${basePath}/${escritorio.name}/${columna.slug}/${firstColumnLink?._id}`}
           title={columna.name}
@@ -97,15 +129,18 @@ export default function SideBarNav () {
   const [activeDesk, setActiveDesk] = useState(null)
   const [movedDesk, setMovedDesk] = useState(null)
   const listRef = useRef()
+  const desktopsOrderRef = useRef()
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
-  const desktopsOrderRef = useRef()
-  desktopsOrderRef.current = desktopsStore
-
-  const globalLoading = useGlobalStore(state => state.globalLoading)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
+  const subCategories = globalColumns?.filter(column => column.level !== 0)
+  const globalLoading = useGlobalStore(state => state.globalLoading)
   const { theme } = useStyles()
+
+  desktopsOrderRef.current = globalColumns
+
+  const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
+  const subCategoriesIds = useMemo(() => subCategories.map(column => column._id), [subCategories])
   const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
 
   useEffect(() => {
@@ -168,13 +203,18 @@ export default function SideBarNav () {
                     : desktopsStore.map(escritorio => (
                       !escritorio.hidden &&
                         <SideBarNavItem key={escritorio._id} escritorio={escritorio}>
-                            {
-                              globalColumns.map(col => (
-                                col.escritorio === escritorio.name
-                                  ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col} slug={slug}>{col.name}</SideBarNavSubItem>
-                                  : null
-                              ))
-                            }
+
+                              <SortableContext strategy={verticalListSortingStrategy} items={subCategoriesIds}>
+                                {
+                                  globalColumns.map(col => (
+                                    col.parentCategory === escritorio._id
+                                      ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col} slug={slug}>{col.name}</SideBarNavSubItem>
+                                      : null
+                                  ))
+                                }
+
+                            </SortableContext>
+
                         </SideBarNavItem>
                     ))
                 }

@@ -277,6 +277,53 @@ export async function moveDesktops (items) {
     throw error
   }
 }
+
+// Anidar desktop
+export async function nestDesktop ({ desktopId, parentId, level }) {
+  try {
+    const body = { desktopId, parentId, level }
+    const response = await fetch(`${constants.BASE_API_URL}/desktops/nest`, {
+      method: 'PATCH',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al anidar desktop')
+    }
+
+    const data = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error('Error de red:', error)
+    return { hasError: true, message: 'Error al anidar desktop' }
+  }
+}
+
+// Desanidar desktop
+export async function unnestDesktop ({ desktopId }) {
+  try {
+    const body = { desktopId }
+    const response = await fetch(`${constants.BASE_API_URL}/desktops/unnest`, {
+      method: 'PATCH',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al desanidar desktop')
+    }
+
+    const data = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error('Error de red:', error)
+    return { hasError: true, message: 'Error al desanidar desktop' }
+  }
+}
+
 // AddDesktopForm
 export async function createDesktop ({ name, displayName, orden }) {
   const body = { name, displayName, orden }
