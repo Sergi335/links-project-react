@@ -7,7 +7,7 @@
     flex-direction: column;
     padding: 10px;
     overflow-y: auto;
-    width: 0px;
+    /* width: 0px; */
     transition: width 0.3s ease-out;
     background-color: var(--color-primary);
     z-index: 2;
@@ -18,7 +18,7 @@
 
         /* Reglas para dispositivos no táctiles */
         &:hover {
-            width: var(--sidebar-desktop-width);
+            /* width: var(--sidebar-desktop-width); */
 
             >.sidebar_wrapper {
                 visibility: visible;
@@ -239,7 +239,7 @@ a.active:hover {
     .sidebar {
         position: sticky;
         top: 0;
-        width: 10px;
+        /* width: 10px; */
         height: 100dvh;
     }
 
@@ -269,4 +269,44 @@ a.active:hover {
 .drag_over {
     background-color: var(--accentColor);
     outline: 2px dashed white;
+}
+
+.resizable_handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    cursor: ew-resize;
+    z-index: 1000;
+    /* o un valor alto */
+    /* background: #d1d5db; */
+    transition: background-color 0.2s;
+}
+
+.resizable_handle.bg-blue {
+    background-color: #3b82f6;
+    /* bg-blue-500 */
+}
+
+.resizable_handle.bg-gray {
+    background-color: #d1d5db;
+    /* bg-gray-300 */
+}
+
+.resizable_handle.bg-gray:hover {
+    background-color: #9ca3af;
+    /* bg-gray-400 */
+}
+
+/* absolute */
+.resizable_grab_area {
+    position: absolute;
+    /* inset-y-0 */
+    top: 0;
+    bottom: 0;
+    /* -left-2 y -right-2 */
+    left: -8px;
+    /* -0.5rem = -8px */
+    right: -8px;
 }

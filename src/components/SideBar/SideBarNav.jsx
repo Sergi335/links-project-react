@@ -73,7 +73,7 @@ function SideBarNavSubItem ({ escritorio, columna, slug }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const desktopLinks = globalLinks
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.parentCategory === escritorio._id)
+  const desktopColumns = globalColumns?.filter(column => column.parentId === escritorio._id)
   const {
     setNodeRef,
     attributes,
@@ -207,7 +207,7 @@ export default function SideBarNav () {
                               <SortableContext strategy={verticalListSortingStrategy} items={subCategoriesIds}>
                                 {
                                   globalColumns.map(col => (
-                                    col.parentCategory === escritorio._id
+                                    col.parentId === escritorio._id
                                       ? <SideBarNavSubItem key={col._id} id={col._id} data-db={col.escritorio} escritorio={escritorio} columna={col} slug={slug}>{col.name}</SideBarNavSubItem>
                                       : null
                                   ))

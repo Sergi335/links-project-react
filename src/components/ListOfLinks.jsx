@@ -29,7 +29,7 @@ export default function ListOfLinks () {
   console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
   const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
   console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.parentCategory === desktopParent)
+  const desktopColumns = globalColumns?.filter(column => column.parentId === desktopParent)
   console.log('🚀 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)

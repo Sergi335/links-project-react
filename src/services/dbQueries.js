@@ -177,9 +177,145 @@ export async function findDuplicateLinks () {
   }
 }
 
-/* --------------- COLUMNS -------------------- */
+/* --------------- CATEGORIES AKA COLUMNS -------------------- */
+export const updateDbAfterDrag = async (draggedItem, targetItem, position, finalItems) => {
+  try {
+    // Si recibimos un array en lugar de draggedItem, usar la nueva lógica optimizada
+    if (Array.isArray(draggedItem)) {
+      return await handleOptimizedUpdate(draggedItem)
+    }
 
-// Column, ContectualColMenu, useDragItems
+    // Lógica original para compatibilidad hacia atrás
+    const updateType = position === 'inside' ? 'nesting' : 'reordering'
+
+    if (updateType === 'nesting') {
+      // Anidamiento: actualizar level y parentId
+      const nestingResult = await handleNestingUpdate(draggedItem, targetItem, finalItems)
+      return nestingResult
+    } else {
+      // Reordenamiento: actualizar solo order (y posiblemente level si cambió de nivel)
+      const reorderingResult = await handleReorderingUpdate(draggedItem, targetItem, finalItems)
+      return reorderingResult
+    }
+  } catch (error) {
+    console.error('Error updating database:', error)
+    // toast.error('Error al actualizar la estructura')
+    // TODO: Implementar rollback del estado local
+  }
+}
+
+// Nueva función para manejar updates optimizados
+const handleOptimizedUpdate = async (changedItems) => {
+  if (!changedItems || changedItems.length === 0) {
+    console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  const response = await fetch(`${constants.BASE_API_URL}/categories/reorder`, {
+    method: 'POST',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({
+      updates: changedItems.map(item => ({
+        itemId: item._id,
+        newOrder: item.order,
+        newLevel: item.level,
+        parentId: item.parentId
+      }))
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
+  }
+
+  const result = await response.json()
+  console.log(`Successfully updated ${changedItems.length} items`)
+  return result
+}
+
+const handleNestingUpdate = async (draggedItem, targetItem, finalItems) => {
+  const updatedItem = findUpdatedItem(finalItems, draggedItem._id)
+
+  const response = await fetch(`${constants.BASE_API_URL}/categories/nest`, {
+    method: 'POST',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({
+      itemId: draggedItem._id,
+      parentId: targetItem._id,
+      newLevel: updatedItem.level,
+      newOrder: updatedItem.order
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to nest item')
+  }
+  return response.json()
+}
+
+const handleReorderingUpdate = async (draggedItem, targetItem, finalItems) => {
+  // Obtener todos los items que cambiaron de orden en el mismo nivel
+  const affectedItems = getAffectedItems(finalItems, draggedItem, targetItem)
+
+  const response = await fetch(`${constants.BASE_API_URL}/categories/reorder`, {
+    method: 'POST',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({
+      updates: affectedItems.map(item => ({
+        itemId: item._id,
+        newOrder: item.order,
+        newLevel: item.level,
+        parentId: item.parentId
+      }))
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to reorder items')
+  }
+  return response.json()
+}
+// Encuentra un item específico en la estructura final
+const findUpdatedItem = (items, itemId) => {
+  const findInItems = (currentItems) => {
+    for (const item of currentItems) {
+      if (item._id === itemId) return item
+      if (item.children) {
+        const found = findInItems(item.children)
+        if (found) return found
+      }
+    }
+    return null
+  }
+  return findInItems(items)
+}
+
+// Obtiene todos los items afectados por el reordenamiento
+const getAffectedItems = (finalItems, draggedItem, targetItem) => {
+  const affected = []
+
+  const collectItems = (currentItems, level = 0, parentId = null) => {
+    currentItems.forEach((item, index) => {
+      affected.push({
+        _id: item._id,
+        order: index,
+        level,
+        parentId
+      })
+
+      if (item.children && item.children.length > 0) {
+        collectItems(item.children, level + 1, item._id)
+      }
+    })
+  }
+
+  collectItems(finalItems)
+  return affected
+}
+// Column, ContextualColMenu, useDragItems
 export async function editColumn ({ name, oldDesktop, newDesktop, idPanel, columnsIds }) {
   try {
     const body = { id: idPanel, oldDesktop, columnsIds, fields: { name, escritorio: newDesktop } }

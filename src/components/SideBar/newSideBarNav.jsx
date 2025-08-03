@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { updateDbAfterDrag } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
 import { ArrowDown } from '../Icons/icons'
 import styles from './SideBar.module.css'
 
 /**
- * Convierte una lista plana de objetos con `parentCategory` a un árbol anidado.
+ * Convierte una lista plana de objetos con `parentId` a un árbol anidado.
  * @param {Array} list La lista plana de elementos.
  * @returns {Array} La lista de nodos raíz con sus hijos anidados.
  */
@@ -18,10 +19,10 @@ const buildTree = (list) => {
     map[item._id] = { ...item, children: [], expanded: false }
   })
 
-  // Anida los elementos según su `parentCategory`.
+  // Anida los elementos según su `parentId`.
   list.forEach(item => {
-    if (item.parentCategory && map[item.parentCategory]) {
-      map[item.parentCategory].children.push(map[item._id])
+    if (item.parentId && map[item.parentId]) {
+      map[item.parentId].children.push(map[item._id])
     } else {
       roots.push(map[item._id])
     }
@@ -40,7 +41,8 @@ const buildTree = (list) => {
 }
 
 /**
- * Recorre el árbol y actualiza las propiedades `level`, `parentCategory` y `order`.
+ * Recorre el árbol y actualiza las propiedades `level`, `parentId` y `order`.
+ * Solo reordena elementos dentro del mismo padre.
  * @param {Array} nodes El árbol de nodos a actualizar.
  * @param {number} level El nivel inicial.
  * @param {string|null} parentId El ID del padre.
@@ -48,12 +50,77 @@ const buildTree = (list) => {
  */
 const updateNodeProperties = (nodes, level = 0, parentId = null) => {
   return nodes.map((node, index) => {
-    const newNode = { ...node, level, parentCategory: parentId, order: index }
+    const newNode = {
+      ...node,
+      level,
+      parentId,
+      order: index // El order siempre refleja la posición actual en este nivel
+    }
+
     if (node.children && node.children.length > 0) {
       newNode.children = updateNodeProperties(node.children, level + 1, node._id)
     }
     return newNode
   })
+}
+
+/**
+ * Aplana un desktop con sus hijos en un array plano
+ */
+const flattenDesktop = (desktop) => {
+  const result = [desktop]
+  if (desktop.children) {
+    desktop.children.forEach(child => {
+      result.push(...flattenDesktop(child))
+    })
+  }
+  return result
+}
+
+/**
+ * Función helper para obtener solo los cambios que afectan a un padre específico
+ * @param {Array} originalItems Estado original (flat)
+ * @param {Array} newItems Estado después del drag (flat)
+ * @param {string|null} affectedParentId ID del padre afectado
+ * @returns {Array} Lista de items que cambiaron
+ */
+const getChangedItemsForParent = (originalItems, newItems, affectedParentId = null) => {
+  const changedItems = []
+
+  // Filtrar solo los items que pertenecen al padre específico
+  const relevantNewItems = newItems.filter(item => item.parentId === affectedParentId)
+  const relevantOriginalItems = originalItems.filter(item => item.parentId === affectedParentId)
+
+  console.log(`🔍 Analizando padre: ${affectedParentId || 'ROOT'}`)
+  console.log('📊 Items originales:', relevantOriginalItems.map(i => ({ id: i._id, name: i.name, order: i.order })))
+  console.log('📊 Items nuevos:', relevantNewItems.map(i => ({ id: i._id, name: i.name, order: i.order })))
+
+  relevantNewItems.forEach(newItem => {
+    const oldItem = originalItems.find(item => item._id === newItem._id)
+
+    if (!oldItem ||
+        oldItem.order !== newItem.order ||
+        oldItem.parentId !== newItem.parentId ||
+        oldItem.level !== newItem.level) {
+      console.log(`🔄 Cambio detectado en ${newItem.name}:`, {
+        id: newItem._id,
+        oldOrder: oldItem?.order,
+        newOrder: newItem.order,
+        oldParent: oldItem?.parentId,
+        newParent: newItem.parentId
+      })
+
+      changedItems.push({
+        _id: newItem._id,
+        order: newItem.order,
+        parentId: newItem.parentId,
+        level: newItem.level
+      })
+    }
+  })
+
+  console.log(`✅ Total cambios encontrados: ${changedItems.length}`)
+  return changedItems
 }
 
 const MultiLevelDragDrop = () => {
@@ -140,6 +207,7 @@ const MultiLevelDragDrop = () => {
       item.expanded = false
     }
     setDraggedItem(item)
+    e.dataTransfer.setData('text/plain', item._id)
     e.dataTransfer.effectAllowed = 'move'
   }
 
@@ -153,7 +221,7 @@ const MultiLevelDragDrop = () => {
     setDragOverItem(null)
   }
 
-  const handleDrop = (e, targetItem, position) => {
+  const handleDrop = async (e, targetItem, position) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -162,28 +230,64 @@ const MultiLevelDragDrop = () => {
       return
     }
 
-    const sourceData = findItemAndParent(items, draggedItem._id)
-    if (!sourceData) return
+    // Guardamos el estado original para rollback
+    const originalItems = [...items]
 
-    let tempItems = removeItem(items, draggedItem._id)
+    try {
+      const sourceData = findItemAndParent(items, draggedItem._id)
+      if (!sourceData) return
 
-    if (position === 'inside') {
-      tempItems = insertItem(tempItems, targetItem._id, sourceData.item)
-    } else {
-      const targetData = findItemAndParent(tempItems, targetItem._id)
-      if (targetData) {
-        const insertIndex = position === 'after' ? targetData.index + 1 : targetData.index
-        const parentId = targetData.parent ? targetData.parent._id : null
-        tempItems = insertAtIndex(tempItems, parentId, insertIndex, sourceData.item)
+      let tempItems = removeItem(items, draggedItem._id)
+
+      if (position === 'inside') {
+        tempItems = insertItem(tempItems, targetItem._id, sourceData.item)
+      } else {
+        const targetData = findItemAndParent(tempItems, targetItem._id)
+        if (targetData) {
+          const insertIndex = position === 'after' ? targetData.index + 1 : targetData.index
+          const parentId = targetData.parent ? targetData.parent._id : null
+          tempItems = insertAtIndex(tempItems, parentId, insertIndex, sourceData.item)
+        }
       }
+
+      // Actualiza level, parentId y order en toda la estructura
+      const finalItems = updateNodeProperties(tempItems)
+
+      // Obtener solo los cambios relevantes
+      const flatOriginal = originalItems.map(item => flattenDesktop(item)).flat()
+      const flatFinal = finalItems.map(item => flattenDesktop(item)).flat()
+
+      // Determinar el padre objetivo
+      const targetParentId = position === 'inside'
+        ? targetItem._id
+        : (findItemAndParent(originalItems, targetItem._id)?.parent?._id || null)
+
+      const changedItems = getChangedItemsForParent(flatOriginal, flatFinal, targetParentId)
+
+      // Si hay elementos movidos entre diferentes padres, incluir ambos grupos
+      const originalParentId = sourceData.parent ? sourceData.parent._id : null
+      if (originalParentId !== targetParentId) {
+        const originalParentChanges = getChangedItemsForParent(flatOriginal, flatFinal, originalParentId)
+        changedItems.push(...originalParentChanges)
+      }
+
+      // Actualizar el estado local
+      setItems(finalItems)
+      setDraggedItem(null)
+      setDragOverItem(null)
+
+      // Enviar solo los cambios a la base de datos
+      if (changedItems.length > 0) {
+        const result = await updateDbAfterDrag(changedItems)
+        console.log('Database update result:', result)
+      }
+    } catch (error) {
+      console.error('Error durante el drop:', error)
+      // Rollback en caso de error
+      setItems([...originalItems])
+      setDraggedItem(null)
+      setDragOverItem(null)
     }
-
-    // Actualiza level, parentCategory y order en toda la estructura
-    const finalItems = updateNodeProperties(tempItems)
-
-    setItems(finalItems)
-    setDraggedItem(null)
-    setDragOverItem(null)
   }
 
   const toggleExpand = (itemId) => {
