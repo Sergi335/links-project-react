@@ -1,21 +1,21 @@
 import '@fontsource-variable/inter'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import 'overlayscrollbars/overlayscrollbars.css'
-import 'react-toastify/dist/ReactToastify.css'
-import { constants } from './services/constants'
+import { useEffect } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ToastContainer, Zoom, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { useDesktopsStore } from '../src/store/desktops'
-import { useEffect } from 'react'
-import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import { useSessionStore } from '../src/store/session'
-import { useStyles } from './hooks/useStyles'
-import AppLayout from './components/Pages/AppLayout'
-import HomePage from './components/Pages/HomePage'
-import InternalError from './components/Pages/500'
+import { constants } from './services/constants'
+// import { useStyles } from './hooks/useStyles'
 import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
 import ListOfLinks from './components/ListOfLinks'
-import Login from './components/Pages/LoginPage'
 import NotFound from './components/Pages/404'
+import InternalError from './components/Pages/500'
+import AppLayout from './components/Pages/AppLayout'
+import HomePage from './components/Pages/HomePage'
+import Login from './components/Pages/LoginPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
@@ -71,7 +71,7 @@ function App () {
   const desktopsStore = useDesktopsStore(state => state.desktopsStore)
   const firstDesktop = localStorage.getItem('firstDesktop') === null ? desktopsStore[0]?.slug : JSON.parse(localStorage.getItem('firstDesktop'))
 
-  const { themeforToastify, theme } = useStyles()
+  // const { themeforToastify, theme } = useStyles()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
 
@@ -165,7 +165,7 @@ function App () {
       defer: true,
       options: {
         scrollbars: {
-          theme: `os-theme-${theme}`
+          // theme: `os-theme-${theme}`
         }
       }
     })
@@ -185,7 +185,7 @@ function App () {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={themeforToastify}
+        // theme={themeforToastify}
         transition={Zoom}
       />
     </>

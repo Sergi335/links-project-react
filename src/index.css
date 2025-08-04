@@ -1,3 +1,7 @@
+html.dark {
+  background-color: #1D1D1D;
+}
+
 @font-face {
   font-family: 'K2D';
   src: url('/fonts/k2d/K2D-Regular.woff2') format('woff2');
@@ -139,7 +143,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-primary);
+  /* background: var(--color-primary); */
   background-attachment: fixed;
 }
 

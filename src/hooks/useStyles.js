@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { constants } from '../services/constants'
-
+// Cuidado al ejecutar ya que causa parpadeo en el tema oscuro al refrescar la página
 export const useStyles = () => {
   const [themeforToastify, setThemeforToastify] = useState()
   // Usar estado para reactividad con el theme changer

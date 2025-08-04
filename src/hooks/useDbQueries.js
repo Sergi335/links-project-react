@@ -75,7 +75,7 @@ const useDbQueries = () => {
         // Set first desktop in localStorage
         localStorage.setItem('firstDesktop', JSON.stringify(desktopsResponse.data.find(desktop => desktop.order === 0)?.slug))
 
-        // return { desktops: desktopsResponse.data }
+        return { desktops: desktopsResponse.data, columns: columnsResponse.data, links: linksResponse.data }
       } catch (err) {
         // Handle error
         setGlobalError({ error: 'Error al recuperar los datos' })
