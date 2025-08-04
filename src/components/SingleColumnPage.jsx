@@ -19,6 +19,7 @@ import LinkLoader from './Loaders/LinkLoader'
 import SingleColumn from './SingleColumn'
 
 export default function SingleColumnPage () {
+  // DesktopName es el parentSlug
   const { slug, desktopName, id } = useParams()
   const [navigationLinks, setNavigationLinks] = useState([])
   const [firstColumnLink, setFirstColumnLink] = useState(null)
@@ -33,9 +34,12 @@ export default function SingleColumnPage () {
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks?.filter(link => link.escritorio.toLowerCase() === desktopName)
+  const desktopLinks = globalLinks
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.escritorio.toLowerCase() === desktopName)
+  // const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
+  // console.log('🚀 ~ SingleColumnPage ~ desktopParent:', desktopParent)
+  const desktopColumns = globalColumns?.filter(column => column.slug === slug)
+  console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
@@ -98,7 +102,7 @@ export default function SingleColumnPage () {
                           <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                             {
                               desktopLinks.map((link) =>
-                                link.idpanel === columna._id
+                                link.categoryId === columna._id
                                   ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName} context='singlecol'/>)
                                   : null
                               ).filter(link => link !== null)

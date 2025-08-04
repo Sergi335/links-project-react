@@ -178,11 +178,17 @@ export async function findDuplicateLinks () {
 }
 
 /* --------------- CATEGORIES AKA COLUMNS -------------------- */
-export const updateDbAfterDrag = async (draggedItem, targetItem, position, finalItems) => {
+export const updateDbAfterDrag = async (draggedItemOrArray, targetItem = null, position = null, finalItems = null) => {
   try {
     // Si recibimos un array en lugar de draggedItem, usar la nueva lógica optimizada
-    if (Array.isArray(draggedItem)) {
-      return await handleOptimizedUpdate(draggedItem)
+    if (Array.isArray(draggedItemOrArray)) {
+      return await handleOptimizedUpdate(draggedItemOrArray)
+    }
+
+    // Si recibimos un solo objeto sin otros parámetros, también usar lógica optimizada
+    if (!targetItem && !position && !finalItems) {
+      // Es un objeto individual (caso de anidamiento)
+      return await handleOptimizedUpdate([draggedItemOrArray])
     }
 
     // Lógica original para compatibilidad hacia atrás
@@ -190,15 +196,16 @@ export const updateDbAfterDrag = async (draggedItem, targetItem, position, final
 
     if (updateType === 'nesting') {
       // Anidamiento: actualizar level y parentId
-      const nestingResult = await handleNestingUpdate(draggedItem, targetItem, finalItems)
+      const nestingResult = await handleNestingUpdate(draggedItemOrArray, targetItem, finalItems)
       return nestingResult
     } else {
       // Reordenamiento: actualizar solo order (y posiblemente level si cambió de nivel)
-      const reorderingResult = await handleReorderingUpdate(draggedItem, targetItem, finalItems)
+      const reorderingResult = await handleReorderingUpdate(draggedItemOrArray, targetItem, finalItems)
       return reorderingResult
     }
   } catch (error) {
     console.error('Error updating database:', error)
+    throw error
     // toast.error('Error al actualizar la estructura')
     // TODO: Implementar rollback del estado local
   }
@@ -211,16 +218,22 @@ const handleOptimizedUpdate = async (changedItems) => {
     return { success: true, message: 'No changes to update' }
   }
 
+  // Asegurar que changedItems es un array
+  const itemsArray = Array.isArray(changedItems) ? changedItems : [changedItems]
+
+  console.log('📤 Enviando al backend:', itemsArray)
+
   const response = await fetch(`${constants.BASE_API_URL}/categories/reorder`, {
     method: 'POST',
     credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
-      updates: changedItems.map(item => ({
+      updates: itemsArray.map(item => ({
         itemId: item._id,
         newOrder: item.order,
         newLevel: item.level,
-        parentId: item.parentId
+        parentId: item.parentId,
+        parentSlug: item.parentSlug
       }))
     })
   })
@@ -230,7 +243,7 @@ const handleOptimizedUpdate = async (changedItems) => {
   }
 
   const result = await response.json()
-  console.log(`Successfully updated ${changedItems.length} items`)
+  console.log(`Successfully updated ${itemsArray.length} items`)
   return result
 }
 
@@ -244,6 +257,7 @@ const handleNestingUpdate = async (draggedItem, targetItem, finalItems) => {
     body: JSON.stringify({
       itemId: draggedItem._id,
       parentId: targetItem._id,
+      parentSlug: targetItem.slug,
       newLevel: updatedItem.level,
       newOrder: updatedItem.order
     })
@@ -268,7 +282,8 @@ const handleReorderingUpdate = async (draggedItem, targetItem, finalItems) => {
         itemId: item._id,
         newOrder: item.order,
         newLevel: item.level,
-        parentId: item.parentId
+        parentId: item.parentId,
+        parentSlug: item.parentSlug
       }))
     })
   })
@@ -293,17 +308,44 @@ const findUpdatedItem = (items, itemId) => {
   return findInItems(items)
 }
 
+// Encuentra el slug de un padre específico
+const findParentSlug = (items, parentId) => {
+  const findInItems = (currentItems) => {
+    for (const item of currentItems) {
+      if (item._id === parentId) return item.slug
+      if (item.children) {
+        const found = findInItems(item.children)
+        if (found) return found
+      }
+    }
+    return null
+  }
+  return findInItems(items)
+}
+
 // Obtiene todos los items afectados por el reordenamiento
 const getAffectedItems = (finalItems, draggedItem, targetItem) => {
   const affected = []
 
+  // Verificar que finalItems existe y es un array
+  if (!finalItems || !Array.isArray(finalItems)) {
+    console.warn('getAffectedItems: finalItems is not a valid array', finalItems)
+    return affected
+  }
+
   const collectItems = (currentItems, level = 0, parentId = null) => {
+    if (!currentItems || !Array.isArray(currentItems)) {
+      console.warn('collectItems: currentItems is not a valid array', currentItems)
+      return
+    }
+
     currentItems.forEach((item, index) => {
       affected.push({
         _id: item._id,
         order: index,
         level,
-        parentId
+        parentId,
+        parentSlug: parentId ? findParentSlug(finalItems, parentId) : null
       })
 
       if (item.children && item.children.length > 0) {

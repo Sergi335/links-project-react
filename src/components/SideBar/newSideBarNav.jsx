@@ -1,137 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useOverlayScrollbars } from 'overlayscrollbars-react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useStyles } from '../../hooks/useStyles'
 import { updateDbAfterDrag } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
+import { buildTree, flattenDesktop, getChangedItemsForParent, updateNodeProperties } from '../../utils/dragDropUtils'
 import { ArrowDown } from '../Icons/icons'
 import styles from './SideBar.module.css'
-
-/**
- * Convierte una lista plana de objetos con `parentId` a un árbol anidado.
- * @param {Array} list La lista plana de elementos.
- * @returns {Array} La lista de nodos raíz con sus hijos anidados.
- */
-const buildTree = (list) => {
-  const map = {}
-  const roots = []
-
-  // Añade una propiedad `children` y `expanded` a cada elemento.
-  list.forEach(item => {
-    map[item._id] = { ...item, children: [], expanded: false }
-  })
-
-  // Anida los elementos según su `parentId`.
-  list.forEach(item => {
-    if (item.parentId && map[item.parentId]) {
-      map[item.parentId].children.push(map[item._id])
-    } else {
-      roots.push(map[item._id])
-    }
-  })
-
-  // Ordena los hijos en cada nivel según la propiedad `order`.
-  const sortChildren = (node) => {
-    node.children.sort((a, b) => a.order - b.order)
-    node.children.forEach(sortChildren)
-  }
-
-  roots.forEach(sortChildren)
-  roots.sort((a, b) => a.order - b.order)
-
-  return roots
-}
-
-/**
- * Recorre el árbol y actualiza las propiedades `level`, `parentId` y `order`.
- * Solo reordena elementos dentro del mismo padre.
- * @param {Array} nodes El árbol de nodos a actualizar.
- * @param {number} level El nivel inicial.
- * @param {string|null} parentId El ID del padre.
- * @returns {Array} El nuevo árbol con propiedades actualizadas.
- */
-const updateNodeProperties = (nodes, level = 0, parentId = null) => {
-  return nodes.map((node, index) => {
-    const newNode = {
-      ...node,
-      level,
-      parentId,
-      order: index // El order siempre refleja la posición actual en este nivel
-    }
-
-    if (node.children && node.children.length > 0) {
-      newNode.children = updateNodeProperties(node.children, level + 1, node._id)
-    }
-    return newNode
-  })
-}
-
-/**
- * Aplana un desktop con sus hijos en un array plano
- */
-const flattenDesktop = (desktop) => {
-  const result = [desktop]
-  if (desktop.children) {
-    desktop.children.forEach(child => {
-      result.push(...flattenDesktop(child))
-    })
-  }
-  return result
-}
-
-/**
- * Función helper para obtener solo los cambios que afectan a un padre específico
- * @param {Array} originalItems Estado original (flat)
- * @param {Array} newItems Estado después del drag (flat)
- * @param {string|null} affectedParentId ID del padre afectado
- * @returns {Array} Lista de items que cambiaron
- */
-const getChangedItemsForParent = (originalItems, newItems, affectedParentId = null) => {
-  const changedItems = []
-
-  // Filtrar solo los items que pertenecen al padre específico
-  const relevantNewItems = newItems.filter(item => item.parentId === affectedParentId)
-  const relevantOriginalItems = originalItems.filter(item => item.parentId === affectedParentId)
-
-  console.log(`🔍 Analizando padre: ${affectedParentId || 'ROOT'}`)
-  console.log('📊 Items originales:', relevantOriginalItems.map(i => ({ id: i._id, name: i.name, order: i.order })))
-  console.log('📊 Items nuevos:', relevantNewItems.map(i => ({ id: i._id, name: i.name, order: i.order })))
-
-  relevantNewItems.forEach(newItem => {
-    const oldItem = originalItems.find(item => item._id === newItem._id)
-
-    if (!oldItem ||
-        oldItem.order !== newItem.order ||
-        oldItem.parentId !== newItem.parentId ||
-        oldItem.level !== newItem.level) {
-      console.log(`🔄 Cambio detectado en ${newItem.name}:`, {
-        id: newItem._id,
-        oldOrder: oldItem?.order,
-        newOrder: newItem.order,
-        oldParent: oldItem?.parentId,
-        newParent: newItem.parentId
-      })
-
-      changedItems.push({
-        _id: newItem._id,
-        order: newItem.order,
-        parentId: newItem.parentId,
-        level: newItem.level
-      })
-    }
-  })
-
-  console.log(`✅ Total cambios encontrados: ${changedItems.length}`)
-  return changedItems
-}
 
 const MultiLevelDragDrop = () => {
   const [items, setItems] = useState([])
   const globalColumns = useGlobalStore(state => state.globalColumns)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
+  const { theme } = useStyles()
+  const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
+  const listRef = useRef(null)
+
+  useEffect(() => {
+    initialize({ target: listRef.current })
+  }, [initialize])
 
   // Al montar, convierte la data plana a un árbol
   useEffect(() => {
-    setItems(buildTree(globalColumns))
+    const tree = buildTree(globalColumns)
+    setItems(tree)
   }, [globalColumns])
 
   const [draggedItem, setDraggedItem] = useState(null)
@@ -203,9 +97,7 @@ const MultiLevelDragDrop = () => {
   }
 
   const handleDragStart = (e, item) => {
-    if (item.expanded) {
-      item.expanded = false
-    }
+    if (item.expanded) item.expanded = false
     setDraggedItem(item)
     e.dataTransfer.setData('text/plain', item._id)
     e.dataTransfer.effectAllowed = 'move'
@@ -237,15 +129,29 @@ const MultiLevelDragDrop = () => {
       const sourceData = findItemAndParent(items, draggedItem._id)
       if (!sourceData) return
 
-      let tempItems = removeItem(items, draggedItem._id)
+      console.log('📍 Datos fuente:', {
+        item: { id: sourceData.item._id, name: sourceData.item.name },
+        parent: sourceData.parent ? { id: sourceData.parent._id, name: sourceData.parent.name } : null,
+        index: sourceData.index
+      })
 
-      if (position === 'inside') {
+      let tempItems = removeItem(items, draggedItem._id)
+      const isNestingOperation = position === 'inside'
+
+      if (isNestingOperation) {
         tempItems = insertItem(tempItems, targetItem._id, sourceData.item)
       } else {
         const targetData = findItemAndParent(tempItems, targetItem._id)
         if (targetData) {
           const insertIndex = position === 'after' ? targetData.index + 1 : targetData.index
           const parentId = targetData.parent ? targetData.parent._id : null
+
+          console.log('📍 Inserción en:', {
+            insertIndex,
+            parentId: parentId || 'ROOT',
+            position
+          })
+
           tempItems = insertAtIndex(tempItems, parentId, insertIndex, sourceData.item)
         }
       }
@@ -253,33 +159,40 @@ const MultiLevelDragDrop = () => {
       // Actualiza level, parentId y order en toda la estructura
       const finalItems = updateNodeProperties(tempItems)
 
-      // Obtener solo los cambios relevantes
-      const flatOriginal = originalItems.map(item => flattenDesktop(item)).flat()
-      const flatFinal = finalItems.map(item => flattenDesktop(item)).flat()
-
-      // Determinar el padre objetivo
-      const targetParentId = position === 'inside'
-        ? targetItem._id
-        : (findItemAndParent(originalItems, targetItem._id)?.parent?._id || null)
-
-      const changedItems = getChangedItemsForParent(flatOriginal, flatFinal, targetParentId)
-
-      // Si hay elementos movidos entre diferentes padres, incluir ambos grupos
-      const originalParentId = sourceData.parent ? sourceData.parent._id : null
-      if (originalParentId !== targetParentId) {
-        const originalParentChanges = getChangedItemsForParent(flatOriginal, flatFinal, originalParentId)
-        changedItems.push(...originalParentChanges)
-      }
-
       // Actualizar el estado local
       setItems(finalItems)
       setDraggedItem(null)
       setDragOverItem(null)
 
-      // Enviar solo los cambios a la base de datos
-      if (changedItems.length > 0) {
-        const result = await updateDbAfterDrag(changedItems)
-        console.log('Database update result:', result)
+      // 🔄 Enviar cambios al backend según el tipo de operación
+      const flatOriginal = originalItems.map(item => flattenDesktop(item)).flat()
+      const flatFinal = finalItems.map(item => flattenDesktop(item)).flat()
+
+      if (isNestingOperation) {
+        // Para operaciones de anidamiento, enviamos el item que cambió de padre
+        const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
+        if (draggedFinalState) {
+          await updateDbAfterDrag(draggedFinalState)
+        }
+      } else {
+        // Para reordenamiento, detectar qué padre fue afectado
+        const draggedOriginalState = flatOriginal.find(item => item._id === draggedItem._id)
+        const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
+
+        let affectedParentId = null
+
+        if (draggedOriginalState && draggedFinalState) {
+          affectedParentId = draggedFinalState.parentId
+        }
+
+        const changedItems = getChangedItemsForParent(flatOriginal, flatFinal, affectedParentId)
+
+        if (changedItems.length > 0) {
+          const result = await updateDbAfterDrag(changedItems)
+          console.log('✅ Resultado:', result)
+        } else {
+          console.log('ℹ️ No hay cambios de orden que enviar')
+        }
       }
     } catch (error) {
       console.error('Error durante el drop:', error)
@@ -307,17 +220,14 @@ const MultiLevelDragDrop = () => {
 
   const renderItem = (item) => {
     const isDragOver = dragOverItem?.id === item._id
+    const className = `${isDragOver && dragOverItem.position === 'before' ? styles.drag_to_top : ''} ${isDragOver && dragOverItem.position === 'after' ? styles.drag_to_bottom : ''} ${isDragOver && dragOverItem.position === 'inside' ? styles.drag_over : ''}`
+    const firstColumnLink = globalLinks.find(link => link.categoryId === item._id && link.order === 0)
 
     return (
-      <li key={item._id}
-        className={`
-            ${isDragOver && dragOverItem.position === 'before' ? styles.drag_to_top : ''}
-            ${isDragOver && dragOverItem.position === 'after' ? styles.drag_to_bottom : ''}
-            ${isDragOver && dragOverItem.position === 'inside' ? styles.drag_over : ''}
-          `}
-        >
+      <li key={item._id} order={item.order} className={className}>
         <NavLink
-            to={`${rootPath}${basePath}/${item.slug}`}
+            // to={`${rootPath}${basePath}/${item.slug}`}
+            to={item.level === 0 ? `${rootPath}${basePath}/${item.slug}` : `${rootPath}${basePath}/${item.parentSlug}/${item.slug}/${firstColumnLink?._id}`}
             className={({ isActive }) => isActive ? styles.active : ''}
             draggable
             onDragStart={(e) => handleDragStart(e, item)}
@@ -372,7 +282,7 @@ const MultiLevelDragDrop = () => {
   }
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} ref={listRef}>
       <ul className={styles.nav_first_level_ul}>
         {items.map(item => renderItem(item))}
       </ul>
