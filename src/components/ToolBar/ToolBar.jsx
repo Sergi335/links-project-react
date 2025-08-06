@@ -3,10 +3,10 @@ import { useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
@@ -18,8 +18,8 @@ export default function ToolBar () {
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
   const setGlobalOpenColumns = usePreferencesStore(state => state.setGlobalOpenColumns)
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const desktop = desktopsStore.find(desk => desk.name === desktopName)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const desktop = topLevelCategoriesStore.find(desk => desk.name === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)

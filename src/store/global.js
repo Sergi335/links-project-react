@@ -19,6 +19,10 @@ export const useGlobalStore = create(
       setGlobalError: (globalError) => {
         set({ globalError })
       },
+      globalDesktops: [],
+      setGlobalDesktops: (globalDesktops) => {
+        set({ globalDesktops })
+      },
       globalColumns: [],
       setGlobalColumns: (globalColumns) => {
         set({ globalColumns })
@@ -26,18 +30,7 @@ export const useGlobalStore = create(
       globalLinks: [],
       setGlobalLinks: (globalLinks) => {
         set({ globalLinks })
-      }//,
-      // mappedGlobalLinks: new Map(),
-      // setMappedGlobalLinks: (mappedGlobalLinks) => {
-      //   const paneles = get().globalColumns
-      //   const links = get().globalLinks
-      //   paneles.forEach(panel => {
-      //     const matchingLinks = links.filter(link => link.idpanel === panel._id)
-      //     mappedGlobalLinks.set(panel._id, matchingLinks)
-      //   })
-
-      //   set({ mappedGlobalLinks })
-      // }
+      }
     }
   }
 )

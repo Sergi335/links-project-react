@@ -4,14 +4,14 @@ import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
 import { createDesktop } from '../../services/dbQueries'
 import { formatPath, handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import styles from './AddLinkForm.module.css'
 
 export default function AddDesktopForm () {
   const navigate = useNavigate()
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const inputRef = useRef()
@@ -23,7 +23,7 @@ export default function AddDesktopForm () {
     event.preventDefault()
     const displayName = inputRef.current.value.trim()
     const name = formatPath(displayName)
-    const orden = desktopsStore.length + 1
+    const orden = topLevelCategoriesStore.length + 1
 
     const response = await createDesktop({ name, displayName, orden })
     const { hasError, message } = handleResponseErrors(response)
@@ -34,7 +34,7 @@ export default function AddDesktopForm () {
     const { data } = response
     setAddDeskFormVisible(false)
     toast.success('Escritorio Añadido!', { autoClose: 1500 })
-    setDesktopsStore(data)
+    setTopLevelCategoriesStore(data)
     navigate(`/desktop/${name}`)
   }
   return (

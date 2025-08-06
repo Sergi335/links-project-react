@@ -3,9 +3,9 @@ import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, 
 import { toast } from 'react-toastify'
 import { firebaseConfig } from '../config/firebaseConfig'
 import { constants } from '../services/constants'
+import { sendLogoutSignal } from '../services/dbQueries'
 import { useGlobalStore } from '../store/global'
 import { useSessionStore } from '../store/session'
-import { sendLogoutSignal } from '../services/dbQueries'
 
 export default function useGoogleAuth () {
   initializeApp(firebaseConfig)
@@ -52,7 +52,7 @@ export default function useGoogleAuth () {
       })
       .then(() => {
         // Pedir todos es innecesario?
-        fetch(`${constants.BASE_API_URL}/categories`, {
+        fetch(`${constants.BASE_API_URL}/categories/toplevel`, {
           method: 'GET',
           credentials: 'include',
           ...constants.FETCH_OPTIONS
@@ -64,7 +64,7 @@ export default function useGoogleAuth () {
             const firstDesktopSlug = firstDesktop[0]?.slug
             if (firstDesktopSlug) {
               setLoginLoading(false)
-              window.location.href = `/app/${firstDesktopSlug}` // --> si esto te redirige el login ha sido correcto en Firebase
+              window.location.href = `${rootPath}${basePath}/${firstDesktopSlug}` // --> si esto te redirige el login ha sido correcto en Firebase
             } // else? --> no hay desktops
           })
       })

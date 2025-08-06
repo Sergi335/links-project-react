@@ -4,24 +4,24 @@ import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
 import { deleteDesktop } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import styles from './AddLinkForm.module.css'
 
 export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'escritorio' }) {
   const visibleClassName = visible ? styles.flex : styles.hidden
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const navigate = useNavigate()
   const { desktopName } = useParams()
   const formRef = useRef()
   useHideForms({ form: formRef.current, setFormVisible: setVisible })
-  const index = desktopsStore.findIndex((desktop) => desktop.name === desktopName)
-  let desktopToNavigate = desktopsStore.length > 0 ? desktopsStore[0].name : ''
-  if (index === 0 && desktopsStore.length === 1) {
+  const index = topLevelCategoriesStore.findIndex((desktop) => desktop.name === desktopName)
+  let desktopToNavigate = topLevelCategoriesStore.length > 0 ? topLevelCategoriesStore[0].name : ''
+  if (index === 0 && topLevelCategoriesStore.length === 1) {
     desktopToNavigate = ''
   }
-  if (index === 0 && desktopsStore.length > 1) {
-    desktopToNavigate = desktopsStore[index + 1].name
+  if (index === 0 && topLevelCategoriesStore.length > 1) {
+    desktopToNavigate = topLevelCategoriesStore[index + 1].name
   }
 
   const handleDeleteDesktop = async (event) => {
@@ -35,7 +35,7 @@ export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'es
       return
     }
     const { data } = response
-    setDesktopsStore(data)
+    setTopLevelCategoriesStore(data)
     navigate(`/desktop/${desktopToNavigate}`)
   }
 

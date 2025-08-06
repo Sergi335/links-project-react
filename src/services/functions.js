@@ -206,6 +206,21 @@ export function handleResponseErrors (response) {
   // }
   return { hasError: false, message: '' }
 }
+export function keepServerAwake (apiUrl, intervalMinutes = 14) {
+  const wakeUp = async () => {
+    try {
+      await fetch(apiUrl)
+      console.log('Server pinged at:', new Date().toLocaleTimeString())
+    } catch (error) {
+      console.error('Ping failed:', error)
+      // toast.error('Servidor no disponible en estos momentos', { toastId: 'server-error' })
+    }
+  }
+
+  //   // Ejecutar inmediatamente y luego periódicamente
+  wakeUp()
+  return setInterval(wakeUp, intervalMinutes * 60 * 1000)
+}
 // function convertHtmlEntityToEmoji (htmlEntity) {
 //   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
 //   const codePoint = parseInt(htmlEntity.slice(3, -1), 16)

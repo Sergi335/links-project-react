@@ -62,7 +62,7 @@ export default function SingleColumnPage () {
     if (desktopName) {
       let dataFinal = []
       desktopColumns.forEach((column) => {
-        dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
       })
       setNavigationLinks(dataFinal)
     }

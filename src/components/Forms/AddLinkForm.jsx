@@ -20,18 +20,14 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
 
   const handleAddLinkSubmit = async (event) => {
     event.preventDefault()
-    const imgURL = constants.BASE_LINK_IMG_URL(urlRef.current.value)
+    const imgUrl = constants.BASE_LINK_IMG_URL(urlRef.current.value)
     const body = {
-      idpanel: params._id,
-      data: [{
-        name: nameRef.current.value,
-        URL: urlRef.current.value,
-        imgURL,
-        escritorio: params.escritorio,
-        panel: params.name,
-        idpanel: params._id,
-        orden: 0 // añadir al final
-      }]
+      categoryId: params._id,
+      name: nameRef.current.value,
+      url: urlRef.current.value,
+      imgUrl,
+      order: 0 // añadir al final
+
     }
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)

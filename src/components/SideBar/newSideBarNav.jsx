@@ -12,20 +12,57 @@ const MultiLevelDragDrop = () => {
   const [items, setItems] = useState([])
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
+  const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const { theme } = useStyles()
   const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
   const listRef = useRef(null)
 
+  // 🔧 Función para extraer el estado expanded del árbol actual
+  const getExpandedState = (items) => {
+    const expandedMap = new Map()
+
+    const extractExpanded = (currentItems) => {
+      currentItems.forEach(item => {
+        if (item.expanded) {
+          expandedMap.set(item._id, true)
+        }
+        if (item.children) {
+          extractExpanded(item.children)
+        }
+      })
+    }
+
+    extractExpanded(items)
+    return expandedMap
+  }
+
+  // 🔧 Función para aplicar el estado expanded a un árbol
+  const applyExpandedState = (items, expandedMap) => {
+    return items.map(item => ({
+      ...item,
+      expanded: expandedMap.has(item._id),
+      children: item.children ? applyExpandedState(item.children, expandedMap) : item.children
+    }))
+  }
+
   useEffect(() => {
     initialize({ target: listRef.current })
   }, [initialize])
 
-  // Al montar, convierte la data plana a un árbol
+  // ✅ Modificar el useEffect para preservar el estado expanded
   useEffect(() => {
+    // Guardar el estado expanded actual antes de reconstruir
+    const expandedState = getExpandedState(items)
+
     const tree = buildTree(globalColumns)
-    setItems(tree)
+    const treeWithProperties = updateNodeProperties(tree)
+
+    // Restaurar el estado expanded
+    const treeWithExpanded = applyExpandedState(treeWithProperties, expandedState)
+
+    setItems(treeWithExpanded)
   }, [globalColumns])
 
   const [draggedItem, setDraggedItem] = useState(null)
@@ -113,6 +150,7 @@ const MultiLevelDragDrop = () => {
     setDragOverItem(null)
   }
 
+  // ✅ El handleDrop modificado para preservar el estado expanded
   const handleDrop = async (e, targetItem, position) => {
     e.preventDefault()
     e.stopPropagation()
@@ -122,8 +160,9 @@ const MultiLevelDragDrop = () => {
       return
     }
 
-    // Guardamos el estado original para rollback
+    // Guardamos el estado original para rollback Y el estado expanded
     const originalItems = [...items]
+    // const currentExpandedState = getExpandedState(items)
 
     try {
       const sourceData = findItemAndParent(items, draggedItem._id)
@@ -169,18 +208,19 @@ const MultiLevelDragDrop = () => {
       const flatFinal = finalItems.map(item => flattenDesktop(item)).flat()
 
       if (isNestingOperation) {
-        // Para operaciones de anidamiento, enviamos el item que cambió de padre
         const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
         if (draggedFinalState) {
           await updateDbAfterDrag(draggedFinalState)
+
+          // ✅ Actualizar store global (el useEffect preservará el estado expanded)
+          console.log('🔄 Actualizando store global después de anidamiento')
+          setGlobalColumns(flatFinal)
         }
       } else {
-        // Para reordenamiento, detectar qué padre fue afectado
         const draggedOriginalState = flatOriginal.find(item => item._id === draggedItem._id)
         const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
 
         let affectedParentId = null
-
         if (draggedOriginalState && draggedFinalState) {
           affectedParentId = draggedFinalState.parentId
         }
@@ -190,14 +230,20 @@ const MultiLevelDragDrop = () => {
         if (changedItems.length > 0) {
           const result = await updateDbAfterDrag(changedItems)
           console.log('✅ Resultado:', result)
+
+          // ✅ Actualizar store global (el useEffect preservará el estado expanded)
+          console.log('🔄 Actualizando store global después de reordenamiento')
+          setGlobalColumns(flatFinal)
+
+          console.log('✅ Store global actualizado con:', flatFinal.length, 'items')
         } else {
           console.log('ℹ️ No hay cambios de orden que enviar')
         }
       }
     } catch (error) {
       console.error('Error durante el drop:', error)
-      // Rollback en caso de error
-      setItems([...originalItems])
+      // ❌ NO actualizar store global en caso de error
+      setItems([...originalItems]) // Solo rollback local
       setDraggedItem(null)
       setDragOverItem(null)
     }
@@ -262,14 +308,19 @@ const MultiLevelDragDrop = () => {
             {/* <GripVertical className={styles.grab_icon} /> */}
             {/* <Folder className="w-5 h-5 text-blue-600" /> */}
             {item.name}
-            <button
-                onClick={() => toggleExpand(item._id)}
-                className="p-0.5 hover:bg-gray-200 rounded"
-            >
-                <ArrowDown
-                    className={item.expanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon}
-                />
+              {
+                item.children && item.children.length > 0 && (
+                  <button
+                      onClick={(e) => {
+                        e.preventDefault() // ✅ Evita que el click se propague al NavLink padre
+                        toggleExpand(item._id)
+                      }}
+                      className="p-0.5 hover:bg-gray-200 rounded"
+                  >
+                  <ArrowDown className={item.expanded ? `${styles.plus_icon_opened} ${styles.plus_icon}` : styles.plus_icon} />
             </button>
+                )
+              }
 
         </NavLink>
         {item.expanded && item.children && (

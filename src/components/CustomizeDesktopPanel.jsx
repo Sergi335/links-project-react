@@ -5,10 +5,10 @@ import useHideForms from '../hooks/useHideForms'
 import { constants } from '../services/constants'
 import { changeBackgroundImage, editDesktop, getBackgroundMiniatures } from '../services/dbQueries'
 import { formatPath, handleResponseErrors } from '../services/functions'
-import { useDesktopsStore } from '../store/desktops'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
+import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
@@ -17,8 +17,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const inputRef = useRef()
   const formRef = useRef()
   const { desktopName } = useParams()
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
@@ -26,7 +26,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
+  const desktop = topLevelCategoriesStore?.filter(desk => desk.name === desktopName) || 'null'
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const themeVariants = Object.keys(constants.THEME_VARIANTS)
@@ -47,7 +47,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       return
     }
     const { data } = response
-    setDesktopsStore(data)
+    setTopLevelCategoriesStore(data)
     const newColsState = globalColumns.map(column => {
       if (column.escritorio === desktopName) {
         column.escritorio = name
@@ -169,10 +169,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const deskIndex = desktopsStore.findIndex(desktop => desktop.name === name)
-    const newState = [...desktopsStore]
+    const deskIndex = topLevelCategoriesStore.findIndex(desktop => desktop.name === name)
+    const newState = [...topLevelCategoriesStore]
     newState[deskIndex].hidden = true
-    setDesktopsStore(newState)
+    setTopLevelCategoriesStore(newState)
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
@@ -184,10 +184,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    const newState = [...desktopsStore]
+    const newState = [...topLevelCategoriesStore]
     const deskIndex = newState.findIndex(desktop => desktop.name === name)
     newState[deskIndex].hidden = false
-    setDesktopsStore(newState)
+    setTopLevelCategoriesStore(newState)
     // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
     // setHiddenDesktops(newHiddenState)
   }
@@ -268,7 +268,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label>
                           <select name="" id="" onChange={handleHideDesktops}>
                           {
-                              desktopsStore?.map(desktop => {
+                              topLevelCategoriesStore?.map(desktop => {
                                 if (!desktop.hidden) {
                                   return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
                                 }
@@ -279,7 +279,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          </div>
                         <div className={styles.rowGroup}>
                         {
-                          desktopsStore?.map(desktop => {
+                          topLevelCategoriesStore?.map(desktop => {
                             if (desktop.hidden) {
                               return <button onClick={handleRestoreDesktop} key={desktop._id} className={styles.hiddenDesktops}>{desktop.displayName}</button>
                             }

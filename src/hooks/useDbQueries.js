@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 // import { useNavigate } from 'react-router-dom'
 import { constants } from '../services/constants'
-import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
+import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 // import { useSessionStore } from '../store/session'
 
 // Fetch functions
@@ -47,11 +47,12 @@ const fetchLinks = async () => {
 
 const useDbQueries = () => {
   // const navigate = useNavigate()
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  // const setGlobalDesktops = useGlobalStore(state => state.setGlobalDesktops)
   // const setUser = useSessionStore(state => state.setUser)
 
   // Parallel queries using useQueries
@@ -67,7 +68,8 @@ const useDbQueries = () => {
         ])
 
         // Update stores
-        setDesktopsStore(desktopsResponse.data)
+        setTopLevelCategoriesStore(desktopsResponse.data)
+        // setGlobalDesktops(desktopsResponse.data)
         setGlobalColumns(columnsResponse.data)
         setGlobalLinks(linksResponse.data)
         // console.log('🚀 ~ queryFn: ~ linksResponse.data:', linksResponse.data, desktopsResponse.data, columnsResponse.data)

@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { useStyles } from '../../hooks/useStyles'
 import { moveDesktops } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 // import { useColumnsStore } from '../../store/columns'
 import { useGlobalStore } from '../../store/global'
 import { ArrowDown } from '../Icons/icons'
@@ -130,8 +130,8 @@ export default function SideBarNav () {
   const [movedDesk, setMovedDesk] = useState(null)
   const listRef = useRef()
   const desktopsOrderRef = useRef()
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const subCategories = globalColumns?.filter(column => column.level !== 0)
   const globalLoading = useGlobalStore(state => state.globalLoading)
@@ -139,7 +139,7 @@ export default function SideBarNav () {
 
   desktopsOrderRef.current = globalColumns
 
-  const desktopsId = useMemo(() => desktopsStore.map((desk) => desk._id), [desktopsStore])
+  const desktopsId = useMemo(() => topLevelCategoriesStore.map((desk) => desk._id), [topLevelCategoriesStore])
   const subCategoriesIds = useMemo(() => subCategories.map(column => column._id), [subCategories])
   const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
 
@@ -169,14 +169,14 @@ export default function SideBarNav () {
     if (movedDesk) { // Siempre hará la llamada a la API
       setMovedDesk(null)
       const newOrder = desktopsOrderRef.current
-      setDesktopsStore(newOrder)
+      setTopLevelCategoriesStore(newOrder)
       const response = await moveDesktops(newOrder)
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
         toast(message)
       }
     }
-  }, [movedDesk, desktopsStore])
+  }, [movedDesk, topLevelCategoriesStore])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -200,7 +200,7 @@ export default function SideBarNav () {
                 {
                   globalLoading
                     ? <><NavLoader/><NavLoader/><NavLoader/><NavLoader/></>
-                    : desktopsStore.map(escritorio => (
+                    : topLevelCategoriesStore.map(escritorio => (
                       !escritorio.hidden &&
                         <SideBarNavItem key={escritorio._id} escritorio={escritorio}>
 

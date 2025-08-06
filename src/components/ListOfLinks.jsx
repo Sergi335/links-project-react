@@ -2,10 +2,10 @@ import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSen
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
+import { useGlobalData } from '../hooks/useGlobalData'
 import { useFormsStore } from '../store/forms'
-import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import Columna from './column'
@@ -19,34 +19,31 @@ import LinkLoader from './Loaders/LinkLoader'
 import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 
 export default function ListOfLinks () {
-  const globalLoading = useGlobalStore(state => state.globalLoading)
+  const { links, loading, categories } = useGlobalData()
   const { desktopName } = useParams()
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
 
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
-  const numberOfLoaders = Array(Number(numberOfColumns)).fill(null)
-  const globalColumns = useGlobalStore(state => state.globalColumns)
-  // console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
-  const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
-  // console.log('🚀 ~ ListOfLinks ~ globalColumns:', globalColumns)
-  const desktopColumns = globalColumns?.filter(column => column.parentId === desktopParent)
-  // console.log('🚀 ~ ListOfLinks ~ desktopColumns:', desktopColumns)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
-  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-
-  const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
-  const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
-  const linkLoader = useLinksStore(state => state.linkLoader)
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const numberOfColumnLoaders = Array(Number(numberOfColumns)).fill(null)
+
+  const actualDesktop = categories?.find(column => column.slug === desktopName)?._id
+  const desktopColumns = categories?.filter(column => column.parentId === actualDesktop)
+
+  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
+  const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
+  const linkLoader = useLinksStore(state => state.linkLoader)
+  const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
 
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
     setSelectedLinks([])
-  }, [globalLinks])
+  }, [links])
 
   // DND
   const sensors = useSensors(
@@ -59,17 +56,21 @@ export default function ListOfLinks () {
   // Obtener ids para DND
   const columnsId = desktopColumns?.map((col) => col._id)
   const getLinksIds = (columna) => {
-    return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
+    return links.filter(link => link.categoryId === columna._id).map(link => link._id)
+  }
+
+  const getFirstColumnLink = (columna) => {
+    return links.find(link => link.categoryId === columna._id && link.order === 0)
   }
 
   return (
     <main className={styles.list_of_links}>
-      <DesktopNameDisplay numberOfLinks={desktopLinks.length} />
+      <DesktopNameDisplay numberOfLinks={links.length} />
       {
-        globalLoading
+        loading
           ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
             {
-              numberOfLoaders.map((item, index) => (
+              numberOfColumnLoaders.map((item, index) => (
                 <ColumnsLoader key={index} />
               ))
             }
@@ -94,12 +95,24 @@ export default function ListOfLinks () {
                             <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                               {
                                 !activeColumn &&
-                                desktopLinks.map((link, index) =>
+                                links.map((link, index) =>
                                   link.categoryId === columna._id
                                     ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} desktopName={desktopName} />)
                                     : null
                                 ).filter(link => link !== null)
                               }
+                              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                              {
+                                categories.map((col) => {
+                                  if (col.parentId === columna._id) {
+                                    return (
+                                      <Link key={col._id} className={styles.subcategories} to={`${rootPath}${basePath}/${columna.slug}/${col.slug}/${getFirstColumnLink(col)?._id}`}>{col.name}</Link>
+                                    )
+                                  }
+                                  return null
+                                })
+                              }
+                              </div>
                               {
                                 linkLoader && columna._id === columnLoaderTarget?.id && (numberOfLinkLoaders.map((item, index) => (
                                   <LinkLoader key={index} />

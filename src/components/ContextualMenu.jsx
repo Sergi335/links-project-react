@@ -18,7 +18,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
+  const desktopColumns = globalColumns.filter(column => column.slug === desktopName).toSorted((a, b) => a.orden - b.orden)
   // console.log(points)
   // console.log(menuRef.current)
   const handleMoveClick = async (event) => {

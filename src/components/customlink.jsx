@@ -26,7 +26,7 @@ export default function CustomLink ({ data, className, desktopName }) {
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
 
   useEffect(() => {
-    if (columnSelectModeId.includes(link.idpanel)) {
+    if (columnSelectModeId.includes(link.categoryId)) {
       setLinkSelectMode(true) // no estamos comprobando el idpanel de los que quedan
     } else {
       setLinkSelectMode(false)
@@ -122,7 +122,7 @@ export default function CustomLink ({ data, className, desktopName }) {
         >
           <a
             ref={linkRef}
-            href={link.URL}
+            href={link.url}
             target='_blank'
             rel='noreferrer'
             title={link.name}
@@ -130,7 +130,7 @@ export default function CustomLink ({ data, className, desktopName }) {
             {
               linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
             }
-            <img src={link.imgURL} alt={`favicon of ${link.name}`} />
+            <img src={link.imgUrl} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
           </a>
           {

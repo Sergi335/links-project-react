@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 // import { getDesktops } from '../services/dbQueries'
-import { useDesktopsStore } from '../store/desktops'
+import { useTopLevelCategoriesStore } from '../store/desktops'
 // import { usePreferencesStore } from '../store/preferences'
 // import { handleResponseErrors } from '../services/functions'
 // import { toast } from 'react-toastify'
@@ -8,15 +8,15 @@ import { useDesktopsStore } from '../store/desktops'
 export const useDesktops = ({ desktopName }) => {
   const [desktop, setDesktop] = useState()
   const [desktopDisplayName, setDesktopDisplayName] = useState()
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  //   const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  //   const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
 
   //   const storage = JSON.parse(localStorage.getItem('Desktops'))
   //   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
 
   //   useEffect(() => {
   //     if (localStorage.getItem('Desktops') && storage?.length > 0) {
-  //       setDesktopsStore(storage)
+  //       setTopLevelCategoriesStore(storage)
   //     } else {
   //       const fetchData = async () => {
   //         try {
@@ -29,7 +29,7 @@ export const useDesktops = ({ desktopName }) => {
   //           const { data } = response
   //           const state = data.filter(desk => desk.hidden !== true)
   //           // Hay que setear los hidden desktops tambien para que aparezcan
-  //           setDesktopsStore(state)
+  //           setTopLevelCategoriesStore(state)
   //           activeLocalStorage ?? localStorage.setItem('Desktops', JSON.stringify(data.toSorted((a, b) => (a.order - b.order))))
   //         } catch (error) {
   //           console.error(error)
@@ -41,9 +41,9 @@ export const useDesktops = ({ desktopName }) => {
   //   }, [desktopName])
 
   useEffect(() => {
-    setDesktop(desktopsStore.find(desk => desk.name === desktopName))
+    setDesktop(topLevelCategoriesStore.find(desk => desk.name === desktopName))
     setDesktopDisplayName(desktop?.displayName)
-  }, [desktopsStore])
+  }, [topLevelCategoriesStore])
 
   return { desktopDisplayName, desktop }
 }

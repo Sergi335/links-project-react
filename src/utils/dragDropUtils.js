@@ -29,6 +29,7 @@ export const buildTree = (list) => {
 
   roots.forEach(sortChildren)
   roots.sort((a, b) => a.order - b.order)
+  console.log('📊 Árbol construido:', JSON.stringify(roots, null, 2))
 
   return roots
 }

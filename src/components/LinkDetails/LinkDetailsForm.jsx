@@ -45,6 +45,8 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
+
         setIcons(data)
       })
   }, [])

@@ -98,6 +98,7 @@
                 padding: var(--navlinks-block-padding) 0;
                 padding-left: 20px;
                 transition: border-color .5s, color .5s;
+                padding-right: 5px;
 
                 &:hover {
                     color: var(--text-color-primary);

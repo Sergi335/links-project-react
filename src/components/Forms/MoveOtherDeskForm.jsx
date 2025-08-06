@@ -1,14 +1,14 @@
 import { useRef } from 'react'
-import styles from './MoveOtherDeskForm.module.css'
 import FolderIcon from '../Icons/folder'
+import styles from './MoveOtherDeskForm.module.css'
 // import { useLinksStore } from '../../store/links'
 import { useParams } from 'react-router-dom'
-import { usePreferencesStore } from '../../store/preferences'
-import { moveLink, getLinksCount, moveMultipleLinks } from '../../services/dbQueries'
-import useHideForms from '../../hooks/useHideForms'
 import { toast } from 'react-toastify'
+import useHideForms from '../../hooks/useHideForms'
+import { getLinksCount, moveLink, moveMultipleLinks } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
+import { usePreferencesStore } from '../../store/preferences'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 // import useDbQueries from '../../hooks/useDbQueries'
 import { useGlobalStore } from '../../store/global'
 
@@ -20,7 +20,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   const { desktopName } = useParams()
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   useHideForms({ form: moveFormRef.current, setFormVisible: setMoveFormVisible })
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const globalError = useGlobalStore(state => state.globalError)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
@@ -53,7 +53,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   }
   const handleMove = async () => {
     const columnSelected = document.querySelector('.selected')
-    const count = await getLinksCount({ idpanel: columnSelected.id })
+    const count = await getLinksCount({ categoryId: columnSelected.id })
     if (Array.isArray(params)) {
       console.log('Multiple links')
       const updatedDesktopLinks = globalLinks.map(link => {
@@ -124,7 +124,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
                     <p>Mover {params?.name}</p>
                     <ul className={styles.destDeskMoveTo}>
                     {
-                          desktopsStore?.map(desk => desk.name !== params?.escritorio
+                          topLevelCategoriesStore?.map(desk => desk.name !== params?.escritorio
                             ? (
                             <li key={desk._id} onClick={handleResizeSublist} className={styles.accordion} id={desk.name}>
                                 <FolderIcon className='uiIcon'/>

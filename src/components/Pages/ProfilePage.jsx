@@ -5,9 +5,9 @@ import { useTitle } from '../../hooks/useTitle'
 import { constants } from '../../services/constants'
 import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon } from '../Icons/icons'
 import styles from './ProfilePage.module.css'
 
@@ -398,7 +398,7 @@ export function UserStats ({ user }) {
   const [duplicatesLoading, setDuplicatesLoading] = useState(false)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   // TODO Errores
   const handleFindDuplicates = async (e) => {
     setDuplicatesLoading(true)
@@ -432,7 +432,7 @@ export function UserStats ({ user }) {
                   <th>Links</th>
                 </tr>
                 <tr>
-                  <td>{desktopsStore.length}</td>
+                  <td>{topLevelCategoriesStore.length}</td>
                   <td>{globalColumns.length}</td>
                   <td>{globalLinks.length}</td>
                 </tr>

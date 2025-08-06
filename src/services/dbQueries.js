@@ -18,9 +18,9 @@ export async function getAllLinks () {
   }
 }
 // MoveOtherDeskForm
-export async function getLinksCount ({ idpanel }) {
+export async function getLinksCount ({ categoryId }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/count/?column=${idpanel}`, {
+    const res = await fetch(`${constants.BASE_API_URL}/links/count/?categoryId=${categoryId}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
@@ -32,6 +32,7 @@ export async function getLinksCount ({ idpanel }) {
     return error
   }
 }
+// getLinksCount({ categoryId: '68878243698c52c17c1ab948' })
 // useDragItems
 export async function getLinkById ({ id }) {
   try {
@@ -47,6 +48,7 @@ export async function getLinkById ({ id }) {
     return error
   }
 }
+// getLinkById({ id: '66f398d45bb7399213bba32b' })
 // AddLinkForm -- Validar datos
 export async function addLink (body) {
   return fetch(`${constants.BASE_API_URL}/links`, {
@@ -62,6 +64,7 @@ export async function addLink (body) {
       return error
     })
 }
+//  addLink({ name: 'Nuevo enlace', url: 'https://www.ejemplo.com', description: 'Descripción del nuevo enlace', notes: 'Notas del nuevo enlace', bookmark: false, bookmarkOrder: 0, categoryId: '68878243698c52c17c1ab948' })
 // EditlinkForm, linkDetails -- Validar datos
 export async function editLink ({ id, name, URL, description, notes, bookmark, bookmarkOrder }) {
   return fetch(`${constants.BASE_API_URL}/links`, {
