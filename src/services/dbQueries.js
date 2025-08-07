@@ -65,21 +65,26 @@ export async function addLink (body) {
     })
 }
 //  addLink({ name: 'Nuevo enlace', url: 'https://www.ejemplo.com', description: 'Descripción del nuevo enlace', notes: 'Notas del nuevo enlace', bookmark: false, bookmarkOrder: 0, categoryId: '68878243698c52c17c1ab948' })
-// EditlinkForm, linkDetails -- Validar datos
-export async function editLink ({ id, name, URL, description, notes, bookmark, bookmarkOrder }) {
+// EditlinkForm, linkDetails, Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
+export async function editLink ({ id, name, url, description, notes, bookmark, bookmarkOrder, oldCategoryId, destinyIds, categoryId, order, previousIds }) {
   return fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
       id,
+      oldCategoryId,
+      destinyIds,
+      previousIds,
       fields: {
         name,
-        URL,
+        url,
         description,
-        imgURL: URL ? constants.BASE_LINK_IMG_URL(URL) : undefined,
+        imgUrl: url ? constants.BASE_LINK_IMG_URL(url) : undefined,
         notes,
         bookmark,
-        bookmarkOrder
+        bookmarkOrder,
+        categoryId,
+        order
       }
     })
   })
@@ -130,20 +135,20 @@ export async function deleteLink ({ body }) {
   }
 }
 // Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
-export async function moveLink (body) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
+// export async function moveLink (body) {
+//   return fetch(`${constants.BASE_API_URL}/links`, {
+//     method: 'PATCH',
+//     ...constants.FETCH_OPTIONS,
+//     body: JSON.stringify(body)
+//   })
+//     .then(res => res.json())
+//     .then(data => {
+//       return data
+//     })
+//     .catch(error => {
+//       return error
+//     })
+// }
 export async function moveMultipleLinks (body) {
   return fetch(`${constants.BASE_API_URL}/links/move`, {
     method: 'PATCH',

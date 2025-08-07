@@ -37,7 +37,7 @@ function BookmarkItem ({ bookmark }) {
   }
   return (
     <a ref={setNodeRef} style={style} href={bookmark.URL} title={bookmark.name} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
-      <img className={styles.bookmark} src={bookmark.imgURL} alt="" />
+      <img className={styles.bookmark} src={bookmark.imgUrl} alt="" />
     </a>
   )
 }
@@ -45,6 +45,7 @@ function BookmarkItem ({ bookmark }) {
 export default function Bookmarks () {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const [books, setBooks] = useState([])
+  console.log('🚀 ~ Bookmarks ~ books:', books)
   const [booksOrder, setBooksOrder] = useState([])
   const [activeBook, setActiveBook] = useState(null)
   const [prevBooks, setPrevBooks] = useState([]) // Nuevo estado para guardar el orden anterior

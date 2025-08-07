@@ -20,14 +20,14 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
   // Link sobre el que se hace click contextual se setea en customlink, podriamos pasarselo desde el custom hook y limpiar mas el componente?
   const activeLink = useFormsStore(state => state.activeLink)
   const name = useMemo(() => activeLink?.name, [activeLink, visibleClassName])
-  const URL = useMemo(() => activeLink?.URL, [activeLink, visibleClassName])
+  const url = useMemo(() => activeLink?.url, [activeLink, visibleClassName])
   const description = useMemo(() => activeLink?.description, [activeLink, visibleClassName])
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   useEffect(() => {
     nameRef.current.value = name
-    urlRef.current.value = URL
+    urlRef.current.value = url
     descriptionRef.current.value = description
   }, [activeLink])
   // Habrá que hacer un custom hook que devuelva la funcion handleEditLinkSubmit
@@ -35,10 +35,10 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
     event.preventDefault()
     const { elements } = event.currentTarget
     const name = elements.namedItem('editlinkName').value
-    const URL = elements.namedItem('editlinkURL').value
+    const url = elements.namedItem('editlinkURL').value
     const description = elements.namedItem('editlinkDescription').value
     const id = activeLink._id
-    const response = await editLink({ id, name, URL, description })
+    const response = await editLink({ id, name, url, description })
 
     const { hasError, message } = handleResponseErrors(response)
     let error

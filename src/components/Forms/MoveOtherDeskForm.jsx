@@ -5,7 +5,7 @@ import styles from './MoveOtherDeskForm.module.css'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
-import { getLinksCount, moveLink, moveMultipleLinks } from '../../services/dbQueries'
+import { editLink, getLinksCount, moveMultipleLinks } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
@@ -59,7 +59,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       const updatedDesktopLinks = globalLinks.map(link => {
         if (params.includes(link._id)) {
           // Modifica la propiedad del elemento encontrado
-          return { ...link, idpanel: columnSelected.id, panel: columnSelected.innerText, escritorio: columnSelected.attributes[1].nodeValue, orden: count } // orden!!
+          return { ...link, categoryId: columnSelected.id, orden: count } // orden!!
         }
         return link
       }).toSorted((a, b) => (a.orden - b.orden))
@@ -85,24 +85,30 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       const updatedDesktopLinks = globalLinks.map(link => {
         if (link._id === params._id) {
           // Modifica la propiedad del elemento encontrado
-          return { ...link, idpanel: columnSelected.id, panel: columnSelected.innerText, escritorio: columnSelected.attributes[1].nodeValue, orden: count }
+          return { ...link, categoryId: columnSelected.id, orden: count }
         }
         return link
       }).toSorted((a, b) => (a.orden - b.orden))
       setGlobalLinks(updatedDesktopLinks)
       setMoveFormVisible(false)
-      const body = {
+      // const body = {
+      //   id: params._id,
+      //   idpanelOrigen: params.idpanel,
+      //   fields: {
+      //     idpanel: columnSelected.id,
+      //     panel: columnSelected.innerText,
+      //     name: params.name,
+      //     orden: count,
+      //     escritorio: columnSelected.attributes[1].nodeValue
+      //   }
+      // }
+      const response = await editLink({
         id: params._id,
-        idpanelOrigen: params.idpanel,
-        fields: {
-          idpanel: columnSelected.id,
-          panel: columnSelected.innerText,
-          name: params.name,
-          orden: count,
-          escritorio: columnSelected.attributes[1].nodeValue
-        }
-      }
-      const response = await moveLink(body)
+        oldCategoryId: params.idpanel,
+        categoryId: columnSelected.id,
+        name: params.name,
+        orden: count
+      })
 
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
@@ -132,7 +138,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
                                     <ul>
                                         {
                                           globalColumns.map(col => (
-                                            col.escritorio === desk.name
+                                            col.parentId === desk._id
                                               ? <li key={col._id} id={col._id} data-db={col.escritorio} className='destination' onClick={selectDest}>{col.name}</li>
                                               : null
                                           ))

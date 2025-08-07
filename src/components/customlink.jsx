@@ -117,7 +117,7 @@ export default function CustomLink ({ data, className, desktopName }) {
           {...listeners}
           id={link._id}
           className={`${styles.link} ${className !== undefined ? className : ''} link`}
-          data-orden={link.orden}
+          data-order={link.order}
           onContextMenu={(e) => handleContextMenu(e)}
         >
           <a

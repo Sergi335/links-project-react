@@ -17,6 +17,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const addedLinkOrder = globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
 
   const handleAddLinkSubmit = async (event) => {
     event.preventDefault()
@@ -26,7 +27,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
       name: nameRef.current.value,
       url: urlRef.current.value,
       imgUrl,
-      order: 0 // añadir al final
+      order: addedLinkOrder // añadir al final
 
     }
     const response = await addLink(body)

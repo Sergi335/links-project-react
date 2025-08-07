@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { editLink, moveLink, moveMultipleLinks } from '../services/dbQueries'
+import { editLink, moveMultipleLinks } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
@@ -18,7 +18,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.slug === desktopName).toSorted((a, b) => a.orden - b.orden)
+  const desktop = globalColumns.filter(column => column.slug === desktopName)
+  const desktopColumns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
   // console.log(points)
   // console.log(menuRef.current)
   const handleMoveClick = async (event) => {
@@ -48,26 +49,30 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
 
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
     } else {
-      const orden = document.getElementById(event.target.id)?.childNodes.length ? document.getElementById(event.target.id).childNodes?.length : 0
+      const order = globalLinks.filter(link => link.categoryId === event.target.id).length
       const updatedDesktopLinks = globalLinks.map(link => {
         if (link._id === params._id) {
         // Modifica la propiedad del elemento encontrado
-          return { ...link, idpanel: event.target.id, panel: event.target.innerText, orden }
+          return { ...link, categoryId: event.target.id, order }
         }
         return link
-      }).toSorted((a, b) => (a.orden - b.orden))
+      }).toSorted((a, b) => (a.order - b.order))
       setGlobalLinks(updatedDesktopLinks)
 
-      const body = {
+      // const body = {
+      //   id: params._id,
+      //   oldCategoryId: params.categoryId,
+      //   fields: {
+      //     categoryId: event.target.id,
+      //     order
+      //   }
+      // }
+      const response = await editLink({
         id: params._id,
-        idpanelOrigen: params.idpanel,
-        fields: {
-          idpanel: event.target.id,
-          panel: event.target.innerText,
-          orden
-        }
-      }
-      const response = await moveLink(body)
+        oldCategoryId: params.categoryId,
+        categoryId: event.target.id,
+        order
+      })
 
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
@@ -75,7 +80,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         return
       }
 
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.order - b.order))))
     }
   }
   const handleEditClick = () => {
@@ -153,7 +158,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
           {
-            desktopColumns.map(col => col._id === params.idpanel
+            desktopColumns.map(col => col._id === params.categoryId
               ? null
               : <li key={col._id} onClick={handleMoveClick}><span id={col._id}>{col.name}</span></li>)
           }
