@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { useStyles } from '../../hooks/useStyles'
 import { updateDbAfterDrag } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
-import { buildTree, flattenDesktop, getChangedItemsForParent, updateNodeProperties } from '../../utils/dragDropUtils'
+import { buildTree, flattenDesktop, updateNodeProperties } from '../../utils/dragDropUtils'
 import { ArrowDown } from '../Icons/icons'
 import styles from './SideBar.module.css'
 
@@ -37,6 +37,8 @@ const MultiLevelDragDrop = () => {
     extractExpanded(items)
     return expandedMap
   }
+  // Cuando subimos una categoría que no tiene subcategorías, de nivel 1 a 0, no encuentra columnas
+  // que mostrar y no se muestran los links
 
   // 🔧 Función para aplicar el estado expanded a un árbol
   const applyExpandedState = (items, expandedMap) => {
@@ -207,39 +209,185 @@ const MultiLevelDragDrop = () => {
       const flatOriginal = originalItems.map(item => flattenDesktop(item)).flat()
       const flatFinal = finalItems.map(item => flattenDesktop(item)).flat()
 
+      // 🔍 DEBUG: Añadir estos logs
+      console.log('🔍 ANÁLISIS DE OPERACIÓN:')
+      console.log('draggedItem:', {
+        id: draggedItem._id,
+        name: draggedItem.name,
+        level: draggedItem.level,
+        parentId: draggedItem.parentId
+      })
+      console.log('targetItem:', targetItem
+        ? {
+            id: targetItem._id,
+            name: targetItem.name,
+            level: targetItem.level,
+            parentId: targetItem.parentId
+          }
+        : 'null')
+      console.log('position:', position)
+      console.log('isNestingOperation:', isNestingOperation)
+
+      // Buscar estados original y final
+      const draggedOriginalState = flatOriginal.find(item => item._id === draggedItem._id)
+      const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
+
+      console.log('🔍 COMPARACIÓN DE ESTADOS:')
+      console.log('Original:', draggedOriginalState
+        ? {
+            level: draggedOriginalState.level,
+            order: draggedOriginalState.order,
+            parentId: draggedOriginalState.parentId
+          }
+        : 'not found')
+      console.log('Final:', draggedFinalState
+        ? {
+            level: draggedFinalState.level,
+            order: draggedFinalState.order,
+            parentId: draggedFinalState.parentId
+          }
+        : 'not found')
+
       if (isNestingOperation) {
-        const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
+        console.log('🔄 EJECUTANDO FLUJO DE ANIDAMIENTO')
         if (draggedFinalState) {
           await updateDbAfterDrag(draggedFinalState)
-
-          // ✅ Actualizar store global (el useEffect preservará el estado expanded)
-          console.log('🔄 Actualizando store global después de anidamiento')
-          setGlobalColumns(flatFinal)
         }
       } else {
+        console.log('🔄 EJECUTANDO FLUJO DE REORDENAMIENTO')
+
         const draggedOriginalState = flatOriginal.find(item => item._id === draggedItem._id)
         const draggedFinalState = flatFinal.find(item => item._id === draggedItem._id)
 
-        let affectedParentId = null
-        if (draggedOriginalState && draggedFinalState) {
-          affectedParentId = draggedFinalState.parentId
-        }
+        if (draggedFinalState) {
+          // 🚀 NUEVA LÓGICA: Incluir hermanos Y descendientes
+          const affectedParentIds = new Set()
+          const affectedDescendantIds = new Set()
 
-        const changedItems = getChangedItemsForParent(flatOriginal, flatFinal, affectedParentId)
+          if (draggedOriginalState) {
+            // Añadir niveles de hermanos (origen y destino)
+            affectedParentIds.add(draggedOriginalState.parentId)
+            affectedParentIds.add(draggedFinalState.parentId)
 
-        if (changedItems.length > 0) {
-          const result = await updateDbAfterDrag(changedItems)
-          console.log('✅ Resultado:', result)
+            // 🚀 NUEVO: Añadir todos los descendientes de la categoría movida
+            const getDescendants = (itemId, flatList) => {
+              const descendants = []
+              const addDescendants = (parentId) => {
+                const children = flatList.filter(item => item.parentId === parentId)
+                children.forEach(child => {
+                  descendants.push(child._id)
+                  affectedDescendantIds.add(child._id)
+                  addDescendants(child._id) // Recursivo para nietos, bisnietos, etc.
+                })
+              }
+              addDescendants(itemId)
+              return descendants
+            }
 
-          // ✅ Actualizar store global (el useEffect preservará el estado expanded)
-          console.log('🔄 Actualizando store global después de reordenamiento')
-          setGlobalColumns(flatFinal)
+            // Obtener descendientes del estado original y final
+            getDescendants(draggedItem._id, flatOriginal)
+            getDescendants(draggedItem._id, flatFinal)
+          } else {
+            affectedParentIds.add(draggedFinalState.parentId)
+          }
 
-          console.log('✅ Store global actualizado con:', flatFinal.length, 'items')
-        } else {
-          console.log('ℹ️ No hay cambios de orden que enviar')
+          console.log('🔍 Niveles hermanos afectados:', Array.from(affectedParentIds))
+          console.log('🔍 Descendientes afectados:', Array.from(affectedDescendantIds))
+
+          // 🚀 CAMBIO: Recopilar hermanos + descendientes + el item movido
+          let allItemsToUpdate = []
+
+          // 1. Hermanos de niveles afectados
+          for (const parentId of affectedParentIds) {
+            const allSiblingsInFinal = flatFinal.filter(item => item.parentId === parentId)
+            allItemsToUpdate = [...allItemsToUpdate, ...allSiblingsInFinal]
+          }
+
+          // 2. Todos los descendientes (que cambiaron de nivel)
+          for (const descendantId of affectedDescendantIds) {
+            const descendantInFinal = flatFinal.find(item => item._id === descendantId)
+            if (descendantInFinal) {
+              allItemsToUpdate.push(descendantInFinal)
+            }
+          }
+
+          // 3. La categoría movida (si no está ya incluida)
+          if (!allItemsToUpdate.find(item => item._id === draggedFinalState._id)) {
+            allItemsToUpdate.push(draggedFinalState)
+          }
+
+          // 🚀 Eliminar duplicados por ID
+          const uniqueItemsToUpdate = allItemsToUpdate.filter((item, index, self) =>
+            index === self.findIndex(t => t._id === item._id)
+          )
+
+          console.log('🔍 TODOS los items a actualizar (hermanos + descendientes):', uniqueItemsToUpdate.map(item => ({
+            id: item._id,
+            name: item.name,
+            newOrder: item.order,
+            newLevel: item.level,
+            newParentId: item.parentId
+          })))
+
+          // 🚀 Verificar que realmente hay cambios comparando con estado original
+          const itemsWithRealChanges = uniqueItemsToUpdate.filter(finalItem => {
+            const originalItem = flatOriginal.find(orig => orig._id === finalItem._id)
+
+            if (!originalItem) {
+              console.log(`📍 ${finalItem.name} es nuevo/movido`)
+              return true
+            }
+
+            const hasChanges = (
+              originalItem.order !== finalItem.order ||
+              originalItem.level !== finalItem.level ||
+              originalItem.parentId !== finalItem.parentId ||
+              originalItem.parentSlug !== finalItem.parentSlug // 🚀 AÑADIR parentSlug
+            )
+
+            if (hasChanges) {
+              console.log(`📍 ${finalItem.name} cambió:`, {
+                order: `${originalItem.order} → ${finalItem.order}`,
+                level: `${originalItem.level} → ${finalItem.level}`,
+                parentId: `${originalItem.parentId} → ${finalItem.parentId}`,
+                parentSlug: `${originalItem.parentSlug} → ${finalItem.parentSlug}` // 🚀 LOG parentSlug
+              })
+            }
+
+            return hasChanges
+          })
+
+          console.log('🔍 Items con cambios REALES:', itemsWithRealChanges.length)
+
+          // 🚀 LOG DETALLADO: Verificar valores null para nivel 0
+          itemsWithRealChanges.forEach(item => {
+            if (item.level === 0) {
+              console.log(`🔍 Item nivel 0 - ${item.name}:`, {
+                parentId: item.parentId,
+                parentSlug: item.parentSlug,
+                level: item.level
+              })
+
+              // 🚨 VERIFICACIÓN CRÍTICA
+              if (item.parentId !== null || item.parentSlug !== null) {
+                console.error(`❌ ERROR: Item ${item.name} nivel 0 no tiene parentId/parentSlug null!`)
+              }
+            }
+          })
+
+          if (itemsWithRealChanges.length > 0) {
+            console.log('✅ Enviando actualización al backend')
+            const result = await updateDbAfterDrag(itemsWithRealChanges)
+            console.log('✅ Resultado:', result)
+          } else {
+            console.log('ℹ️ No hay cambios reales para enviar')
+          }
         }
       }
+
+      // ✅ Actualizar store global
+      console.log('🔄 Actualizando store global')
+      setGlobalColumns(flatFinal)
     } catch (error) {
       console.error('Error durante el drop:', error)
       // ❌ NO actualizar store global en caso de error
@@ -270,7 +418,7 @@ const MultiLevelDragDrop = () => {
     const firstColumnLink = globalLinks.find(link => link.categoryId === item._id && link.order === 0)
 
     return (
-      <li key={item._id} order={item.order} className={className}>
+      <li key={item._id} data-order={item.order} className={className} data-id={item._id} data-level={item.level}>
         <NavLink
             // to={`${rootPath}${basePath}/${item.slug}`}
             to={item.level === 0 ? `${rootPath}${basePath}/${item.slug}` : `${rootPath}${basePath}/${item.parentSlug}/${item.slug}/${firstColumnLink?._id}`}
@@ -335,7 +483,7 @@ const MultiLevelDragDrop = () => {
   return (
     <nav className={styles.nav} ref={listRef}>
       <ul className={styles.nav_first_level_ul}>
-        {items.map(item => renderItem(item))}
+        {items.map(item => renderItem(item)).toSorted((a, b) => a.order - b.order)}
       </ul>
     </nav>
   )

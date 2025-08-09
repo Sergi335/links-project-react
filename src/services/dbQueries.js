@@ -32,7 +32,6 @@ export async function getLinksCount ({ categoryId }) {
     return error
   }
 }
-// getLinksCount({ categoryId: '68878243698c52c17c1ab948' })
 // useDragItems
 export async function getLinkById ({ id }) {
   try {
@@ -48,7 +47,6 @@ export async function getLinkById ({ id }) {
     return error
   }
 }
-// getLinkById({ id: '66f398d45bb7399213bba32b' })
 // AddLinkForm -- Validar datos
 export async function addLink (body) {
   return fetch(`${constants.BASE_API_URL}/links`, {
@@ -64,7 +62,6 @@ export async function addLink (body) {
       return error
     })
 }
-//  addLink({ name: 'Nuevo enlace', url: 'https://www.ejemplo.com', description: 'Descripción del nuevo enlace', notes: 'Notas del nuevo enlace', bookmark: false, bookmarkOrder: 0, categoryId: '68878243698c52c17c1ab948' })
 // EditlinkForm, linkDetails, Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
 export async function editLink ({ id, name, url, description, notes, bookmark, bookmarkOrder, oldCategoryId, destinyIds, categoryId, order, previousIds }) {
   return fetch(`${constants.BASE_API_URL}/links`, {
@@ -134,21 +131,6 @@ export async function deleteLink ({ body }) {
     return error
   }
 }
-// Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
-// export async function moveLink (body) {
-//   return fetch(`${constants.BASE_API_URL}/links`, {
-//     method: 'PATCH',
-//     ...constants.FETCH_OPTIONS,
-//     body: JSON.stringify(body)
-//   })
-//     .then(res => res.json())
-//     .then(data => {
-//       return data
-//     })
-//     .catch(error => {
-//       return error
-//     })
-// }
 export async function moveMultipleLinks (body) {
   return fetch(`${constants.BASE_API_URL}/links/move`, {
     method: 'PATCH',
@@ -237,11 +219,11 @@ const handleOptimizedUpdate = async (changedItems) => {
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
       updates: itemsArray.map(item => ({
-        itemId: item._id,
-        newOrder: item.order,
-        newLevel: item.level,
+        id: item._id,
+        order: item.order,
+        level: item.level,
         parentId: item.parentId,
-        parentSlug: item.parentSlug
+        parentSlug: item.parentSlug || undefined
       }))
     })
   })

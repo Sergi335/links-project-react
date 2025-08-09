@@ -66,11 +66,9 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       setGlobalLinks(updatedDesktopLinks)
       setMoveFormVisible(false)
       const body = {
-        source: params[0].idpanel, // multiplesources!!
-        destiny: columnSelected.id,
-        panel: columnSelected.innerText,
+        destinationCategoryId: columnSelected.id,
         links: params,
-        escritorio: columnSelected.attributes[1].nodeValue
+        previousCategoryId: params[0].categoryId // multiplesources!!
       }
       const response = await moveMultipleLinks(body)
 

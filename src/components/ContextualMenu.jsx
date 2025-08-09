@@ -25,19 +25,21 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const handleMoveClick = async (event) => {
     if (Array.isArray(params)) {
       console.log('multiple links')
+      const prevId = params[0]
+      const previousCategoryId = globalLinks.find(link => link._id === prevId)?.categoryId
+      let startingOrder = globalLinks.filter(link => link.categoryId === event.target.id).length
       const updatedDesktopLinks = globalLinks.map(link => {
         if (params.includes(link._id)) {
         // Modifica la propiedad del elemento encontrado
-          return { ...link, idpanel: event.target.id, panel: event.target.innerText, orden: 0 } // orden!!
+          return { ...link, categoryId: event.target.id, order: startingOrder++ } // orden!!
         }
         return link
-      }).toSorted((a, b) => (a.orden - b.orden))
+      }).toSorted((a, b) => (a.order - b.order))
       setGlobalLinks(updatedDesktopLinks)
       const body = {
-        source: undefined,
-        destiny: event.target.id,
-        panel: event.target.innerText,
-        links: params
+        destinationCategoryId: event.target.id,
+        links: params,
+        previousCategoryId
       }
       const response = await moveMultipleLinks(body)
 
@@ -47,7 +49,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         return
       }
 
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.order - b.order))))
     } else {
       const order = globalLinks.filter(link => link.categoryId === event.target.id).length
       const updatedDesktopLinks = globalLinks.map(link => {
