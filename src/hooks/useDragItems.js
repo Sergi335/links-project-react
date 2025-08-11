@@ -1,11 +1,11 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { editColumn, editLink, getLinkById } from '../services/dbQueries'
+import { editLink, getLinkById, updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 
-export const useDragItems = ({ desktopName }) => {
+export const useDragItems = ({ desktopId }) => {
   const [activeLink, setActiveLink] = useState()
   const [movedLink, setMovedLink] = useState()
   const [movedColumn, setMovedColumn] = useState()
@@ -191,8 +191,13 @@ export const useDragItems = ({ desktopName }) => {
 
     if (movedColumn) {
       try {
-        const ids = globalColumns.map(col => col._id)
-        const response = await editColumn({ columnsIds: ids, newDesktop: desktopName })
+        const items = globalColumns.filter(col => col.parentId === desktopId).map((col, index) => ({
+          id: col._id,
+          order: index,
+          name: col.name,
+          parentId: desktopId
+        }))
+        const response = await updateCategory({ items })
         const { hasError, message } = handleResponseErrors(response)
         if (hasError) {
           toast(message)

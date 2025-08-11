@@ -21,7 +21,8 @@ import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 export default function ListOfLinks () {
   const { links, loading, categories } = useGlobalData()
   const { desktopName } = useParams()
-  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopName })
+  const desktopId = categories?.find(category => category.slug === desktopName)?._id
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems({ desktopId }) // pasar el id, en vez de desktopName es desktopSlug, que si que es único
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
 

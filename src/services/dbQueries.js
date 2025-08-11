@@ -182,17 +182,17 @@ export const updateDbAfterDrag = async (draggedItemOrArray, targetItem = null, p
     }
 
     // Lógica original para compatibilidad hacia atrás
-    const updateType = position === 'inside' ? 'nesting' : 'reordering'
+    // const updateType = position === 'inside' ? 'nesting' : 'reordering'
 
-    if (updateType === 'nesting') {
-      // Anidamiento: actualizar level y parentId
-      const nestingResult = await handleNestingUpdate(draggedItemOrArray, targetItem, finalItems)
-      return nestingResult
-    } else {
-      // Reordenamiento: actualizar solo order (y posiblemente level si cambió de nivel)
-      const reorderingResult = await handleReorderingUpdate(draggedItemOrArray, targetItem, finalItems)
-      return reorderingResult
-    }
+    // if (updateType === 'nesting') {
+    //   // Anidamiento: actualizar level y parentId
+    //   const nestingResult = await handleNestingUpdate(draggedItemOrArray, targetItem, finalItems)
+    //   return nestingResult
+    // } else {
+    //   // Reordenamiento: actualizar solo order (y posiblemente level si cambió de nivel)
+    //   const reorderingResult = await handleReorderingUpdate(draggedItemOrArray, targetItem, finalItems)
+    //   return reorderingResult
+    // }
   } catch (error) {
     console.error('Error updating database:', error)
     throw error
@@ -213,17 +213,46 @@ const handleOptimizedUpdate = async (changedItems) => {
 
   console.log('📤 Enviando al backend:', itemsArray)
 
-  const response = await fetch(`${constants.BASE_API_URL}/categories/reorder`, {
-    method: 'POST',
+  const response = await updateCategory({ items: itemsArray })
+
+  if (response.status !== 'success') {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
+  }
+
+  // const result = await response.json()
+  console.log(response)
+  return response
+}
+
+export async function updateCategory ({ items }) {
+  if (!items || items.length === 0) {
+    console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  // Asegurar que items es un array
+  const itemsArray = Array.isArray(items) ? items : [items]
+
+  console.log('📤 Enviando al backend:', itemsArray)
+
+  const response = await fetch(`${constants.BASE_API_URL}/categories`, {
+    method: 'PATCH',
     credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
       updates: itemsArray.map(item => ({
-        id: item._id,
-        order: item.order,
-        level: item.level,
-        parentId: item.parentId,
-        parentSlug: item.parentSlug || undefined
+        id: item.id || item._id,
+        oldParentId: item.oldParentId || undefined,
+        fields: {
+          order: item.order ?? undefined,
+          level: item.level ?? undefined,
+          parentId: item.level === 0 ? null : item.parentId,
+          parentSlug: item.level === 0 ? null : item.parentSlug,
+          name: item.name ?? undefined,
+          hidden: item.hidden ?? undefined,
+          isEmpty: item.isEmpty ?? undefined,
+          displayName: item.displayName ?? undefined
+        }
       }))
     })
   })
@@ -237,139 +266,6 @@ const handleOptimizedUpdate = async (changedItems) => {
   return result
 }
 
-const handleNestingUpdate = async (draggedItem, targetItem, finalItems) => {
-  const updatedItem = findUpdatedItem(finalItems, draggedItem._id)
-
-  const response = await fetch(`${constants.BASE_API_URL}/categories/nest`, {
-    method: 'POST',
-    credentials: 'include',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify({
-      itemId: draggedItem._id,
-      parentId: targetItem._id,
-      parentSlug: targetItem.slug,
-      newLevel: updatedItem.level,
-      newOrder: updatedItem.order
-    })
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to nest item')
-  }
-  return response.json()
-}
-
-const handleReorderingUpdate = async (draggedItem, targetItem, finalItems) => {
-  // Obtener todos los items que cambiaron de orden en el mismo nivel
-  const affectedItems = getAffectedItems(finalItems, draggedItem, targetItem)
-
-  const response = await fetch(`${constants.BASE_API_URL}/categories/reorder`, {
-    method: 'POST',
-    credentials: 'include',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify({
-      updates: affectedItems.map(item => ({
-        itemId: item._id,
-        newOrder: item.order,
-        newLevel: item.level,
-        parentId: item.parentId,
-        parentSlug: item.parentSlug
-      }))
-    })
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to reorder items')
-  }
-  return response.json()
-}
-// Encuentra un item específico en la estructura final
-const findUpdatedItem = (items, itemId) => {
-  const findInItems = (currentItems) => {
-    for (const item of currentItems) {
-      if (item._id === itemId) return item
-      if (item.children) {
-        const found = findInItems(item.children)
-        if (found) return found
-      }
-    }
-    return null
-  }
-  return findInItems(items)
-}
-
-// Encuentra el slug de un padre específico
-const findParentSlug = (items, parentId) => {
-  const findInItems = (currentItems) => {
-    for (const item of currentItems) {
-      if (item._id === parentId) return item.slug
-      if (item.children) {
-        const found = findInItems(item.children)
-        if (found) return found
-      }
-    }
-    return null
-  }
-  return findInItems(items)
-}
-
-// Obtiene todos los items afectados por el reordenamiento
-const getAffectedItems = (finalItems, draggedItem, targetItem) => {
-  const affected = []
-
-  // Verificar que finalItems existe y es un array
-  if (!finalItems || !Array.isArray(finalItems)) {
-    console.warn('getAffectedItems: finalItems is not a valid array', finalItems)
-    return affected
-  }
-
-  const collectItems = (currentItems, level = 0, parentId = null) => {
-    if (!currentItems || !Array.isArray(currentItems)) {
-      console.warn('collectItems: currentItems is not a valid array', currentItems)
-      return
-    }
-
-    currentItems.forEach((item, index) => {
-      affected.push({
-        _id: item._id,
-        order: index,
-        level,
-        parentId,
-        parentSlug: parentId ? findParentSlug(finalItems, parentId) : null
-      })
-
-      if (item.children && item.children.length > 0) {
-        collectItems(item.children, level + 1, item._id)
-      }
-    })
-  }
-
-  collectItems(finalItems)
-  return affected
-}
-// Column, ContextualColMenu, useDragItems
-export async function editColumn ({ name, oldDesktop, newDesktop, idPanel, columnsIds }) {
-  try {
-    const body = { id: idPanel, oldDesktop, columnsIds, fields: { name, escritorio: newDesktop } }
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
 // DeleteColConfirmForm
 export async function deleteColumn (idPanel) {
   try {
@@ -419,78 +315,6 @@ export async function createColumn ({ name, escritorio, order }) {
 }
 
 /* --------------- DESKTOPS -------------------- */
-
-// Nav
-export async function moveDesktops (items) {
-  try {
-    const names = items.map(item => {
-      return item.displayName
-    })
-    const body = { names }
-    const response = await fetch(`${constants.BASE_API_URL}/desktops/setorder`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al mover columnas')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    throw error
-  }
-}
-
-// Anidar desktop
-export async function nestDesktop ({ desktopId, parentId, level }) {
-  try {
-    const body = { desktopId, parentId, level }
-    const response = await fetch(`${constants.BASE_API_URL}/desktops/nest`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al anidar desktop')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    return { hasError: true, message: 'Error al anidar desktop' }
-  }
-}
-
-// Desanidar desktop
-export async function unnestDesktop ({ desktopId }) {
-  try {
-    const body = { desktopId }
-    const response = await fetch(`${constants.BASE_API_URL}/desktops/unnest`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al desanidar desktop')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    return { hasError: true, message: 'Error al desanidar desktop' }
-  }
-}
 
 // AddDesktopForm
 export async function createDesktop ({ name, displayName, orden }) {

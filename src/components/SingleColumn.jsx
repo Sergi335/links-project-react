@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { editColumn } from '../services/dbQueries'
+import { updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
@@ -11,7 +11,8 @@ import styles from './Column.module.css'
 import { SelectIcon } from './Icons/icons'
 
 export default function SingleColumn ({ data, children, childCount }) {
-  const { desktopName } = useParams()
+  const { desktopName, id } = useParams()
+  const navigate = useNavigate()
   const columna = data.columna || data.activeColumn
   const [editMode, setEditMode] = useState(false)
   const colRef = useRef(null)
@@ -81,6 +82,7 @@ export default function SingleColumn ({ data, children, childCount }) {
     setEditMode(false)
     const newName = event.currentTarget.value
     if (columna.name !== newName) {
+      const previousState = [...globalColumns]
       const updatedState = [...globalColumns]
       const elementIndex = updatedState.findIndex(element => element._id === columna._id)
       if (elementIndex !== -1) {
@@ -89,11 +91,32 @@ export default function SingleColumn ({ data, children, childCount }) {
       }
       setGlobalColumns(updatedState)
       activeLocalStorage ?? localStorage.setItem(`${desktopName}Columns`, JSON.stringify(updatedState.toSorted((a, b) => (a.orden - b.orden))))
-      const response = await editColumn({ name: newName, idPanel: columna._id })
+      const response = await updateCategory({ items: [{ name: newName, id: columna._id }] })
 
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
         toast(message)
+        setGlobalColumns(previousState)
+      } else {
+        const { updatedData } = response
+        console.log('🚀 ~ handleHeaderBlur ~ updatedData:', updatedData)
+
+        if (updatedData.length > 0) {
+          // 🔧 Usar updatedState (ya calculado) en lugar de globalColumns
+          const postDbUpdatedState = [...updatedState]
+          const updatedCategoryIndex = postDbUpdatedState.findIndex(col => col._id === columna._id)
+
+          if (updatedCategoryIndex !== -1) {
+            const updatedCategory = {
+              ...postDbUpdatedState[updatedCategoryIndex],
+              slug: updatedData[0].slug
+            }
+            postDbUpdatedState[updatedCategoryIndex] = updatedCategory
+            setGlobalColumns(postDbUpdatedState)
+            console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
+            navigate(`/app/${desktopName}/${updatedCategory.slug}/${id}`)
+          }
+        }
       }
     }
   }
