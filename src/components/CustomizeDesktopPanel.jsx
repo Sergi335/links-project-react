@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../hooks/useHideForms'
 import { constants } from '../services/constants'
-import { changeBackgroundImage, editDesktop, getBackgroundMiniatures, updateCategory } from '../services/dbQueries'
-import { formatPath, handleResponseErrors } from '../services/functions'
+import { changeBackgroundImage, getBackgroundMiniatures, updateCategory } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
@@ -13,6 +13,8 @@ import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
+  const [desktop, setDesktop] = useState([])
+  const [desktopNameInput, setDesktopNameInput] = useState(desktop[0]?.name || '')
   const navigate = useNavigate()
   const inputRef = useRef()
   const formRef = useRef()
@@ -24,7 +26,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
+  const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
+  // const globalLoading = useGlobalStore(state => state.globalLoading)
+  // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
   console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
@@ -36,6 +40,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   // Debería estar montado y ocultarlo y mostrarlo mediante clases css
   const handleSubmit = async (event) => {
     event.preventDefault()
+    setGlobalLoading(true)
     const newName = inputRef.current.value.trim()
 
     if (!newName || newName === desktop[0]?.name) {
@@ -109,11 +114,13 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
 
       navigate(`/app/${updatedData[0].slug}`)
       toast('Desktop actualizado correctamente')
+      setGlobalLoading(false)
     } catch (error) {
       console.error('Error en handleSubmit:', error)
       toast('Error al actualizar el desktop')
       setGlobalColumns(previousState)
       setTopLevelCategoriesStore(previousTopLevelState)
+      setGlobalLoading(false)
     }
   }
   const handleNumberColumnsChange = (event) => {
@@ -208,33 +215,45 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
   }
   const handleHideDesktops = async (event) => {
-    const name = formatPath(event.target.value)
-    const body = { name, hidden: true }
-    const response = await editDesktop(body)
+    const select = event.target
+    const selectedOption = select.options[select.selectedIndex]
+    const id = selectedOption.dataset.id
+    console.log(id)
+    const items = [{ id, hidden: true }]
+    const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
       return
     }
-    const deskIndex = topLevelCategoriesStore.findIndex(desktop => desktop.name === name)
-    const newState = [...topLevelCategoriesStore]
-    newState[deskIndex].hidden = true
-    setTopLevelCategoriesStore(newState)
+    const deskIndex = topLevelCategoriesStore.findIndex(desktop => desktop._id === id)
+    const globalDeskIndex = globalColumns.findIndex(col => col._id === id)
+    const newTopLevelState = [...topLevelCategoriesStore]
+    const newGlobalState = [...globalColumns]
+    newTopLevelState[deskIndex].hidden = true
+    newGlobalState[globalDeskIndex].hidden = true
+    setTopLevelCategoriesStore(newTopLevelState)
+    setGlobalColumns(newGlobalState)
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
-    const name = formatPath(event.target.textContent)
-    const body = { name, hidden: false }
-    const response = await editDesktop(body)
+    const id = event.target.dataset.id
+    console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
+    const items = [{ id, hidden: false }]
+    const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
       return
     }
-    const newState = [...topLevelCategoriesStore]
-    const deskIndex = newState.findIndex(desktop => desktop.name === name)
-    newState[deskIndex].hidden = false
-    setTopLevelCategoriesStore(newState)
+    const newTopLevelState = [...topLevelCategoriesStore]
+    const newGlobalState = [...globalColumns]
+    const globalDeskIndex = newGlobalState.findIndex(col => col._id === id)
+    const deskIndex = newTopLevelState.findIndex(desktop => desktop._id === id)
+    newTopLevelState[deskIndex].hidden = false
+    newGlobalState[globalDeskIndex].hidden = false
+    setTopLevelCategoriesStore(newTopLevelState)
+    setGlobalColumns(newGlobalState)
     // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
     // setHiddenDesktops(newHiddenState)
   }
@@ -284,6 +303,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         toast({ error })
       })
   }, [])
+  useEffect(() => {
+    setDesktop(topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || [])
+  }, [desktopName, topLevelCategoriesStore])
+  // Añadir effect para detectar cambio de desktop al navegar
+
+  useEffect(() => {
+    setDesktopNameInput(desktop[0]?.name || '')
+  }, [desktop[0]?.name])
 
   return (
     <>
@@ -294,7 +321,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                     <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                       <div className={styles.rowGroup} style={{ position: 'relative' }}>
                           <label htmlFor="changeDesktopName" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Nombre:</label>
-                          <input ref={inputRef} type="text" name="changeDesktopName" id="changeDesktopName" defaultValue={desktop[0]?.name}/>
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            name="changeDesktopName"
+                            id="changeDesktopName"
+                            value={desktopNameInput}
+                            onChange={e => setDesktopNameInput(e.target.value)}
+                          />
                           <button className={styles.inputButton} type='submit'>Modificar</button>
                       </div>
                       <div className={styles.rowGroup}>
@@ -317,7 +351,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           {
                               topLevelCategoriesStore?.map(desktop => {
                                 if (!desktop.hidden) {
-                                  return <option key={desktop._id} value={desktop.name}>{desktop.name}</option>
+                                  return <option key={desktop._id} data-id={desktop._id} value={desktop.name}>{desktop.name}</option>
                                 }
                                 return null // Add this line to return null if the condition is not met
                               })
@@ -328,7 +362,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                         {
                           topLevelCategoriesStore?.map(desktop => {
                             if (desktop.hidden) {
-                              return <button onClick={handleRestoreDesktop} key={desktop._id} className={styles.hiddenDesktops}>{desktop.displayName}</button>
+                              return <button onClick={handleRestoreDesktop} data-id={desktop._id} key={desktop._id} className={styles.hiddenDesktops}>{desktop.name}</button>
                             }
                             return null // Add this line to return null if the condition is not met
                           })

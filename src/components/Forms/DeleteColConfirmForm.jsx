@@ -19,7 +19,7 @@ export default function DeleteColConfirmForm ({ visible, setVisible, itemType = 
     const newList = [...globalColumns].filter(col => col._id !== params._id)
     setGlobalColumns(newList)
     // TODO filter links for performance
-    const response = await deleteColumn(params._id)
+    const response = await deleteColumn({ id: params._id })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)

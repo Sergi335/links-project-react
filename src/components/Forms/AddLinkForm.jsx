@@ -36,8 +36,8 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
       toast.error(message)
       return
     }
-    const { link } = response
-    const newList = [...globalLinks, link]
+    const { data } = response
+    const newList = [...globalLinks, data]
     setFormVisible(false)
     setGlobalLinks(newList)
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))

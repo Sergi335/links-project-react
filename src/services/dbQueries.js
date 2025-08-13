@@ -267,10 +267,10 @@ export async function updateCategory ({ items }) {
 }
 
 // DeleteColConfirmForm
-export async function deleteColumn (idPanel) {
+export async function deleteColumn ({ id, level }) {
   try {
-    const body = { id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+    const body = { id, level }
+    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
@@ -290,11 +290,11 @@ export async function deleteColumn (idPanel) {
   }
 }
 // SideInfo
-export async function createColumn ({ name, escritorio, order }) {
+export async function createColumn ({ name, parentId, order, level }) {
   try {
-    const body = { name, escritorio, order }
+    const body = { name, parentId, order, level }
     console.log(body)
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
@@ -310,62 +310,6 @@ export async function createColumn ({ name, escritorio, order }) {
     }
   } catch (error) {
     console.error('Error de red:', error)
-    return error
-  }
-}
-
-/* --------------- DESKTOPS -------------------- */
-
-// AddDesktopForm
-export async function createDesktop ({ name, displayName, orden }) {
-  const body = { name, displayName, orden }
-  return fetch(`${constants.BASE_API_URL}/desktops`, {
-    method: 'POST',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-// CustomizeDesktopPanel
-export async function editDesktop (body) {
-  return fetch(`${constants.BASE_API_URL}/desktops`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-// DeleteConfirmForm
-export async function deleteDesktop ({ body }) {
-  try {
-    const res = await fetch(`${constants.BASE_API_URL}/desktops`, {
-      method: 'DELETE',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
     return error
   }
 }

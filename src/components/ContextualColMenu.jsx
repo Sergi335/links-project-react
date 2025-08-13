@@ -57,7 +57,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
       if (hasError) {
         throw new Error(message)
       }
-      toast('Movido a ' + desk.displayName)
+      toast('Movido a ' + desk.name)
     } catch (error) {
       toast(error.message)
       // Revertir los cambios en caso de error
@@ -98,11 +98,11 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
             <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
               <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-67%', top: subMenuTop }}>
                 {
-                  desktops.map(desk => desk.name === desktopName // <---
+                  desktops.map(desk => desk.slug === desktopName // <---
                     ? (
                         null
                       )
-                    : <li key={desk._id} id={desk._id} onClick={() => { handleMoveCol(desk) }}>{desk.displayName}</li>)
+                    : <li key={desk._id} id={desk._id} onClick={() => { handleMoveCol(desk) }}>{desk.name}</li>)
                 }
               </ul>
             </span>

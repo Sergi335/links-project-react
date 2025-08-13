@@ -483,7 +483,7 @@ const MultiLevelDragDrop = () => {
   return (
     <nav className={styles.nav} ref={listRef}>
       <ul className={styles.nav_first_level_ul}>
-        {items.map(item => renderItem(item)).toSorted((a, b) => a.order - b.order)}
+        {items.filter(item => !item.hidden).map(item => renderItem(item)).toSorted((a, b) => a.order - b.order)}
       </ul>
     </nav>
   )

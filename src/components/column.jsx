@@ -109,10 +109,10 @@ export default function Columna ({ data, children, childCount, context }) {
           setGlobalColumns(previousState)
           toast(message)
         } else {
-          const { updatedData } = response
-          console.log('🚀 ~ handleHeaderBlur ~ updatedData:', updatedData)
+          const { data } = response
+          console.log('🚀 ~ handleHeaderBlur ~ updatedData:', data)
 
-          if (updatedData.length > 0) {
+          if (data.length > 0) {
             // 🔧 Usar updatedState (ya calculado) en lugar de globalColumns
             const postDbUpdatedState = [...updatedState]
             const updatedCategoryIndex = postDbUpdatedState.findIndex(col => col._id === columna._id)
@@ -120,7 +120,7 @@ export default function Columna ({ data, children, childCount, context }) {
             if (updatedCategoryIndex !== -1) {
               const updatedCategory = {
                 ...postDbUpdatedState[updatedCategoryIndex],
-                slug: updatedData[0].slug
+                slug: data[0].slug
               }
               postDbUpdatedState[updatedCategoryIndex] = updatedCategory
               setGlobalColumns(postDbUpdatedState)
