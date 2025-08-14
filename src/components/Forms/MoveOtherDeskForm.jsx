@@ -5,7 +5,7 @@ import styles from './MoveOtherDeskForm.module.css'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
-import { editLink, getLinksCount, moveMultipleLinks } from '../../services/dbQueries'
+import { updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
@@ -51,73 +51,79 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       }
     })
   }
-  const handleMove = async () => {
+  const handleMove = async (event) => {
+    const previousLinks = [...globalLinks]
+    const linksToEdit = Array.isArray(params) ? params : [params._id]
+    const firstLink = globalLinks.find(link => link._id === linksToEdit[0])
     const columnSelected = document.querySelector('.selected')
-    const count = await getLinksCount({ categoryId: columnSelected.id })
-    if (Array.isArray(params)) {
-      console.log('Multiple links')
-      const updatedDesktopLinks = globalLinks.map(link => {
-        if (params.includes(link._id)) {
-          // Modifica la propiedad del elemento encontrado
-          return { ...link, categoryId: columnSelected.id, orden: count } // orden!!
-        }
-        return link
-      }).toSorted((a, b) => (a.orden - b.orden))
-      setGlobalLinks(updatedDesktopLinks)
-      setMoveFormVisible(false)
-      const body = {
-        destinationCategoryId: columnSelected.id,
-        links: params,
-        previousCategoryId: params[0].categoryId // multiplesources!!
-      }
-      const response = await moveMultipleLinks(body)
 
-      const { hasError, message } = handleResponseErrors(response)
-      if (hasError) {
-        toast(message)
-        return
-      }
-      toast('Enlaces movidos correctamente')
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
-    } else {
-      const updatedDesktopLinks = globalLinks.map(link => {
-        if (link._id === params._id) {
-          // Modifica la propiedad del elemento encontrado
-          return { ...link, categoryId: columnSelected.id, orden: count }
-        }
-        return link
-      }).toSorted((a, b) => (a.orden - b.orden))
-      setGlobalLinks(updatedDesktopLinks)
-      setMoveFormVisible(false)
-      // const body = {
-      //   id: params._id,
-      //   idpanelOrigen: params.idpanel,
-      //   fields: {
-      //     idpanel: columnSelected.id,
-      //     panel: columnSelected.innerText,
-      //     name: params.name,
-      //     orden: count,
-      //     escritorio: columnSelected.attributes[1].nodeValue
-      //   }
-      // }
-      const response = await editLink({
-        id: params._id,
-        oldCategoryId: params.idpanel,
-        categoryId: columnSelected.id,
-        name: params.name,
-        orden: count
-      })
+    // Obtener categorías ANTES de cualquier actualización
+    const targetCategoryId = columnSelected.id
+    const sourceCategoryId = firstLink?.categoryId
 
-      const { hasError, message } = handleResponseErrors(response)
-      if (hasError) {
-        toast(message)
-        return
+    const newLinkBrothers = globalLinks.filter(link => link.categoryId === targetCategoryId)
+    const oldLinkBrothers = globalLinks.filter(link =>
+      link.categoryId === sourceCategoryId && !linksToEdit.includes(link._id) // ⬅️ Excluir los que se van a mover
+    )
+
+    let startingOrder = newLinkBrothers.length
+
+    // Actualización optimista del estado
+    const updatedDesktopLinks = globalLinks.map(link => {
+      if (linksToEdit.includes(link._id)) {
+        return { ...link, categoryId: targetCategoryId, order: startingOrder++ }
       }
-      toast('Enlace movido correctamente')
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
-      // Modificar el localstorage de destino
+      return link
+    }).toSorted((a, b) => (a.order - b.order))
+
+    setGlobalLinks(updatedDesktopLinks)
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks))
+
+    try {
+      // Links que se mueven
+      const movedItems = linksToEdit.map((linkId, index) => ({
+        id: linkId,
+        categoryId: targetCategoryId,
+        order: newLinkBrothers.length + index
+      }))
+
+      // Links en la categoría destino (reordenar)
+      const destinyItems = newLinkBrothers.map((link, index) => ({
+        id: link._id,
+        order: index,
+        name: link.name,
+        categoryId: link.categoryId
+      }))
+
+      // Links que quedan en la categoría origen (reordenar)
+      const remainingItems = oldLinkBrothers.map((link, index) => ({
+        id: link._id,
+        order: index,
+        name: link.name,
+        categoryId: link.categoryId
+      }))
+
+      const items = [...movedItems, ...destinyItems, ...remainingItems]
+
+      const response = await updateLink({ items })
+      const { hasError, message } = handleResponseErrors(response)
+
+      if (hasError) {
+        // Rollback en caso de error
+        setGlobalLinks(previousLinks)
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
+        toast(message)
+      }
+    } catch (error) {
+      // Rollback en caso de error de red
+      setGlobalLinks(previousLinks)
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
+      toast('Error al mover enlaces')
     }
+
+    setMoveFormVisible(false)
   }
+
   return (
     <div ref={moveFormRef} id="menuMoveTo" className={visibleClass + ' ' + styles.menuMoveTo}>
         {

@@ -1,7 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { editLink, getLinkById, updateCategory } from '../services/dbQueries'
+import { getLinkById, updateCategory, updateLink } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 
@@ -137,7 +137,7 @@ export const useDragItems = ({ desktopId }) => {
     if (movedLink) {
       try {
         // 🚩 Obtén prevData ANTES de calcular los arrays
-        const prevData = await getLinkById({ id: movedLink._id })
+        const { data: prevData } = await getLinkById({ id: movedLink._id })
 
         // 🚀 Usar el estado interno que está sincronizado
         const currentLinks = currentLinksState
@@ -171,13 +171,9 @@ export const useDragItems = ({ desktopId }) => {
         console.log('🚀 ~ Número de links en destino:', destinationLinks.length)
         console.log('🚀 ~ Número de links en origen:', originLinks.length)
 
-        const response = await editLink({
-          id: movedLink._id,
-          oldCategoryId: prevData.categoryId,
-          destinyIds: ids,
-          categoryId: movedLink.categoryId,
-          previousIds: prevIds.length > 0 ? prevIds : undefined
-        })
+        const items = [...ids, ...prevIds]
+        console.log('🚀 ~ handleSortItems ~ items:', items)
+        const response = await updateLink({ items })
 
         const { hasError, message } = handleResponseErrors(response)
         if (hasError) {

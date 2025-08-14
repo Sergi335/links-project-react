@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
 import { constants } from '../../services/constants'
-import { deleteLinkImage, editLink, fetchLinkIconFile, saveLinkIcon } from '../../services/dbQueries'
+import { deleteLinkImage, fetchLinkIconFile, saveLinkIcon, updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
+import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsForm ({ data, links, setLinks }) {
+  console.log('🚀 ~ LinkDetailsForm ~ links:', links)
+  console.log('🚀 ~ LinkDetailsForm ~ data:', data)
   // Cuando borras una imagen al pasar al siguiente link el boton de borrar imagen sigue activo a veces
   const [showIcons, setShowIcons] = useState(false)
   const [icons, setIcons] = useState()
@@ -19,6 +22,8 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
   const editNameInputRef = useRef()
   const editDescriptionInputRef = useRef()
   const linkImgOptions = useRef()
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   useHideForms({ form: linkImgOptions.current, setFormVisible: setShowIcons })
 
   // Checa si la imagen es una de las subidas por el usuario para deshabilitar el boton de borrar
@@ -184,28 +189,29 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     deleteButtonRef.current.disabled = true
   }
   const handleEditLinkName = async () => {
-    // setNameEditMode(false)
+    setNameEditMode(false)
+    console.log('🚀 ~ handleEditLinkName ~ data:', data)
     if (data?.name === editNameInputRef.current.value) return
     // comprobar si el nombre a cambiado para no llamar a la api si no es necesario
-    const elementIndex = links.findIndex(link => link._id === data?._id)
-    const newState = [...links]
-    newState[elementIndex].name = editNameInputRef.current.value
-    setLinks(newState)
-    const response = await editLink({ id: data?._id, name: editNameInputRef.current.value })
+    const elementIndex = globalLinks.findIndex(link => link._id === data?._id)
+    const newState = [...globalLinks]
+    newState[elementIndex].name = editNameInputRef.current.value.trim()
+    setGlobalLinks(newState)
+    const response = await updateLink({ items: [{ id: data?._id, name: editNameInputRef.current.value.trim() }] })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
     }
   }
   const handleEditLinkDescription = async () => {
-    // setDescriptionEditMode(false)
+    setDescriptionEditMode(false)
     if (data?.description === editDescriptionInputRef.current.value) return
     // comprobar si el nombre a cambiado para no llamar a la api si no es necesario
-    const elementIndex = links.findIndex(link => link._id === data?._id)
-    const newState = [...links]
+    const elementIndex = globalLinks.findIndex(link => link._id === data?._id)
+    const newState = [...globalLinks]
     newState[elementIndex].description = editDescriptionInputRef.current.value
-    setLinks(newState)
-    const response = await editLink({ id: data?._id, description: editDescriptionInputRef.current.value })
+    setGlobalLinks(newState)
+    const response = await updateLink({ items: [{ id: data?._id, description: editDescriptionInputRef.current.value }] })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)

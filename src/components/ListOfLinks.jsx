@@ -13,6 +13,7 @@ import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
+import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
@@ -158,6 +159,7 @@ export default function ListOfLinks () {
       }
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
       <FormsContainer />
+      <DeleteColConfirmForm/>
     </main>
   )
 }

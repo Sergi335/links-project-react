@@ -18,7 +18,8 @@ export default function LinkDetailsPage ({ linkid, context }) {
   const [notesState, setNotesState] = useState()
 
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden) // memo?
+  const actualDesktopId = globalColumns.find(column => column.slug.toLowerCase() === desktopName)?._id
+  const desktopColumns = globalColumns.filter(column => column.parentId === actualDesktopId).toSorted((a, b) => a.orden - b.orden) // memo?
   console.log('🚀 ~ LinkDetails ~ desktopColumns:', desktopColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
 
@@ -28,7 +29,7 @@ export default function LinkDetailsPage ({ linkid, context }) {
 
       let dataFinal = []
       desktopColumns.forEach((column) => {
-        dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
       })
       setLinks(dataFinal)
     }
@@ -36,7 +37,7 @@ export default function LinkDetailsPage ({ linkid, context }) {
 
   console.log(links)
 
-  const data = linkId.id ? links.find(link => link._id === linkId.id) : links.find(link => link._id === linkId)
+  const data = links?.find(link => link._id === linkId)
   useTitle({ title: `${data?.name}` })
 
   console.log('🚀 ~ LinkDetails ~ data:', data)

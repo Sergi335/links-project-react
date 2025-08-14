@@ -62,37 +62,49 @@ export async function addLink (body) {
       return error
     })
 }
-// EditlinkForm, linkDetails, Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
-export async function editLink ({ id, name, url, description, notes, bookmark, bookmarkOrder, oldCategoryId, destinyIds, categoryId, order, previousIds }) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
+export async function updateLink ({ items }) {
+  if (!items || items.length === 0) {
+    console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  // Asegurar que items es un array
+  const itemsArray = Array.isArray(items) ? items : [items]
+
+  console.log('📤 Enviando al backend:', itemsArray)
+
+  const response = await fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
+    credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
-      id,
-      oldCategoryId,
-      destinyIds,
-      previousIds,
-      fields: {
-        name,
-        url,
-        description,
-        imgUrl: url ? constants.BASE_LINK_IMG_URL(url) : undefined,
-        notes,
-        bookmark,
-        bookmarkOrder,
-        categoryId,
-        order
-      }
+      updates: itemsArray.map(item => ({
+        id: item.id || item._id,
+        oldCategoryId: item.oldCategoryId || undefined,
+        destinyIds: item.destinyIds || undefined,
+        previousIds: item.previousIds || undefined,
+        fields: {
+          name: item.name ?? undefined,
+          url: item.url ?? undefined,
+          description: item.description ?? undefined,
+          imgUrl: item.url ? constants.BASE_LINK_IMG_URL(item.url) : undefined,
+          notes: item.notes ?? undefined,
+          bookmark: item.bookmark ?? undefined,
+          bookmarkOrder: item.bookmarkOrder ?? undefined,
+          categoryId: item.categoryId ?? undefined,
+          order: item.order ?? undefined
+        }
+      }))
     })
   })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(err => {
-      console.log(err)
-      return err
-    })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
+  }
+
+  const result = await response.json()
+  console.log(`Successfully updated ${itemsArray.length} items`)
+  return result
 }
 export async function setBookMarksOrder ({ links }) {
   return fetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
@@ -130,20 +142,6 @@ export async function deleteLink ({ body }) {
     console.log(error)
     return error
   }
-}
-export async function moveMultipleLinks (body) {
-  return fetch(`${constants.BASE_API_URL}/links/move`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
 }
 // ProfilePage
 export async function findDuplicateLinks () {

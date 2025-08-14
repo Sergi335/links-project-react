@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { editLink, moveMultipleLinks } from '../services/dbQueries'
+import { updateLink } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
@@ -20,70 +20,80 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktop = globalColumns.filter(column => column.slug === desktopName)
   const desktopColumns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
-  // console.log(points)
-  // console.log(menuRef.current)
+  const firstLinkId = Array.isArray(params) ? params[0] : params._id
+  const firstLink = globalLinks.find(link => link._id === firstLinkId)
+  const sourceCategoryId = firstLink?.categoryId
+
   const handleMoveClick = async (event) => {
-    if (Array.isArray(params)) {
-      console.log('multiple links')
-      const prevId = params[0]
-      const previousCategoryId = globalLinks.find(link => link._id === prevId)?.categoryId
-      let startingOrder = globalLinks.filter(link => link.categoryId === event.target.id).length
-      const updatedDesktopLinks = globalLinks.map(link => {
-        if (params.includes(link._id)) {
-        // Modifica la propiedad del elemento encontrado
-          return { ...link, categoryId: event.target.id, order: startingOrder++ } // orden!!
-        }
-        return link
-      }).toSorted((a, b) => (a.order - b.order))
-      setGlobalLinks(updatedDesktopLinks)
-      const body = {
-        destinationCategoryId: event.target.id,
-        links: params,
-        previousCategoryId
-      }
-      const response = await moveMultipleLinks(body)
+    const previousLinks = [...globalLinks]
+    const linksToEdit = Array.isArray(params) ? params : [params._id]
+    const firstLink = globalLinks.find(link => link._id === linksToEdit[0])
 
+    // Obtener categorías ANTES de cualquier actualización
+    const targetCategoryId = event.target.id
+    const sourceCategoryId = firstLink?.categoryId
+
+    const newLinkBrothers = globalLinks.filter(link => link.categoryId === targetCategoryId)
+    const oldLinkBrothers = globalLinks.filter(link =>
+      link.categoryId === sourceCategoryId && !linksToEdit.includes(link._id) // ⬅️ Excluir los que se van a mover
+    )
+
+    let startingOrder = newLinkBrothers.length
+
+    // Actualización optimista del estado
+    const updatedDesktopLinks = globalLinks.map(link => {
+      if (linksToEdit.includes(link._id)) {
+        return { ...link, categoryId: targetCategoryId, order: startingOrder++ }
+      }
+      return link
+    }).toSorted((a, b) => (a.order - b.order))
+
+    setGlobalLinks(updatedDesktopLinks)
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks))
+
+    try {
+      // Links que se mueven
+      const movedItems = linksToEdit.map((linkId, index) => ({
+        id: linkId,
+        categoryId: targetCategoryId,
+        order: newLinkBrothers.length + index
+      }))
+
+      // Links en la categoría destino (reordenar)
+      const destinyItems = newLinkBrothers.map((link, index) => ({
+        id: link._id,
+        order: index,
+        name: link.name,
+        categoryId: link.categoryId
+      }))
+
+      // Links que quedan en la categoría origen (reordenar)
+      const remainingItems = oldLinkBrothers.map((link, index) => ({
+        id: link._id,
+        order: index,
+        name: link.name,
+        categoryId: link.categoryId
+      }))
+
+      const items = [...movedItems, ...destinyItems, ...remainingItems]
+
+      const response = await updateLink({ items })
       const { hasError, message } = handleResponseErrors(response)
+
       if (hasError) {
+        // Rollback en caso de error
+        setGlobalLinks(previousLinks)
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
         toast(message)
-        return
       }
-
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.order - b.order))))
-    } else {
-      const order = globalLinks.filter(link => link.categoryId === event.target.id).length
-      const updatedDesktopLinks = globalLinks.map(link => {
-        if (link._id === params._id) {
-        // Modifica la propiedad del elemento encontrado
-          return { ...link, categoryId: event.target.id, order }
-        }
-        return link
-      }).toSorted((a, b) => (a.order - b.order))
-      setGlobalLinks(updatedDesktopLinks)
-
-      // const body = {
-      //   id: params._id,
-      //   oldCategoryId: params.categoryId,
-      //   fields: {
-      //     categoryId: event.target.id,
-      //     order
-      //   }
-      // }
-      const response = await editLink({
-        id: params._id,
-        oldCategoryId: params.categoryId,
-        categoryId: event.target.id,
-        order
-      })
-
-      const { hasError, message } = handleResponseErrors(response)
-      if (hasError) {
-        toast(message)
-        return
-      }
-
-      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.order - b.order))))
+    } catch (error) {
+      // Rollback en caso de error de red
+      setGlobalLinks(previousLinks)
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
+      toast('Error al mover enlaces')
     }
+
+    setVisible(false)
   }
   const handleEditClick = () => {
     setEditFormVisible(true)
@@ -103,19 +113,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     const booked = params.bookmark === true
     console.log(!booked)
 
-    const response = await editLink({ id: params._id, bookmark: !booked })
-
-    const { hasError, message } = handleResponseErrors(response)
-    let error
-    if (response.message !== undefined) {
-      error = response.message.join('\n')
-    } else {
-      error = message
-    }
-    if (hasError) {
-      toast(error)
-      return
-    }
+    // Actualizaciones optimistas - actualizar estado inmediatamente
+    const previousLinks = [...globalLinks]
     const updatedDesktopLinks = globalLinks.map(link => {
       if (link._id === params._id) {
       // Modifica la propiedad del elemento encontrado
@@ -123,8 +122,26 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       }
       return link
     }).toSorted((a, b) => (a.orden - b.orden))
+
     setGlobalLinks(updatedDesktopLinks)
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
+
+    try {
+      const response = await updateLink({ items: [{ id: params._id, bookmark: !booked }] })
+
+      const { hasError, message } = handleResponseErrors(response)
+      if (hasError) {
+        // Rollback en caso de error
+        setGlobalLinks(previousLinks)
+        activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.orden - b.orden))))
+        toast(message)
+      }
+    } catch (error) {
+      // Rollback en caso de error de red u otros errores
+      setGlobalLinks(previousLinks)
+      activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.orden - b.orden))))
+      toast('Error al actualizar favoritos')
+    }
   }
   useEffect(() => {
     // console.log(window.innerHeight)
@@ -150,6 +167,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     }
     setPoints(newPoints)
   }, [params]) // se puede meter params en un useRef
+
   return (
     <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
@@ -160,7 +178,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
           {
-            desktopColumns.map(col => col._id === params.categoryId
+            desktopColumns.map(col => col._id === sourceCategoryId
               ? null
               : <li key={col._id} onClick={handleMoveClick}><span id={col._id}>{col.name}</span></li>)
           }
