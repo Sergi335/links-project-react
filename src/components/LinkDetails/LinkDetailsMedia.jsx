@@ -112,7 +112,7 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
                 console.log(message)
                 toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
               } else {
-                newState[elementIndex].images.push(response.link.images[response.link.images.length - 1])
+                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
                 setLinks(newState)
                 toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
               }

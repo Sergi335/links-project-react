@@ -52,7 +52,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
       .then(data => {
         console.log(data)
 
-        setIcons(data)
+        setIcons(data.data)
       })
   }, [])
 
@@ -62,7 +62,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     // Encuentra el link actual entre todos los links
     const elementIndex = links.findIndex(link => link._id === data?._id)
     const newState = [...links]
-    newState[elementIndex].imgURL = $linkIcon.src
+    newState[elementIndex].imgUrl = $linkIcon.src
     // setPlaceHolderImageUrl(element.src)
 
     // adjudicar el id con el nombre del icono para poder borrarlo, importante
@@ -72,29 +72,29 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     saveButtonRef.current.disabled = true
     setLinks(newState)
     const response = await saveLinkIcon({ src: $linkIcon.src, linkId: data?._id })
-    // Error de red
-    if (!response.message && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+    } else {
+      $notification.textContent = 'Saved!'
+      $notification.classList.add(`${styles.show}`)
+      setTimeout(() => {
+        $notification.classList.remove(`${styles.show}`)
+      }, 1500)
     }
-    // Error http
-    if (!response.message && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response.message && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    $notification.textContent = 'Saved!'
-    $notification.classList.add(`${styles.show}`)
-    setTimeout(() => {
-      $notification.classList.remove(`${styles.show}`)
-    }, 1500)
   }
   const handleCreateImageUrlFromFile = async () => {
     const file = inputRef.current.files[0]
-    console.log(file.size)
+    if (!file) return
+
+    // Lista de tipos MIME permitidos
+    const allowedTypes = ['image/png', 'image/jpeg']
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Formato no permitido. Solo se permiten PNG y JPG/JPEG.')
+      inputRef.current.value = '' // Limpia el input para evitar problemas
+      return
+    }
+
     if (file.size > 500000) {
       toast.error('Imagen muy grande, máximo 500KB')
       return
@@ -108,85 +108,56 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     const elementIndex = links.findIndex(link => link._id === data?._id)
     const newState = [...links]
     const response = await fetchLinkIconFile({ file, linkId: data?._id })
-    setIcons([...icons, { url: response.url, nombre: response.name }])
-    newState[elementIndex].imgURL = response.url
-    setLinks(newState)
-    // adjudicar el id con el nombre del icono para poder borrarlo, importante
-    currentImageRef.current.id = response.name
-    // evitar que se guarde si no se ha cambiado la imagen
-    console.log(response)
-    // Error de red
-    if (!response.message && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+    } else {
+      setIcons([...icons, { url: response.data.url, nombre: response.data.name }])
+      newState[elementIndex].imgUrl = response.data.url
+      setLinks(newState)
+      // adjudicar el id con el nombre del icono para poder borrarlo, importante
+      currentImageRef.current.id = response.data.name
+      toast('Imagen guardada!', { autoClose: 1500 })
     }
-    // Error http
-    if (!response.message && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response.message && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    toast('Imagen guardada!', { autoClose: 1500 })
   }
   const handleSetAutoIcon = async () => {
     const $notification = document.getElementById('notification')
     const elementIndex = links.findIndex(link => link._id === data?._id)
     const newState = [...links]
-    newState[elementIndex].imgURL = constants.BASE_LINK_IMG_URL(data?.URL)
+    newState[elementIndex].imgUrl = constants.BASE_LINK_IMG_URL(data?.url)
     setLinks(newState)
-    currentImageRef.current.src = constants.BASE_LINK_IMG_URL(data?.URL)
-    const response = await saveLinkIcon({ src: constants.BASE_LINK_IMG_URL(data?.URL), linkId: data?._id })
-    // Error de red
-    if (!response.message && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
+    currentImageRef.current.src = constants.BASE_LINK_IMG_URL(data?.url)
+    const response = await saveLinkIcon({ src: constants.BASE_LINK_IMG_URL(data?.url), linkId: data?._id })
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+    } else {
+      $notification.textContent = 'Saved!'
+      $notification.classList.add(`${styles.show}`)
+      setTimeout(() => {
+        $notification.classList.remove(`${styles.show}`)
+      }, 1500)
     }
-    // Error http
-    if (!response.message && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response.message && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    $notification.textContent = 'Saved!'
-    $notification.classList.add(`${styles.show}`)
-    setTimeout(() => {
-      $notification.classList.remove(`${styles.show}`)
-    }, 1500)
   }
   const handleDeleteLinkIcon = async () => {
     const response = await deleteLinkImage(currentImageRef.current.id)
-    // Error de red
-    if (!response.message && !response.ok && response.error === undefined) {
-      toast('Error de red')
-      return
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+    } else {
+      toast('Imagen borrada!', { autoClose: 1500 })
+      const elementIndex = links.findIndex(link => link._id === data?._id)
+      const newLinksState = [...links]
+      newLinksState[elementIndex].imgUrl = constants.BASE_LINK_IMG_URL(data?.url)
+      saveLinkIcon({ src: constants.BASE_LINK_IMG_URL(data?.url), linkId: data?._id }) // Await y control???
+      setLinks(newLinksState)
+      // const iconIndex = icons.findIndex(icon => icon.url === currentImageRef.current.src)
+      const newIconsState = icons.filter(icon => icon.url !== currentImageRef.current.src)
+      setIcons(newIconsState)
+      currentImageRef.current.src = constants.BASE_LINK_IMG_URL(data?.url)
+      // Deshabilitar boton de borrar imagen
+      deleteButtonRef.current.disabled = true
     }
-    // Error http
-    if (!response.message && !response.ok && response.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response.message && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    toast('Imagen borrada!', { autoClose: 1500 })
-    const elementIndex = links.findIndex(link => link._id === data?._id)
-    const newLinksState = [...links]
-    newLinksState[elementIndex].imgURL = constants.BASE_LINK_IMG_URL(data?.URL)
-    saveLinkIcon({ src: constants.BASE_LINK_IMG_URL(data?.URL), linkId: data?._id }) // Await y control???
-    setLinks(newLinksState)
-    // const iconIndex = icons.findIndex(icon => icon.url === currentImageRef.current.src)
-    const newIconsState = icons.filter(icon => icon.url !== currentImageRef.current.src)
-    setIcons(newIconsState)
-    currentImageRef.current.src = constants.BASE_LINK_IMG_URL(data?.URL)
-    // Deshabilitar boton de borrar imagen
-    deleteButtonRef.current.disabled = true
   }
   const handleEditLinkName = async () => {
     setNameEditMode(false)
@@ -239,7 +210,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
                 : <span>{data?.description}</span>}
             </div>
             <div className={styles.editBlock}>
-              <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => handleShowIcons()} className={styles.iconImage} src={data?.imgURL} alt="" /><span id='notification' className={styles.notification}></span></p>
+              <p><strong>Icono:</strong> <img ref={currentImageRef} onClick={() => handleShowIcons()} className={styles.iconImage} src={data?.imgUrl} alt="" /><span id='notification' className={styles.notification}></span></p>
             </div>
           </div>
           <div ref={linkImgOptions} className={showIcons ? `${styles.showIcons} ${styles.imgOptions}` : `${styles.imgOptions}` }>

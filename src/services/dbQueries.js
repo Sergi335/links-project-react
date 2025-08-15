@@ -348,8 +348,7 @@ export async function getBackgroundMiniatures () {
   })
     .then(res => res.json())
     .then(data => {
-      const { backgrounds } = data
-      return backgrounds
+      return data
     })
     .catch(error => {
       return error
@@ -366,11 +365,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     formData.append('linkId', linkId)
     const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+      ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
     if (res.ok) {
@@ -438,11 +433,7 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'x-justlinks-user': 'SergioSR',
-          'x-justlinks-token': 'otroheader'
-        },
+        ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
 
@@ -476,32 +467,17 @@ export async function saveLinkIcon ({ src, linkId }) {
   try {
     const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+      ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
 
     if (response.ok) {
       const result = await response.json()
-      console.log(result)
-      const firstKey = Object.keys(result)[0]
-      const firstValue = result[firstKey]
-
-      if (firstKey === 'error') {
-        return (`${firstKey}, ${firstValue}`)
-      } else {
-        return result
-      }
-    } else {
-      console.error('Error al actualizar la ruta de la imagen')
-      return ('Error al cambiar imagen')
+      return result
     }
   } catch (error) {
     console.error('Error al realizar la solicitud:', error)
-    return ('Error al cambiar imagen')
+    return ('Error al realizar la solicitud')
   }
 }
 // LinkDetails
@@ -514,23 +490,7 @@ export async function deleteLinkImage (imageId) {
     })
     if (res.ok) {
       const result = await res.json()
-      console.log(result)
-      const firstKey = Object.keys(result)[0]
-      const firstValue = result[firstKey]
-
-      if (firstKey === 'error' || firstKey === 'errors') {
-        if (firstKey === 'errors') {
-          return (`Error, valor ${firstValue[0].path} no válido`)
-        } else {
-          return (`${firstKey}, ${firstValue}`)
-        }
-      } else {
-        console.log('Borrado con éxito')
-        return { message: 'Borrado con éxito' }
-      }
-    } else {
-      console.log(await res.json())
-      return ('Error en la solicitud')
+      return result
     }
   } catch (error) {
     console.log(error)
@@ -545,23 +505,12 @@ export async function uploadProfileImg (file) {
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/profilepic`, {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'x-justlinks-user': 'SergioSR',
-          'x-justlinks-token': 'otroheader'
-        },
+        ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
       if (response.ok) {
         const result = await response.json()
-        const firstKey = Object.keys(result)[0]
-        const firstValue = result[firstKey]
-
-        if (firstKey === 'error') {
-          return (`${firstKey}, ${firstValue}`)
-        } else {
-          return result.url
-        }
+        return result.data.url
       } else {
         console.error('Error al actualizar la ruta de la imagen')
         return ('Error al actualizar la ruta de la imagen')

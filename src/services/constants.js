@@ -16,6 +16,14 @@ export const constants = {
       'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''
     }
   },
+  STORAGE_FETCH_OPTIONS: {
+    credentials: 'include',
+    headers: {
+      'x-justlinks-user': 'SergioSR',
+      'x-justlinks-token': 'otroheader',
+      'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''
+    }
+  },
   ACCENT_COLORS: {
     defaultLight: {
       color: 'hsl(0, 0%, 73%)',

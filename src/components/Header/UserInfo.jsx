@@ -14,7 +14,7 @@ export default function UserInfo () {
           <Clock hours={hours} minutes={minutes} />
           {/* <WeatherComponent /> */}
         </div>
-        <Link to={'/profile'} className={styles.header_image_link}><img src={user?.profileImage ? user?.profileImage : '/img/avatar.svg' } alt={user?.realName}/></Link>
+        <Link to={'/app/profile'} className={styles.header_image_link}><img src={user?.profileImage ? user?.profileImage : '/img/avatar.svg' } alt={user?.realName}/></Link>
         <div className={styles.header_info_wrapper}>
           <p>{saludo}</p>
           <p className={styles.header_info_user}>{user?.realName}</p>

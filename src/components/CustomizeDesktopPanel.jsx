@@ -283,21 +283,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   useEffect(() => {
     getBackgroundMiniatures()
       .then(response => {
-        // Error de red
-        if (!Array.isArray(response) && !response.ok && response.error === undefined) {
-          toast('Error de red')
+        const { hasError, message } = handleResponseErrors(response)
+        if (hasError) {
+          toast(message)
           return
         }
-        // Error http
-        if (!Array.isArray(response) && !response.ok && response.status !== undefined) {
-          toast(`${response.status}: ${response.statusText}`)
-          return
-        }
-        // Error personalizado
-        if (!Array.isArray(response) && response.error) {
-          toast(`Error: ${response.error}`)
-        }
-        setMiniatures(response)
+        setMiniatures(response.data)
       })
       .catch(error => {
         toast({ error })
