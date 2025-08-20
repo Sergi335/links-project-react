@@ -30,6 +30,10 @@ export const useGlobalStore = create(
       globalLinks: [],
       setGlobalLinks: (globalLinks) => {
         set({ globalLinks })
+      },
+      globalArticles: null,
+      setGlobalArticles: (globalArticles) => {
+        set({ globalArticles })
       }
     }
   }

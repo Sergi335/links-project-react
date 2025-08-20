@@ -92,7 +92,8 @@ export async function updateLink ({ items }) {
           bookmark: item.bookmark ?? undefined,
           bookmarkOrder: item.bookmarkOrder ?? undefined,
           categoryId: item.categoryId ?? undefined,
-          order: item.order ?? undefined
+          order: item.order ?? undefined,
+          extractedArticle: item.extractedArticle === null ? null : undefined
         }
       }))
     })
