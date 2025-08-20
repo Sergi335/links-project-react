@@ -26,9 +26,9 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const firstLink = globalLinks.find(link => link._id === firstLinkId)
   const sourceCategoryId = firstLink?.categoryId
   const navigate = useNavigate()
-  const globalArticles = useGlobalStore(state => state.globalArticles)
+  // const globalArticles = useGlobalStore(state => state.globalArticles)
   const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
-  console.log(globalArticles)
+  // console.log(globalArticles)
 
   const handleMoveClick = async (event) => {
     const previousLinks = [...globalLinks]
@@ -114,10 +114,10 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     setVisible(false)
   }
   const handleAddToFavorites = async () => {
-    console.log(params)
+    // console.log(params)
     setVisible(false)
     const booked = params.bookmark === true
-    console.log(!booked)
+    // console.log(!booked)
 
     // Actualizaciones optimistas - actualizar estado inmediatamente
     const previousLinks = [...globalLinks]
@@ -162,7 +162,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         return response.json()
       })
       .then(data => {
-        console.log('🚀 ~ handleExtractArticle ~ data:', data)
+        // console.log('🚀 ~ handleExtractArticle ~ data:', data)
         if (Array.isArray(data.data) && data.data.length > 0) {
           setGlobalArticles(data.data[0].extractedArticle)
         } else {
@@ -178,12 +178,12 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       })
   }
   useEffect(() => {
-    // console.log(window.innerHeight)
-    // console.log(document.body.scrollHeight)
+    // //console.log(window.innerHeight)
+    // //console.log(document.body.scrollHeight)
     const menu = menuRef.current
     const submenu = subMenuRef.current
     const newPoints = { x: points.x, y: points.y }
-    // console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
+    // //console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
     if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
       setSubMenuSide('left')
       newPoints.x = window.innerWidth - menu.offsetWidth

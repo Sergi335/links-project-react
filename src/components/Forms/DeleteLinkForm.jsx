@@ -17,7 +17,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
   useHideForms({ form: formRef.current, setFormVisible: setDeleteFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  // console.log(params)
+  // //console.log(params)
   // Habrá que hacer un custom hook que devuelva la funcion handleDeleteLinkSubmit
   const handleClick = async (event) => {
     event.preventDefault()
@@ -35,7 +35,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
       linkId: Array.isArray(params) ? params : params._id
     }
     const response = await deleteLink({ body })
-    console.log(response)
+    //console.log(response)
 
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {

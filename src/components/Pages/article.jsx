@@ -13,13 +13,16 @@ const ArticleRenderer = () => {
 
   useEffect(() => {
     setArticle(globalArticles)
+    // if (article !== undefined) {
+    //   //console.log('🚀 ~ ArticleRenderer ~ globalArticles:', JSON.parse(article?.content))
+    // }
   }, [globalArticles])
-  console.log('🚀 ~ ArticleRenderer ~ article:', article)
+  // console.log('🚀 ~ ArticleRenderer ~ article:', article)
   if (!article) {
     return <div className="article-loading">Cargando artículo...</div>
   }
 
-  const handleUpdateLink = async (linkId, updatedData) => {
+  const handleUpdateLink = async () => {
     try {
       const response = await updateLink({ items: [{ id, extractedArticle: null }] })
       const { hasError, message } = handleResponseErrors(response)
@@ -63,7 +66,7 @@ const ArticleRenderer = () => {
           ? (
           <div
             className={styles.contentBody}
-            dangerouslySetInnerHTML={{ __html: extractContentBody(article.content) }}
+            dangerouslySetInnerHTML={{ __html: article.content }}
           />
             )
           : (
@@ -87,24 +90,24 @@ const extractImageSrc = (html) => {
   return imgMatch ? imgMatch[1] : 'https://via.placeholder.com/800x400?text=Imagen+no+disponible'
 }
 
-const extractContentBody = (html) => {
-  const contentMatch = html.match(/<div[^>]*class="[^"]*page[^"]*"[^>]*>([\s\S]*?)<\/div>/)
-  if (contentMatch && contentMatch[1]) {
-    // Limpiar el contenido para eliminar elementos no deseados
-    let cleanedContent = contentMatch[1]
-      .replace(/<div[^>]*class="[^"]*page[^"]*"[^>]*>/g, '')
-      .replace(/<div[^>]*id="[^"]*readability-page-[^"]*"[^>]*>/g, '')
+// const extractContentBody = (html) => {
+//   const contentMatch = html.match(/<div[^>]*class="[^"]*page[^"]*"[^>]*>([\s\S]*?)<\/div>/)
+//   if (contentMatch && contentMatch[1]) {
+//     // Limpiar el contenido para eliminar elementos no deseados
+//     let cleanedContent = contentMatch[1]
+//       .replace(/<div[^>]*class="[^"]*page[^"]*"[^>]*>/g, '')
+//       .replace(/<div[^>]*id="[^"]*readability-page-[^"]*"[^>]*>/g, '')
 
-    // Eliminar secciones específicas que no queremos mostrar dos veces
-    cleanedContent = cleanedContent
-      .replace(/<figure>[\s\S]*?<\/figure>/, '') // Eliminar figura (ya la mostramos arriba)
-      .replace(/<div[^>]*class="[^"]*article-header[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
-      .replace(/<div[^>]*class="[^"]*author-section[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
+//     // Eliminar secciones específicas que no queremos mostrar dos veces
+//     cleanedContent = cleanedContent
+//       .replace(/<figure>[\s\S]*?<\/figure>/, '') // Eliminar figura (ya la mostramos arriba)
+//       .replace(/<div[^>]*class="[^"]*article-header[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
+//       .replace(/<div[^>]*class="[^"]*author-section[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
 
-    return cleanedContent
-  }
-  return html
-}
+//     return cleanedContent
+//   }
+//   return html
+// }
 
 const extractAuthorSection = (html) => {
   const authorMatch = html.match(/<div[^>]*class="[^"]*author-section[^"]*"[^>]*>[\s\S]*?<\/div>/)

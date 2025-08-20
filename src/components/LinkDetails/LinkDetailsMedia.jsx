@@ -109,7 +109,7 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
               const { hasError, message } = handleResponseErrors(response)
 
               if (hasError) {
-                console.log(message)
+                //console.log(message)
                 toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
               } else {
                 newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
@@ -123,8 +123,8 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
     })
   }
   const handleSubmit = async () => {
-    console.log(notesState)
-    console.log('🚀 ~ handleSubmit ~ id:', id)
+    //console.log(notesState)
+    //console.log('🚀 ~ handleSubmit ~ id:', id)
     const response = await updateLink({ items: [{ id, notes: notesState }] })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {

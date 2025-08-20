@@ -30,7 +30,7 @@ export default function ToolBar () {
   const isColumnLocation = window.location.pathname.startsWith('/column')
   // const navigate = useNavigate()
   const [newColumnId, setNewColumnId] = useState(null) // Added line
-  // console.log(location.pathname)
+  // //console.log(location.pathname)
 
   const handleAddColumn = async () => {
     if (desktop === undefined) {
@@ -44,7 +44,7 @@ export default function ToolBar () {
       return
     }
     const { data } = response
-    console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
+    //console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
     setGlobalColumns((() => { return [...globalColumns, ...data] })())
     setNewColumnId(data[0]._id) // Update newColumnId
     // navigate(`/desktop/${desktop.name}/#${column[0]._id}`)

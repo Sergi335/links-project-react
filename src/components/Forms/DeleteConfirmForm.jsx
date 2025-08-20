@@ -38,7 +38,7 @@ export default function DeleteConfirmForm ({ visible, setVisible, itemType = 'es
       return
     }
     const { column } = response
-    console.log('🚀 ~ handleDeleteDesktop ~ column:', column)
+    //console.log('🚀 ~ handleDeleteDesktop ~ column:', column)
     const newTopLevelState = topLevelCategoriesStore.filter(desk => desk._id !== id)
     const newGlobalState = globalColumns.filter(col => col._id !== id && col.parentId !== id)
     setTopLevelCategoriesStore(newTopLevelState)

@@ -8,7 +8,7 @@ export const PublicOnlyRoute = ({ children }) => {
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
-  // console.log('🚀 ~ PublicOnlyRoute ~ topLevelCategoriesStore:', topLevelCategoriesStore)
+  // //console.log('🚀 ~ PublicOnlyRoute ~ topLevelCategoriesStore:', topLevelCategoriesStore)
   const firstDesktop = localStorage.getItem('firstDesktop') === null
     ? topLevelCategoriesStore[0]?.slug
     : ''

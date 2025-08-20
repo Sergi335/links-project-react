@@ -9,9 +9,9 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
   const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
 
   const nextIndex = links.findIndex(link => linkId === link?._id) + 1 // > length
-  // console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
+  // //console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
   const prevIndex = links.findIndex(link => linkId === link?._id) - 1 // -2
-  // console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
+  // //console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
   let nextId
   if (typeof links[nextIndex] === 'object' && links[nextIndex]._id !== undefined) {
     nextId = links[nextIndex]._id

@@ -10,9 +10,9 @@ export default function ReadingList () {
   //     // here we use top-level await, assume current platform supports it
   //     try {
   //       const article = await extract(input)
-  //       console.log(article)
+  //       //console.log(article)
   //       setItem(article)
-  //       console.log(item)
+  //       //console.log(item)
   //     } catch (err) {
   //       console.error(err)
   //     }

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <script>
       try {
-        console.log('inline dark script ejecutado');
+        //console.log('inline dark script ejecutado');
         const stored = JSON.parse(localStorage.getItem('theme') || '{}');
         if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');

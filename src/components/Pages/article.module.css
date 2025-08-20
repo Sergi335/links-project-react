@@ -1,11 +1,13 @@
 /* Estilos generales del artículo */
 .articleContainer {
-    max-width: 800px;
+    max-width: 100ch;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 50px;
     line-height: 1.6;
     color: #afa5a5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-secondary);
+    text-wrap: pretty;
 }
 
 .articleFeaturedImage {
@@ -79,9 +81,10 @@
 }
 
 .contentBody a {
-    color: #0066cc;
+    color: var(--accentColor);
     text-decoration: none;
     word-break: break-word;
+    font-size: inherit;
 }
 
 .contentBody a:hover {

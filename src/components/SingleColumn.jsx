@@ -99,7 +99,7 @@ export default function SingleColumn ({ data, children, childCount }) {
         setGlobalColumns(previousState)
       } else {
         const { updatedData } = response
-        console.log('🚀 ~ handleHeaderBlur ~ updatedData:', updatedData)
+        // console.log('🚀 ~ handleHeaderBlur ~ updatedData:', updatedData)
 
         if (updatedData.length > 0) {
           // 🔧 Usar updatedState (ya calculado) en lugar de globalColumns
@@ -113,7 +113,7 @@ export default function SingleColumn ({ data, children, childCount }) {
             }
             postDbUpdatedState[updatedCategoryIndex] = updatedCategory
             setGlobalColumns(postDbUpdatedState)
-            console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
+            // console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
             navigate(`/app/${desktopName}/${updatedCategory.slug}/${id}`)
           }
         }

@@ -1012,7 +1012,7 @@ const response1 = await fetch('/links', {
 })
 
 const newLink = await response1.json()
-console.log('Link creado:', newLink.link._id)
+//console.log('Link creado:', newLink.link._id)
 
 // 2. Actualizar el link
 const response2 = await fetch('/links', {

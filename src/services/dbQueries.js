@@ -10,10 +10,10 @@ export async function getAllLinks () {
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -25,10 +25,10 @@ export async function getLinksCount ({ categoryId }) {
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -40,10 +40,10 @@ export async function getLinkById ({ id }) {
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -64,14 +64,14 @@ export async function addLink (body) {
 }
 export async function updateLink ({ items }) {
   if (!items || items.length === 0) {
-    console.log('No hay cambios para enviar a la base de datos')
+    // console.log('No hay cambios para enviar a la base de datos')
     return { success: true, message: 'No changes to update' }
   }
 
   // Asegurar que items es un array
   const itemsArray = Array.isArray(items) ? items : [items]
 
-  console.log('📤 Enviando al backend:', itemsArray)
+  // console.log('📤 Enviando al backend:', itemsArray)
 
   const response = await fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
@@ -104,7 +104,7 @@ export async function updateLink ({ items }) {
   }
 
   const result = await response.json()
-  console.log(`Successfully updated ${itemsArray.length} items`)
+  // console.log(`Successfully updated ${itemsArray.length} items`)
   return result
 }
 export async function setBookMarksOrder ({ links }) {
@@ -118,7 +118,7 @@ export async function setBookMarksOrder ({ links }) {
       return data
     })
     .catch(err => {
-      console.log(err)
+      // console.log(err)
       return err
     })
 }
@@ -132,15 +132,15 @@ export async function deleteLink ({ body }) {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -153,15 +153,15 @@ export async function findDuplicateLinks () {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -203,14 +203,14 @@ export const updateDbAfterDrag = async (draggedItemOrArray, targetItem = null, p
 // Nueva función para manejar updates optimizados
 const handleOptimizedUpdate = async (changedItems) => {
   if (!changedItems || changedItems.length === 0) {
-    console.log('No hay cambios para enviar a la base de datos')
+    // console.log('No hay cambios para enviar a la base de datos')
     return { success: true, message: 'No changes to update' }
   }
 
   // Asegurar que changedItems es un array
   const itemsArray = Array.isArray(changedItems) ? changedItems : [changedItems]
 
-  console.log('📤 Enviando al backend:', itemsArray)
+  // console.log('📤 Enviando al backend:', itemsArray)
 
   const response = await updateCategory({ items: itemsArray })
 
@@ -219,20 +219,20 @@ const handleOptimizedUpdate = async (changedItems) => {
   }
 
   // const result = await response.json()
-  console.log(response)
+  // console.log(response)
   return response
 }
 
 export async function updateCategory ({ items }) {
   if (!items || items.length === 0) {
-    console.log('No hay cambios para enviar a la base de datos')
+    // console.log('No hay cambios para enviar a la base de datos')
     return { success: true, message: 'No changes to update' }
   }
 
   // Asegurar que items es un array
   const itemsArray = Array.isArray(items) ? items : [items]
 
-  console.log('📤 Enviando al backend:', itemsArray)
+  // console.log('📤 Enviando al backend:', itemsArray)
 
   const response = await fetch(`${constants.BASE_API_URL}/categories`, {
     method: 'PATCH',
@@ -261,7 +261,7 @@ export async function updateCategory ({ items }) {
   }
 
   const result = await response.json()
-  console.log(`Successfully updated ${itemsArray.length} items`)
+  // console.log(`Successfully updated ${itemsArray.length} items`)
   return result
 }
 
@@ -276,15 +276,15 @@ export async function deleteColumn ({ id, level }) {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -292,7 +292,7 @@ export async function deleteColumn ({ id, level }) {
 export async function createColumn ({ name, parentId, order, level }) {
   try {
     const body = { name, parentId, order, level }
-    console.log(body)
+    // console.log(body)
     const res = await fetch(`${constants.BASE_API_URL}/categories`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
@@ -300,11 +300,11 @@ export async function createColumn ({ name, parentId, order, level }) {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
@@ -319,19 +319,19 @@ export async function createColumn ({ name, parentId, order, level }) {
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
-    console.log('fetch')
+    // console.log('fetch')
     return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(data => {
         const element = document.querySelector('#root')
         element.setAttribute('data-background', 'image')
-        element.style.background = `url(${data})`
+        element.style.background = `url(${data.data})`
         element.style.backgroundSize = 'cover'
         element.style.backgroundAttachment = 'fixed'
-        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data}`))
+        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data.data}`))
         return data
       })
       .catch(error => {
@@ -396,7 +396,7 @@ export async function deleteImage ({ imageUrl, linkId }) {
     })
     if (res.ok) {
       const result = await res.json()
-      console.log(result)
+      // console.log(result)
       const firstKey = Object.keys(result)[0]
       const firstValue = result[firstKey]
 
@@ -414,7 +414,7 @@ export async function deleteImage ({ imageUrl, linkId }) {
       if (error.error === 'storage/invalid-url' || error.error === 'storage/object-not-found') {
         return 'Referencia eliminada'
       } else {
-        console.log(error)
+        // console.log(error)
         console.error(error.error)
         return error.error
       }
@@ -430,7 +430,7 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     const formData = new FormData()
     formData.append('linkImg', file)
     formData.append('linkId', linkId)
-    console.log(formData)
+    // console.log(formData)
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
@@ -494,7 +494,7 @@ export async function deleteLinkImage (imageId) {
       return result
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -543,7 +543,7 @@ export async function editUserAditionalInfo ({ email, fields }) {
       return data
     })
     .catch(err => {
-      console.log(err)
+      // console.log(err)
       return err
     })
 }
@@ -562,7 +562,7 @@ export async function deleteAccount ({ email }) {
       return result
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }

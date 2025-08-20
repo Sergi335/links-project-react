@@ -18,39 +18,9 @@ import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 import SingleColumn from './SingleColumn'
 
-export default function SingleColumnPage () {
-  // DesktopName es el parentSlug
-  const { slug, desktopName, id } = useParams()
-  const [navigationLinks, setNavigationLinks] = useState([])
-  const [firstColumnLink, setFirstColumnLink] = useState(null)
-  console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
+export function Columns ({ desktopColumns, desktopLinks, getLinksIds, linkLoader, columnLoaderTarget, numberOfPastedLinks, firstColumnLink, navigationLinks, numberOfLinkLoaders }) {
+  const { slug, desktopName } = useParams()
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
-  const linkLoader = useLinksStore(state => state.linkLoader)
-  const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
-  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
-  // const styleOfColumns = '415px 1fr'
-  // const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
-  const numberOfLoaders = Array(1).fill(null)
-  const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
-  const globalLoading = useGlobalStore(state => state.globalLoading)
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktopLinks = globalLinks
-  const globalColumns = useGlobalStore(state => state.globalColumns)
-  // const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
-  // console.log('🚀 ~ SingleColumnPage ~ desktopParent:', desktopParent)
-  const desktopColumns = globalColumns?.filter(column => column.slug === slug)
-  console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
-  const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
-
-  // Limpia selectedLinks al mover los seleccionados a otra columna
-  useEffect(() => {
-    setSelectedLinks([])
-  }, [globalLinks])
-  useEffect(() => {
-    setFirstColumnLink(desktopLinks.find(link => link._id === id))
-  }, [id, globalColumns])
-
   // DND
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -59,32 +29,8 @@ export default function SingleColumnPage () {
       }
     })
   )
-  useEffect(() => {
-    if (desktopName) {
-      let dataFinal = []
-      desktopColumns.forEach((column) => {
-        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
-      })
-      setNavigationLinks(dataFinal)
-    }
-  }, [desktopName, globalColumns])
-  const getLinksIds = useCallback((columna) => {
-    return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
-  }, [desktopLinks])
-
   return (
-    <main className={styles.list_of_links}>
-      {
-        globalLoading
-          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content}>
-              {
-                numberOfLoaders.map((item, index) => (
-                  <ColumnsLoader key={index} />
-                ))
-              }
-            </div></div>
-          : (
-            <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
+    <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
             <div id='maincontent' className={styles.sp_lol_content}>
             <DndContext
               sensors={sensors}
@@ -136,11 +82,92 @@ export default function SingleColumnPage () {
                 document.body
               )}
             </DndContext>
-            <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
             </div>
             </div>
+  )
+}
+export default function SingleColumnPage () {
+  // DesktopName es el parentSlug
+  const { slug, desktopName, id } = useParams()
+  const [navigationLinks, setNavigationLinks] = useState([])
+  const [firstColumnLink, setFirstColumnLink] = useState(null)
+  // console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
+  const linkLoader = useLinksStore(state => state.linkLoader)
+  const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
+  const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
+  // const styleOfColumns = '415px 1fr'
+  // const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
+  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
+  const numberOfLoaders = Array(1).fill(null)
+  const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
+  const globalLoading = useGlobalStore(state => state.globalLoading)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const desktopLinks = globalLinks
+  const globalColumns = useGlobalStore(state => state.globalColumns)
+  // const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
+  // //console.log('🚀 ~ SingleColumnPage ~ desktopParent:', desktopParent)
+  const desktopColumns = globalColumns?.filter(column => column.slug === slug)
+  // console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
+  const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+
+  // Limpia selectedLinks al mover los seleccionados a otra columna
+  useEffect(() => {
+    setSelectedLinks([])
+  }, [globalLinks])
+  useEffect(() => {
+    setFirstColumnLink(desktopLinks.find(link => link._id === id))
+  }, [id, globalColumns])
+
+  // DND
+  // const sensors = useSensors(
+  //   useSensor(MouseSensor, {
+  //     activationConstraint: {
+  //       distance: 0
+  //     }
+  //   })
+  // )
+  useEffect(() => {
+    if (desktopName) {
+      let dataFinal = []
+      desktopColumns.forEach((column) => {
+        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
+      })
+      setNavigationLinks(dataFinal)
+    }
+  }, [desktopName, globalColumns])
+  const getLinksIds = useCallback((columna) => {
+    return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
+  }, [desktopLinks])
+
+  return (
+    <main className={styles.list_of_links}>
+      {
+        globalLoading
+          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content}>
+              {
+                numberOfLoaders.map((item, index) => (
+                  <ColumnsLoader key={index} />
+                ))
+              }
+            </div></div>
+          : (
+            <Columns
+              desktopColumns={desktopColumns}
+              desktopLinks={desktopLinks}
+              columnLoaderTarget={columnLoaderTarget}
+              linkLoader={linkLoader}
+              numberOfLinkLoaders={numberOfLinkLoaders}
+              getLinksIds={getLinksIds}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDragEnd={handleDragEnd}
+              handleDragCancel={handleDragCancel}
+              activeLink={activeLink}
+            />
             )
-      }
+          }
+      <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
       <FormsContainer />
     </main>

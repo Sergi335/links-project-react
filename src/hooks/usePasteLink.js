@@ -15,7 +15,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
 
   async function pasteLink () {
     setLinkLoader(true) // estamos usando???
-    console.log('Ejecuto')
+    //console.log('Ejecuto')
     // lee el contenido del portapapeles entonces ...
     // Arrow function anónima con los items de param
     navigator.clipboard.read().then(clipboardItems => {
@@ -27,18 +27,18 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
           for (const type of clipboardItem.types) {
             if (type === 'text/plain') {
               handlePastedTextLinks(clipboardItem, type, params, desktopName, activeLocalStorage)
-              console.log('Texto plano')
+              //console.log('Texto plano')
             }
           }
         } else {
           for (const type of clipboardItem.types) {
             if (type === 'text/html') {
               handlePastedHtmlLinks(event, clipboardItem, type, params, desktopName, activeLocalStorage)
-              console.log('html text')
+              //console.log('html text')
             }
             if (type.startsWith('image/')) {
               clipboardItem.getType(type).then((blob) => {
-                console.log('Es una immagen:', blob)
+                //console.log('Es una immagen:', blob)
               })
             }
           }
@@ -50,27 +50,27 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     // Pasamos el blob a texto
     clipboardItem.getType(type).then(blob => {
       blob.text().then(text => {
-        console.log(text)
+        //console.log(text)
         // Si tiene un enlace
         if (text.indexOf('http') === 0) {
           const urls = text.match(/https?:\/\/[^\s]+/g)
           if (urls.length > 1) {
-            console.log('entramos')
+            //console.log('entramos')
             pasteMultipleLinks(urls, params, desktopName, activeLocalStorage)
-            console.log('muchos links')
+            //console.log('muchos links')
             return
           }
-          console.log('Tiene un enlace')
+          //console.log('Tiene un enlace')
           processTextLinks(text, params, desktopName, activeLocalStorage)
         } else {
-          console.log('Es texto plano sin enlace')
-          console.log(text)
+          //console.log('Es texto plano sin enlace')
+          //console.log(text)
         }
       })
     })
   }
   async function processTextLinks (text, params, desktopName, activeLocalStorage) {
-    console.log(text)
+    //console.log(text)
     const orden = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
     const nombre = await getNameByUrl({ url: text }) // Iniciar el proceso de carga dentro de la función
 
@@ -94,7 +94,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
       })
       if (res.ok) {
         const data = await res.json()
-        console.log(data)
+        //console.log(data)
         const { link } = data
         const newList = [...globalLinks, link]
         setColumnLoaderTarget(columnRef.current)
@@ -107,22 +107,22 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
         activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
       } else {
         const data = await res.json()
-        console.log(data)
+        //console.log(data)
       }
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
   const handlePastedHtmlLinks = (event, clipboardItem, type, params, linksStore, setLinksStore, desktopName, activeLocalStorage) => {
     clipboardItem.getType(type).then(blob => {
       blob.text().then(text => {
         if (text.indexOf('<a href') === 0) {
-          console.log('Es un enlace html')
-          console.log(text)
-          console.log(typeof (text))
+          //console.log('Es un enlace html')
+          //console.log(text)
+          //console.log(typeof (text))
           processHtmlLink(text, params, linksStore, setLinksStore, desktopName, activeLocalStorage)
         } else {
-          console.log('No hay enlace')
+          //console.log('No hay enlace')
         }
       })
     })
@@ -169,10 +169,10 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
         activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
       } else {
         const data = await res.json()
-        console.log(data)
+        //console.log(data)
       }
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
   async function pasteMultipleLinks (array, params, desktopName, activeLocalStorage) {
@@ -194,7 +194,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
     for (const bodie of bodies) {
       bodie.data[0].name = await getNameByUrl({ url: bodie.data[0].URL })
-      console.log(bodie)
+      //console.log(bodie)
     }
     setNumberOfPastedLinks(bodies.length)
     const requests = bodies.map(async body => {
@@ -210,11 +210,11 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
           return data.link
         } else {
           const data = await res.json()
-          console.log(data)
+          //console.log(data)
           toast.update(pasteLoading, { render: 'Error al pegar los links', type: 'error', isLoading: false, autoClose: 3000 })
         }
       } catch (error) {
-        console.log(error)
+        //console.log(error)
         toast.update(pasteLoading, { render: 'Error al pegar los links', type: 'error', isLoading: false, autoClose: 3000 })
       }
     })
@@ -232,7 +232,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   async function getNameByUrl ({ url }) {
-    console.log(url)
+    //console.log(url)
     const res = await fetch(`${constants.BASE_API_URL}/links/getname?url=${url}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
@@ -241,7 +241,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
       return { status: res.status, statusText: res.statusText }
     }
     const title = await res.text()
-    console.log(title)
+    //console.log(title)
     return title
   }
   return { pasteLink }

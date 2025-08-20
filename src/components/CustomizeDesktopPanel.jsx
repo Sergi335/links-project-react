@@ -29,7 +29,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   // const globalLoading = useGlobalStore(state => state.globalLoading)
   // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
-  console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
+  //console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const themeVariants = Object.keys(constants.THEME_VARIANTS)
@@ -139,24 +139,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       }
     })
     const response = await changeBackgroundImage(event)
-    console.log(response)
-    // console.log('🚀 ~ handleChangeBackgroundImage ~ response:', response)
-    // Error de red
-    // Esto se repite mucho, hacer una funcion para esto
-    if (!response?.startsWith('http') && !response?.ok && response?.error === undefined) {
-      toast('Error de red')
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
       return
     }
-    // Error http
-    if (!response?.startsWith('http') && !response?.ok && response?.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response?.startsWith('http') && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    console.log(event.target.src ?? event.target.id)
+    //console.log(event.target.src ?? event.target.id)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.src))
   }
   const handleRemoveBackgroundImage = (event) => {
@@ -218,7 +206,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const select = event.target
     const selectedOption = select.options[select.selectedIndex]
     const id = selectedOption.dataset.id
-    console.log(id)
+    //console.log(id)
     const items = [{ id, hidden: true }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -238,7 +226,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
     const id = event.target.dataset.id
-    console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
+    //console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
     const items = [{ id, hidden: false }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -268,11 +256,11 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     colorOptions.querySelector(`#${accentColor}`).classList.add(`${styles.optionSelected}`)
 
     const background = JSON.parse(window.localStorage.getItem('backgroundMiniature')) ?? 'color'
-    // console.log('🚀 ~ useEffect ~ background:', background)
+    // //console.log('🚀 ~ useEffect ~ background:', background)
     const backgroundOptions = Array.from(document.getElementById('bgMiniatures').childNodes)
-    // console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
+    // //console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
     backgroundOptions.forEach(option => {
-      // console.log(option.src)
+      // //console.log(option.src)
       if (option.src && option.src === background) {
         option.classList.add(`${styles.optionSelected}`)
       } else if (option.id && option.id === background) {

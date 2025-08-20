@@ -110,7 +110,7 @@ export default function Columna ({ data, children, childCount, context }) {
           toast(message)
         } else {
           const { data } = response
-          console.log('🚀 ~ handleHeaderBlur ~ updatedData:', data)
+          //console.log('🚀 ~ handleHeaderBlur ~ updatedData:', data)
 
           if (data.length > 0) {
             // 🔧 Usar updatedState (ya calculado) en lugar de globalColumns
@@ -124,7 +124,7 @@ export default function Columna ({ data, children, childCount, context }) {
               }
               postDbUpdatedState[updatedCategoryIndex] = updatedCategory
               setGlobalColumns(postDbUpdatedState)
-              console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
+              //console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
             }
           }
         }

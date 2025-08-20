@@ -7,7 +7,7 @@ import styles from './Toolbar.module.css'
 export default function DesktopNameDisplay ({ numberOfLinks }) {
   const { desktopName } = useParams()
   const location = useLocation()
-  // console.log(desktopName)
+  // //console.log(desktopName)
   let desktopDisplayName
   if (location.pathname === '/readinglist') {
     desktopDisplayName = 'Reading List'

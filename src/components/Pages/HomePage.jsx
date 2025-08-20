@@ -22,11 +22,11 @@ export default function HomePage () {
   //     if (prefersDarkMode.matches) {
   //       // Aplicar estilos para el modo oscuro
   //       document.documentElement.classList.add('dark')
-  //       // console.log('dark mode desde el home')
+  //       // //console.log('dark mode desde el home')
   //     } else {
   //       // Aplicar estilos para el modo claro
   //       document.documentElement.classList.remove('dark')
-  //       console.log('light mode desde el home')
+  //       //console.log('light mode desde el home')
   //     }
   //   }
   //   prefersDarkMode.addEventListener('change', applyTheme)

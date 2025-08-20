@@ -35,7 +35,7 @@ export default function AddDesktopForm () {
     }
     const { data } = response
     const [newCategory] = data
-    console.log('🚀 ~ handleAddDesktopSubmit ~ newCategory:', newCategory)
+    //console.log('🚀 ~ handleAddDesktopSubmit ~ newCategory:', newCategory)
     setAddDeskFormVisible(false)
     toast.success('Escritorio Añadido!', { autoClose: 1500 })
     const newState = [...topLevelCategoriesStore, newCategory]

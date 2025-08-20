@@ -34,7 +34,7 @@ function App () {
   useEffect(() => {
     setArticle(globalArticles)
   }, [globalArticles])
-  console.log('🚀 ~ App ~ globalArticles:', globalArticles)
+  // console.log('🚀 ~ App ~ globalArticles:', globalArticles)
   // const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
 
   // 🔧 Mover keepServerAwake a useEffect para mejor control

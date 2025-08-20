@@ -68,7 +68,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
     const menu = menuRef.current
     const submenu = subMenuRef.current
     const newPoints = { x: points.x, y: points.y }
-    // console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
+    // //console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
     if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
       setSubMenuSide('left')
       newPoints.x = window.innerWidth - menu.offsetWidth

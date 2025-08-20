@@ -45,7 +45,7 @@ function BookmarkItem ({ bookmark }) {
 export default function Bookmarks () {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const [books, setBooks] = useState([])
-  console.log('🚀 ~ Bookmarks ~ books:', books)
+  //console.log('🚀 ~ Bookmarks ~ books:', books)
   const [booksOrder, setBooksOrder] = useState([])
   const [activeBook, setActiveBook] = useState(null)
   const [prevBooks, setPrevBooks] = useState([]) // Nuevo estado para guardar el orden anterior
@@ -128,7 +128,7 @@ export default function Bookmarks () {
     }
     // Si todo va bien, limpiar prevBooks
     setPrevBooks([])
-    console.log(response)
+    //console.log(response)
   }
   return (
     <div className={styles.bookmarks}>

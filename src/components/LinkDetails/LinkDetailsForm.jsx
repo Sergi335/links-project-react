@@ -8,8 +8,8 @@ import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsForm ({ data, links, setLinks }) {
-  console.log('🚀 ~ LinkDetailsForm ~ links:', links)
-  console.log('🚀 ~ LinkDetailsForm ~ data:', data)
+  //console.log('🚀 ~ LinkDetailsForm ~ links:', links)
+  //console.log('🚀 ~ LinkDetailsForm ~ data:', data)
   // Cuando borras una imagen al pasar al siguiente link el boton de borrar imagen sigue activo a veces
   const [showIcons, setShowIcons] = useState(false)
   const [icons, setIcons] = useState()
@@ -50,7 +50,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
 
         setIcons(data.data)
       })
@@ -161,7 +161,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
   }
   const handleEditLinkName = async () => {
     setNameEditMode(false)
-    console.log('🚀 ~ handleEditLinkName ~ data:', data)
+    //console.log('🚀 ~ handleEditLinkName ~ data:', data)
     if (data?.name === editNameInputRef.current.value) return
     // comprobar si el nombre a cambiado para no llamar a la api si no es necesario
     const elementIndex = globalLinks.findIndex(link => link._id === data?._id)

@@ -52,7 +52,7 @@ export default function CustomLink ({ data, className, desktopName }) {
 
   const handleSelectChange = (e) => {
     const linkId = e.currentTarget.parentNode.parentNode.id
-    // console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
+    // //console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
     if (selectedLinks.includes(linkId)) {
       const index = selectedLinks.findIndex((id) => id === linkId)
       const newState = [...selectedLinks]
