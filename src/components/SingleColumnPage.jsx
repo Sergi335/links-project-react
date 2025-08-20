@@ -1,98 +1,22 @@
-import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
+import Columns from './Columns'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
-import CustomLink from './customlink'
-import linkStyles from './customlink.module.css'
 import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './ListOfLinks.module.css'
-import LinkLoader from './Loaders/LinkLoader'
-import SingleColumn from './SingleColumn'
-
-export function Columns ({ desktopColumns, desktopLinks, getLinksIds, linkLoader, columnLoaderTarget, numberOfPastedLinks, firstColumnLink, navigationLinks, numberOfLinkLoaders }) {
-  const { slug, desktopName } = useParams()
-  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
-  // DND
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 0
-      }
-    })
-  )
-  return (
-    <div id='spMainContentWrapper' className={styles.lol_content_wrapper}>
-            <div id='maincontent' className={styles.sp_lol_content}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCorners}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              onDragCancel={handleDragCancel}
-            >
-              {desktopColumns
-                ? (
-                    desktopColumns.map((columna) => (
-                      columna.slug === slug
-                        ? (
-                          <SingleColumn key={columna._id} data={{ columna }} childCount={getLinksIds(columna).length} context='singlecol'>
-                          <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
-                            {
-                              desktopLinks.map((link) =>
-                                link.categoryId === columna._id
-                                  ? (<CustomLink key={link._id} data={{ link }} idpanel={columna._id} className={'flex'} desktopName={desktopName} context='singlecol'/>)
-                                  : null
-                              ).filter(link => link !== null)
-                            }
-                            {
-                              linkLoader && columna._id === columnLoaderTarget?.id && (numberOfLinkLoaders.map((item, index) => (
-                                <LinkLoader key={index} />
-                              )))
-                            }
-                          </SortableContext>
-                        </SingleColumn>
-                          )
-                        : null
-                    ))
-                  )
-                : (
-                    <>
-                      <ColumnsLoader />
-                    </>
-                  )}
-              {createPortal(
-                <DragOverlay>
-                  {activeLink && (
-                    <CustomLink
-                      data={{ activeLink }}
-                      className={linkStyles.floatLink}
-                    />
-                  )}
-                </DragOverlay>,
-                document.body
-              )}
-            </DndContext>
-            </div>
-            </div>
-  )
-}
 export default function SingleColumnPage () {
   // DesktopName es el parentSlug
   const { slug, desktopName, id } = useParams()
   const [navigationLinks, setNavigationLinks] = useState([])
   const [firstColumnLink, setFirstColumnLink] = useState(null)
   // console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
-  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink } = useDragItems({ desktopName })
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
@@ -159,11 +83,8 @@ export default function SingleColumnPage () {
               linkLoader={linkLoader}
               numberOfLinkLoaders={numberOfLinkLoaders}
               getLinksIds={getLinksIds}
-              handleDragStart={handleDragStart}
-              handleDragOver={handleDragOver}
-              handleDragEnd={handleDragEnd}
-              handleDragCancel={handleDragCancel}
-              activeLink={activeLink}
+              context="single"
+              slug={slug}
             />
             )
           }
