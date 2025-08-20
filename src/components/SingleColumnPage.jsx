@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDragItems } from '../hooks/useDragItems'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'

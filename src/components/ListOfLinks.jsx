@@ -15,7 +15,6 @@ import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 export default function ListOfLinks () {
   const { links, loading, categories } = useGlobalData()
   const { desktopName } = useParams()
-  const desktopId = categories?.find(category => category.slug === desktopName)?._id
 
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
