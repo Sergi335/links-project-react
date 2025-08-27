@@ -49,14 +49,14 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <Link className={`${styles.details_nav_link} button`} to={`${path}${prevId}`}>Prev<ArrowLeft/></Link>
-            : <a className={`${styles.details_nav_link_disabled} button`}>Prev<ArrowLeft/></a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${prevId}`}>Prev<ArrowLeft/></Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}>Prev<ArrowLeft/></a>}
           {
-            context !== 'singlecol' && <Link className={`${styles.details_nav_link_disabled} button`} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
+            context !== 'singlecol' && <Link className={`${styles.details_nav_link_disabled} button button_small  `} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
           }
           {nextId
-            ? <Link className={`${styles.details_nav_link} button`} to={`${path}${nextId}`}><ArrowRight/>Next</Link>
-            : <a className={`${styles.details_nav_link_disabled} button`}><ArrowRight/>Next</a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${nextId}`}><ArrowRight/>Next</Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}><ArrowRight/>Next</a>}
       </div>
     </section>
   )

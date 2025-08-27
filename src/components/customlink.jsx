@@ -1,16 +1,19 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
 import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import { ArrowDown, MaximizeIcon } from './Icons/icons'
+import { ArrowDown } from './Icons/icons'
 import styles from './customlink.module.css'
 
-export default function CustomLink ({ data, className, desktopName }) {
+const CustomLink = ({ data, className, desktopName }) => {
+  // console.log('render')
+
   const link = data.link || data.activeLink
   const [linkSelectMode, setLinkSelectMode] = useState(false)
+  const [localFaviconVisible, setLocalFaviconVisible] = useState(false)
   // Ref del link y descripción
   const linkRef = useRef(null)
   const linkDesc = useRef(null)
@@ -24,6 +27,10 @@ export default function CustomLink ({ data, className, desktopName }) {
   const setActiveElement = useFormsStore(state => state.setActiveElement)
   const pastedLinkId = useLinksStore(state => state.pastedLinkId)
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
+  const faviconChangerVisible = useGlobalStore(state => state.faviconChangerVisible)
+  const setFaviconChangerVisible = useGlobalStore(state => state.setFaviconChangerVisible)
+  const setFaviconChangerVisiblePoints = useGlobalStore(state => state.setFaviconChangerVisiblePoints)
+  const setLinkToChangeFavicon = useGlobalStore(state => state.setLinkToChangeFavicon)
 
   useEffect(() => {
     if (columnSelectModeId.includes(link.categoryId)) {
@@ -68,6 +75,21 @@ export default function CustomLink ({ data, className, desktopName }) {
       }
     }
   }
+  const handleShowFaviconChanger = (e) => {
+    e.stopPropagation()
+    setFaviconChangerVisiblePoints({ x: e.pageX, y: e.pageY })
+    // Aquí se abriría el selector de favicon
+    setLocalFaviconVisible(!localFaviconVisible)
+    setLinkToChangeFavicon(link)
+  }
+  // Sincronizar estado local con global, ya que se actualiza al clicar fuera y provocaba inconsistencias
+  useEffect(() => {
+    setFaviconChangerVisible(localFaviconVisible)
+  }, [localFaviconVisible])
+
+  useEffect(() => {
+    setLocalFaviconVisible(faviconChangerVisible)
+  }, [faviconChangerVisible])
 
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
@@ -120,6 +142,7 @@ export default function CustomLink ({ data, className, desktopName }) {
           data-order={link.order}
           onContextMenu={(e) => handleContextMenu(e)}
         >
+          <img src={link.imgUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
           <a
             ref={linkRef}
             href={link.url}
@@ -130,7 +153,6 @@ export default function CustomLink ({ data, className, desktopName }) {
             {
               linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
             }
-            <img src={link.imgUrl} alt={`favicon of ${link.name}`} />
             <span>{link.name}</span>
           </a>
           {
@@ -140,11 +162,11 @@ export default function CustomLink ({ data, className, desktopName }) {
                   <button className='buttonIcon' onClick={handleHeightChange}>
                     <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
                   </button>
-                  <button className='buttonIcon'>
+                  {/* <button className='buttonIcon'>
                     <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
                       <MaximizeIcon className='uiIcon_small'/>
                     </Link>
-                  </button>
+                  </button> */}
                 </div>
                 <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>
               </>
@@ -165,3 +187,5 @@ export default function CustomLink ({ data, className, desktopName }) {
         </div>
   )
 }
+
+export default React.memo(CustomLink)

@@ -353,6 +353,12 @@ ul {
   list-style-type: none;
 }
 
+/* .flex {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+} */
+
 button,
 .button {
   display: flex;
@@ -364,6 +370,11 @@ button,
   color: var(--text-color-inverse);
   background-color: var(--btn-bg-color);
   border-radius: var(--button-radius);
+}
+
+.button_small {
+  padding: 4px 12px;
+  font-size: .75rem;
 }
 
 button:disabled {

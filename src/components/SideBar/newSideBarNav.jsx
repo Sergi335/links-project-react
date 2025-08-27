@@ -415,7 +415,7 @@ const MultiLevelDragDrop = () => {
   const renderItem = (item) => {
     const isDragOver = dragOverItem?.id === item._id
     const className = `${isDragOver && dragOverItem.position === 'before' ? styles.drag_to_top : ''} ${isDragOver && dragOverItem.position === 'after' ? styles.drag_to_bottom : ''} ${isDragOver && dragOverItem.position === 'inside' ? styles.drag_over : ''}`
-    const firstColumnLink = globalLinks.find(link => link.categoryId === item._id && link.order === 0)
+    const firstColumnLink = globalLinks.filter(link => link.categoryId === item._id).toSorted((a, b) => a.order - b.order)[0]
 
     return (
       <li key={item._id} data-order={item.order} className={className} data-id={item._id} data-level={item.level}>

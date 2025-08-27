@@ -1,5 +1,6 @@
 import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
@@ -27,6 +28,8 @@ export default function Columns ({
   const { desktopName } = useParams()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
+  const [columnsId, setColumnsId] = useState([])
+  const [filteredColumns, setFilteredColumns] = useState([])
 
   // Get the appropriate drag items hook based on context
   const dragHookProps = context === 'single'
@@ -44,16 +47,19 @@ export default function Columns ({
     })
   )
 
-  // Get column IDs for DND
-  const columnsId = desktopColumns?.map((col) => col._id)
+  useEffect(() => {
+    // Get column IDs for DND
+    const columnsId = desktopColumns?.map((col) => col?._id)
+    setColumnsId(columnsId)
+    // Filter columns based on context
+    const choosenColumns = context === 'single'
+      ? desktopColumns?.filter(columna => columna?.slug === slug)
+      : desktopColumns
+    setFilteredColumns(choosenColumns)
+  }, [desktopColumns, context, slug])
 
   // Choose the appropriate column component
   const ColumnComponent = context === 'single' ? SingleColumn : Columna
-
-  // Filter columns based on context
-  const filteredColumns = context === 'single'
-    ? desktopColumns?.filter(columna => columna.slug === slug)
-    : desktopColumns
 
   // Content wrapper style
   const contentStyle = context === 'single'
@@ -80,8 +86,8 @@ export default function Columns ({
   }
 
   return (
-    <div id={context === 'single' ? 'spMainContentWrapper' : 'mainContentWrapper'} className={wrapperClass}>
-      <div id='maincontent' className={contentClass} style={contentStyle}>
+    <>
+
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -167,7 +173,6 @@ export default function Columns ({
             document.body
           )}
         </DndContext>
-      </div>
-    </div>
+      </>
   )
 }

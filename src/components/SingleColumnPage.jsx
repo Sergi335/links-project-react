@@ -9,7 +9,7 @@ import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
-import styles from './ListOfLinks.module.css'
+import styles from './SingleColumnPage.module.css'
 export default function SingleColumnPage () {
   // DesktopName es el parentSlug
   const { slug, desktopName, id } = useParams()
@@ -30,7 +30,8 @@ export default function SingleColumnPage () {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   // const desktopParent = globalColumns?.find(column => column.slug === desktopName)?._id
   // //console.log('🚀 ~ SingleColumnPage ~ desktopParent:', desktopParent)
-  const desktopColumns = globalColumns?.filter(column => column.slug === slug)
+  const desktopColumns = globalColumns?.find(column => column.slug === slug)
+  // console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
   // console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
 
@@ -50,33 +51,28 @@ export default function SingleColumnPage () {
   //     }
   //   })
   // )
+
   useEffect(() => {
-    if (desktopName) {
-      let dataFinal = []
-      desktopColumns.forEach((column) => {
-        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
-      })
-      setNavigationLinks(dataFinal)
+    if (desktopName !== '' && desktopName !== undefined) {
+      const navlinks = globalLinks.filter(link => link.categoryId === desktopColumns._id).toSorted((a, b) => (a.orden - b.orden))
+      setNavigationLinks(navlinks)
     }
-  }, [desktopName, globalColumns])
+  }, [desktopName, globalColumns, slug, globalLinks])
+
   const getLinksIds = useCallback((columna) => {
     return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
   }, [desktopLinks])
 
   return (
-    <main className={styles.list_of_links}>
+    <main className={styles.single_column_page}>
       {
         globalLoading
-          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.sp_lol_content}>
-              {
-                numberOfLoaders.map((item, index) => (
+          ? numberOfLoaders.map((item, index) => (
                   <ColumnsLoader key={index} />
-                ))
-              }
-            </div></div>
+          ))
           : (
             <Columns
-              desktopColumns={desktopColumns}
+              desktopColumns={[desktopColumns]}
               desktopLinks={desktopLinks}
               columnLoaderTarget={columnLoaderTarget}
               linkLoader={linkLoader}

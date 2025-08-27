@@ -72,10 +72,11 @@
 
   & img {
     width: 16px;
-    margin-left: 10px;
+    margin-inline: 10px;
     transition: margin .3s ease-in-out;
     border-radius: 3px;
     aspect-ratio: 1/1;
+    cursor: pointer;
   }
 
   /*Debe ser n+9 al principio para evitar el shift y al pasar 1s añadir n+10*/
@@ -108,17 +109,21 @@
     }
   }
 }
+
 .animated_paste {
   position: relative;
   background-color: var(--color-primary);
   border-radius: var(--button-radius);
 }
+
 @property --angle {
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
 }
-.animated_paste::after, .animated_paste::before {
+
+.animated_paste::after,
+.animated_paste::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -133,14 +138,17 @@
   box-sizing: content-box;
   animation: 3s spin linear infinite;
 }
+
 @keyframes spin {
   from {
     --angle: 0deg;
   }
+
   to {
     --angle: 360deg;
   }
 }
+
 .link::before {
   filter: blur(1.5rem);
   opacity: .5;

@@ -44,7 +44,7 @@ export default function ToolBar () {
       return
     }
     const { data } = response
-    //console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
+    // console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
     setGlobalColumns((() => { return [...globalColumns, ...data] })())
     setNewColumnId(data[0]._id) // Update newColumnId
     // navigate(`/desktop/${desktop.name}/#${column[0]._id}`)

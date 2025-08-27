@@ -14,7 +14,7 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
 
   const handleDeleteImage = (event) => {
-    //console.log(event.currentTarget.id)
+    // console.log(event.currentTarget.id)
     const element = document.getElementById(event.currentTarget.id).parentNode.childNodes[0]
     // LLamar a confirmación mostrar estado glob
     setDeleteConfFormVisible(true)
@@ -52,16 +52,12 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
   )
 }
 export default function LinkDetailsGallery ({ data }) {
-  //console.log('🚀 ~ LinkDetailsGallery ~ data:', data)
+  // console.log('🚀 ~ LinkDetailsGallery ~ data:', data?.images.length)
   return (
-    <div className={styles.imageGalleryContainer} style={{ backgroundImage: data?.images.length ? '' : 'var(--placeholderImg)' }}>
-    {data?.images.length
-      ? (
-
+    data?.images.length > 0 && (
+      <div className={styles.imageGalleryContainer}>
         <ResponsiveColumnsMasonry className={styles.imageGallery} images={data?.images} linkId={data?._id} />
-
-        )
-      : null}
-</div>
+      </div>
+    )
   )
 }

@@ -34,6 +34,18 @@ export const useGlobalStore = create(
       globalArticles: null,
       setGlobalArticles: (globalArticles) => {
         set({ globalArticles })
+      },
+      linkToChangeFavicon: null,
+      setLinkToChangeFavicon: (linkToChangeFavicon) => {
+        set({ linkToChangeFavicon })
+      },
+      faviconChangerVisible: false,
+      setFaviconChangerVisible: (faviconChangerVisible) => {
+        set({ faviconChangerVisible })
+      },
+      faviconChangerVisiblePoints: { x: 0, y: 0 },
+      setFaviconChangerVisiblePoints: (faviconChangerVisiblePoints) => {
+        set({ faviconChangerVisiblePoints })
       }
     }
   }

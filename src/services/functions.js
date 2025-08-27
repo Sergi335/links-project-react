@@ -211,6 +211,12 @@ export function keepServerAwake (apiUrl, intervalMinutes = 14) {
   wakeUp()
   return setInterval(wakeUp, intervalMinutes * 60 * 1000)
 }
+export function getFileNameFromUrl (url) {
+  const decodedUrl = decodeURIComponent(url)
+  // Busca el último segmento después de la última barra
+  const match = decodedUrl.match(/\/(\d+-\d+\.(png|jpg|jpeg|svg|gif|webp))(\?|$)/i)
+  return match ? match[1] : null
+}
 // function convertHtmlEntityToEmoji (htmlEntity) {
 //   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
 //   const codePoint = parseInt(htmlEntity.slice(3, -1), 16)

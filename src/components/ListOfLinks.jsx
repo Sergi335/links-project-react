@@ -7,7 +7,7 @@ import { usePreferencesStore } from '../store/preferences'
 import Columns from './Columns'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
-import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
+import FaviconSelector from './FaviconSelector'
 import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
@@ -47,35 +47,35 @@ export default function ListOfLinks () {
 
   return (
     <main className={styles.list_of_links}>
-      <DesktopNameDisplay numberOfLinks={links.length} />
-      {
-        loading
-          ? <div className={styles.lol_content_wrapper}><div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
-            {
-              numberOfColumnLoaders.map((item, index) => (
-                <ColumnsLoader key={index} />
+      <div className={styles.lol_content_wrapper}>
+          <DesktopNameDisplay numberOfLinks={links.length} />
+        <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
+          {
+            loading
+              ? numberOfColumnLoaders.map((item, index) => (
+                    <ColumnsLoader key={index} />
               ))
-            }
-          </div>
-          </div>
-          : (
-            <Columns
-              desktopColumns={desktopColumns}
-              desktopLinks={links}
-              getLinksIds={getLinksIds}
-              linkLoader={linkLoader}
-              columnLoaderTarget={columnLoaderTarget}
-              numberOfLinkLoaders={numberOfLinkLoaders}
-              context="multi"
-              styleOfColumns={styleOfColumns}
-              categories={categories}
-              getFirstColumnLink={getFirstColumnLink}
-            />
-            )
-      }
-      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
-      <FormsContainer />
-      <DeleteColConfirmForm/>
+
+              : (
+                <Columns
+                  desktopColumns={desktopColumns}
+                  desktopLinks={links}
+                  getLinksIds={getLinksIds}
+                  linkLoader={linkLoader}
+                  columnLoaderTarget={columnLoaderTarget}
+                  numberOfLinkLoaders={numberOfLinkLoaders}
+                  context="multi"
+                  styleOfColumns={styleOfColumns}
+                  categories={categories}
+                  getFirstColumnLink={getFirstColumnLink}
+                />
+                )
+          }
+          <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
+          <FormsContainer />
+          <FaviconSelector />
+        </div>
+      </div>
     </main>
   )
 }
