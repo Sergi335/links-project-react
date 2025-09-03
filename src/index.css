@@ -184,6 +184,10 @@ body {
   }
 }
 
+.yoopta-block-action-buttons svg {
+  color: var(--text-color-primary);
+}
+
 /* Bloque Header */
 header.main_header {
   grid-area: header;

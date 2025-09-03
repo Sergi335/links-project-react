@@ -1,0 +1,29 @@
+.link_details_tabs_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.link_details_tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em;
+}
+
+.link_details_tab {
+    padding: 0.5rem 1rem;
+    border-bottom: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-color-primary);
+    flex-grow: 1;
+}
+
+.link_details_tab.active {
+    background-color: black;
+}
+
+.link_details_content {
+    padding: 1rem;
+    border: var(--firstBorder);
+    border-radius: 4px;
+}

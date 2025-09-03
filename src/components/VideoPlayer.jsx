@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { checkUrlMatch } from '../services/functions'
+import styles from './VideoPlayer.module.css'
 
 export default function VideoPlayer ({ src, width, height }) {
   console.log('🚀 ~ VideoPlayer ~ src:', src)
@@ -13,7 +14,7 @@ export default function VideoPlayer ({ src, width, height }) {
   return (
     <>
       {
-        isVideo && <iframe src={checkUrlMatch(src)} width={width} height={height}></iframe>
+        isVideo && <iframe className={styles.video_player_iframe} src={checkUrlMatch(src)} width={width} height={height}></iframe>
       }
     </>
   )

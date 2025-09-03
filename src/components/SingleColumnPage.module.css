@@ -2,3 +2,10 @@
     display: flex;
     padding: 16px;
 }
+
+.single_column_grid {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    gap: 16px;
+    width: 100%;
+}

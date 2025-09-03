@@ -1,0 +1,6 @@
+.editor_container {
+    padding: 32px;
+    background-color: var(--color-secondary);
+    border: 1px dashed var(--firstBorderColor);
+
+}

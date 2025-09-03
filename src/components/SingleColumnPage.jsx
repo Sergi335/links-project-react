@@ -65,25 +65,27 @@ export default function SingleColumnPage () {
 
   return (
     <main className={styles.single_column_page}>
-      {
-        globalLoading
-          ? numberOfLoaders.map((item, index) => (
-                  <ColumnsLoader key={index} />
-          ))
-          : (
-            <Columns
-              desktopColumns={[desktopColumns]}
-              desktopLinks={desktopLinks}
-              columnLoaderTarget={columnLoaderTarget}
-              linkLoader={linkLoader}
-              numberOfLinkLoaders={numberOfLinkLoaders}
-              getLinksIds={getLinksIds}
-              context="single"
-              slug={slug}
-            />
-            )
-          }
-      <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
+      <div className={styles.single_column_grid}>
+        {
+          globalLoading
+            ? numberOfLoaders.map((item, index) => (
+                    <ColumnsLoader key={index} />
+            ))
+            : (
+              <Columns
+                desktopColumns={[desktopColumns]}
+                desktopLinks={desktopLinks}
+                columnLoaderTarget={columnLoaderTarget}
+                linkLoader={linkLoader}
+                numberOfLinkLoaders={numberOfLinkLoaders}
+                getLinksIds={getLinksIds}
+                context="single"
+                slug={slug}
+              />
+              )
+            }
+        <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
+      </div>
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
       <FormsContainer />
     </main>

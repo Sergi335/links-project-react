@@ -65,7 +65,7 @@
 } */
 
 .scPage.column_wrapper {
-    width: 33%;
+    overflow: hidden;
 }
 
 .selectMode .column h2 {
