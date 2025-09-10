@@ -41,7 +41,7 @@ export default function SingleColumnPage () {
   }, [globalLinks])
   useEffect(() => {
     setFirstColumnLink(desktopLinks.find(link => link._id === id))
-  }, [id, globalColumns])
+  }, [id, globalColumns, globalLinks])
 
   // DND
   // const sensors = useSensors(

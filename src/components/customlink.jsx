@@ -176,8 +176,8 @@ const CustomLink = ({ data, className, desktopName }) => {
           {
             className === 'searchResult' && (
               <div className={styles.additionalInfo}>
-                <span>Escritorio: {link.escritorio}</span>
-                <span>Panel: {link.panel}</span>
+                {/* <span>Escritorio: {link.escritorio}</span> crear función que devuelva la ruta completa desde la categoria superior pasando por todas las intermedias */}
+                <span>Ruta: {link.categoryChain}</span>
                 {
                   link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
                 }

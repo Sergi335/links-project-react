@@ -18,6 +18,10 @@ import Table from '@yoopta/table'
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar'
 import Video from '@yoopta/video'
 import { useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
+import { updateLink } from '../../services/dbQueries'
+import { handleResponseErrors } from '../../services/functions'
+import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetailsNotes.module.css'
 
 const TOOLS = {
@@ -37,11 +41,32 @@ const TOOLS = {
 const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight]
 const plugins = [Paragraph, Blockquote, Table, Divider, Accordion, Code, Embed, Image, Link, File, Callout, Video]
 
-export default function Editor () {
+export default function Editor ({ data }) {
   const editor = useMemo(() => createYooptaEditor(), [])
-  const [value, setValue] = useState()
+  const [value, setValue] = useState(data.notes || {})
+  // console.log('🚀 ~ Editor ~ value:', value)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const onChange = (value, options) => {
     setValue(value)
+  }
+  const handleSaveNotes = async () => {
+    const previousState = [...globalLinks]
+    const optimisticState = [...globalLinks]
+    const elementIndex = optimisticState.findIndex(element => element._id === data._id)
+    if (elementIndex !== -1) {
+      const currentLink = optimisticState[elementIndex]
+      optimisticState[elementIndex] = { ...currentLink, notes: value }
+      setGlobalLinks(optimisticState)
+    }
+    const response = await updateLink({ items: [{ id: data._id, notes: value }] })
+    const { hasError, message } = handleResponseErrors(response)
+
+    if (hasError) {
+      console.log('revertimos')
+      setGlobalLinks(previousState)
+      toast.error(message)
+    }
   }
 
   return (
@@ -57,6 +82,7 @@ export default function Editor () {
         marks={MARKS}
         width="100%"
       />
+      <button onClick={handleSaveNotes}>Save</button>
     </div>
   )
 }

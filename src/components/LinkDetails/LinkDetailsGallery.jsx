@@ -2,6 +2,9 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { fetchImage } from '../../services/dbQueries'
+import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import DeleteImageConfirmForm from '../Forms/DeleteImageConfirmForm'
 import ImageLoader from './ImageLoader'
@@ -21,6 +24,45 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
     // establecer el id global para acceder desde formscontainer
     setUrl(element.src)
     // actualizar estado
+  }
+  const handlePasteImage = () => {
+    const pasteLoading = toast.loading('Subiendo archivo ...')
+    navigator.clipboard.read().then(clipboardItems => {
+      let foundImage = false
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          if (type.startsWith('image/')) {
+            foundImage = true
+            // es una imagen
+            clipboardItem.getType(type).then(async blob => {
+              // TODO a constante limitar a 10MB el tamaño de la imagen subida
+              if (blob.size > 1e+7) {
+                toast.update(pasteLoading, { render: 'Imagen muy grande', type: 'error', isLoading: false, autoClose: 3000 })
+                return
+              }
+              const imageUrl = URL.createObjectURL(blob)
+              const elementIndex = globalLinks.findIndex(link => link._id === linkId)
+              const newState = [...globalLinks]
+              const response = await fetchImage({ imageUrl, linkId })
+
+              const { hasError, message } = handleResponseErrors(response)
+
+              if (hasError) {
+                // console.log(message)
+                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+              } else {
+                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
+                setGlobalLinks(newState)
+                toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
+              }
+            })
+          }
+        }
+      }
+      if (!foundImage) {
+        toast.update(pasteLoading, { render: 'No hay imagen en el portapapeles', type: 'error', isLoading: false, autoClose: 3000 })
+      }
+    })
   }
   useEffect(() => {
     let lightbox = new PhotoSwipeLightbox({
@@ -48,6 +90,7 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
           </div>
           <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={globalLinks} setLinks={setGlobalLinks} linkId={linkId} />
         </OverlayScrollbarsComponent>
+        <button id='pasteImageButton' className={styles.pasteImageButton} onClick={handlePasteImage}>Pegar Imagen</button>
       </>
   )
 }
