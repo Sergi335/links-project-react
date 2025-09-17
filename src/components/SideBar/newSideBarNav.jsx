@@ -1,12 +1,42 @@
 import { useOverlayScrollbars } from 'overlayscrollbars-react'
 import { useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useStyles } from '../../hooks/useStyles'
 import { updateDbAfterDrag } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
 import { buildTree, flattenDesktop, updateNodeProperties } from '../../utils/dragDropUtils'
 import { ArrowDown } from '../Icons/icons'
 import styles from './SideBar.module.css'
+
+function NavLinkIgnoraId ({ to, children, viewTransition, draggable, onDragStart, onDragOver, onDragLeave, onDrop }) {
+  const location = useLocation()
+
+  const currentSegments = location.pathname.split('/').filter(Boolean)
+  const targetSegments = to.split('/').filter(Boolean)
+
+  let isActive = false
+
+  if (targetSegments.length > 0) {
+    // Si el último segmento del target parece un ID (ej: 24 caracteres hex)
+    const looksLikeId = /^[a-f0-9]{8,}$/i.test(targetSegments.at(-1))
+
+    if (looksLikeId) {
+      // Comparar todo excepto el último segmento
+      isActive =
+        currentSegments.slice(0, -1).join('/') ===
+        targetSegments.slice(0, -1).join('/')
+    } else {
+      // Comparar la ruta completa
+      isActive = currentSegments.join('/') === targetSegments.join('/')
+    }
+  }
+
+  return (
+    <NavLink to={to} className={isActive ? `${styles.active}` : ''} viewTransition={viewTransition} draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
+      {children}
+    </NavLink>
+  )
+}
 
 const MultiLevelDragDrop = () => {
   const [items, setItems] = useState([])
@@ -18,6 +48,7 @@ const MultiLevelDragDrop = () => {
   const { theme } = useStyles()
   const [initialize] = useOverlayScrollbars({ options: { scrollbars: { theme: `os-theme-${theme}`, autoHide: 'true' } } })
   const listRef = useRef(null)
+  // const { desktopName, slug } = useParams()
 
   // 🔧 Función para extraer el estado expanded del árbol actual
   const getExpandedState = (items) => {
@@ -419,10 +450,11 @@ const MultiLevelDragDrop = () => {
 
     return (
       <li key={item._id} data-order={item.order} className={className} data-id={item._id} data-level={item.level}>
-        <NavLink
+        <NavLinkIgnoraId
             // to={`${rootPath}${basePath}/${item.slug}`}
             to={item.level === 0 ? `${rootPath}${basePath}/${item.slug}` : `${rootPath}${basePath}/${item.parentSlug}/${item.slug}/${firstColumnLink?._id}`}
-            className={({ isActive }) => isActive ? styles.active : ''}
+            // className={({ isActive }) => isActive ? styles.active : ''}
+            viewTransition
             draggable
             onDragStart={(e) => handleDragStart(e, item)}
             onDragOver={(e) => {
@@ -470,7 +502,7 @@ const MultiLevelDragDrop = () => {
                 )
               }
 
-        </NavLink>
+        </NavLinkIgnoraId>
         {item.expanded && item.children && (
           <ul>
             {item.children.map(child => renderItem(child))}

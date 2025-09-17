@@ -11,6 +11,7 @@ import linkStyles from './customlink.module.css'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 import SingleColumn from './SingleColumn'
+import SingleColumnLink from './SingleColumnLink'
 
 export default function Columns ({
   desktopColumns,
@@ -60,6 +61,7 @@ export default function Columns ({
 
   // Choose the appropriate column component
   const ColumnComponent = context === 'single' ? SingleColumn : Columna
+  const LinkComponent = context === 'single' ? SingleColumnLink : CustomLink
 
   // Content wrapper style
   const contentStyle = context === 'single'
@@ -112,7 +114,7 @@ export default function Columns ({
                     desktopLinks.map((link) =>
                       (context === 'single' ? link.categoryId === columna._id : link.categoryId === columna._id)
                         ? (
-                          <CustomLink
+                          <LinkComponent
                             key={link._id}
                             data={{ link }}
                             idpanel={columna._id}

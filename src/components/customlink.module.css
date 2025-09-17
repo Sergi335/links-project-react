@@ -1,8 +1,10 @@
 .link {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  flex-direction: column;
   border-left: 1px solid var(--firstBorderColor);
+  justify-content: center;
+  padding: 7px 0;
 
   .description {
     display: flex;
@@ -22,13 +24,23 @@
     }
 
     &.link_open {
-      height: auto;
+      height: 35px;
     }
 
     & span.fade {
       opacity: 1;
       transition: opacity 1s ease-in-out;
 
+    }
+  }
+
+  .link_wrapper {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+
+    & a {
+      width: 75%;
     }
   }
 

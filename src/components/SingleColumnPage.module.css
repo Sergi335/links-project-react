@@ -1,6 +1,6 @@
 .single_column_page {
     display: flex;
-    padding: 16px;
+    padding: 16px 0;
 }
 
 .single_column_grid {
@@ -8,4 +8,5 @@
     grid-template-columns: 25% 50% 25%;
     gap: 16px;
     width: 100%;
+    height: calc(100vh - 92px);
 }

@@ -20,6 +20,7 @@ const sections = [
 ]
 
 export default function LinkDetailsTabs ({ data }) {
+//   console.log('🚀 ~ LinkDetailsTabs ~ data:', data)
   const [activeSection, setActiveSection] = useState(sections[0].id)
 
   return (
@@ -57,7 +58,7 @@ export default function LinkDetailsTabs ({ data }) {
                 {
                     activeSection === 'article' && (
                         <div>
-                            <ArticleRenderer />
+                            <ArticleRenderer data={data} />
                         </div>
                     )
                 }

@@ -6,20 +6,30 @@ import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import styles from './article.module.css'
 
-const ArticleRenderer = () => {
+const ArticleRenderer = ({ data }) => {
+  // console.log('🚀 ~ ArticleRenderer ~ data:', data)
   const [article, setArticle] = useState(null)
+  // console.log('🚀 ~ ArticleRenderer ~ article:', article)
   const globalArticles = useGlobalStore(state => state.globalArticles)
   const { id } = useParams()
+  // console.log('🚀 ~ ArticleRenderer ~ id:', id)
 
   useEffect(() => {
-    setArticle(globalArticles)
+    // console.log('entramos al useEffect')
+    if (data?._id && data?._id === id) {
+      // console.log('entramos')
+
+      setArticle(data.extractedArticle)
+    } else {
+      setArticle(globalArticles)
+    }
     // if (article !== undefined) {
     //   //console.log('🚀 ~ ArticleRenderer ~ globalArticles:', JSON.parse(article?.content))
     // }
-  }, [globalArticles])
+  }, [globalArticles, data])
   // console.log('🚀 ~ ArticleRenderer ~ article:', article)
   if (!article) {
-    return <div className="article-loading">Cargando artículo...</div>
+    return <div className="article-loading">No hay artículo disponible.</div>
   }
 
   const handleUpdateLink = async () => {

@@ -25,45 +25,7 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
     setUrl(element.src)
     // actualizar estado
   }
-  const handlePasteImage = () => {
-    const pasteLoading = toast.loading('Subiendo archivo ...')
-    navigator.clipboard.read().then(clipboardItems => {
-      let foundImage = false
-      for (const clipboardItem of clipboardItems) {
-        for (const type of clipboardItem.types) {
-          if (type.startsWith('image/')) {
-            foundImage = true
-            // es una imagen
-            clipboardItem.getType(type).then(async blob => {
-              // TODO a constante limitar a 10MB el tamaño de la imagen subida
-              if (blob.size > 1e+7) {
-                toast.update(pasteLoading, { render: 'Imagen muy grande', type: 'error', isLoading: false, autoClose: 3000 })
-                return
-              }
-              const imageUrl = URL.createObjectURL(blob)
-              const elementIndex = globalLinks.findIndex(link => link._id === linkId)
-              const newState = [...globalLinks]
-              const response = await fetchImage({ imageUrl, linkId })
 
-              const { hasError, message } = handleResponseErrors(response)
-
-              if (hasError) {
-                // console.log(message)
-                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
-              } else {
-                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
-                setGlobalLinks(newState)
-                toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
-              }
-            })
-          }
-        }
-      }
-      if (!foundImage) {
-        toast.update(pasteLoading, { render: 'No hay imagen en el portapapeles', type: 'error', isLoading: false, autoClose: 3000 })
-      }
-    })
-  }
   useEffect(() => {
     let lightbox = new PhotoSwipeLightbox({
       gallery: '#gallery',
@@ -90,17 +52,61 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
           </div>
           <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={globalLinks} setLinks={setGlobalLinks} linkId={linkId} />
         </OverlayScrollbarsComponent>
-        <button id='pasteImageButton' className={styles.pasteImageButton} onClick={handlePasteImage}>Pegar Imagen</button>
       </>
   )
 }
 export default function LinkDetailsGallery ({ data }) {
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const handlePasteImage = () => {
+    const pasteLoading = toast.loading('Subiendo archivo ...')
+    navigator.clipboard.read().then(clipboardItems => {
+      let foundImage = false
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          if (type.startsWith('image/')) {
+            foundImage = true
+            // es una imagen
+            clipboardItem.getType(type).then(async blob => {
+              // TODO a constante limitar a 10MB el tamaño de la imagen subida
+              if (blob.size > 1e+7) {
+                toast.update(pasteLoading, { render: 'Imagen muy grande', type: 'error', isLoading: false, autoClose: 3000 })
+                return
+              }
+              const imageUrl = URL.createObjectURL(blob)
+              const elementIndex = globalLinks.findIndex(link => link._id === data._id)
+              const newState = [...globalLinks]
+              const response = await fetchImage({ imageUrl, linkId: data._id })
+
+              const { hasError, message } = handleResponseErrors(response)
+
+              if (hasError) {
+                // console.log(message)
+                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+              } else {
+                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
+                setGlobalLinks(newState)
+                toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
+              }
+            })
+          }
+        }
+      }
+      if (!foundImage) {
+        toast.update(pasteLoading, { render: 'No hay imagen en el portapapeles', type: 'error', isLoading: false, autoClose: 3000 })
+      }
+    })
+  }
   // console.log('🚀 ~ LinkDetailsGallery ~ data:', data?.images.length)
   return (
-    data?.images.length > 0 && (
-      <div className={styles.imageGalleryContainer}>
-        <ResponsiveColumnsMasonry className={styles.imageGallery} images={data?.images} linkId={data?._id} />
+    <div className={styles.imageGalleryContainer}>
+      {
+        data?.images.length > 0 && (
+            <ResponsiveColumnsMasonry className={styles.imageGallery} images={data?.images} linkId={data?._id} />
+        )
+
+        }
+        <button id='pasteImageButton' className={styles.pasteImageButton} onClick={handlePasteImage}>Pegar Imagen</button>
       </div>
-    )
   )
 }

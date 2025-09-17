@@ -1,14 +1,19 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import { ArrowDown } from './Icons/icons'
+import { ArrowDown, ExternalLink } from './Icons/icons'
 import styles from './customlink.module.css'
 
 const CustomLink = ({ data, className }) => {
+  const navigate = useNavigate()
+  const { slug, desktopName } = useParams()
+  // console.log('render')
+
   const link = data.link || data.activeLink
   const [linkSelectMode, setLinkSelectMode] = useState(false)
   const [localFaviconVisible, setLocalFaviconVisible] = useState(false)
@@ -73,12 +78,21 @@ const CustomLink = ({ data, className }) => {
       }
     }
   }
+  const handleSingleColumnContextClick = (e) => {
+    e.preventDefault()
+    const newUrl = `/app/${desktopName}/${slug}/${link._id}` // Ajusta si desktopName viene de otro lugar
+    navigate(newUrl, { replace: true }) // 'replace: true' reemplaza la entrada en el historial (opcional)
+  }
   const handleShowFaviconChanger = (e) => {
     e.stopPropagation()
     setFaviconChangerVisiblePoints({ x: e.pageX, y: e.pageY })
     // Aquí se abriría el selector de favicon
     setLocalFaviconVisible(!localFaviconVisible)
     setLinkToChangeFavicon(link)
+  }
+  const handleExternalLink = (e) => {
+    e.stopPropagation()
+    window.open(link.url, '_blank', 'noopener,noreferrer')
   }
   // Sincronizar estado local con global, ya que se actualiza al clicar fuera y provocaba inconsistencias
   useEffect(() => {
@@ -148,6 +162,7 @@ const CustomLink = ({ data, className }) => {
               target='_blank'
               rel='noreferrer'
               title={link.name}
+              onClick={(e) => handleSingleColumnContextClick(e)}
             >
               {
                 linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
@@ -160,6 +175,9 @@ const CustomLink = ({ data, className }) => {
                   <div className={styles.lcontrols}>
                     <button className='buttonIcon' onClick={handleHeightChange}>
                       <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
+                    </button>
+                    <button className='buttonIcon' onClick={handleExternalLink} title="Abrir enlace en una nueva pestaña">
+                      <ExternalLink className={'uiIcon_small'} />
                     </button>
                     {/* <button className='buttonIcon'>
                       <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>

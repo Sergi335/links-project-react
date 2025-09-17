@@ -214,7 +214,7 @@ const handleOptimizedUpdate = async (changedItems) => {
 
   const response = await updateCategory({ items: itemsArray })
 
-  if (response.status !== 'success') {
+  if (response.success !== true) {
     throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
   }
 

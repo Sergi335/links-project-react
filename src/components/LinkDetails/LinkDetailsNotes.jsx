@@ -17,7 +17,7 @@ import Paragraph from '@yoopta/paragraph'
 import Table from '@yoopta/table'
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar'
 import Video from '@yoopta/video'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
@@ -42,14 +42,22 @@ const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight]
 const plugins = [Paragraph, Blockquote, Table, Divider, Accordion, Code, Embed, Image, Link, File, Callout, Video]
 
 export default function Editor ({ data }) {
-  const editor = useMemo(() => createYooptaEditor(), [])
-  const [value, setValue] = useState(data.notes || {})
-  // console.log('🚀 ~ Editor ~ value:', value)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const onChange = (value, options) => {
+  const [value, setValue] = useState(data.notes || {})
+
+  useEffect(() => {
+    console.log('ha cambiado')
+
+    setValue(data.notes || {})
+  }, [data._id])
+
+  const editor = useMemo(() => createYooptaEditor(), [data._id])
+
+  const onChange = (value) => {
     setValue(value)
   }
+
   const handleSaveNotes = async () => {
     const previousState = [...globalLinks]
     const optimisticState = [...globalLinks]
@@ -72,9 +80,10 @@ export default function Editor ({ data }) {
   return (
     <div className={styles.editor_container}>
       <YooptaEditor
+        key={data._id}
         editor={editor}
         placeholder="Type text.."
-        value={value}
+        value={data.notes || {}}
         onChange={onChange}
         // here we go
         plugins={plugins}

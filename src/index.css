@@ -312,11 +312,13 @@ input:-webkit-autofill:focus {
 }
 
 a {
+  display: flex;
   font-weight: var(--linkFontWeight);
   color: var(--text-color-secondary);
   text-decoration: inherit;
   font-size: .875rem;
   transition: height .3s ease-in-out;
+  flex-grow: 1;
 
   & :hover {
     color: var(--text-color-primary);
@@ -331,10 +333,12 @@ span:hover svg {
 a.active,
 .link.active,
 .link.navlink_active {
-  /* background-color: var(--hover-color-primary); */
-  /* color: var(--accentColor); */
   border-left: 1px solid var(--accentColor);
 }
+
+/* .link.navlink_active>div:first-child {
+  border-left: 1px solid var(--accentColor);
+} */
 
 .selectMode .link img {
   margin-left: 0;
