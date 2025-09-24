@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ExtractArticleButton from '../ExtractArticleButton'
 import ArticleRenderer from '../Pages/article'
 import LinkDetailsGallery from './LinkDetailsGallery'
 import Editor from './LinkDetailsNotes'
@@ -58,6 +59,7 @@ export default function LinkDetailsTabs ({ data }) {
                 {
                     activeSection === 'article' && (
                         <div>
+                            {data.extractedArticle === undefined && <ExtractArticleButton linkId={data._id} />}
                             <ArticleRenderer data={data} />
                         </div>
                     )

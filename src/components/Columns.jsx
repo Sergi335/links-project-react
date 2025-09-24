@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom'
 import { Link, useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
 import Columna from './column'
-import ColumnsLoader from './ColumnsLoader'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
 import styles from './ListOfLinks.module.css'
@@ -81,7 +80,7 @@ export default function Columns ({
     return (
       <div className={wrapperClass}>
         <div className={contentClass} style={contentStyle}>
-          <ColumnsLoader />
+          <p>No hay Categorías, crea una</p>
         </div>
       </div>
     )
