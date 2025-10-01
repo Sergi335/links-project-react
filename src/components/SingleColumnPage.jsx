@@ -34,6 +34,7 @@ export default function SingleColumnPage () {
   // console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
   // console.log('🚀 ~ SingleColumnPage ~ desktopColumns:', desktopColumns)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
+  const tabsVisible = useGlobalStore(state => state.tabsVisible)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function SingleColumnPage () {
 
   return (
     <main className={styles.single_column_page}>
-      <div className={styles.single_column_grid}>
+      <div style={{ gridTemplateColumns: !tabsVisible ? '25% 44px 1fr' : '' }} className={styles.single_column_grid}>
         {
           globalLoading
             ? numberOfLoaders.map((item, index) => (

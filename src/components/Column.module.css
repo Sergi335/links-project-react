@@ -70,6 +70,7 @@
     --scrollbar-border-thickness: 0px;
     --scrollbar-border-radius: 12px;
     --scrollbar-height: 30px;
+    margin-right: 16px;
 }
 
 .scPage.column_wrapper::-webkit-scrollbar {

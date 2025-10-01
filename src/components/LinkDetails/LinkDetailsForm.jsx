@@ -14,7 +14,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
   const currentImageRef = useRef()
   const editNameInputRef = useRef()
   const editDescriptionInputRef = useRef()
-  const linkImgOptions = useRef()
+  // const linkImgOptions = useRef()
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   // useHideForms({ form: linkImgOptions.current, setFormVisible: setShowIcons })

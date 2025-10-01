@@ -552,6 +552,11 @@
   cursor: pointer;
 }
 
+.pasteImageButton {
+  max-width: fit-content;
+  margin-top: 16px;
+}
+
 .imgOptionsWrapper img:hover {
   background-color: var(--buttonHoverColor);
   border-radius: var(--button-radius);

@@ -99,14 +99,16 @@ export default function LinkDetailsGallery ({ data }) {
   }
   // console.log('🚀 ~ LinkDetailsGallery ~ data:', data?.images.length)
   return (
-    <div className={styles.imageGalleryContainer}>
+    <>
+    <div style={{ backgroundImage: data?.images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }} className={styles.imageGalleryContainer}>
       {
         data?.images.length > 0 && (
             <ResponsiveColumnsMasonry className={styles.imageGallery} images={data?.images} linkId={data?._id} />
         )
 
         }
-        <button id='pasteImageButton' className={styles.pasteImageButton} onClick={handlePasteImage}>Pegar Imagen</button>
       </div>
+        <button id='pasteImageButton' className={styles.pasteImageButton} onClick={handlePasteImage}>Pegar Imagen</button>
+      </>
   )
 }

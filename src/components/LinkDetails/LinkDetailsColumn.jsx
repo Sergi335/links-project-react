@@ -1,4 +1,4 @@
-import { PasteImageIcon } from '../Icons/icons'
+// import { PasteImageIcon } from '../Icons/icons'
 import VideoPlayer from '../VideoPlayer'
 import styles from './LinkDetails.module.css'
 import LinkDetailsForm from './LinkDetailsForm'
@@ -17,7 +17,7 @@ export default function LinkDetailsColumn ({ data, links, actualDesktop, slug })
         <div className={styles.link_details_content}>
           <LinkDetailsHeader data={data} context={'singlecol'} />
           <LinkDetailsForm data={data} />
-          <PasteImageIcon />
+          {/* <PasteImageIcon /> */}
           <LinkDetailsNav links={links} actualDesktop={actualDesktop} linkId={data?._id} context={'singlecol'} slug={slug} />
           <h3>Related Links</h3>
         </div>

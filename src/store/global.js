@@ -46,6 +46,10 @@ export const useGlobalStore = create(
       faviconChangerVisiblePoints: { x: 0, y: 0 },
       setFaviconChangerVisiblePoints: (faviconChangerVisiblePoints) => {
         set({ faviconChangerVisiblePoints })
+      },
+      tabsVisible: true,
+      setTabsVisible: (tabsVisible) => {
+        set({ tabsVisible })
       }
     }
   }

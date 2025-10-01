@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGlobalStore } from '../../store/global'
 import ExtractArticleButton from '../ExtractArticleButton'
 import ArticleRenderer from '../Pages/article'
 import LinkDetailsGallery from './LinkDetailsGallery'
@@ -23,12 +24,27 @@ const sections = [
 export default function LinkDetailsTabs ({ data }) {
 //   console.log('🚀 ~ LinkDetailsTabs ~ data:', data)
   const [activeSection, setActiveSection] = useState(sections[0].id)
+  const setTabsVisible = useGlobalStore(state => state.setTabsVisible)
+  const tabsVisible = useGlobalStore(state => state.tabsVisible)
+
+  const handleHideTabs = () => {
+    document.startViewTransition(() => {
+      setTabsVisible(!tabsVisible)
+    })
+  }
 
   return (
         <div className={styles.link_details_tabs_container}>
-            <div className={styles.link_details_tabs}>
+            <div>
+                <button onClick={handleHideTabs}>
+                    {'<-'}
+                </button>
+            </div>
+            <div>
+                <div className={styles.link_details_tabs}>
                 {
                     sections.map(section => (
+
                         <button
                             key={section.id}
                             className={`${activeSection === section.id ? styles.active : ''} ${styles.link_details_tab}`}
@@ -36,6 +52,7 @@ export default function LinkDetailsTabs ({ data }) {
                         >
                             {section.name}
                         </button>
+
                     ))
                 }
             </div>
@@ -43,7 +60,6 @@ export default function LinkDetailsTabs ({ data }) {
                 {
                     activeSection === 'images' && (
                         <div>
-                            <h2>Images</h2>
                             <LinkDetailsGallery data={data}/>
                         </div>
                     )
@@ -64,6 +80,7 @@ export default function LinkDetailsTabs ({ data }) {
                         </div>
                     )
                 }
+            </div>
             </div>
         </div>
   )

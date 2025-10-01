@@ -14,7 +14,7 @@ export default function VideoPlayer ({ src, width, height }) {
   return (
     <>
       {
-        isVideo && <iframe className={styles.video_player_iframe} src={checkUrlMatch(src)} width={width} height={height}></iframe>
+        isVideo && <iframe style={{ border: 'none' }} className={styles.video_player_iframe} src={checkUrlMatch(src)} width={width} height={height}></iframe>
       }
     </>
   )
