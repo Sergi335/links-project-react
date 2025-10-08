@@ -17,13 +17,25 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
   useEffect(() => {
     const baseurl = new URL(import.meta.env.VITE_CUSTOM_BASE_URL)
     const autoUrlHost = import.meta.env.VITE_AUTO_FAVICON_HOST
+
     if (linkToChangeFavicon?.imgUrl !== '' && linkToChangeFavicon?.imgUrl !== undefined) {
-      const url = new URL(linkToChangeFavicon.imgUrl)
-      if (url.host === baseurl.host || url.host === autoUrlHost) {
-        deleteButtonRef.current.disabled = true
+      const imgUrl = linkToChangeFavicon.imgUrl
+
+      // Verificar si es una URL absoluta (comienza con http:// o https://)
+      const isAbsoluteUrl = imgUrl.startsWith('http://') || imgUrl.startsWith('https://')
+
+      if (isAbsoluteUrl) {
+        const url = new URL(imgUrl)
+        if (url.host === baseurl.host || url.host === autoUrlHost) {
+          deleteButtonRef.current.disabled = true
+        } else {
+          deleteButtonRef.current.disabled = false
+        }
       } else {
-        deleteButtonRef.current.disabled = false
+      // Es una ruta relativa (ej: /img/icon.svg), imagen por defecto
+        deleteButtonRef.current.disabled = true
       }
+
       saveButtonRef.current.disabled = true
     }
   }, [globalLinks, linkToChangeFavicon])

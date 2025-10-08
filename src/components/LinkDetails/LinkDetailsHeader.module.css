@@ -3,21 +3,27 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    /* gap: 25px; */
+    gap: 8px;
     order: initial;
+    margin-bottom: 8px;
+    width: min(100%, 500px);
+    border: 1px solid var(--firstBorderColor);
+    padding: 8px;
 
     & p {
+        display: grid;
+        grid-template-columns: 80.34px auto;
         font-size: .813rem;
         margin: 0;
-        display: flex;
+        margin-block: 3px;
         gap: 5px;
     }
 
-    & p:nth-of-type(2) {
+    /* & p:nth-of-type(2) {
         margin-top: 5px;
         display: flex;
         align-items: center;
-    }
+    } */
 }
 
 .header a {
@@ -48,7 +54,7 @@
     vertical-align: middle;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 5px;
+    /* margin-left: 5px; */
 }
 
 .badgeDanger {
@@ -62,7 +68,7 @@
     vertical-align: middle;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 5px;
+    /* margin-left: 5px; */
 }
 
 @media (min-width: 1536px) {

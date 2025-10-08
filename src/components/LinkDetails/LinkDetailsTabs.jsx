@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useGlobalStore } from '../../store/global'
 import ExtractArticleButton from '../ExtractArticleButton'
 import ArticleRenderer from '../Pages/article'
 import LinkDetailsGallery from './LinkDetailsGallery'
@@ -24,23 +23,10 @@ const sections = [
 export default function LinkDetailsTabs ({ data }) {
 //   console.log('🚀 ~ LinkDetailsTabs ~ data:', data)
   const [activeSection, setActiveSection] = useState(sections[0].id)
-  const setTabsVisible = useGlobalStore(state => state.setTabsVisible)
-  const tabsVisible = useGlobalStore(state => state.tabsVisible)
-
-  const handleHideTabs = () => {
-    document.startViewTransition(() => {
-      setTabsVisible(!tabsVisible)
-    })
-  }
 
   return (
         <div className={styles.link_details_tabs_container}>
-            <div>
-                <button onClick={handleHideTabs}>
-                    {'<-'}
-                </button>
-            </div>
-            <div>
+
                 <div className={styles.link_details_tabs}>
                 {
                     sections.map(section => (
@@ -81,7 +67,7 @@ export default function LinkDetailsTabs ({ data }) {
                     )
                 }
             </div>
-            </div>
+
         </div>
   )
 }

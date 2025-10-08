@@ -355,6 +355,24 @@ export async function getBackgroundMiniatures () {
       return error
     })
 }
+export async function getLinkImages ({ linkId }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/storage/link/${linkId}/images`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    if (res.ok) {
+      const data = await res.json()
+      return data
+    } else {
+      const error = await res.json()
+      return error
+    }
+  } catch (error) {
+    return error
+  }
+}
+
 // LinkDetails
 export async function fetchImage ({ imageUrl, linkId }) {
   try {
@@ -382,10 +400,10 @@ export async function fetchImage ({ imageUrl, linkId }) {
   }
 }
 // DeleteImageConfirmForm
-export async function deleteImage ({ imageUrl, linkId }) {
+export async function deleteImage ({ imageKey, linkId }) {
   try {
     let body = {
-      image: imageUrl,
+      image: imageKey,
       id: linkId
     }
     body = JSON.stringify(body)

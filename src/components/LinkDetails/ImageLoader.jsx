@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { CloseIcon } from '../Icons/icons'
 import ImagesLoader from '../Loaders/ImagesLoader'
-export default function ImageLoader ({ src, alt, handleDeleteImage }) {
+export default function ImageLoader ({ src, alt, handleDeleteImage, imageKey }) {
   const [loading, setLoading] = useState(true)
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
@@ -41,7 +41,7 @@ export default function ImageLoader ({ src, alt, handleDeleteImage }) {
         style={{ width: '100%', height: '', opacity: !loading ? 1 : 0, transition: 'opacity .5s', objectFit: 'contain' }}
         onLoad={handleImageLoad}
       />
-      <span id={src.match(/(\d+-\d+)/)[1]} onClick={handleDeleteImage}><CloseIcon/></span>
+      <span id={imageKey} onClick={handleDeleteImage}><CloseIcon/></span>
       </a>
     </>
   )

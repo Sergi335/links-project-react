@@ -3,27 +3,19 @@ import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { fetchImage } from '../../services/dbQueries'
+import { fetchImage, getLinkImages } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useGlobalStore } from '../../store/global'
 import DeleteImageConfirmForm from '../Forms/DeleteImageConfirmForm'
 import ImageLoader from './ImageLoader'
 import styles from './LinkDetails.module.css'
 
-export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
+export function ResponsiveColumnsMasonry ({ images, setImages, linkId, className }) {
   const [deleteConfFormVisible, setDeleteConfFormVisible] = useState(false)
-  const [url, setUrl] = useState()
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const [imageKey, setImageKey] = useState()
 
   const handleDeleteImage = (event) => {
-    // console.log(event.currentTarget.id)
-    const element = document.getElementById(event.currentTarget.id).parentNode.childNodes[0]
-    // LLamar a confirmación mostrar estado glob
     setDeleteConfFormVisible(true)
-    // establecer el id global para acceder desde formscontainer
-    setUrl(element.src)
-    // actualizar estado
+    setImageKey(event.currentTarget.id)
   }
 
   useEffect(() => {
@@ -47,17 +39,26 @@ export function ResponsiveColumnsMasonry ({ images, linkId, className }) {
             className={className}
           >
             {images.map((item) => {
-              return <ImageLoader key={item} src={item} alt={'my picture'} handleDeleteImage={handleDeleteImage}/>
+              return <ImageLoader key={item.url} src={item.url} alt={'my picture'} imageKey={item.key} handleDeleteImage={handleDeleteImage}/>
             })}
           </div>
-          <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageUrl={url}links={globalLinks} setLinks={setGlobalLinks} linkId={linkId} />
+          <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageKey={imageKey} images={images} setImages={setImages} linkId={linkId} />
         </OverlayScrollbarsComponent>
       </>
   )
 }
 export default function LinkDetailsGallery ({ data }) {
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const [images, setImages] = useState([])
+
+  const getImages = async () => {
+    const response = await getLinkImages({ linkId: data?._id })
+    const { hasError, message } = handleResponseErrors(response)
+    if (!hasError) {
+      setImages(response.data.map(img => { return { url: img.url, key: img.key } }))
+    } else {
+      toast.error(message)
+    }
+  }
   const handlePasteImage = () => {
     const pasteLoading = toast.loading('Subiendo archivo ...')
     navigator.clipboard.read().then(clipboardItems => {
@@ -74,18 +75,16 @@ export default function LinkDetailsGallery ({ data }) {
                 return
               }
               const imageUrl = URL.createObjectURL(blob)
-              const elementIndex = globalLinks.findIndex(link => link._id === data._id)
-              const newState = [...globalLinks]
               const response = await fetchImage({ imageUrl, linkId: data._id })
 
               const { hasError, message } = handleResponseErrors(response)
 
               if (hasError) {
-                // console.log(message)
                 toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
               } else {
-                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
-                setGlobalLinks(newState)
+                const newState = [...images]
+                newState.push({ url: response.data.signedUrl, key: null })
+                setImages(newState)
                 toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
               }
             })
@@ -97,13 +96,17 @@ export default function LinkDetailsGallery ({ data }) {
       }
     })
   }
-  // console.log('🚀 ~ LinkDetailsGallery ~ data:', data?.images.length)
+  useEffect(() => {
+    if (!data?._id) return
+    getImages()
+  }, [data])
+
   return (
     <>
     <div style={{ backgroundImage: data?.images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }} className={styles.imageGalleryContainer}>
       {
         data?.images.length > 0 && (
-            <ResponsiveColumnsMasonry className={styles.imageGallery} images={data?.images} linkId={data?._id} />
+            <ResponsiveColumnsMasonry className={styles.imageGallery} images={images} setImages={setImages} linkId={data?._id} />
         )
 
         }

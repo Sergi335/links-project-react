@@ -3,6 +3,7 @@ import VideoPlayer from '../VideoPlayer'
 import styles from './LinkDetails.module.css'
 import LinkDetailsForm from './LinkDetailsForm'
 // import LinkDetailsGallery from './LinkDetailsGallery'
+
 import LinkDetailsHeader from './LinkDetailsHeader'
 import LinkDetailsNav from './LinkDetailsNav'
 import LinkDetailsTabs from './LinkDetailsTabs'
@@ -13,8 +14,9 @@ export default function LinkDetailsColumn ({ data, links, actualDesktop, slug })
       <LinkDetailsTabs data={data} />
       <div className={styles.link_details_media}>
         <VideoPlayer src={data?.url} />
+
         {/* <LinkDetailsGallery data={data} /> */}
-        <div className={styles.link_details_content}>
+        <div style={{ marginTop: '12px' }} className={styles.link_details_content}>
           <LinkDetailsHeader data={data} context={'singlecol'} />
           <LinkDetailsForm data={data} />
           {/* <PasteImageIcon /> */}

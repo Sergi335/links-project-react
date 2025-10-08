@@ -7,6 +7,7 @@ import { usePreferencesStore } from '../store/preferences'
 import Columns from './Columns'
 import ColumnsLoader from './ColumnsLoader'
 import CustomizeDesktopPanel from './CustomizeDesktopPanel'
+import FaviconSelector from './FaviconSelector'
 import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './SingleColumnPage.module.css'
@@ -66,7 +67,7 @@ export default function SingleColumnPage () {
 
   return (
     <main className={styles.single_column_page}>
-      <div style={{ gridTemplateColumns: !tabsVisible ? '25% 44px 1fr' : '' }} className={styles.single_column_grid}>
+      <div style={{ gridTemplateColumns: !tabsVisible ? '25% 0px 1fr' : '' }} className={styles.single_column_grid}>
         {
           globalLoading
             ? numberOfLoaders.map((item, index) => (
@@ -89,6 +90,7 @@ export default function SingleColumnPage () {
       </div>
       <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
       <FormsContainer />
+      <FaviconSelector />
     </main>
   )
 }

@@ -24,14 +24,14 @@ export default function LinkDetailsHeader ({ data, context }) {
   }, [data])
   return (
       <header className={styles.header}>
-        <h3>Detalles del Link</h3>
+        {/* <h3>Detalles del Link</h3> */}
           {
             context !== 'singlecol' && <a href={data?.url} target='_blank' rel="noreferrer">{data?.name}</a>
           }
           {
             context !== 'singlecol' && <p><strong>Panel:</strong> <span>{data?.panel}</span></p>
           }
-          <p><strong>Fecha de creación: </strong><span>{formatDate(data?.createdAt)}</span></p>
+          <p><strong>Creado: </strong><span>{formatDate(data?.createdAt)}</span></p>
           <p><strong>Activo:</strong> <span className={badgeClass}>{urlStatus || 'comprobando...' }</span></p>
         </header>
   )

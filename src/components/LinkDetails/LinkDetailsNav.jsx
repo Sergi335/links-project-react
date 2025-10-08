@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ArrowRight } from '../Icons/icons'
+import { ArrowUp } from '../Icons/icons'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
@@ -49,14 +49,14 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${prevId}`}>Prev<ArrowLeft/></Link>
-            : <a className={`${styles.details_nav_link_disabled} button button_small`}>Prev<ArrowLeft/></a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${prevId}`}><ArrowUp style={{ transform: 'rotate(270deg)' }} />Prev</Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}><ArrowUp style={{ transform: 'rotate(270deg)' }} />Prev</a>}
           {
             context !== 'singlecol' && <Link className={`${styles.details_nav_link_disabled} button button_small  `} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
           }
           {nextId
-            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${nextId}`}><ArrowRight/>Next</Link>
-            : <a className={`${styles.details_nav_link_disabled} button button_small`}><ArrowRight/>Next</a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${nextId}`}>Next<ArrowUp style={{ transform: 'rotate(90deg)' }} /></Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}>Next<ArrowUp style={{ transform: 'rotate(90deg)' }} /></a>}
       </div>
     </section>
   )

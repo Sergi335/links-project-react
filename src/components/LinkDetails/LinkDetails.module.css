@@ -181,7 +181,7 @@
 }
 
 .descriptionTextArea {
-  width: 37ch;
+  /* width: 37ch; */
   min-height: 75px;
   background-color: var(--inputBackgroundColor);
   border: var(--firstBorder);
@@ -484,20 +484,27 @@
   font-size: 13px;
   /* justify-content: center; */
   position: relative;
-  /* width: 50%; */
+  width: min(100%, 500px);
+  border: 1px solid var(--firstBorderColor);
+  padding: 8px;
 }
 
 .editFieldsColumn {
-  /* width: 50%; */
+  gap: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-end;
+  /* align-items: flex-end; */
+
+  &>div:first-of-type,
+  &>div:last-of-type {
+    grid-template-columns: 80.34px auto 75px;
+  }
 }
 
 .infoContainer p {
   /* margin: 6px; */
-  width: 40ch;
+  /* width: 40ch; */
   text-align: left;
   text-wrap: balance;
   display: flex;
@@ -507,7 +514,7 @@
 .iconImage {
   width: 21px;
   vertical-align: middle;
-  margin-left: 5px;
+  /* margin-left: 5px; */
   cursor: pointer;
 }
 
@@ -526,6 +533,7 @@
   /* right: 70px; */
   padding: 8px;
   max-width: 180px;
+  border: var(--firstBorder);
 }
 
 .imgOptionsWrapper {
@@ -591,21 +599,27 @@
   font-size: .75rem;
   padding: 2px 12px;
 } */
-/* .details_nav_link:nth-of-type(2) {
-  padding: 5px 12px;
-} */
+.details_nav_link:hover {
+  opacity: .8;
+}
+
 .details_nav_link_disabled {
   background-color: transparent;
   padding: 2px 12px;
   font-size: .75rem;
   border-radius: var(--button-radius);
   display: flex;
-  gap: 5px;
   align-items: center;
   justify-content: center;
   opacity: .5;
   cursor: not-allowed;
 
+}
+
+.details_nav_link_disabled:hover,
+.details_nav_link_disabled:hover svg {
+  opacity: .5;
+  cursor: not-allowed;
 }
 
 /* .details_nav_link:hover {
@@ -655,16 +669,25 @@
 
 }
 
+.link_details_media {
+  background-color: var(--color-primary);
+}
+
 .editBlock {
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
+  display: grid;
+  grid-template-columns: 80.34px auto 75px;
+  gap: 8px;
+  align-items: flex-start;
+  /* flex-direction: column; */
   /* width: 100%; */
 
   & span {
-    width: 40ch;
+    /*  width: 40ch; */
     text-align: left;
     margin-block: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   & p {
@@ -687,6 +710,22 @@
   & strong {
     cursor: pointer;
   }
+
+  & svg {
+    display: none;
+  }
+
+  &:hover svg {
+    display: inline;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.editButton {
+  background-color: transparent;
+  padding: 0;
+  margin-top: 3px;
 }
 
 .btntoggle {
@@ -1016,7 +1055,7 @@
   }
 
   .infoContainer {
-    margin-top: 16px;
+    /* margin-top: 16px; */
     align-items: center;
     /* justify-content: center; */
   }
