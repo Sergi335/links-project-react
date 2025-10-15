@@ -2,6 +2,7 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect, useState } from 'react'
+import Masonry from 'react-layout-masonry'
 import { toast } from 'react-toastify'
 import { fetchImage, getLinkImages } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
@@ -32,16 +33,21 @@ export function ResponsiveColumnsMasonry ({ images, setImages, linkId, className
   })
   return (
       <>
-        <OverlayScrollbarsComponent style={{ flexGrow: '1', marginBottom: '8px' }} defer>
-          <div
+        <OverlayScrollbarsComponent
+          style={{ flexGrow: '1', marginBottom: '8px' }}
+          defer
+          options={{ scrollbars: { autoHide: true } }}
+        >
+          <Masonry
             id='gallery'
-            style={{ flexGrow: '1', columnCount: '4', columnGap: '5px', padding: '5px' }}
+            columns={{ 640: 1, 768: 2, 1024: 3, 1280: 4 }}
+            gap={16}
             className={className}
           >
             {images.map((item) => {
               return <ImageLoader key={item.url} src={item.url} alt={'my picture'} imageKey={item.key} handleDeleteImage={handleDeleteImage}/>
             })}
-          </div>
+          </Masonry>
           <DeleteImageConfirmForm visible={deleteConfFormVisible} setVisible={setDeleteConfFormVisible} itemType='imagen' imageKey={imageKey} images={images} setImages={setImages} linkId={linkId} />
         </OverlayScrollbarsComponent>
       </>

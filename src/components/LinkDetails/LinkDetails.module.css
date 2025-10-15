@@ -211,6 +211,9 @@
   display: flex;
   border-radius: var(--button-radius);
   margin-bottom: 5px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .imageGallery img+span {

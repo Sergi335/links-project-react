@@ -53,7 +53,6 @@ export default function LinkDetailsTabs ({ data }) {
                 {
                     activeSection === 'notes' && (
                         <div>
-                            <h2>Notes</h2>
                             <Editor data={data} />
                         </div>
                     )

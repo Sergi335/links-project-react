@@ -74,24 +74,28 @@ export default function Editor ({ data }) {
       console.log('revertimos')
       setGlobalLinks(previousState)
       toast.error(message)
+    } else {
+      toast.success('Notes updated successfully')
     }
   }
 
   return (
-    <div className={styles.editor_container}>
-      <YooptaEditor
-        key={data._id}
-        editor={editor}
-        placeholder="Type text.."
-        value={data.notes || {}}
-        onChange={onChange}
-        // here we go
-        plugins={plugins}
-        tools={TOOLS}
-        marks={MARKS}
-        width="100%"
-      />
-      <button onClick={handleSaveNotes}>Save</button>
-    </div>
+    <>
+      <div className={styles.editor_container}>
+        <YooptaEditor
+          key={data._id}
+          editor={editor}
+          placeholder="Type text.."
+          value={data.notes || {}}
+          onChange={onChange}
+          // here we go
+          plugins={plugins}
+          tools={TOOLS}
+          marks={MARKS}
+          width="100%"
+        />
+      </div>
+      <button style={{ marginTop: '16px', maxWidth: 'fit-content' }} onClick={handleSaveNotes}>Save</button>
+    </>
   )
 }
