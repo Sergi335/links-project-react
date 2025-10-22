@@ -36,7 +36,7 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
         deleteButtonRef.current.disabled = true
       }
 
-      saveButtonRef.current.disabled = true
+      // saveButtonRef.current.disabled = true
     }
   }, [globalLinks, linkToChangeFavicon])
 
