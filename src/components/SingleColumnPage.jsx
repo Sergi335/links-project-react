@@ -16,6 +16,7 @@ export default function SingleColumnPage () {
   const { slug, desktopName, id } = useParams()
   const [navigationLinks, setNavigationLinks] = useState([])
   const [firstColumnLink, setFirstColumnLink] = useState(null)
+  console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
   // console.log('🚀 ~ SingleColumnPage ~ firstColumnLink:', firstColumnLink)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)

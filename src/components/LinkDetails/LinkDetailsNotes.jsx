@@ -48,6 +48,8 @@ export default function Editor ({ data }) {
 
   useEffect(() => {
     console.log('ha cambiado')
+    console.log('🚀 ~ Editor ~ value:', value)
+    console.log('🚀 ~ Editor ~ value:', data.notes ? Object.keys(data.notes) : [])
 
     setValue(data.notes || {})
   }, [data._id])
