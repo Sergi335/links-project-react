@@ -7,11 +7,11 @@ import Divider from '@yoopta/divider'
 import YooptaEditor, { createYooptaEditor } from '@yoopta/editor'
 import Embed from '@yoopta/embed'
 import File from '@yoopta/file'
-// import Headings from '@yoopta/headings'
+import { HeadingOne, HeadingThree, HeadingTwo } from '@yoopta/headings'
 import Image from '@yoopta/image'
 import Link from '@yoopta/link'
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool'
-// import LISTS from '@yoopta/lists'
+import { BulletedList, NumberedList, TodoList } from '@yoopta/lists'
 import { Bold, CodeMark, Highlight, Italic, Strike, Underline } from '@yoopta/marks'
 import Paragraph from '@yoopta/paragraph'
 import Table from '@yoopta/table'
@@ -19,11 +19,47 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar'
 import Video from '@yoopta/video'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { updateLink } from '../../services/dbQueries'
+import { fetchImage, updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetailsNotes.module.css'
 
+const plugins = [
+  Paragraph,
+  Blockquote,
+  Table,
+  Divider,
+  Accordion,
+  Code,
+  Embed,
+  Image.extend({
+    options: {
+      async onUpload (file) {
+        const imageUrl = URL.createObjectURL(file)
+        const data = await fetchImage({ imageUrl, linkId: '6892646fea856ea73ab59820' })
+
+        return {
+          src: data.signedUrl,
+          alt: 'cloudinary',
+          sizes: {
+            width: data.width,
+            height: data.height
+          }
+        }
+      }
+    }
+  }),
+  Link,
+  File,
+  Callout,
+  Video,
+  HeadingOne,
+  HeadingThree,
+  HeadingTwo,
+  NumberedList,
+  BulletedList,
+  TodoList
+]
 const TOOLS = {
   Toolbar: {
     tool: Toolbar,
@@ -39,7 +75,6 @@ const TOOLS = {
   }
 }
 const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight]
-const plugins = [Paragraph, Blockquote, Table, Divider, Accordion, Code, Embed, Image, Link, File, Callout, Video]
 
 export default function Editor ({ data }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)

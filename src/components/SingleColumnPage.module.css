@@ -8,7 +8,7 @@
     grid-template-columns: 25% 50% 25%;
     /* gap: 16px; */
     width: 100%;
-    height: calc(100vh - 92px);
+    min-height: calc(100vh - 92px);
     background-color: var(--color-primary);
     padding: 24px;
 }
