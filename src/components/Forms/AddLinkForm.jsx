@@ -17,21 +17,18 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const addedLinkOrder = globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
 
   const handleAddLinkSubmit = async (event) => {
     event.preventDefault()
-    const imgURL = constants.BASE_LINK_IMG_URL(urlRef.current.value)
+    const imgUrl = constants.BASE_LINK_IMG_URL(urlRef.current.value)
     const body = {
-      idpanel: params._id,
-      data: [{
-        name: nameRef.current.value,
-        URL: urlRef.current.value,
-        imgURL,
-        escritorio: params.escritorio,
-        panel: params.name,
-        idpanel: params._id,
-        orden: 0 // añadir al final
-      }]
+      categoryId: params._id,
+      name: nameRef.current.value,
+      url: urlRef.current.value,
+      imgUrl,
+      order: addedLinkOrder // añadir al final
+
     }
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -39,8 +36,8 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
       toast.error(message)
       return
     }
-    const { link } = response
-    const newList = [...globalLinks, link]
+    const { data } = response
+    const newList = [...globalLinks, data]
     setFormVisible(false)
     setGlobalLinks(newList)
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))

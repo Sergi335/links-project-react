@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { usePasteLink } from '../hooks/usePasteLink'
-import { editColumn } from '../services/dbQueries'
+import { updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
@@ -14,8 +14,8 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  // const globalLinks = useGlobalStore(state => state.globalLinks)
+  // const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const { pasteLink } = usePasteLink({ params, desktopName, activeLocalStorage })
@@ -25,32 +25,42 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   const [subMenuTop, setSubMenuTop] = useState('')
 
   const handleMoveCol = async (desk) => {
-    const updatedState = [...globalColumns]
-    const elementIndex = updatedState.findIndex(element => element._id === params._id)
-    const objeto = updatedState[elementIndex]
-    updatedState[elementIndex] = { ...objeto, escritorio: desk }
-
-    const newLinksState = [...globalLinks]
-    newLinksState.forEach(link => {
-      if (link.idpanel === params._id) {
-        link.escritorio = desk
-      }
-    })
-
-    setGlobalLinks(newLinksState)
-    setGlobalColumns(updatedState)
-
     try {
-      const response = await editColumn({ oldDesktop: desktopName, newDesktop: desk, idPanel: params._id })
+      const updatedState = [...globalColumns]
+      const categoryIndex = updatedState.findIndex(cat => cat._id === params._id)
+      const category = updatedState[categoryIndex]
+      // Actualizar el campo orden
+      const order = globalColumns.filter(col => col.parentId === desk._id).length
+      updatedState[categoryIndex] = { ...category, parentId: desk._id, parentSlug: desk.slug, order }
+      setGlobalColumns(updatedState)
+
+      const oldCategories = updatedState.filter(cat => cat.parentId === category.parentId)
+      const siblings = oldCategories.filter(cat => cat._id !== category._id)
+      // Agregamos las categorias que quedan en el escritorio, para actualizar el orden
+      const items = siblings.map((cat, index) => ({
+        id: cat._id,
+        order: index,
+        name: cat.name,
+        parentId: cat.parentId
+      }))
+      // Agregar la categoría actual
+      items.push({
+        parentId: desk._id,
+        parentSlug: desk.slug,
+        id: category._id,
+        order
+      })
+
+      const response = await updateCategory({ items })
+
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
         throw new Error(message)
       }
-      toast('Movido a ' + desk)
+      toast('Movido a ' + desk.name)
     } catch (error) {
       toast(error.message)
       // Revertir los cambios en caso de error
-      setGlobalLinks(globalLinks)
       setGlobalColumns(globalColumns)
     }
   }
@@ -58,7 +68,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
     const menu = menuRef.current
     const submenu = subMenuRef.current
     const newPoints = { x: points.x, y: points.y }
-    // console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
+    // //console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
     if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
       setSubMenuSide('left')
       newPoints.x = window.innerWidth - menu.offsetWidth
@@ -88,11 +98,11 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
             <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
               <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-67%', top: subMenuTop }}>
                 {
-                  desktops.map(desk => desk.name === desktopName
+                  desktops.map(desk => desk.slug === desktopName // <---
                     ? (
                         null
                       )
-                    : <li key={desk._id} id={desk._id} onClick={() => { handleMoveCol(desk.name) }}>{desk.displayName}</li>)
+                    : <li key={desk._id} id={desk._id} onClick={() => { handleMoveCol(desk) }}>{desk.name}</li>)
                 }
               </ul>
             </span>

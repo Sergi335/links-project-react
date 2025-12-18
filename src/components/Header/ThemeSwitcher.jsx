@@ -9,7 +9,7 @@ export default function ThemeSwitcher () {
   useEffect(() => {
     setDarkTheme(initialTheme === 'dark')
   }, [])
-  // console.log(darkTheme)
+  // //console.log(darkTheme)
 
   const handleChangeTheme = () => {
     const root = document.documentElement

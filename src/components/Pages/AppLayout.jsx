@@ -7,12 +7,10 @@ import HeaderInfo from '../Header/HeaderInfo'
 import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
 import ToolBar from '../ToolBar/ToolBar'
-import styles from './HomePage.module.css'
 
 export default function AppLayout () {
   const { desktopName } = useParams()
-  // console.log('🚀 ~ AppLayout ~ id:', id)
-  useDbQueries({ desktopName })
+  useDbQueries()
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
 
   useEffect(() => {
@@ -20,7 +18,6 @@ export default function AppLayout () {
     if (desktopName !== undefined) {
       const root = document.getElementById('root')
       if (root.classList.contains('fullscreen')) root.classList.remove('fullscreen')
-      if (document.body.classList.contains(`${styles.home}`)) document.body.classList.remove(`${styles.home}`)
       setActualDesktop(desktopName)
       localStorage.setItem('actualDesktop', JSON.stringify(desktopName))
     }
@@ -32,10 +29,10 @@ export default function AppLayout () {
       <SideBar />
       <div id="grid" className="grid">
         <ToolBar />
-      <header className='main_header'>
-        <Bookmarks />
-        <HeaderInfo />
-      </header>
+        <header className='main_header'>
+          <Bookmarks />
+          <HeaderInfo />
+        </header>
         <Outlet />
       </div>
       <ScrollToTop />

@@ -1,16 +1,17 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
 import { useFormsStore } from '../store/forms'
+import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
-import { ArrowDown, MaximizeIcon } from './Icons/icons'
+import { ArrowDown } from './Icons/icons'
 import styles from './customlink.module.css'
 
-export default function CustomLink ({ data, className, desktopName }) {
+const CustomLink = ({ data, className }) => {
   const link = data.link || data.activeLink
   const [linkSelectMode, setLinkSelectMode] = useState(false)
+  const [localFaviconVisible, setLocalFaviconVisible] = useState(false)
   // Ref del link y descripción
   const linkRef = useRef(null)
   const linkDesc = useRef(null)
@@ -24,9 +25,13 @@ export default function CustomLink ({ data, className, desktopName }) {
   const setActiveElement = useFormsStore(state => state.setActiveElement)
   const pastedLinkId = useLinksStore(state => state.pastedLinkId)
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
+  const faviconChangerVisible = useGlobalStore(state => state.faviconChangerVisible)
+  const setFaviconChangerVisible = useGlobalStore(state => state.setFaviconChangerVisible)
+  const setFaviconChangerVisiblePoints = useGlobalStore(state => state.setFaviconChangerVisiblePoints)
+  const setLinkToChangeFavicon = useGlobalStore(state => state.setLinkToChangeFavicon)
 
   useEffect(() => {
-    if (columnSelectModeId.includes(link.idpanel)) {
+    if (columnSelectModeId.includes(link.categoryId)) {
       setLinkSelectMode(true) // no estamos comprobando el idpanel de los que quedan
     } else {
       setLinkSelectMode(false)
@@ -52,7 +57,7 @@ export default function CustomLink ({ data, className, desktopName }) {
 
   const handleSelectChange = (e) => {
     const linkId = e.currentTarget.parentNode.parentNode.id
-    // console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
+    // //console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
     if (selectedLinks.includes(linkId)) {
       const index = selectedLinks.findIndex((id) => id === linkId)
       const newState = [...selectedLinks]
@@ -68,6 +73,21 @@ export default function CustomLink ({ data, className, desktopName }) {
       }
     }
   }
+  const handleShowFaviconChanger = (e) => {
+    e.stopPropagation()
+    setFaviconChangerVisiblePoints({ x: e.pageX, y: e.pageY })
+    // Aquí se abriría el selector de favicon
+    setLocalFaviconVisible(!localFaviconVisible)
+    setLinkToChangeFavicon(link)
+  }
+  // Sincronizar estado local con global, ya que se actualiza al clicar fuera y provocaba inconsistencias
+  useEffect(() => {
+    setFaviconChangerVisible(localFaviconVisible)
+  }, [localFaviconVisible])
+
+  useEffect(() => {
+    setLocalFaviconVisible(faviconChangerVisible)
+  }, [faviconChangerVisible])
 
   useEffect(() => {
     if (pastedLinkId.includes(link._id)) {
@@ -117,45 +137,46 @@ export default function CustomLink ({ data, className, desktopName }) {
           {...listeners}
           id={link._id}
           className={`${styles.link} ${className !== undefined ? className : ''} link`}
-          data-orden={link.orden}
+          data-order={link.order}
           onContextMenu={(e) => handleContextMenu(e)}
         >
-          <a
-            ref={linkRef}
-            href={link.URL}
-            target='_blank'
-            rel='noreferrer'
-            title={link.name}
-          >
+          <div className={styles.link_wrapper}>
+            <img src={link.imgUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
+            <a
+              ref={linkRef}
+              href={link.url}
+              target='_blank'
+              rel='noreferrer'
+              title={link.name}
+            >
+              {
+                linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
+              }
+              <span>{link.name}</span>
+            </a>
             {
-              linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
+              className !== 'searchResult' && (
+                <>
+                  <div className={styles.lcontrols}>
+                    <button className='buttonIcon' onClick={handleHeightChange}>
+                      <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
+                    </button>
+                    {/* <button className='buttonIcon'>
+                      <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
+                        <MaximizeIcon className='uiIcon_small'/>
+                      </Link>
+                    </button> */}
+                  </div>
+                </>
+              )
             }
-            <img src={link.imgURL} alt={`favicon of ${link.name}`} />
-            <span>{link.name}</span>
-          </a>
-          {
-            className !== 'searchResult' && (
-              <>
-                <div className={styles.lcontrols}>
-                  <button className='buttonIcon' onClick={handleHeightChange}>
-                    <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
-                  </button>
-                  <button className='buttonIcon'>
-                    <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
-                      <MaximizeIcon className='uiIcon_small'/>
-                    </Link>
-                  </button>
-                </div>
-                <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>
-              </>
-            )
-          }
-
+          </div>
+          {className !== 'searchResult' && <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>}
           {
             className === 'searchResult' && (
               <div className={styles.additionalInfo}>
-                <span>Escritorio: {link.escritorio}</span>
-                <span>Panel: {link.panel}</span>
+                {/* <span>Escritorio: {link.escritorio}</span> crear función que devuelva la ruta completa desde la categoria superior pasando por todas las intermedias */}
+                <span>Ruta: {link.categoryChain}</span>
                 {
                   link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
                 }
@@ -165,3 +186,5 @@ export default function CustomLink ({ data, className, desktopName }) {
         </div>
   )
 }
+
+export default React.memo(CustomLink)

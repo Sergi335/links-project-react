@@ -8,6 +8,12 @@ export function setCookie (name, value, days, domain) {
   }
   document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain
 }
+export function getCookie (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+  return null
+}
 export const videoUrlsObj = {
   Youtube: {
     url: /^https:\/\/www\.youtube\.com\/watch\?(?!.*&list=PL)/,
@@ -104,11 +110,11 @@ export const searchLinks = async ({ search }) => {
     })
     if (response.ok) {
       const data = await response.json()
-      // console.log(data)
+      // //console.log(data)
       return data
     } else {
-      const data = await response.json()
-      console.log(data)
+      // const data = await response.json()
+      // console.log(data)
     }
   } catch (error) {
     return { error }
@@ -117,7 +123,7 @@ export const searchLinks = async ({ search }) => {
 export function formatPath (path) {
   const decodedPath = decodeURIComponent(path)
   const formattedPath = decodedPath.replace(/\s+/g, '-').toLowerCase()
-  // console.log('🚀 ~ file: formatUrl.js:6 ~ formatUrl ~ formattedUrl:', formattedPath)
+  // //console.log('🚀 ~ file: formatUrl.js:6 ~ formatUrl ~ formattedUrl:', formattedPath)
   const normalizedPath = formattedPath.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   return normalizedPath
 }
@@ -152,53 +158,64 @@ export function formatDate (date) {
   const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora)
 
   const resultado = fechaFormateada + ' ' + horaFormateada
-  // console.log(resultado)
+  // //console.log(resultado)
   return resultado
 }
 export async function getUrlStatus (url) {
-  // console.log('🚀 ~ file: sidepanel.js:644 ~ getUrlStatus ~ url:', url)
-  // console.log('Funciona Status')
-  const query = await fetch(`${constants.BASE_API_URL}/links/status?url=${url}`, {
-    method: 'GET',
-    ...constants.FETCH_OPTIONS
-  })
-  const res = await query.json()
-  // console.log(res)
-  // const holder = document.getElementById('lactive')
-  const firstKey = Object.keys(res)[0]
-  const firstValue = res[firstKey]
-  let icon
-  if (firstKey === 'error' || firstKey === 'errors') {
-    if (firstKey === 'errors') {
-      // icon = convertHtmlEntityToEmoji('&#x1F198;')
-      icon = false
-    } else {
-      // icon = convertHtmlEntityToEmoji('&#x1F198;')
-      icon = false
+  try {
+    const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(url)}`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    const res = await response.json()
+    const data = res.data || {}
+    const firstKey = Object.keys(data)[0]
+    const firstValue = data[firstKey]
+
+    if (firstKey === 'error' || firstKey === 'errors') {
+      return false
     }
-    return icon
-  } else {
+
     if (firstValue === 'success' || firstValue === 'redirect') {
-      // icon = convertHtmlEntityToEmoji('&#x1F197;')
-      icon = true
+      return true
     }
     if (firstValue === 'clientErr' || firstValue === 'serverErr') {
-      // icon = convertHtmlEntityToEmoji('&#x1F198;')
-      icon = true
+      return true
     }
-    return icon
+
+    // Si no coincide ningún caso conocido, devuelve null
+    return null
+  } catch (error) {
+    console.error('Error en getUrlStatus:', error)
+    return null
   }
 }
 export function handleResponseErrors (response) {
-  if (response.status !== 'success' || !response.status) {
-    // return { hasError: true, message: 'Error al efectuar la operación' }
-    return { hasError: true, message: response.error || 'Error al efectuar la operación' }
+  if (response.success !== true) {
+    return { hasError: true, message: response.message || 'Error al efectuar la operación', error: response.error || '' }
   }
-  // if (response.status === 'error') {
-  //   // return { hasError: true, message: 'Error al efectuar la operación' }
-  //   return { hasError: true, message: response.error?.message }
-  // }
   return { hasError: false, message: '' }
+}
+export function keepServerAwake (apiUrl, intervalMinutes = 14) {
+  const wakeUp = async () => {
+    try {
+      await fetch(apiUrl)
+      // console.log('Server pinged at:', new Date().toLocaleTimeString())
+    } catch (error) {
+      console.error('Ping failed:', error)
+      // toast.error('Servidor no disponible en estos momentos', { toastId: 'server-error' })
+    }
+  }
+
+  //   // Ejecutar inmediatamente y luego periódicamente
+  wakeUp()
+  return setInterval(wakeUp, intervalMinutes * 60 * 1000)
+}
+export function getFileNameFromUrl (url) {
+  const decodedUrl = decodeURIComponent(url)
+  // Busca el último segmento después de la última barra
+  const match = decodedUrl.match(/\/(\d+-\d+\.(png|jpg|jpeg|svg|gif|webp))(\?|$)/i)
+  return match ? match[1] : null
 }
 // function convertHtmlEntityToEmoji (htmlEntity) {
 //   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal

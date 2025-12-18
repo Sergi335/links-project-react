@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ArrowRight } from '../Icons/icons'
+import { ArrowUp } from '../Icons/icons'
 import styles from './LinkDetails.module.css'
 
 export default function LinkDetailsNav ({ links, actualDesktop, linkId, context, slug }) {
@@ -9,9 +9,9 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
   const path = context === 'singlecol' ? `${rootPath}${basePath}/${actualDesktop}/${slug}/` : `${rootPath}${basePath}/${actualDesktop}/link/`
 
   const nextIndex = links.findIndex(link => linkId === link?._id) + 1 // > length
-  // console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
+  // //console.log('🚀 ~ LinkDetailsNav ~ nextIndex:', nextIndex)
   const prevIndex = links.findIndex(link => linkId === link?._id) - 1 // -2
-  // console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
+  // //console.log('🚀 ~ LinkDetailsNav ~ prevIndex:', prevIndex)
   let nextId
   if (typeof links[nextIndex] === 'object' && links[nextIndex]._id !== undefined) {
     nextId = links[nextIndex]._id
@@ -49,14 +49,14 @@ export default function LinkDetailsNav ({ links, actualDesktop, linkId, context,
     <section className={styles.navigation_container}>
       <div className={styles.navigation}>
           {prevId
-            ? <Link className={`${styles.details_nav_link} button`} to={`${path}${prevId}`}>Prev<ArrowLeft/></Link>
-            : <a className={`${styles.details_nav_link_disabled} button`}>Prev<ArrowLeft/></a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${prevId}`}><ArrowUp style={{ transform: 'rotate(270deg)' }} />Prev</Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}><ArrowUp style={{ transform: 'rotate(270deg)' }} />Prev</a>}
           {
-            context !== 'singlecol' && <Link className={`${styles.details_nav_link_disabled} button`} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
+            context !== 'singlecol' && <Link className={`${styles.details_nav_link_disabled} button button_small  `} to={`${rootPath}${basePath}/${actualDesktop}`} end>Volver</Link>
           }
           {nextId
-            ? <Link className={`${styles.details_nav_link} button`} to={`${path}${nextId}`}><ArrowRight/>Next</Link>
-            : <a className={`${styles.details_nav_link_disabled} button`}><ArrowRight/>Next</a>}
+            ? <Link className={`${styles.details_nav_link} button button_small`} to={`${path}${nextId}`}>Next<ArrowUp style={{ transform: 'rotate(90deg)' }} /></Link>
+            : <a className={`${styles.details_nav_link_disabled} button button_small`}>Next<ArrowUp style={{ transform: 'rotate(90deg)' }} /></a>}
       </div>
     </section>
   )

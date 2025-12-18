@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { constants } from '../services/constants'
-import { useDesktopsStore } from '../store/desktops'
 import { useGlobalStore } from '../store/global'
-import { useSessionStore } from '../store/session'
+import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
+// import { useSessionStore } from '../store/session'
 
 // Fetch functions
 const fetchDesktops = async () => {
-  const response = await fetch(`${constants.BASE_API_URL}/desktops`, {
+  const response = await fetch(`${constants.BASE_API_URL}/categories/toplevel`, {
     method: 'GET',
     ...constants.FETCH_OPTIONS
   })
@@ -20,7 +20,7 @@ const fetchDesktops = async () => {
 }
 
 const fetchColumns = async () => {
-  const response = await fetch(`${constants.BASE_API_URL}/columns`, {
+  const response = await fetch(`${constants.BASE_API_URL}/categories`, {
     method: 'GET',
     ...constants.FETCH_OPTIONS
   })
@@ -46,13 +46,14 @@ const fetchLinks = async () => {
 }
 
 const useDbQueries = () => {
-  const navigate = useNavigate()
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  // const navigate = useNavigate()
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   const setGlobalError = useGlobalStore(state => state.setGlobalError)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const setUser = useSessionStore(state => state.setUser)
+  // const setGlobalDesktops = useGlobalStore(state => state.setGlobalDesktops)
+  // const setUser = useSessionStore(state => state.setUser)
 
   // Parallel queries using useQueries
   const { isLoading, isError, error } = useQuery({
@@ -67,20 +68,21 @@ const useDbQueries = () => {
         ])
 
         // Update stores
-        setDesktopsStore(desktopsResponse.data)
+        setTopLevelCategoriesStore(desktopsResponse.data)
+        // setGlobalDesktops(desktopsResponse.data)
         setGlobalColumns(columnsResponse.data)
         setGlobalLinks(linksResponse.data)
-        console.log('🚀 ~ queryFn: ~ linksResponse.data:', linksResponse.data)
+        // //console.log('🚀 ~ queryFn: ~ linksResponse.data:', linksResponse.data, desktopsResponse.data, columnsResponse.data)
 
         // Set first desktop in localStorage
-        localStorage.setItem('firstDesktop', JSON.stringify(desktopsResponse.data[0]?.name))
+        localStorage.setItem('firstDesktop', JSON.stringify(desktopsResponse.data.find(desktop => desktop.order === 0)?.slug))
 
-        return { desktops: desktopsResponse.data }
+        return { desktops: desktopsResponse.data, columns: columnsResponse.data, links: linksResponse.data }
       } catch (err) {
         // Handle error
         setGlobalError({ error: 'Error al recuperar los datos' })
-        setUser(null)
-        navigate('/login')
+        // setUser(null)
+        // navigate('/login')
         throw err
       } finally {
         setGlobalLoading(false)

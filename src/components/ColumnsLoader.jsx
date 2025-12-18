@@ -1,9 +1,9 @@
-import React from 'react'
 import ContentLoader from 'react-content-loader'
 import styles from './ColumnsLoader.module.css'
 
 const ColumnsLoader = (props) => {
   const width = '90%'
+  // Habría que calcular el ancho del loader para quitar el error de la consola
   return (
     <ContentLoader // No se adapta
       speed={5}

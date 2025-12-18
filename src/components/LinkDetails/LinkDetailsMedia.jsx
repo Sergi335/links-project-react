@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 // import Masonry from 'react-layout-masonry'
 import 'photoswipe/style.css'
+import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { editLink, fetchImage } from '../../services/dbQueries'
+import { fetchImage, updateLink } from '../../services/dbQueries'
 import { checkUrlMatch, handleResponseErrors } from '../../services/functions'
 import { CodeIcon, MaximizeIcon, PasteImageIcon, TrashIcon } from '../Icons/icons'
 import VideoPlayer from '../VideoPlayer'
@@ -84,7 +85,8 @@ export function ToggleSwitchButton ({ setNotesVisible, notesVisible }) {
   )
 }
 export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, data, links, setLinks, linkId, actualDesktop, notesState, setNotesState }) {
-  const id = linkId.id
+  // const id = linkId.id
+  const { id } = useParams()
   const [notesVisible, setNotesVisible] = useState(false)
   const handlePasteImage = () => {
     const pasteLoading = toast.loading('Subiendo archivo ...')
@@ -107,10 +109,10 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
               const { hasError, message } = handleResponseErrors(response)
 
               if (hasError) {
-                console.log(message)
+                // console.log(message)
                 toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
               } else {
-                newState[elementIndex].images.push(response.link.images[response.link.images.length - 1])
+                newState[elementIndex].images.push(response.data.images[response.data.images.length - 1])
                 setLinks(newState)
                 toast.update(pasteLoading, { render: 'Imagen Guardada!', type: 'success', isLoading: false, autoClose: 1500 })
               }
@@ -121,8 +123,9 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
     })
   }
   const handleSubmit = async () => {
-    console.log(notesState)
-    const response = await editLink({ id, notes: notesState })
+    // console.log(notesState)
+    // console.log('🚀 ~ handleSubmit ~ id:', id)
+    const response = await updateLink({ items: [{ id, notes: notesState }] })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
@@ -137,11 +140,11 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
   return (
     <>
         <section className={`${maximizeVideo ? styles.mainSectionMaximized : styles.mainSection}`}>
-          {checkUrlMatch(data.URL)
+          {checkUrlMatch(data.url)
             ? (
               <>
                 <div className={`${maximizeVideo ? styles.videoPlayerMaximized : styles.videoPlayer}`}>
-                  <VideoPlayer src={data.URL} width={1068} height={600} />
+                  <VideoPlayer src={data.url} width={1068} height={600} />
                   <div className={styles.text_controls_container}>
                     <div id="textControls" className={styles.textControls}>
                         <button className={styles.control_button} onClick={handleMaximizeVideo}>
@@ -157,7 +160,7 @@ export default function LinkDetailsMedia ({ maximizeVideo, handleMaximizeVideo, 
             !maximizeVideo && (
             <>
             {
-                checkUrlMatch(data.URL)
+                checkUrlMatch(data.url)
                   ? (
                     <div className={styles.sectionsWrapper}>
                       {

@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './colors.css'
 import './index.css'
+import './yoopta.css'
 
 const queryClient = new QueryClient()
 

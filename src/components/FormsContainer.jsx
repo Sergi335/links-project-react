@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDesktopsStore } from '../store/desktops'
 import { useFormsStore } from '../store/forms'
 import { usePreferencesStore } from '../store/preferences'
+import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 import ContextualColMenu from './ContextualColMenu'
 import ContextLinkMenu from './ContextualMenu'
 import AddDesktopForm from './Forms/AddDesktopForm'
@@ -35,7 +35,7 @@ export default function FormsContainer () {
   const columnContextMenuVisible = useFormsStore(state => state.columnContextMenuVisible)
   const setColumnContextMenuVisible = useFormsStore(state => state.setColumnContextMenuVisible)
   const activeColumn = useFormsStore(state => state.activeColumn)
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
@@ -131,7 +131,7 @@ export default function FormsContainer () {
                   points={points}
                   setPoints={setPoints}
                   params={activeColumn}
-                  desktops={desktopsStore}
+                  desktops={topLevelCategoriesStore}
                   setAddLinkFormVisible={setAddLinkFormVisible}
                 />
               : null

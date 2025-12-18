@@ -10,25 +10,25 @@ export async function getAllLinks () {
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
 // MoveOtherDeskForm
-export async function getLinksCount ({ idpanel }) {
+export async function getLinksCount ({ categoryId }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/count/?column=${idpanel}`, {
+    const res = await fetch(`${constants.BASE_API_URL}/links/count/?categoryId=${categoryId}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -40,10 +40,10 @@ export async function getLinkById ({ id }) {
       ...constants.FETCH_OPTIONS
     })
     const data = await res.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -62,32 +62,50 @@ export async function addLink (body) {
       return error
     })
 }
-// EditlinkForm, linkDetails -- Validar datos
-export async function editLink ({ id, name, URL, description, notes, bookmark, bookmarkOrder }) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
+export async function updateLink ({ items }) {
+  if (!items || items.length === 0) {
+    // console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  // Asegurar que items es un array
+  const itemsArray = Array.isArray(items) ? items : [items]
+
+  // console.log('📤 Enviando al backend:', itemsArray)
+
+  const response = await fetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
+    credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
-      id,
-      fields: {
-        name,
-        URL,
-        description,
-        imgURL: URL ? constants.BASE_LINK_IMG_URL(URL) : undefined,
-        notes,
-        bookmark,
-        bookmarkOrder
-      }
+      updates: itemsArray.map(item => ({
+        id: item.id || item._id,
+        oldCategoryId: item.oldCategoryId || undefined,
+        destinyIds: item.destinyIds || undefined,
+        previousIds: item.previousIds || undefined,
+        fields: {
+          name: item.name ?? undefined,
+          url: item.url ?? undefined,
+          description: item.description ?? undefined,
+          imgUrl: item.url ? constants.BASE_LINK_IMG_URL(item.url) : undefined,
+          notes: item.notes ?? undefined,
+          bookmark: item.bookmark ?? undefined,
+          bookmarkOrder: item.bookmarkOrder ?? undefined,
+          categoryId: item.categoryId ?? undefined,
+          order: item.order ?? undefined,
+          extractedArticle: item.extractedArticle === null ? null : undefined
+        }
+      }))
     })
   })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(err => {
-      console.log(err)
-      return err
-    })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
+  }
+
+  const result = await response.json()
+  // console.log(`Successfully updated ${itemsArray.length} items`)
+  return result
 }
 export async function setBookMarksOrder ({ links }) {
   return fetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
@@ -100,7 +118,7 @@ export async function setBookMarksOrder ({ links }) {
       return data
     })
     .catch(err => {
-      console.log(err)
+      // console.log(err)
       return err
     })
 }
@@ -114,46 +132,17 @@ export async function deleteLink ({ body }) {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
-}
-// Contextualmenu, moveOtherDeskForm, useDragItems -- Validar datos
-export async function moveLink (body) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-export async function moveMultipleLinks (body) {
-  return fetch(`${constants.BASE_API_URL}/links/move`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
 }
 // ProfilePage
 export async function findDuplicateLinks () {
@@ -164,169 +153,162 @@ export async function findDuplicateLinks () {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
 
-/* --------------- COLUMNS -------------------- */
-
-// Column, ContectualColMenu, useDragItems
-export async function editColumn ({ name, oldDesktop, newDesktop, idPanel, columnsIds }) {
+/* --------------- CATEGORIES AKA COLUMNS -------------------- */
+export const updateDbAfterDrag = async (draggedItemOrArray, targetItem = null, position = null, finalItems = null) => {
   try {
-    const body = { id: idPanel, oldDesktop, columnsIds, fields: { name, escritorio: newDesktop } }
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
+    // Si recibimos un array en lugar de draggedItem, usar la nueva lógica optimizada
+    if (Array.isArray(draggedItemOrArray)) {
+      return await handleOptimizedUpdate(draggedItemOrArray)
+    }
+
+    // Si recibimos un solo objeto sin otros parámetros, también usar lógica optimizada
+    if (!targetItem && !position && !finalItems) {
+      // Es un objeto individual (caso de anidamiento)
+      return await handleOptimizedUpdate([draggedItemOrArray])
+    }
+
+    // Lógica original para compatibilidad hacia atrás
+    // const updateType = position === 'inside' ? 'nesting' : 'reordering'
+
+    // if (updateType === 'nesting') {
+    //   // Anidamiento: actualizar level y parentId
+    //   const nestingResult = await handleNestingUpdate(draggedItemOrArray, targetItem, finalItems)
+    //   return nestingResult
+    // } else {
+    //   // Reordenamiento: actualizar solo order (y posiblemente level si cambió de nivel)
+    //   const reorderingResult = await handleReorderingUpdate(draggedItemOrArray, targetItem, finalItems)
+    //   return reorderingResult
+    // }
+  } catch (error) {
+    console.error('Error updating database:', error)
+    throw error
+    // toast.error('Error al actualizar la estructura')
+    // TODO: Implementar rollback del estado local
+  }
+}
+
+// Nueva función para manejar updates optimizados
+const handleOptimizedUpdate = async (changedItems) => {
+  if (!changedItems || changedItems.length === 0) {
+    // console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  // Asegurar que changedItems es un array
+  const itemsArray = Array.isArray(changedItems) ? changedItems : [changedItems]
+
+  // console.log('📤 Enviando al backend:', itemsArray)
+
+  const response = await updateCategory({ items: itemsArray })
+
+  if (response.success !== true) {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
+  }
+
+  // const result = await response.json()
+  // console.log(response)
+  return response
+}
+
+export async function updateCategory ({ items }) {
+  if (!items || items.length === 0) {
+    // console.log('No hay cambios para enviar a la base de datos')
+    return { success: true, message: 'No changes to update' }
+  }
+
+  // Asegurar que items es un array
+  const itemsArray = Array.isArray(items) ? items : [items]
+
+  // console.log('📤 Enviando al backend:', itemsArray)
+
+  const response = await fetch(`${constants.BASE_API_URL}/categories`, {
+    method: 'PATCH',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify({
+      updates: itemsArray.map(item => ({
+        id: item.id || item._id,
+        oldParentId: item.oldParentId || undefined,
+        fields: {
+          order: item.order ?? undefined,
+          level: item.level ?? undefined,
+          parentId: item.level === 0 ? null : item.parentId,
+          parentSlug: item.level === 0 ? null : item.parentSlug,
+          name: item.name ?? undefined,
+          hidden: item.hidden ?? undefined,
+          isEmpty: item.isEmpty ?? undefined,
+          displayName: item.displayName ?? undefined
+        }
+      }))
     })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
-    return error
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
   }
+
+  const result = await response.json()
+  // console.log(`Successfully updated ${itemsArray.length} items`)
+  return result
 }
+
 // DeleteColConfirmForm
-export async function deleteColumn (idPanel) {
+export async function deleteColumn ({ id, level }) {
   try {
-    const body = { id: idPanel }
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+    const body = { id, level }
+    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
 // SideInfo
-export async function createColumn ({ name, escritorio, order }) {
+export async function createColumn ({ name, parentId, order, level }) {
   try {
-    const body = { name, escritorio, order }
-    console.log(body)
-    const res = await fetch(`${constants.BASE_API_URL}/columns`, {
+    const body = { name, parentId, order, level }
+    // console.log(body)
+    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       return data
     }
   } catch (error) {
     console.error('Error de red:', error)
-    return error
-  }
-}
-
-/* --------------- DESKTOPS -------------------- */
-
-// Nav
-export async function moveDesktops (items) {
-  try {
-    const names = items.map(item => {
-      return item.displayName
-    })
-    const body = { names }
-    const response = await fetch(`${constants.BASE_API_URL}/desktops/setorder`, {
-      method: 'PATCH',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al mover columnas')
-    }
-
-    const data = await response.json()
-    console.log(data)
-    return data
-  } catch (error) {
-    console.error('Error de red:', error)
-    throw error
-  }
-}
-// AddDesktopForm
-export async function createDesktop ({ name, displayName, orden }) {
-  const body = { name, displayName, orden }
-  return fetch(`${constants.BASE_API_URL}/desktops`, {
-    method: 'POST',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-// CustomizeDesktopPanel
-export async function editDesktop (body) {
-  return fetch(`${constants.BASE_API_URL}/desktops`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-// DeleteConfirmForm
-export async function deleteDesktop ({ body }) {
-  try {
-    const res = await fetch(`${constants.BASE_API_URL}/desktops`, {
-      method: 'DELETE',
-      ...constants.FETCH_OPTIONS,
-      body: JSON.stringify(body)
-    })
-    if (res.ok) {
-      const data = await res.json()
-      console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
-  } catch (error) {
-    console.log(error)
     return error
   }
 }
@@ -337,19 +319,19 @@ export async function deleteDesktop ({ body }) {
 export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
-    console.log('fetch')
+    // console.log('fetch')
     return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(data => {
         const element = document.querySelector('#root')
         element.setAttribute('data-background', 'image')
-        element.style.background = `url(${data})`
+        element.style.background = `url(${data.data})`
         element.style.backgroundSize = 'cover'
         element.style.backgroundAttachment = 'fixed'
-        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data}`))
+        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data.data}`))
         return data
       })
       .catch(error => {
@@ -367,13 +349,30 @@ export async function getBackgroundMiniatures () {
   })
     .then(res => res.json())
     .then(data => {
-      const { backgrounds } = data
-      return backgrounds
+      return data
     })
     .catch(error => {
       return error
     })
 }
+export async function getLinkImages ({ linkId }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/storage/link/${linkId}/images`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    if (res.ok) {
+      const data = await res.json()
+      return data
+    } else {
+      const error = await res.json()
+      return error
+    }
+  } catch (error) {
+    return error
+  }
+}
+
 // LinkDetails
 export async function fetchImage ({ imageUrl, linkId }) {
   try {
@@ -385,11 +384,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     formData.append('linkId', linkId)
     const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+      ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
     if (res.ok) {
@@ -405,10 +400,10 @@ export async function fetchImage ({ imageUrl, linkId }) {
   }
 }
 // DeleteImageConfirmForm
-export async function deleteImage ({ imageUrl, linkId }) {
+export async function deleteImage ({ imageKey, linkId }) {
   try {
     let body = {
-      image: imageUrl,
+      image: imageKey,
       id: linkId
     }
     body = JSON.stringify(body)
@@ -419,7 +414,7 @@ export async function deleteImage ({ imageUrl, linkId }) {
     })
     if (res.ok) {
       const result = await res.json()
-      console.log(result)
+      // console.log(result)
       const firstKey = Object.keys(result)[0]
       const firstValue = result[firstKey]
 
@@ -437,7 +432,7 @@ export async function deleteImage ({ imageUrl, linkId }) {
       if (error.error === 'storage/invalid-url' || error.error === 'storage/object-not-found') {
         return 'Referencia eliminada'
       } else {
-        console.log(error)
+        // console.log(error)
         console.error(error.error)
         return error.error
       }
@@ -453,15 +448,11 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     const formData = new FormData()
     formData.append('linkImg', file)
     formData.append('linkId', linkId)
-    console.log(formData)
+    // console.log(formData)
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'x-justlinks-user': 'SergioSR',
-          'x-justlinks-token': 'otroheader'
-        },
+        ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
 
@@ -495,32 +486,17 @@ export async function saveLinkIcon ({ src, linkId }) {
   try {
     const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'x-justlinks-user': 'SergioSR',
-        'x-justlinks-token': 'otroheader'
-      },
+      ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
 
     if (response.ok) {
       const result = await response.json()
-      console.log(result)
-      const firstKey = Object.keys(result)[0]
-      const firstValue = result[firstKey]
-
-      if (firstKey === 'error') {
-        return (`${firstKey}, ${firstValue}`)
-      } else {
-        return result
-      }
-    } else {
-      console.error('Error al actualizar la ruta de la imagen')
-      return ('Error al cambiar imagen')
+      return result
     }
   } catch (error) {
     console.error('Error al realizar la solicitud:', error)
-    return ('Error al cambiar imagen')
+    return ('Error al realizar la solicitud')
   }
 }
 // LinkDetails
@@ -533,26 +509,10 @@ export async function deleteLinkImage (imageId) {
     })
     if (res.ok) {
       const result = await res.json()
-      console.log(result)
-      const firstKey = Object.keys(result)[0]
-      const firstValue = result[firstKey]
-
-      if (firstKey === 'error' || firstKey === 'errors') {
-        if (firstKey === 'errors') {
-          return (`Error, valor ${firstValue[0].path} no válido`)
-        } else {
-          return (`${firstKey}, ${firstValue}`)
-        }
-      } else {
-        console.log('Borrado con éxito')
-        return { message: 'Borrado con éxito' }
-      }
-    } else {
-      console.log(await res.json())
-      return ('Error en la solicitud')
+      return result
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
 }
@@ -564,23 +524,12 @@ export async function uploadProfileImg (file) {
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/profilepic`, {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'x-justlinks-user': 'SergioSR',
-          'x-justlinks-token': 'otroheader'
-        },
+        ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
       if (response.ok) {
         const result = await response.json()
-        const firstKey = Object.keys(result)[0]
-        const firstValue = result[firstKey]
-
-        if (firstKey === 'error') {
-          return (`${firstKey}, ${firstValue}`)
-        } else {
-          return result.url
-        }
+        return result.data.url
       } else {
         console.error('Error al actualizar la ruta de la imagen')
         return ('Error al actualizar la ruta de la imagen')
@@ -612,7 +561,7 @@ export async function editUserAditionalInfo ({ email, fields }) {
       return data
     })
     .catch(err => {
-      console.log(err)
+      // console.log(err)
       return err
     })
 }
@@ -631,7 +580,16 @@ export async function deleteAccount ({ email }) {
       return result
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return error
   }
+}
+export const sendLogoutSignal = async ({ idToken, csrfToken }) => {
+  const body = { idToken, csrfToken }
+  return fetch(`${constants.BASE_API_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+    ...constants.FETCH_OPTIONS,
+    body: JSON.stringify(body)
+  })
 }

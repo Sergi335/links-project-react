@@ -1,8 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" data-overlayscrollbars-initialize>
+<html lang="en" data-overlayscrollbars-initialize style="background-color:#080a0c;">
 
 <head>
   <meta charset="UTF-8" />
+  <script>
+      try {
+        //console.log('inline dark script ejecutado');
+        const stored = JSON.parse(localStorage.getItem('theme') || '{}');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+  </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />

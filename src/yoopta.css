@@ -1,0 +1,128 @@
+div.yoopta-action-menu-list-content button.yoopta-button,
+div.yoopta-action-menu-list-content button.yoopta-block-options-button,
+div.yoopta-block-options-menu-content button.yoopta-button,
+div.yoopta-block-options-menu-content button.yoopta-block-options-button {
+    justify-content: flex-start;
+    color: var(--text-color-primary);
+    font-family: 'Inter Variable';
+}
+
+div.yoopta-editor {
+    height: -webkit-fill-available;
+}
+
+blockquote.yoopta-blockquote {
+    border-left-color: var(--firstBorderColor);
+    background-color: var(--color-primary);
+}
+
+div.yoopta-code-cm-editor .cm-editor {
+    border: var(--firstBorder)
+}
+
+.yoo-embed-flex button {
+    color: var(--text-color-inverse);
+    font-weight: bold;
+    font-family: 'Inter Variable', sans-serif;
+}
+
+.yoo-embed-flex button:hover {
+    color: var(--text-color-primary)
+}
+
+div.yoo-embed-bg-\[\#FFFFFF\] {
+    background-color: var(--color-secondary);
+    border: var(--firstBorder);
+}
+
+div.yoo-embed-shadow-\[rgb\(55_53_47_\/9\%\)_0px_-1px_0px_inset\] button {
+    color: var(--text-color-primary);
+    border-radius: 0;
+    font-weight: normal;
+}
+
+div.yoo-embed-shadow-\[rgb\(55_53_47_\/9\%\)_0px_-1px_0px_inset\] button:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+div.yoopta-callout {
+    display: flex;
+    padding: .5rem;
+    align-items: center;
+    gap: 8px;
+}
+
+code.yoopta-mark-code {
+    background-color: var(--color-primary);
+}
+
+div.yoopta-callout-icon {
+    position: initial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+
+div.yoopta-callout-theme-info div svg {
+    padding-top: 1px;
+}
+
+div.cm-scroller::-webkit-scrollbar-thumb {
+    background: var(--color-medium);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+div.cm-scroller::-webkit-scrollbar-track {
+    background: var(--color-primary);
+    border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+button.yoopta-button:not(.yoopta-extended-block-actions):hover {
+    background-color: var(--buttonHoverColor);
+    box-shadow: var(--secondNeumoShadow);
+}
+
+button.yoopta-extended-block-actions {
+    color: var(--text-color-primary);
+    background-color: var(--color-medium);
+}
+
+.yoopta-table tr:nth-child(odd) {
+    background-color: var(--color-primary);
+}
+
+td.yoopta-table-data-cell {
+    border-color: var(--firstBorderColor);
+}
+
+div.yoo-accordion-absolute button {
+    padding: 0;
+}
+
+div.yoo-accordion-absolute button svg {
+    stroke: var(--text-color-primary);
+}
+
+.yoopta-editor *:not(div.yoopta-callout) {
+    scrollbar-color: var(--color-medium) transparent !important;
+    border-color: var(--firstBorderColor) !important;
+}
+
+div.yoopta-action-menu-list-content {
+    background-color: var(--color-secondary);
+    border: var(--firstBorder);
+}
+
+div.yoopta-block-options-menu-content {
+    background-color: var(--color-secondary);
+    border: var(--firstBorder);
+    color: var(--text-color-primary);
+}
+
+div.yoo-action-menu-bg-\[\#FFFFFF\] {
+    background-color: var(--color-secondary);
+    border: var(--firstBorder);
+}

@@ -1,0 +1,12 @@
+.video_player_iframe,
+.video_player_placeholder {
+    aspect-ratio: 16 / 9;
+}
+
+.video_player_placeholder {
+    margin-bottom: 57.5px;
+    background-image: url('/img/placeholderVid.png');
+    background-size: cover;
+    background-position: center;
+    border: var(--firstBorder);
+}

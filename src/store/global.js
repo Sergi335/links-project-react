@@ -19,6 +19,10 @@ export const useGlobalStore = create(
       setGlobalError: (globalError) => {
         set({ globalError })
       },
+      globalDesktops: [],
+      setGlobalDesktops: (globalDesktops) => {
+        set({ globalDesktops })
+      },
       globalColumns: [],
       setGlobalColumns: (globalColumns) => {
         set({ globalColumns })
@@ -26,18 +30,27 @@ export const useGlobalStore = create(
       globalLinks: [],
       setGlobalLinks: (globalLinks) => {
         set({ globalLinks })
-      }//,
-      // mappedGlobalLinks: new Map(),
-      // setMappedGlobalLinks: (mappedGlobalLinks) => {
-      //   const paneles = get().globalColumns
-      //   const links = get().globalLinks
-      //   paneles.forEach(panel => {
-      //     const matchingLinks = links.filter(link => link.idpanel === panel._id)
-      //     mappedGlobalLinks.set(panel._id, matchingLinks)
-      //   })
-
-      //   set({ mappedGlobalLinks })
-      // }
+      },
+      globalArticles: null,
+      setGlobalArticles: (globalArticles) => {
+        set({ globalArticles })
+      },
+      linkToChangeFavicon: null,
+      setLinkToChangeFavicon: (linkToChangeFavicon) => {
+        set({ linkToChangeFavicon })
+      },
+      faviconChangerVisible: false,
+      setFaviconChangerVisible: (faviconChangerVisible) => {
+        set({ faviconChangerVisible })
+      },
+      faviconChangerVisiblePoints: { x: 0, y: 0 },
+      setFaviconChangerVisiblePoints: (faviconChangerVisiblePoints) => {
+        set({ faviconChangerVisiblePoints })
+      },
+      tabsVisible: true,
+      setTabsVisible: (tabsVisible) => {
+        set({ tabsVisible })
+      }
     }
   }
 )

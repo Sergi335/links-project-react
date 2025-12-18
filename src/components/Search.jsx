@@ -24,7 +24,7 @@ export default function Search () {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('entramos')
+    // console.log('entramos')
   }
   const handleChange = useCallback(
     debounce(async (search) => {
@@ -37,7 +37,7 @@ export default function Search () {
     []
   )
   const handleShowMobileSearch = () => {
-    console.log('entramos')
+    // console.log('entramos')
     inputRef.current.classList.toggle(styles.show)
     inputRef.current.focus()
   }
@@ -125,7 +125,6 @@ export default function Search () {
                       <CustomLink
                         key={link._id}
                         data={{ link }}
-                        idpanel={link.idpanel}
                         className={'searchResult'}
                       />
                     ))

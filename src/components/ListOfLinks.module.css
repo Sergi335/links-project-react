@@ -19,4 +19,12 @@
     }
 }
 
-
+.subcategories {
+    padding: 5px 10px;
+    background-color: var(--inputBackgroundColor);
+    border-radius: 5px;
+    width: fit-content;
+    border: 1px solid var(--secondBorderColor);
+    margin-left: 10px;
+    margin-bottom: 10px;
+}

@@ -3,71 +3,125 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../hooks/useHideForms'
 import { constants } from '../services/constants'
-import { changeBackgroundImage, editDesktop, getBackgroundMiniatures } from '../services/dbQueries'
-import { formatPath, handleResponseErrors } from '../services/functions'
-import { useDesktopsStore } from '../store/desktops'
+import { changeBackgroundImage, getBackgroundMiniatures, updateCategory } from '../services/dbQueries'
+import { handleResponseErrors } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
+import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 import styles from './CustomizeDesktopPanel.module.css'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
+  const [desktop, setDesktop] = useState([])
+  const [desktopNameInput, setDesktopNameInput] = useState(desktop[0]?.name || '')
   const navigate = useNavigate()
   const inputRef = useRef()
   const formRef = useRef()
   const { desktopName } = useParams()
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const setDesktopsStore = useDesktopsStore(state => state.setDesktopsStore)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const setStyleOfColumns = usePreferencesStore(state => state.setStyleOfColumns)
   const setNumberOfColumns = usePreferencesStore(state => state.setNumberOfColumns)
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const globalLinks = useGlobalStore(state => state.globalLinks)
-  const desktop = desktopsStore?.filter(desk => desk.name === desktopName) || 'null'
+  const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
+  // const globalLoading = useGlobalStore(state => state.globalLoading)
+  // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
+  //console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
+
   // Debería estar montado y ocultarlo y mostrarlo mediante clases css
   const handleSubmit = async (event) => {
     event.preventDefault()
+    setGlobalLoading(true)
     const newName = inputRef.current.value.trim()
-    const name = formatPath(newName)
-    const body = { newName, oldName: desktopName, name }
-    // if new === old return
-    const response = await editDesktop(body)
-    const { hasError, message } = handleResponseErrors(response)
-    if (hasError) {
-      toast(message)
+
+    if (!newName || newName === desktop[0]?.name) {
       return
     }
-    const { data } = response
-    setDesktopsStore(data)
-    const newColsState = globalColumns.map(column => {
-      if (column.escritorio === desktopName) {
-        column.escritorio = name
+
+    const previousState = [...globalColumns]
+    const previousTopLevelState = [...topLevelCategoriesStore]
+
+    // Crear estado actualizado localmente
+    const currentUpdatedState = [...globalColumns]
+    const updatedCategoryIndex = currentUpdatedState.findIndex(category => category.slug === desktopName)
+
+    if (updatedCategoryIndex === -1) {
+      toast('Error: Desktop no encontrado')
+      return
+    }
+
+    const categoryToUpdate = currentUpdatedState[updatedCategoryIndex]
+    const categoryToUpdateId = categoryToUpdate._id
+
+    // Primera actualización local
+    currentUpdatedState[updatedCategoryIndex] = { ...categoryToUpdate, name: newName }
+
+    try {
+      const items = [{ id: categoryToUpdateId, name: newName }]
+      const response = await updateCategory({ items })
+      const { hasError: hasError1, message: message1 } = handleResponseErrors(response)
+
+      if (hasError1) {
+        toast(message1)
+        return
       }
-      return column
-    })
-    setGlobalColumns(newColsState)
-    const newLinksState = globalLinks.map(link => {
-      if (link.escritorio === desktopName) {
-        link.escritorio = name
+
+      const { updatedData } = response
+
+      // Actualizar en el state el slug de la categoría que hemos editado
+      currentUpdatedState[updatedCategoryIndex] = { ...currentUpdatedState[updatedCategoryIndex], slug: updatedData[0].slug }
+
+      // Actualizar topLevelCategoriesStore
+      const updatedTopLevel = currentUpdatedState.filter(cat => cat.level === 0)
+      setTopLevelCategoriesStore(updatedTopLevel)
+      setGlobalColumns(currentUpdatedState)
+
+      // Preparar items para la segunda actualización
+      const restOfItems = []
+      // Trabajar con currentUpdatedState en lugar de globalColumns
+      currentUpdatedState.forEach(column => {
+        if (column.parentSlug === desktopName) {
+          column.parentSlug = updatedData[0].slug
+          restOfItems.push({ id: column._id, parentSlug: updatedData[0].slug })
+        }
+      })
+
+      if (restOfItems.length > 0) {
+        const response2 = await updateCategory({ items: restOfItems })
+        const { hasError: hasError2, message: message2 } = handleResponseErrors(response2)
+
+        if (hasError2) {
+          toast(message2)
+          setGlobalColumns(previousState)
+          setTopLevelCategoriesStore(previousTopLevelState)
+          return
+        }
+
+        // Meter el globalloading
+
+        // Actualizar con los cambios finales usando currentUpdatedState
+        setGlobalColumns([...currentUpdatedState])
       }
-      return link
-    })
-    setGlobalLinks(newLinksState)
-    // const changeUrlEvent = new Event('changeurl')
-    // window.dispatchEvent(changeUrlEvent)
-    // const url = new URL(window.location.href)
-    // url.pathname = `desktop/${name}`
-    // window.history.pushState(null, null, url)
-    navigate(`/desktop/${name}`)
+
+      navigate(`/app/${updatedData[0].slug}`)
+      toast('Desktop actualizado correctamente')
+      setGlobalLoading(false)
+    } catch (error) {
+      console.error('Error en handleSubmit:', error)
+      toast('Error al actualizar el desktop')
+      setGlobalColumns(previousState)
+      setTopLevelCategoriesStore(previousTopLevelState)
+      setGlobalLoading(false)
+    }
   }
   const handleNumberColumnsChange = (event) => {
     setNumberOfColumns(event.target.value)
@@ -85,24 +139,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       }
     })
     const response = await changeBackgroundImage(event)
-    console.log(response)
-    // console.log('🚀 ~ handleChangeBackgroundImage ~ response:', response)
-    // Error de red
-    // Esto se repite mucho, hacer una funcion para esto
-    if (!response?.startsWith('http') && !response?.ok && response?.error === undefined) {
-      toast('Error de red')
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
       return
     }
-    // Error http
-    if (!response?.startsWith('http') && !response?.ok && response?.status !== undefined) {
-      toast(`${response.status}: ${response.statusText}`)
-      return
-    }
-    // Error personalizado
-    if (!response?.startsWith('http') && response.error) {
-      toast(`Error: ${response.error}`)
-    }
-    console.log(event.target.src ?? event.target.id)
+    //console.log(event.target.src ?? event.target.id)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.src))
   }
   const handleRemoveBackgroundImage = (event) => {
@@ -161,33 +203,45 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
   }
   const handleHideDesktops = async (event) => {
-    const name = formatPath(event.target.value)
-    const body = { name, hidden: true }
-    const response = await editDesktop(body)
+    const select = event.target
+    const selectedOption = select.options[select.selectedIndex]
+    const id = selectedOption.dataset.id
+    //console.log(id)
+    const items = [{ id, hidden: true }]
+    const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
       return
     }
-    const deskIndex = desktopsStore.findIndex(desktop => desktop.name === name)
-    const newState = [...desktopsStore]
-    newState[deskIndex].hidden = true
-    setDesktopsStore(newState)
+    const deskIndex = topLevelCategoriesStore.findIndex(desktop => desktop._id === id)
+    const globalDeskIndex = globalColumns.findIndex(col => col._id === id)
+    const newTopLevelState = [...topLevelCategoriesStore]
+    const newGlobalState = [...globalColumns]
+    newTopLevelState[deskIndex].hidden = true
+    newGlobalState[globalDeskIndex].hidden = true
+    setTopLevelCategoriesStore(newTopLevelState)
+    setGlobalColumns(newGlobalState)
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
-    const name = formatPath(event.target.textContent)
-    const body = { name, hidden: false }
-    const response = await editDesktop(body)
+    const id = event.target.dataset.id
+    //console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
+    const items = [{ id, hidden: false }]
+    const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast(message)
       return
     }
-    const newState = [...desktopsStore]
-    const deskIndex = newState.findIndex(desktop => desktop.name === name)
-    newState[deskIndex].hidden = false
-    setDesktopsStore(newState)
+    const newTopLevelState = [...topLevelCategoriesStore]
+    const newGlobalState = [...globalColumns]
+    const globalDeskIndex = newGlobalState.findIndex(col => col._id === id)
+    const deskIndex = newTopLevelState.findIndex(desktop => desktop._id === id)
+    newTopLevelState[deskIndex].hidden = false
+    newGlobalState[globalDeskIndex].hidden = false
+    setTopLevelCategoriesStore(newTopLevelState)
+    setGlobalColumns(newGlobalState)
     // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
     // setHiddenDesktops(newHiddenState)
   }
@@ -202,11 +256,11 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     colorOptions.querySelector(`#${accentColor}`).classList.add(`${styles.optionSelected}`)
 
     const background = JSON.parse(window.localStorage.getItem('backgroundMiniature')) ?? 'color'
-    // console.log('🚀 ~ useEffect ~ background:', background)
+    // //console.log('🚀 ~ useEffect ~ background:', background)
     const backgroundOptions = Array.from(document.getElementById('bgMiniatures').childNodes)
-    // console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
+    // //console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
     backgroundOptions.forEach(option => {
-      // console.log(option.src)
+      // //console.log(option.src)
       if (option.src && option.src === background) {
         option.classList.add(`${styles.optionSelected}`)
       } else if (option.id && option.id === background) {
@@ -217,26 +271,25 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   useEffect(() => {
     getBackgroundMiniatures()
       .then(response => {
-        // Error de red
-        if (!Array.isArray(response) && !response.ok && response.error === undefined) {
-          toast('Error de red')
+        const { hasError, message } = handleResponseErrors(response)
+        if (hasError) {
+          toast(message)
           return
         }
-        // Error http
-        if (!Array.isArray(response) && !response.ok && response.status !== undefined) {
-          toast(`${response.status}: ${response.statusText}`)
-          return
-        }
-        // Error personalizado
-        if (!Array.isArray(response) && response.error) {
-          toast(`Error: ${response.error}`)
-        }
-        setMiniatures(response)
+        setMiniatures(response.data)
       })
       .catch(error => {
         toast({ error })
       })
   }, [])
+  useEffect(() => {
+    setDesktop(topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || [])
+  }, [desktopName, topLevelCategoriesStore])
+  // Añadir effect para detectar cambio de desktop al navegar
+
+  useEffect(() => {
+    setDesktopNameInput(desktop[0]?.name || '')
+  }, [desktop[0]?.name])
 
   return (
     <>
@@ -247,7 +300,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                     <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                       <div className={styles.rowGroup} style={{ position: 'relative' }}>
                           <label htmlFor="changeDesktopName" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Nombre:</label>
-                          <input ref={inputRef} type="text" name="changeDesktopName" id="changeDesktopName" defaultValue={desktop[0]?.displayName}/>
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            name="changeDesktopName"
+                            id="changeDesktopName"
+                            value={desktopNameInput}
+                            onChange={e => setDesktopNameInput(e.target.value)}
+                          />
                           <button className={styles.inputButton} type='submit'>Modificar</button>
                       </div>
                       <div className={styles.rowGroup}>
@@ -268,9 +328,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label>
                           <select name="" id="" onChange={handleHideDesktops}>
                           {
-                              desktopsStore?.map(desktop => {
+                              topLevelCategoriesStore?.map(desktop => {
                                 if (!desktop.hidden) {
-                                  return <option key={desktop._id} value={desktop.displayName}>{desktop.displayName}</option>
+                                  return <option key={desktop._id} data-id={desktop._id} value={desktop.name}>{desktop.name}</option>
                                 }
                                 return null // Add this line to return null if the condition is not met
                               })
@@ -279,9 +339,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                          </div>
                         <div className={styles.rowGroup}>
                         {
-                          desktopsStore?.map(desktop => {
+                          topLevelCategoriesStore?.map(desktop => {
                             if (desktop.hidden) {
-                              return <button onClick={handleRestoreDesktop} key={desktop._id} className={styles.hiddenDesktops}>{desktop.displayName}</button>
+                              return <button onClick={handleRestoreDesktop} data-id={desktop._id} key={desktop._id} className={styles.hiddenDesktops}>{desktop.name}</button>
                             }
                             return null // Add this line to return null if the condition is not met
                           })

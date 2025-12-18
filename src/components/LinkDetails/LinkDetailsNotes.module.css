@@ -1,0 +1,24 @@
+.editor_container {
+    padding: 32px;
+    background-color: var(--color-secondary);
+    border: 1px dashed var(--firstBorderColor);
+    overflow: auto;
+    /* flex-grow: 1; */
+
+}
+
+.editor_container::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-height);
+}
+
+.editor_container::-webkit-scrollbar-thumb {
+    background: var(--color-medium);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+.editor_container::-webkit-scrollbar-track {
+    background: var(--color-primary);
+    border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
+    border-radius: var(--scrollbar-border-radius);
+}

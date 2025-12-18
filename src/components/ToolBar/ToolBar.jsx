@@ -3,23 +3,23 @@ import { useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useDesktopsStore } from '../../store/desktops'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
+import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden)
+  const desktopColumns = globalColumns.filter(column => column.slug === desktopName).toSorted((a, b) => a.orden - b.orden)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
   const setGlobalOpenColumns = usePreferencesStore(state => state.setGlobalOpenColumns)
-  const desktopsStore = useDesktopsStore(state => state.desktopsStore)
-  const desktop = desktopsStore.find(desk => desk.name === desktopName)
+  const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+  const desktop = topLevelCategoriesStore.find(desk => desk.slug === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
@@ -30,23 +30,23 @@ export default function ToolBar () {
   const isColumnLocation = window.location.pathname.startsWith('/column')
   // const navigate = useNavigate()
   const [newColumnId, setNewColumnId] = useState(null) // Added line
-  // console.log(location.pathname)
+  // //console.log(location.pathname)
 
   const handleAddColumn = async () => {
     if (desktop === undefined) {
       toast.error('Debes crear un escritorio primero')
       return
     }
-    const response = await createColumn({ name: 'New Column', escritorio: desktop.name, order: desktopColumns.length })
+    const response = await createColumn({ name: 'New Column', parentId: desktop._id, order: desktopColumns.length + 1, level: 1, parentSlug: desktop.slug })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)
       return
     }
-    const { column } = response
-    console.log('🚀 ~ handleAddColumn ~ column:', column[0]._id)
-    setGlobalColumns((() => { return [...globalColumns, ...column] })())
-    setNewColumnId(column[0]._id) // Update newColumnId
+    const { data } = response
+    // console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
+    setGlobalColumns((() => { return [...globalColumns, ...data] })())
+    setNewColumnId(data[0]._id) // Update newColumnId
     // navigate(`/desktop/${desktop.name}/#${column[0]._id}`)
   }
   useEffect(() => {

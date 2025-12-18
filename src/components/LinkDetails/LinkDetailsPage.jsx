@@ -9,37 +9,38 @@ import LinkDetailsMedia from './LinkDetailsMedia'
 export default function LinkDetailsPage ({ linkid, context }) {
   // const actualDesktop = localStorage.getItem('actualDesktop') ? JSON.parse(localStorage.getItem('actualDesktop')) : useFormsStore(state => state.actualDesktop) // memo?
   const { desktopName, id } = useParams()
-  console.log('🚀 ~ LinkDetails ~ actualDesktop:', desktopName)
+  // console.log('🚀 ~ LinkDetails ~ actualDesktop:', desktopName)
   const linkId = id
-  console.log('🚀 ~ LinkDetails ~ linkId:', linkId)
+  // console.log('🚀 ~ LinkDetails ~ linkId:', linkId)
 
   const [links, setLinks] = useState([])
   const [maximizeVideo, setMaximizeVideo] = useState(false)
   const [notesState, setNotesState] = useState()
 
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const desktopColumns = globalColumns.filter(column => column.escritorio.toLowerCase() === desktopName).toSorted((a, b) => a.orden - b.orden) // memo?
-  console.log('🚀 ~ LinkDetails ~ desktopColumns:', desktopColumns)
+  const actualDesktopId = globalColumns.find(column => column.slug.toLowerCase() === desktopName)?._id
+  const desktopColumns = globalColumns.filter(column => column.parentId === actualDesktopId).toSorted((a, b) => a.orden - b.orden) // memo?
+  // console.log('🚀 ~ LinkDetails ~ desktopColumns:', desktopColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
 
   useEffect(() => {
     if (desktopName) {
-      console.log('entramos')
+      // console.log('entramos')
 
       let dataFinal = []
       desktopColumns.forEach((column) => {
-        dataFinal = dataFinal.concat(globalLinks.filter(link => link.idpanel === column._id).toSorted((a, b) => (a.orden - b.orden)))
+        dataFinal = dataFinal.concat(globalLinks.filter(link => link.categoryId === column._id).toSorted((a, b) => (a.orden - b.orden)))
       })
       setLinks(dataFinal)
     }
   }, [desktopName, globalColumns])
 
-  console.log(links)
+  // console.log(links)
 
-  const data = linkId.id ? links.find(link => link._id === linkId.id) : links.find(link => link._id === linkId)
+  const data = links?.find(link => link._id === linkId)
   useTitle({ title: `${data?.name}` })
 
-  console.log('🚀 ~ LinkDetails ~ data:', data)
+  // console.log('🚀 ~ LinkDetails ~ data:', data)
 
   useEffect(() => {
     if (data?.notes) {

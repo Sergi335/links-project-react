@@ -30,9 +30,9 @@ export const useLinksStore = create(
 // Suscribirte a cambios en la tienda y guardar en localStorage
 useLinksStore.subscribe(state => {
   // const { linksStore } = state
-  // console.log('Store Actualizada')
+  // //console.log('Store Actualizada')
   // const path = window.location.pathname
   // const valor = path.substring(path.lastIndexOf('/') + 1)
-  // console.log(valor)
+  // //console.log(valor)
   // localStorage.setItem('testlinks', JSON.stringify(linksStore.toSorted((a, b) => (a.orden - b.orden))))
 })
