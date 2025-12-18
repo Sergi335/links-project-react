@@ -1,6 +1,7 @@
 .video_player_iframe,
 .video_player_placeholder {
     aspect-ratio: 16 / 9;
+    width: -webkit-fill-available;
 }
 
 .video_player_placeholder {
