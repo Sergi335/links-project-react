@@ -21,7 +21,7 @@ import { ProtectedRoute } from './components/Routes/ProtectedRoute'
 import { PublicOnlyRoute } from './components/Routes/PublicOnlyRoute'
 import SingleColumnPage from './components/SingleColumnPage'
 import { constants } from './services/constants'
-import { getCookie, keepServerAwake } from './services/functions'
+import { keepServerAwake } from './services/functions'
 import { useGlobalStore } from './store/global'
 
 function App () {
@@ -34,7 +34,6 @@ function App () {
   useEffect(() => {
     setArticle(globalArticles)
   }, [globalArticles])
-  // console.log('🚀 ~ App ~ globalArticles:', globalArticles)
   // const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
 
   // 🔧 Mover keepServerAwake a useEffect para mejor control
@@ -52,13 +51,19 @@ function App () {
           credentials: 'include',
           ...constants.FETCH_OPTIONS
         })
+          .then(res => res.json())
+          .then(data => {
+            if (data.csrfToken) {
+              setCsfrtoken(data.csrfToken)
+              localStorage.setItem('csrfToken', JSON.stringify(data.csrfToken))
+            }
+          })
 
-        const csrfToken = getCookie('csrfToken')
-        console.log('🚀 ~ fetchCsrfToken ~ csrfToken:', csrfToken)
-        if (csrfToken) {
-          setCsfrtoken(csrfToken)
-          localStorage.setItem('csrfToken', JSON.stringify(csrfToken))
-        }
+        // const csrfToken = getCookie('csrfToken')
+        // if (csrfToken) {
+        //   setCsfrtoken(csrfToken)
+        //   localStorage.setItem('csrfToken', JSON.stringify(csrfToken))
+        // }
       } catch (error) {
         console.error('Error fetching CSRF token:', error)
       }
