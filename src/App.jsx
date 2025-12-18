@@ -54,6 +54,7 @@ function App () {
         })
 
         const csrfToken = getCookie('csrfToken')
+        console.log('🚀 ~ fetchCsrfToken ~ csrfToken:', csrfToken)
         if (csrfToken) {
           setCsfrtoken(csrfToken)
           localStorage.setItem('csrfToken', JSON.stringify(csrfToken))

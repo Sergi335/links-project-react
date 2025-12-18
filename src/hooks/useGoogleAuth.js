@@ -28,7 +28,7 @@ export default function useGoogleAuth () {
     })
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data)
+        // console.log(data)
         if (data._id) {
           setUser(data)
         }
@@ -46,7 +46,7 @@ export default function useGoogleAuth () {
       .then((result) => {
         setLoginLoading(true)
         // This gives you a Google Access Token. You can use it to access the Google API.
-        //console.log(result)
+        // console.log(result)
         const googleUser = result.user
         return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/googlelogin`, idToken: googleUser.auth.currentUser.accessToken, csrfToken, uid: googleUser.uid, email: googleUser.email })
       })
@@ -70,9 +70,9 @@ export default function useGoogleAuth () {
       })
       .catch((error) => {
         const errorCode = error.code
-        //console.log(errorCode)
+        console.log(errorCode)
         const errorMessage = error.message
-        //console.log(errorMessage)
+        console.log(errorMessage)
       })
   }
 
@@ -84,7 +84,7 @@ export default function useGoogleAuth () {
             .then(res => {
               res.json()
               if (res.status === 200) {
-                //console.log(res)
+                // console.log(res)
                 setUser(null)
                 setCsfrtoken('')
                 auth.signOut()
@@ -94,7 +94,7 @@ export default function useGoogleAuth () {
         }).catch((error) => {
           setUser(null)
           setCsfrtoken('')
-          //console.log(error)
+          console.log(error)
           window.location.href = '/'
         })
     } else {
@@ -134,7 +134,7 @@ export default function useGoogleAuth () {
         })
     })
       .catch((e) => {
-        //console.log(e)
+        // console.log(e)
         // Ver los tipos de errores en la documentación
         toast.error('Usuario o contraseña incorrectos')
       })
@@ -161,21 +161,21 @@ export default function useGoogleAuth () {
           return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/register`, idToken, csrfToken, uid: user.uid, nickname }
           )
             .then(data => {
-              //console.log(data)
+              // console.log(data)
               setRegisterLoading(false)
               // redirect(`${rootPath}${basePath}/start`)
               // window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
             })
         }).catch(function (error) {
           // Handle error
-          //console.log(error)
+          console.log(error)
         })
         // ...
       })
       .catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
-        //console.log(errorCode, errorMessage)
+        console.log(errorCode, errorMessage)
         // ..
       })
   }
@@ -185,7 +185,7 @@ export default function useGoogleAuth () {
     return deleteUser(user).then(() => {
       return 'Usuario eliminado'
     }).catch((error) => {
-      //console.log(error)
+      // console.log(error)
       return ({ error: error.message, code: error.code })
     })
   }
@@ -197,7 +197,7 @@ export default function useGoogleAuth () {
     } catch (error) {
       const errorCode = error.code
       const errorMessage = error.message
-      //console.log(errorCode, errorMessage)
+      // console.log(errorCode, errorMessage)
       return { status: 'error', error: { code: errorCode, message: errorMessage } }
     }
   }
@@ -210,14 +210,14 @@ export default function useGoogleAuth () {
     } catch (error) {
       const errorCode = error.code
       const errorMessage = error.message
-      //console.log(errorCode, errorMessage)
+      // console.log(errorCode, errorMessage)
       return { status: 'error', error: { code: errorCode, message: errorMessage } }
     }
   }
   // TODO
   const handleReauthenticate = async (password) => {
     const user = auth.currentUser
-    //console.log(user.providerData)
+    // console.log(user.providerData)
 
     // TODO(you): prompt the user to re-provide their sign-in credentials
     const credential = EmailAuthProvider.credential(
@@ -231,7 +231,7 @@ export default function useGoogleAuth () {
       }).catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
-        //console.log(errorCode, errorMessage)
+        // console.log(errorCode, errorMessage)
         return { status: 'error', error: { code: errorCode, message: errorMessage } }
       })
   }
@@ -245,7 +245,7 @@ export default function useGoogleAuth () {
       }).catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
-        //console.log(errorCode, errorMessage)
+        // console.log(errorCode, errorMessage)
         return { status: 'error', error: { code: errorCode, message: errorMessage } }
       })
   }
