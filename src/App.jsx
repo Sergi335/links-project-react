@@ -65,6 +65,8 @@ function App () {
         //   localStorage.setItem('csrfToken', JSON.stringify(csrfToken))
         // }
       } catch (error) {
+        localStorage.removeItem('csrfToken')
+        setCsfrtoken('')
         console.error('Error fetching CSRF token:', error)
       }
     }

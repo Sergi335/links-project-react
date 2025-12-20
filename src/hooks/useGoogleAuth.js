@@ -48,7 +48,14 @@ export default function useGoogleAuth () {
         // This gives you a Google Access Token. You can use it to access the Google API.
         // console.log(result)
         const googleUser = result.user
-        return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/googlelogin`, idToken: googleUser.auth.currentUser.accessToken, csrfToken, uid: googleUser.uid, email: googleUser.email })
+        return postIdTokenToSessionLogin(
+          {
+            url: `${constants.BASE_API_URL}/auth/googlelogin`,
+            idToken: googleUser.auth.currentUser.accessToken,
+            csrfToken,
+            uid: googleUser.uid,
+            email: googleUser.email
+          })
       })
       .then(() => {
         // Pedir todos es innecesario?
