@@ -19,6 +19,7 @@ export const constants = {
   STORAGE_FETCH_OPTIONS: {
     credentials: 'include',
     headers: {
+      'Content-Type': 'application/json',
       'x-justlinks-user': 'SergioSR',
       'x-justlinks-token': 'otroheader',
       'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''

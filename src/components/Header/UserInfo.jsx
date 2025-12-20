@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTime } from '../../hooks/useTime'
 import { useSessionStore } from '../../store/session'
+import UserAvatar from '../UserAvatar.jsx'
 import Clock from './Clock'
 import styles from './Header.module.css'
 
@@ -14,7 +15,9 @@ export default function UserInfo () {
           <Clock hours={hours} minutes={minutes} />
           {/* <WeatherComponent /> */}
         </div>
-        <Link to={'/app/profile'} className={styles.header_image_link}><img src={user?.profileImage ? user?.profileImage : '/img/avatar.svg' } alt={user?.realName}/></Link>
+        <Link to={'/app/profile'} className={styles.header_image_link}>
+        <UserAvatar imageKey={user?.profileImage} />
+        </Link>
         <div className={styles.header_info_wrapper}>
           <p>{saludo}</p>
           <p className={styles.header_info_user}>{user?.realName}</p>

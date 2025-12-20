@@ -9,6 +9,7 @@ import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon } from '../Icons/icons'
+import UserAvatar from '../UserAvatar.jsx'
 import styles from './ProfilePage.module.css'
 
 export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
@@ -65,7 +66,7 @@ export function UserPreferences ({ user, setUser }) {
         const response = await handleReauthenticateWithGoogle()
         const { hasError, message } = handleResponseErrors(response)
         if (hasError) {
-          //console.log(message.code)
+          // console.log(message.code)
           toast.update(deleteLoading, { render: 'error reauth google', type: 'error', isLoading: false, autoClose: 3000 })
           return
         }
@@ -130,7 +131,7 @@ export function UserSecurity ({ user, setUser }) {
     const form = e.currentTarget
     const newPassword = form.newPassword.value
     setNewPasswordState(newPassword)
-    //console.log('🚀 ~ handleChangePasswordSubmit ~ newPassword:', newPassword)
+    // console.log('🚀 ~ handleChangePasswordSubmit ~ newPassword:', newPassword)
     const response = await handleChangeFirebasePassword(newPassword)
     if (response.status === 'success') {
       toast('Contraseña cambiada con éxito')
@@ -145,22 +146,22 @@ export function UserSecurity ({ user, setUser }) {
         setReauthVisible(true)
       }
     }
-    //console.log('🚀 ~ handleChangePasswordSubmit ~ response:', response)
+    // console.log('🚀 ~ handleChangePasswordSubmit ~ response:', response)
   }
   const handleReauth = async (e) => {
     e.preventDefault()
     const form = e.currentTarget
     const password = form.currentPassword.value
     const reAuthResponse = await handleReauthenticate(password)
-    //console.log(reAuthResponse)
+    // console.log(reAuthResponse)
     if (reAuthResponse.status === 'success') {
       setReauthVisible(false)
       const authResponse = await handleChangeFirebasePassword(newPasswordState)
       // gestionar error tmb
       toast('Contraseña cambiada con éxito')
-      //console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
+      // console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
     } else {
-      //console.log(reAuthResponse)
+      // console.log(reAuthResponse)
       setReauthVisible(false)
       toast('Error al reautenticar')
     }
@@ -173,7 +174,7 @@ export function UserSecurity ({ user, setUser }) {
     })
       .then(res => res.json())
       .then(data => {
-        //console.log(data)
+        // console.log(data)
         const { hasError, message } = handleResponseErrors(data)
         if (hasError) {
           toast(message)
@@ -499,7 +500,7 @@ export function UserInfo ({ user, setUser }) {
   const [editName, setEditName] = useState(false)
   const [editWebsite, setEditWebsite] = useState(false)
   const [editAboutMe, setEditAboutMe] = useState(false)
-  //console.log(user)
+  // console.log(user)
 
   const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault()
@@ -509,15 +510,15 @@ export function UserInfo ({ user, setUser }) {
     const form = e.target
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
-    //console.log(data)
+    // console.log(data)
     const response = await editUserAditionalInfo({ email: user.email, fields: { ...data } })
-    //console.log(response)
+    // console.log(response)
     const newUserState = { ...response.data }
     setUser(newUserState)
   }
   const handleUploadImageInputChange = async (e) => {
     const file = e.target.files[0]
-    //console.log(file.size)
+    // console.log(file.size)
     if (file.size > 2e+6) {
       toast.error('Imagen demasiado grande, max. 2MB')
       return
@@ -574,7 +575,7 @@ export function UserInfo ({ user, setUser }) {
         <h3>Información Básica</h3>
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
-            <img id="preview-image" src={user.profileImage ? user.profileImage : '/img/avatar.svg'}/>
+            <UserAvatar imageKey={user?.profileImage} id="preview-image" />
           </div>
           <div className={styles.uploadImageTooltip}>
             <p>Sube tu imagen de perfil</p>

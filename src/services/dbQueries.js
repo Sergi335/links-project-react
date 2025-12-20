@@ -540,6 +540,16 @@ export async function uploadProfileImg (file) {
     }
   }
 }
+export async function getSignedUrl (key) {
+  const response = await fetch(`${constants.BASE_API_URL}/storage/signed-url`, {
+    method: 'POST',
+    ...constants.STORAGE_FETCH_OPTIONS,
+    body: JSON.stringify({ key })
+  })
+
+  const data = await response.json()
+  return data.data.url // La URL firmada fresca
+}
 
 // Backup
 
