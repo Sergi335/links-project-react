@@ -548,7 +548,7 @@ export async function getSignedUrl (key) {
   })
 
   const data = await response.json()
-  return data.data.url // La URL firmada fresca
+  return data.data.url
 }
 
 // Backup
