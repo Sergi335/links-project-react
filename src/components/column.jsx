@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
@@ -10,10 +10,10 @@ import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import styles from './Column.module.css'
-import { ArrowDown, SelectIcon } from './Icons/icons'
+import { ArrowDown, ChangeLayoutIcon, SelectIcon } from './Icons/icons'
 import LinkLoader from './Loaders/LinkLoader'
 
-export default function Columna ({ data, children, childCount, context }) {
+export default function Columna ({ data, children, childCount, context, getFirstColumnLink }) {
   const { desktopName } = useParams()
   const columna = data.columna || data.activeColumn
   const [editMode, setEditMode] = useState(false)
@@ -37,10 +37,14 @@ export default function Columna ({ data, children, childCount, context }) {
   const linkLoader = useLinksStore(state => state.linkLoader)
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
 
   const handleChangeColumnHeight = (e) => {
     setLocalOpenColumn(prev => !prev)
   }
+
+  const firstLink = getFirstColumnLink ? getFirstColumnLink(columna) : null
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
     const column = document.getElementById(columna._id)
@@ -110,7 +114,7 @@ export default function Columna ({ data, children, childCount, context }) {
           toast(message)
         } else {
           const { data } = response
-          //console.log('🚀 ~ handleHeaderBlur ~ updatedData:', data)
+          // console.log('🚀 ~ handleHeaderBlur ~ updatedData:', data)
 
           if (data.length > 0) {
             // 🔧 Usar updatedState (ya calculado) en lugar de globalColumns
@@ -124,7 +128,7 @@ export default function Columna ({ data, children, childCount, context }) {
               }
               postDbUpdatedState[updatedCategoryIndex] = updatedCategory
               setGlobalColumns(postDbUpdatedState)
-              //console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
+              // console.log('🚀 ~ handleHeaderBlur ~ updatedCategory:', updatedCategory)
             }
           }
         }
@@ -221,9 +225,14 @@ export default function Columna ({ data, children, childCount, context }) {
                         }
                       </div>
                     }
-                  <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
+                 <div style={{ display: 'flex' }}>
+                   <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>
+                  <Link to={`${rootPath}${basePath}/${desktopName}/${columna.slug}/${firstLink?._id}`} className={styles.selector}>
+                    <ChangeLayoutIcon className='uiIcon_small'/>
+                  </Link>
+                 </div>
                 </div>
           }
             {children}

@@ -107,6 +107,7 @@ export default function Columns ({
                 data={{ columna }}
                 childCount={getLinksIds(columna).length}
                 context={context === 'single' ? 'singlecol' : undefined}
+                getFirstColumnLink={getFirstColumnLink}
               >
                 <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                   {!activeColumn &&
