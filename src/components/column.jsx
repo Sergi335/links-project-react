@@ -45,6 +45,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
   }
 
   const firstLink = getFirstColumnLink ? getFirstColumnLink(columna) : null
+
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
     const column = document.getElementById(columna._id)
@@ -83,6 +84,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
       }
     })
     setSelectedLinks([...prevState, ...newState])
+    console.log(selectedLinks)
   }
   const handleContextMenu = useCallback((event) => {
     event.preventDefault()

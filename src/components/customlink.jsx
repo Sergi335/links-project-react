@@ -17,7 +17,7 @@ const CustomLink = ({ data, className }) => {
   const linkDesc = useRef(null)
   const selectModeGlobal = usePreferencesStore(state => state.selectModeGlobal)
   const columnSelectModeId = usePreferencesStore(state => state.columnSelectModeId)
-  const selectedLinks = usePreferencesStore(state => state.selectedLinks)
+  // const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const setContextMenuVisible = useFormsStore(state => state.setContextMenuVisible)
   const setPoints = useFormsStore(state => state.setPoints)
@@ -56,21 +56,25 @@ const CustomLink = ({ data, className }) => {
   }
 
   const handleSelectChange = (e) => {
-    const linkId = e.currentTarget.parentNode.parentNode.id
-    // //console.log('🚀 ~ handleSelectChange ~ linkId:', linkId)
-    if (selectedLinks.includes(linkId)) {
-      const index = selectedLinks.findIndex((id) => id === linkId)
-      const newState = [...selectedLinks]
-      newState.splice(index, 1)
+    // e.preventDefault()
+    e.stopPropagation()
+
+    const linkElement = e.currentTarget.parentNode.parentNode.parentNode
+    const linkId = linkElement.id
+
+    // Obtener el estado actual directamente del store
+    const currentSelectedLinks = usePreferencesStore.getState().selectedLinks
+    console.log('Estado actual del store:', currentSelectedLinks)
+
+    if (currentSelectedLinks.includes(linkId)) {
+      const newState = currentSelectedLinks.filter(id => id !== linkId)
       setSelectedLinks(newState)
-      if (e.currentTarget.parentNode.parentNode.classList.contains('active')) {
-        e.currentTarget.parentNode.parentNode.classList.remove('active')
-      }
+      linkElement.classList.remove('active')
     } else {
-      setSelectedLinks([...selectedLinks, linkId])
-      if (!e.currentTarget.parentNode.parentNode.classList.contains('active')) {
-        e.currentTarget.parentNode.parentNode.classList.add('active')
-      }
+      const newState = [...currentSelectedLinks, linkId]
+      console.log('Nuevo estado a guardar:', newState)
+      setSelectedLinks(newState)
+      linkElement.classList.add('active')
     }
   }
   const handleShowFaviconChanger = (e) => {

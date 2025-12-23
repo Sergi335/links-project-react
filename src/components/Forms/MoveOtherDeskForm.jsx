@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { memo, useCallback, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useHideForms from '../../hooks/useHideForms'
@@ -11,23 +11,17 @@ import FolderIcon from '../Icons/folder'
 import styles from './MoveOtherDeskForm.module.css'
 
 // Componente recursivo para renderizar categorías anidadas
-function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, isTopLevel = false }) {
-  const childCategories = allCategories.filter(cat => cat.parentId === category._id)
+const CategoryItem = memo(function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, isTopLevel = false }) {
+  console.log('render')
+
+  const childCategories = useMemo(() =>
+    allCategories.filter(cat => cat.parentId === category._id),
+  [allCategories, category._id]
+  )
   const hasChildren = childCategories.length > 0
-  // Las categorías top-level no son seleccionables, las demás sí (aunque tengan hijos)
   const isSelectable = !isTopLevel
 
-  // Debug log
-  console.log('📂 CategoryItem:', {
-    name: category.name,
-    isTopLevel,
-    hasChildren,
-    isSelectable,
-    childrenCount: childCategories.length,
-    willRenderClickableSpan: hasChildren && isSelectable
-  })
-
-  const togglePanel = (liElement) => {
+  const togglePanel = useCallback((liElement) => {
     const panel = liElement.querySelector(':scope > ul')
     if (!panel) return
 
@@ -35,7 +29,6 @@ function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, i
 
     if (isExpanding) {
       panel.style.maxHeight = panel.scrollHeight + 'px'
-      // Actualizar los acordeones padres para que acomoden el nuevo contenido
       let parentLi = liElement.parentElement?.closest('li')
       while (parentLi) {
         const parentPanel = parentLi.querySelector(':scope > ul')
@@ -45,7 +38,6 @@ function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, i
         parentLi = parentLi.parentElement?.closest('li')
       }
     } else {
-      // Al colapsar, también reducir la altura de los padres
       const collapsingHeight = panel.scrollHeight
       panel.style.maxHeight = null
       let parentLi = liElement.parentElement?.closest('li')
@@ -58,42 +50,41 @@ function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, i
         parentLi = parentLi.parentElement?.closest('li')
       }
     }
-  }
+  }, [])
 
-  const handleToggleAccordion = (event) => {
+  const handleToggleAccordion = useCallback((event) => {
     event.stopPropagation()
-    // Si es seleccionable, buscar el span hijo y simular el evento de selección
     if (isSelectable) {
       const spanElement = event.currentTarget.querySelector(':scope > span.destination')
       if (spanElement) {
-        onSelect({ ...event, currentTarget: spanElement })
+        onSelect({ currentTarget: spanElement })
       }
     }
     togglePanel(event.currentTarget)
-  }
+  }, [isSelectable, onSelect, togglePanel])
 
-  const handleSelect = (event) => {
+  const handleSelect = useCallback((event) => {
     event.stopPropagation()
-    console.log('🎯 handleSelect ejecutado para:', category.name)
-    // Pasar el span directamente a onSelect
     onSelect(event)
-    // También hacer toggle del acordeón si tiene hijos
     if (hasChildren) {
       const liElement = event.currentTarget.closest('li')
       togglePanel(liElement)
     }
-  }
+  }, [hasChildren, onSelect, togglePanel])
 
-  // Para categorías sin hijos que son seleccionables
-  const handleClickLeaf = (event) => {
+  const handleClickLeaf = useCallback((event) => {
     if (isSelectable) {
-      onSelect(event)
+      const spanElement = event.currentTarget.querySelector(':scope > span.destination')
+      if (spanElement) {
+        onSelect({ currentTarget: spanElement })
+      }
     }
-  }
+  }, [isSelectable, onSelect])
+
+  if (category._id === currentCategoryId) return null
 
   return (
     <li
-      key={category._id}
       onClick={hasChildren ? handleToggleAccordion : handleClickLeaf}
       className={hasChildren ? styles.accordion : ''}
       id={category._id}
@@ -122,41 +113,38 @@ function CategoryItem ({ category, allCategories, onSelect, currentCategoryId, i
       )}
     </li>
   )
-}
+})
 
-export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params }) {
+function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible, params }) {
   const visibleClass = moveFormVisible ? styles.flex : styles.hidden
   const moveFormRef = useRef()
   const { desktopName } = useParams()
+
+  // Selectores más específicos para evitar re-renders innecesarios
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
-  useHideForms({ form: moveFormRef.current, setFormVisible: setMoveFormVisible })
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const globalError = useGlobalStore(state => state.globalError)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
 
-  // Combinar top-level categories con las columnas para tener el árbol completo
-  const allCategories = [...topLevelCategoriesStore, ...globalColumns]
+  useHideForms({ form: moveFormRef.current, setFormVisible: setMoveFormVisible })
 
-  // Obtener la categoría actual del enlace a mover
-  const currentCategoryId = Array.isArray(params)
-    ? globalLinks.find(link => link._id === params[0])?.categoryId
-    : params?.categoryId
+  // Memoizar para evitar recálculos innecesarios
+  const allCategories = useMemo(() =>
+    [...topLevelCategoriesStore, ...globalColumns],
+  [topLevelCategoriesStore, globalColumns]
+  )
 
-  const selectDest = (event) => {
-    event.stopPropagation?.()
-    // El targetElement ahora es el span, el id está en el li padre
+  const currentCategoryId = useMemo(() =>
+    Array.isArray(params)
+      ? globalLinks.find(link => link._id === params[0])?.categoryId
+      : params?.categoryId,
+  [params, globalLinks]
+  )
+
+  const selectDest = useCallback((event) => {
     const spanElement = event.currentTarget
-    const liElement = spanElement.closest('li')
-    const categoryId = liElement?.id
-    const selectedCategory = allCategories.find(cat => cat._id === categoryId)
-    console.log('📁 Categoría seleccionada como destino:', {
-      id: categoryId,
-      name: selectedCategory?.name,
-      level: selectedCategory?.level,
-      parentId: selectedCategory?.parentId
-    })
     const destinations = document.querySelectorAll('.destination')
     destinations.forEach((destination) => {
       if (destination === spanElement) {
@@ -167,9 +155,9 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
         destination.classList.remove('selected')
       }
     })
-  }
+  }, [])
 
-  const handleMove = async () => {
+  const handleMove = useCallback(async () => {
     setMoveFormVisible(false)
     const previousLinks = [...globalLinks]
     const linksToEdit = Array.isArray(params) ? params : [params._id]
@@ -181,7 +169,6 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       return
     }
 
-    // El span seleccionado está dentro del li que tiene el id
     const targetCategoryId = columnSelected.closest('li')?.id
     const sourceCategoryId = firstLink?.categoryId
 
@@ -238,6 +225,11 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
       toast('Error al mover enlaces')
     }
+  }, [globalLinks, params, setGlobalLinks, activeLocalStorage, desktopName, setMoveFormVisible])
+
+  // Si no está visible, no renderizar el contenido
+  if (!moveFormVisible) {
+    return <div ref={moveFormRef} id="menuMoveTo" className={styles.hidden} />
   }
 
   return (
@@ -248,19 +240,16 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
           <>
             <p>Mover {params?.name}</p>
             <ul className={styles.destDeskMoveTo}>
-              {topLevelCategoriesStore?.map(desk =>
-                (
-                  <CategoryItem
-                    key={desk._id}
-                    category={desk}
-                    allCategories={allCategories}
-                    onSelect={selectDest}
-                    currentCategoryId={currentCategoryId}
-                    isTopLevel={true}
-                  />
-                )
-
-              )}
+              {topLevelCategoriesStore?.map(desk => (
+                <CategoryItem
+                  key={desk._id}
+                  category={desk}
+                  allCategories={allCategories}
+                  onSelect={selectDest}
+                  currentCategoryId={currentCategoryId}
+                  isTopLevel={true}
+                />
+              ))}
             </ul>
             <div className={styles.moveToControls}>
               <button id="acceptMove" onClick={handleMove}>Aceptar</button>
@@ -271,3 +260,5 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
     </div>
   )
 }
+
+export default memo(MoveOtherDeskForm)
