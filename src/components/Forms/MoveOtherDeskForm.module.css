@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
 }
+
 .menuMoveTo {
     position: fixed;
     top: calc(2rem + 46px);
@@ -14,6 +15,7 @@
     box-shadow: 0px 10px 12px var(--firstShadow);
     overflow-y: auto;
 }
+
 .menuMoveTo p:first-child {
     text-align: left;
     padding-left: 30px;
@@ -22,9 +24,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .hidden {
     display: none;
 }
+
 .destDeskMoveTo {
     list-style-type: none;
     cursor: pointer;
@@ -33,25 +37,50 @@
     color: var(--text-color-primary);
     padding-left: 30px;
 }
+
 li.accordion {
     padding: 5px 0 0;
     text-align: left;
 }
+
 li.accordion svg {
     vertical-align: bottom;
     margin-right: 5px;
 }
+
 .menuMoveTo ul li ul {
     max-height: 0px;
     overflow: hidden;
     transition: max-height .2s ease-out;
     margin-top: 5px;
 }
+
 .menuMoveTo ul li ul li {
     padding: 0 5px;
     width: fit-content;
     border-radius: 2px;
 }
+
+.categoryName {
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.categoryName:hover {
+    background-color: var(--accentColor);
+}
+
+.selectableCategory {
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.selectableCategory:hover {
+    background-color: var(--accentColor);
+}
+
 .moveToControls {
     display: flex;
     gap: 15px;
