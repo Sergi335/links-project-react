@@ -170,6 +170,7 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
   }
 
   const handleMove = async () => {
+    setMoveFormVisible(false)
     const previousLinks = [...globalLinks]
     const linksToEdit = Array.isArray(params) ? params : [params._id]
     const firstLink = globalLinks.find(link => link._id === linksToEdit[0])
@@ -237,8 +238,6 @@ export default function MoveOtherDeskForm ({ moveFormVisible, setMoveFormVisible
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
       toast('Error al mover enlaces')
     }
-
-    setMoveFormVisible(false)
   }
 
   return (
