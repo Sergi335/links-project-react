@@ -29,7 +29,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
   // const globalLoading = useGlobalStore(state => state.globalLoading)
   // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
-  //console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
+  // console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
   const themeVariants = Object.keys(constants.THEME_VARIANTS)
@@ -75,10 +75,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         return
       }
 
-      const { updatedData } = response
+      const { data } = response
 
       // Actualizar en el state el slug de la categoría que hemos editado
-      currentUpdatedState[updatedCategoryIndex] = { ...currentUpdatedState[updatedCategoryIndex], slug: updatedData[0].slug }
+      currentUpdatedState[updatedCategoryIndex] = { ...currentUpdatedState[updatedCategoryIndex], slug: data[0].slug }
 
       // Actualizar topLevelCategoriesStore
       const updatedTopLevel = currentUpdatedState.filter(cat => cat.level === 0)
@@ -90,8 +90,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       // Trabajar con currentUpdatedState en lugar de globalColumns
       currentUpdatedState.forEach(column => {
         if (column.parentSlug === desktopName) {
-          column.parentSlug = updatedData[0].slug
-          restOfItems.push({ id: column._id, parentSlug: updatedData[0].slug })
+          column.parentSlug = data[0].slug
+          restOfItems.push({ id: column._id, parentSlug: data[0].slug })
         }
       })
 
@@ -112,7 +112,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         setGlobalColumns([...currentUpdatedState])
       }
 
-      navigate(`/app/${updatedData[0].slug}`)
+      navigate(`/app/${data[0].slug}`)
       toast('Desktop actualizado correctamente')
       setGlobalLoading(false)
     } catch (error) {
@@ -144,7 +144,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       toast(message)
       return
     }
-    //console.log(event.target.src ?? event.target.id)
+    // console.log(event.target.src ?? event.target.id)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.src))
   }
   const handleRemoveBackgroundImage = (event) => {
@@ -206,7 +206,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const select = event.target
     const selectedOption = select.options[select.selectedIndex]
     const id = selectedOption.dataset.id
-    //console.log(id)
+    // console.log(id)
     const items = [{ id, hidden: true }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -226,7 +226,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
     const id = event.target.dataset.id
-    //console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
+    // console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
     const items = [{ id, hidden: false }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)

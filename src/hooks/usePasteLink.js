@@ -54,7 +54,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     // Pasamos el blob a texto
     clipboardItem.getType(type).then(blob => {
       blob.text().then(text => {
-        // console.log(text)
+        console.log(text)
         // Si tiene un enlace
         if (text.indexOf('http') === 0) {
           const urls = text.match(/https?:\/\/[^\s]+/g)

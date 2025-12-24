@@ -543,7 +543,7 @@ export async function uploadProfileImg (file) {
 export async function getSignedUrl (key) {
   const response = await fetch(`${constants.BASE_API_URL}/storage/signed-url`, {
     method: 'POST',
-    ...constants.STORAGE_FETCH_OPTIONS,
+    ...constants.FETCH_OPTIONS,
     body: JSON.stringify({ key })
   })
 
