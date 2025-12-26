@@ -48,10 +48,11 @@
     font-size: 13px;
     font-variant: all-small-caps;
     text-align: left;
-    padding-left: 20px;
+    margin-left: 36px;
     gap: 15px;
     display: flex;
     padding-bottom: 10px;
+    max-width: fit-content;
   }
 
   &:hover>a {

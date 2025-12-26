@@ -77,6 +77,7 @@ const CustomLink = ({ data, className }) => {
       linkElement.classList.add('active')
     }
   }
+
   const handleShowFaviconChanger = (e) => {
     e.stopPropagation()
     setFaviconChangerVisiblePoints({ x: e.pageX, y: e.pageY })

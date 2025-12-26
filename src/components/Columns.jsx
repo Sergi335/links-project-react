@@ -166,7 +166,7 @@ export default function Columns ({
                 </ColumnComponent>
               )}
               {activeLink && (
-                <CustomLink
+                <LinkComponent
                   data={{ activeLink }}
                   className={linkStyles.floatLink}
                 />

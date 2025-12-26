@@ -13,10 +13,12 @@
     box-shadow: 0px 1px 15px var(--firstShadow);
     border: 1px dashed var(--firstBorderColor);
 }
+
 .flex {
     display: flex;
     /* animation: appear .1s ease-in-out; */
 }
+
 @keyframes appear {
     from {
         display: none;
@@ -28,6 +30,7 @@
         opacity: 1;
     }
 }
+
 .searchForm {
     display: flex;
     /* align-items: center;
@@ -64,6 +67,7 @@
     visibility: hidden;
     transition: transform .3s ease-out, opacity .3s ease-out, visibility .3s ease-out; */
 }
+
 /* .searchForm input.searchInput.show {
     transform: translateY(45px);
     opacity: 1;
@@ -75,6 +79,7 @@
     color: var(--text-color-secondary);
     font-size: .75rem;
 }
+
 .searchButtonIcon {
     height: -webkit-fill-available;
     background-color: transparent;
@@ -114,11 +119,10 @@
 
 .searchResults div:not(:first-child) {
     width: 98%;
-    /* height: 150px; */
     overflow: visible;
-    align-items: center;
     max-height: none;
     flex-wrap: wrap;
+    border-left: 0;
 }
 
 /* .searchResults>div:first-child {
@@ -130,9 +134,11 @@
 .searchResults>div:nth-child(2) {
     margin-top: 25px;
 }
+
 .searchResults>div:nth-child(n+12) {
     display: flex;
 }
+
 .searchResults a {
     overflow: visible !important;
     width: 100%;
@@ -152,35 +158,36 @@
     --scrollbar-border-thickness: 0px;
     --scrollbar-border-radius: 12px;
     --scrollbar-height: 30px;
-  }
-  
-  .searchResults::-webkit-scrollbar {
+}
+
+.searchResults::-webkit-scrollbar {
     width: var(--scrollbar-width, 20px);
     height: var(--scrollbar-height, 20px);
-  }
-  
-  .searchResults::-webkit-scrollbar-thumb {
+}
+
+.searchResults::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb-color, var(--accentColor));
     border: var(--scrollbar-border-thickness, 3px) solid var(--scrollbar-border-color, rgba(255, 255, 255, 0));
     border-radius: var(--scrollbar-border-radius, 4px);
-  }
-  
-  .searchResults::-webkit-scrollbar-track {
+}
+
+.searchResults::-webkit-scrollbar-track {
     background: var(--scrollbar-track-color, transparent);
-  }
-  
-  .searchResults::-webkit-scrollbar-corner {
+}
+
+.searchResults::-webkit-scrollbar-corner {
     background: var(--scrollbar-corner-color, transparent);
     border: var(--scrollbar-border-thickness, 3px) solid var(--scrollbar-border-color, transparent);
     border-radius: var(--scrollbar-border-radius, 4px);
-  }
-  
-  .searchResults::-webkit-scrollbar-button:vertical:start:increment,
-  #preview::-webkit-scrollbar-button:vertical:end:decrement,
-  #preview::-webkit-scrollbar-button:horizontal:start:increment,
-  #preview::-webkit-scrollbar-button:horizontal:end:decrement {
+}
+
+.searchResults::-webkit-scrollbar-button:vertical:start:increment,
+#preview::-webkit-scrollbar-button:vertical:end:decrement,
+#preview::-webkit-scrollbar-button:horizontal:start:increment,
+#preview::-webkit-scrollbar-button:horizontal:end:decrement {
     display: var(--show-double-buttons, none);
-  }
+}
+
 /* input[type='text'].active {
     background: var(--color-primary);
     border: 1px solid #9a9a9a;
@@ -195,6 +202,7 @@
     flex-grow: 1;
     margin: 16px 0;
 }
+
 .resControls .cleanButton {
     margin-right: 10px;
     background-color: transparent;
@@ -223,10 +231,10 @@
     margin: 25px;
     display: block;
     margin: 0 auto;
-  }
-  
-  .loader::before,
-  .loader::after {
+}
+
+.loader::before,
+.loader::after {
     content: "";
     box-sizing: border-box;
     position: absolute;
@@ -234,13 +242,13 @@
     border-radius: 50%;
     border: 5px solid var(--inputBackgroundColor);
     animation: prixClipFix 2s linear infinite;
-  }
-  
-  .loader::after {
+}
+
+.loader::after {
     border-color: var(--accentColor);
     animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
     inset: 6px;
-  }
+}
 
 @keyframes bblFadInOut {
 
@@ -254,37 +262,39 @@
         box-shadow: 0 2.5em 0 0
     }
 }
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg)
     }
-  
+
     100% {
         transform: rotate(360deg)
     }
-  }
-  
-  @keyframes prixClipFix {
+}
+
+@keyframes prixClipFix {
     0% {
         clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
     }
-  
+
     25% {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
     }
-  
+
     50% {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
     }
-  
+
     75% {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
     }
-  
+
     100% {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
     }
-  }
+}
+
 @media (min-width: 768px) {
     /* .searchForm input.searchInput {
         display: initial;
@@ -320,6 +330,7 @@
         overflow-y: auto;
         max-height: 60dvh;
     }
+
     .resControls {
         display: flex;
         justify-content: space-between;
@@ -327,6 +338,7 @@
         border-bottom: 1px dashed var(--firstBorderColor);
         padding: 8px 0;
     }
+
     .cleanButton {
         background-color: var(--color-secondary);
         border-radius: 0;
@@ -335,6 +347,7 @@
         display: block;
         /* margin-right: 10px; */
     }
+
     .resControls .cleanButton {
         margin-right: 10px;
         background-color: transparent;

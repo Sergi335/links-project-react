@@ -9,7 +9,7 @@ import { usePreferencesStore } from '../store/preferences'
 import { ArrowDown, ExternalLink } from './Icons/icons'
 import styles from './customlink.module.css'
 
-const CustomLink = ({ data, className }) => {
+const SingleColumnLink = ({ data, className }) => {
   const navigate = useNavigate()
   const { slug, desktopName } = useParams()
   // console.log('render')
@@ -205,4 +205,4 @@ const CustomLink = ({ data, className }) => {
   )
 }
 
-export default React.memo(CustomLink)
+export default React.memo(SingleColumnLink)
