@@ -1,5 +1,34 @@
 import styles from '../components/SideBar/SideBar.module.css'
-import { getCookie } from './functions'
+
+// Función para obtener el token CSRF actual
+// Flujo: acceso a / → servidor envía token → se guarda en sessionStore y localStorage
+const getCurrentCsrfToken = () => {
+  // Fuente principal: sessionStore de Zustand (persistido en localStorage)
+  try {
+    const sessionStore = localStorage.getItem('sessionStore')
+    if (sessionStore) {
+      const parsed = JSON.parse(sessionStore)
+      if (parsed.state?.csfrtoken) {
+        return parsed.state.csfrtoken
+      }
+    }
+  } catch (e) {
+    // Silenciar error
+  }
+
+  // Fallback: localStorage directo (backup)
+  try {
+    const localToken = localStorage.getItem('csrfToken')
+    if (localToken) {
+      return JSON.parse(localToken)
+    }
+  } catch (e) {
+    // Silenciar error
+  }
+
+  return ''
+}
+
 export const constants = {
   // BASE_API_URL: 'http://localhost:3001',
   // BASE_API_URL: 'https://zenmarks-api.onrender.com',
@@ -7,22 +36,27 @@ export const constants = {
   BASE_LINK_IMG_URL: (url) => {
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`
   },
-  FETCH_OPTIONS: {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader',
-      'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''
+  // Función que retorna las opciones con el token actualizado
+  get FETCH_OPTIONS () {
+    return {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader',
+        'x-csrf-token': getCurrentCsrfToken()
+      }
     }
   },
-  STORAGE_FETCH_OPTIONS: {
-    credentials: 'include',
-    headers: {
-      // 'Content-Type': 'application/json',
-      'x-justlinks-user': 'SergioSR',
-      'x-justlinks-token': 'otroheader',
-      'x-csrf-token': getCookie('csrfToken') || JSON.parse(localStorage.getItem('csrfToken')) || ''
+  get STORAGE_FETCH_OPTIONS () {
+    return {
+      credentials: 'include',
+      headers: {
+        // 'Content-Type': 'application/json',
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader',
+        'x-csrf-token': getCurrentCsrfToken()
+      }
     }
   },
   ACCENT_COLORS: {

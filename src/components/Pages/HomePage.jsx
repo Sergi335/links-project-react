@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 // import { useSessionStore } from '../../store/session'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import { useEffect } from 'react'
+import { useSessionStore } from '../../store/session'
 import styles from './HomePage.module.css'
 
 export default function HomePage () {
+  const csrfToken = useSessionStore(state => state.csfrtoken)
   // const user = useSessionStore(state => state.user)
   // useEffect(() => {
   //   if (!document.body.classList.contains(`${styles.home}`)) {
@@ -60,6 +62,9 @@ export default function HomePage () {
   return (
     <div className={styles.home}>
       <header className={styles.header}>
+        {
+          csrfToken
+        }
         <nav className={styles.nav}>
           <div className={styles.navlinks}>
             <a href="">About</a>

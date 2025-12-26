@@ -25,7 +25,7 @@ import { keepServerAwake } from './services/functions'
 import { useGlobalStore } from './store/global'
 
 function App () {
-  const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
+  const fetchCsrfToken = useSessionStore(state => state.fetchCsrfToken)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const globalArticles = useGlobalStore(state => state.globalArticles)
@@ -44,35 +44,8 @@ function App () {
 
   // 🔧 Obtener token CSRF al iniciar
   useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        await fetch(constants.BASE_API_URL, {
-          method: 'GET',
-          credentials: 'include',
-          ...constants.FETCH_OPTIONS
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.csrfToken) {
-              setCsfrtoken(data.csrfToken)
-              localStorage.setItem('csrfToken', JSON.stringify(data.csrfToken))
-            }
-          })
-
-        // const csrfToken = getCookie('csrfToken')
-        // if (csrfToken) {
-        //   setCsfrtoken(csrfToken)
-        //   localStorage.setItem('csrfToken', JSON.stringify(csrfToken))
-        // }
-      } catch (error) {
-        localStorage.removeItem('csrfToken')
-        setCsfrtoken('')
-        console.error('Error fetching CSRF token:', error)
-      }
-    }
-
     fetchCsrfToken()
-  }, [setCsfrtoken])
+  }, []) // Sin dependencias para que solo se ejecute al montar
 
   // 🔧 Memoizar el router para evitar recreaciones innecesarias
   const router = useMemo(() => createBrowserRouter([

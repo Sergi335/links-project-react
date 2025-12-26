@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, deleteUser, getAuth, reauthenticateWithCredential, reauthenticateWithPopup, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword } from 'firebase/auth'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { firebaseConfig } from '../config/firebaseConfig'
 import { constants } from '../services/constants'
@@ -15,8 +16,10 @@ export default function useGoogleAuth () {
   const setCsfrtoken = useSessionStore(state => state.setCsfrtoken)
   const setRegisterLoading = useGlobalStore(state => state.setRegisterLoading)
   const setLoginLoading = useGlobalStore(state => state.setLoginLoading)
+  const fetchCsrfToken = useSessionStore(state => state.fetchCsrfToken)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
+  const navigate = useNavigate()
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
@@ -27,10 +30,24 @@ export default function useGoogleAuth () {
       body: JSON.stringify({ idToken, csrfToken, uid, nickname, email })
     })
       .then((res) => res.json())
-      .then((data) => {
-        // console.log(data)
+      .then(async (data) => {
+        // Guardar usuario si existe
         if (data._id) {
           setUser(data)
+        }
+        // Esperar a que la cookie de sesión esté disponible y pedir el nuevo token CSRF
+        try {
+          const response = await fetch(constants.BASE_API_URL, {
+            method: 'GET',
+            credentials: 'include'
+          })
+          const result = await response.json()
+          if (result.csrfToken) {
+            setCsfrtoken(result.csrfToken)
+            localStorage.setItem('csrfToken', JSON.stringify(result.csrfToken))
+          }
+        } catch (e) {
+          console.error('Error sincronizando CSRF tras login:', e)
         }
       })
       .catch((error) => {
@@ -71,7 +88,7 @@ export default function useGoogleAuth () {
             const firstDesktopSlug = firstDesktop[0]?.slug
             if (firstDesktopSlug) {
               setLoginLoading(false)
-              window.location.href = `${rootPath}${basePath}/${firstDesktopSlug}` // --> si esto te redirige el login ha sido correcto en Firebase
+              navigate(`${rootPath}${basePath}/${firstDesktopSlug}`) // --> si esto te redirige el login ha sido correcto en Firebase
             } // else? --> no hay desktops
           })
       })
@@ -83,29 +100,36 @@ export default function useGoogleAuth () {
       })
   }
 
-  const handleGoogleLogOut = () => {
+  const handleGoogleLogOut = async () => {
     if (getAuth().currentUser !== null && getAuth().currentUser !== undefined) {
-      getAuth().currentUser.getIdToken(true)
-        .then(async (idToken) => {
-          sendLogoutSignal({ idToken, csrfToken })
-            .then(res => {
-              res.json()
-              if (res.status === 200) {
-                // console.log(res)
-                setUser(null)
-                setCsfrtoken('')
-                auth.signOut()
-                window.location.href = '/'
-              } // else?
-            })
-        }).catch((error) => {
+      try {
+        const idToken = await getAuth().currentUser.getIdToken(true)
+        const res = await sendLogoutSignal({ idToken, csrfToken })
+        await res.json()
+        if (res.status === 200) {
           setUser(null)
           setCsfrtoken('')
-          console.log(error)
-          window.location.href = '/'
-        })
+          auth.signOut()
+          await fetchCsrfToken()
+          navigate('/')
+        } else {
+          toast.error('Error al cerrar sesión, inténtalo de nuevo más tarde', { toastId: 'logout-error' })
+          setUser(null)
+          setCsfrtoken('')
+          auth.signOut()
+          await fetchCsrfToken()
+          navigate('/')
+        }
+      } catch (error) {
+        setUser(null)
+        setCsfrtoken('')
+        console.log(error)
+        await fetchCsrfToken()
+        navigate('/')
+      }
     } else {
-      window.location.href = '/'
+      await fetchCsrfToken()
+      navigate('/')
     }
   }
   // TODO
@@ -136,8 +160,7 @@ export default function useGoogleAuth () {
         .then(desks => {
           const { data } = desks
           const firstDesktop = data[0].name
-          // navigate(`/desktop/${firstDesktop}`)
-          window.location.href = `${rootPath}${basePath}/${firstDesktop}` // --> si esto te redirige el login ha sido correcto en Firebase
+          navigate(`${rootPath}${basePath}/${firstDesktop}`) // --> si esto te redirige el login ha sido correcto en Firebase
         })
     })
       .catch((e) => {
