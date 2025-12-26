@@ -1,44 +1,10 @@
-import 'photoswipe/style.css'
-import { Link } from 'react-router-dom'
-// import { useSessionStore } from '../../store/session'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import 'photoswipe/style.css'
 import { useEffect } from 'react'
-import { useSessionStore } from '../../store/session'
+import { Link } from 'react-router-dom'
 import styles from './HomePage.module.css'
 
 export default function HomePage () {
-  const csrfToken = useSessionStore(state => state.csfrtoken)
-  // const user = useSessionStore(state => state.user)
-  // useEffect(() => {
-  //   if (!document.body.classList.contains(`${styles.home}`)) {
-  //     document.body.classList.add(`${styles.home}`)
-  //   }
-  //   if (!document.body.classList.contains('home')) {
-  //     document.body.classList.add('home')
-  //   }
-  //   document.title = 'Zenmarks'
-  //   document.body.style.backgroundImage = ''
-  //   const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
-
-  //   const applyTheme = () => {
-  //     if (prefersDarkMode.matches) {
-  //       // Aplicar estilos para el modo oscuro
-  //       document.documentElement.classList.add('dark')
-  //       // //console.log('dark mode desde el home')
-  //     } else {
-  //       // Aplicar estilos para el modo claro
-  //       document.documentElement.classList.remove('dark')
-  //       //console.log('light mode desde el home')
-  //     }
-  //   }
-  //   prefersDarkMode.addEventListener('change', applyTheme)
-  //   return () => {
-  //     // Este código se ejecuta cuando el componente se desmonta
-  //     document.body.classList.remove('home')
-  //     document.body.classList.remove(`${styles.home}`)
-  //     prefersDarkMode.removeEventListener('change', applyTheme)
-  //   }
-  // }, [])
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
       gallery: '#my-gallery',
@@ -62,9 +28,6 @@ export default function HomePage () {
   return (
     <div className={styles.home}>
       <header className={styles.header}>
-        {
-          csrfToken
-        }
         <nav className={styles.nav}>
           <div className={styles.navlinks}>
             <a href="">About</a>
