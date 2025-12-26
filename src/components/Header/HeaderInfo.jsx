@@ -4,16 +4,13 @@ import LogOut from './LogOut'
 import SearchButton from './SearchButton'
 import ThemeSwitcher from './ThemeSwitcher'
 import UserInfo from './UserInfo'
-import WeatherComponent from './WeatherComponent'
 
 export default function HeaderInfo () {
-  const isProd = import.meta.env.MODE === 'production'
   return (
     <section className={styles.header_info}>
       <SearchButton />
       <Link to={'/readinglist'} className={`${styles.header_info_link} ${styles.divider_right} ${styles.divider_left} ${styles.flex_center}`}>Lista de Lectura</Link>
       <ThemeSwitcher />
-      {isProd && <WeatherComponent />}
       <UserInfo />
       <LogOut />
     </section>
