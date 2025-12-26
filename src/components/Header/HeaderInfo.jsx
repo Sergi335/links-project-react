@@ -13,8 +13,8 @@ export default function HeaderInfo () {
       <SearchButton />
       <Link to={'/readinglist'} className={`${styles.header_info_link} ${styles.divider_right} ${styles.divider_left} ${styles.flex_center}`}>Lista de Lectura</Link>
       <ThemeSwitcher />
-      <UserInfo />
       {isProd && <WeatherComponent />}
+      <UserInfo />
       <LogOut />
     </section>
   )
