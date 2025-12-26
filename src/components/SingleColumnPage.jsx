@@ -11,7 +11,7 @@ import FaviconSelector from './FaviconSelector'
 import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './SingleColumnPage.module.css'
-export default function SingleColumnPage () {
+export default function SingleColumnPage() {
   // DesktopName es el parentSlug
   const { slug, desktopName, id } = useParams()
   const [navigationLinks, setNavigationLinks] = useState([])
@@ -63,7 +63,7 @@ export default function SingleColumnPage () {
   }, [desktopName, globalColumns, slug, globalLinks])
 
   const getLinksIds = useCallback((columna) => {
-    return desktopLinks.filter(link => link.idpanel === columna._id).map(link => link._id)
+    return desktopLinks.filter(link => link.categoryId === columna._id).map(link => link._id)
   }, [desktopLinks])
 
   return (
@@ -72,7 +72,7 @@ export default function SingleColumnPage () {
         {
           globalLoading
             ? numberOfLoaders.map((item, index) => (
-                    <ColumnsLoader key={index} />
+              <ColumnsLoader key={index} />
             ))
             : (
               <Columns
@@ -85,11 +85,11 @@ export default function SingleColumnPage () {
                 context="single"
                 slug={slug}
               />
-              )
-            }
+            )
+        }
         <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
       </div>
-      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible}/>
+      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
       <FormsContainer />
       <FaviconSelector />
     </main>
