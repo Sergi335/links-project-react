@@ -84,19 +84,49 @@ const MultiLevelDragDrop = () => {
     initialize({ target: listRef.current })
   }, [initialize])
 
-  // ✅ Modificar el useEffect para preservar el estado expanded
+  // 🔧 Función para encontrar los IDs de los ancestros según el path actual
+  const getAncestorIds = (columns, pathname) => {
+    const segments = pathname.split('/').filter(Boolean)
+    // El slug de la categoría suele ser el segundo o tercer segmento dependiendo de la ruta
+    // /app/escritorio/categoria o /app/escritorio/categoria/linkId
+    // Buscamos si algún segmento coincide con un slug de columna
+    const activeColumn = columns.find(col => segments.includes(col.slug))
+    if (!activeColumn) return []
+
+    const ancestors = []
+    let current = activeColumn
+    while (current && current.parentId) {
+      ancestors.push(current.parentId)
+      current = columns.find(col => col._id === current.parentId)
+      if (current) ancestors.push(current._id) // Añadimos también el actual si es que tiene hijos para expandirlo
+    }
+    // Añadimos el ID de la columna activa por si tiene subcategorías que deba mostrar (opcional)
+    ancestors.push(activeColumn._id)
+
+    return [...new Set(ancestors)]
+  }
+
+  const { pathname } = useLocation()
+
+  // ✅ Modificar el useEffect para preservar el estado expanded Y abrir el path actual
   useEffect(() => {
-    // Guardar el estado expanded actual antes de reconstruir
+    // 1. Guardar el estado expanded actual (interacción del usuario)
     const expandedState = getExpandedState(items)
+
+    // 2. Obtener IDs que deben estar abiertos por la URL
+    const pathIds = getAncestorIds(globalColumns, pathname)
+
+    // 3. Mezclar ambos
+    pathIds.forEach(id => expandedState.set(id, true))
 
     const tree = buildTree(globalColumns)
     const treeWithProperties = updateNodeProperties(tree)
 
-    // Restaurar el estado expanded
+    // 4. Restaurar el estado expanded mezclado
     const treeWithExpanded = applyExpandedState(treeWithProperties, expandedState)
 
     setItems(treeWithExpanded)
-  }, [globalColumns])
+  }, [globalColumns, pathname])
 
   const [draggedItem, setDraggedItem] = useState(null)
   const [dragOverItem, setDragOverItem] = useState(null)
