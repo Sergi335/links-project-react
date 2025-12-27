@@ -80,6 +80,7 @@ const SingleColumnLink = ({ data, className }) => {
   }
   const handleSingleColumnContextClick = (e) => {
     e.preventDefault()
+    // TODO: usar el basepath
     const newUrl = `/app/${desktopName}/${slug}/${link._id}` // Ajusta si desktopName viene de otro lugar
     navigate(newUrl, { replace: true }) // 'replace: true' reemplaza la entrada en el historial (opcional)
   }

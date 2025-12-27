@@ -63,6 +63,7 @@ export const videoUrlsObj = {
   }
 }
 export function checkUrlMatch (url) {
+  if (url === '' || url === null || url === undefined) return null
   for (const key in videoUrlsObj) {
     if (Object.prototype.hasOwnProperty.call(videoUrlsObj, key)) {
       const videoUrl = videoUrlsObj[key]
