@@ -109,9 +109,9 @@ export default function LinkDetailsGallery ({ data }) {
 
   return (
     <>
-    <div style={{ backgroundImage: data?.images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }} className={styles.imageGalleryContainer}>
+    <div style={{ backgroundImage: images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }} className={styles.imageGalleryContainer}>
       {
-        data?.images.length > 0 && (
+        images.length > 0 && (
             <ResponsiveColumnsMasonry className={styles.imageGallery} images={images} setImages={setImages} linkId={data?._id} />
         )
 
