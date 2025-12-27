@@ -8,7 +8,7 @@ import { buildTree, flattenDesktop, updateNodeProperties } from '../../utils/dra
 import { ArrowDown } from '../Icons/icons'
 import styles from './SideBar.module.css'
 
-function NavLinkIgnoraId ({ to, children, viewTransition, draggable, onDragStart, onDragOver, onDragLeave, onDrop }) {
+function NavLinkIgnoraId ({ to, children, viewTransition, draggable, onDragStart, onDragOver, onDragLeave, onDrop, isActivePath }) {
   const location = useLocation()
 
   const currentSegments = location.pathname.split('/').filter(Boolean)
@@ -31,8 +31,11 @@ function NavLinkIgnoraId ({ to, children, viewTransition, draggable, onDragStart
     }
   }
 
+  // Aplicamos la clase active si es la ruta directa O si es parte de la rama activa
+  const activeClass = (isActive || isActivePath) ? `${styles.active}` : ''
+
   return (
-    <NavLink to={to} className={isActive ? `${styles.active}` : ''} viewTransition={viewTransition} draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
+    <NavLink to={to} className={activeClass} viewTransition={viewTransition} draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
       {children}
     </NavLink>
   )
@@ -40,6 +43,7 @@ function NavLinkIgnoraId ({ to, children, viewTransition, draggable, onDragStart
 
 const MultiLevelDragDrop = () => {
   const [items, setItems] = useState([])
+  const [activePathIds, setActivePathIds] = useState([])
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -115,6 +119,7 @@ const MultiLevelDragDrop = () => {
 
     // 2. Obtener IDs que deben estar abiertos por la URL
     const pathIds = getAncestorIds(globalColumns, pathname)
+    setActivePathIds(pathIds)
 
     // 3. Mezclar ambos
     pathIds.forEach(id => expandedState.set(id, true))
@@ -486,6 +491,7 @@ const MultiLevelDragDrop = () => {
             // className={({ isActive }) => isActive ? styles.active : ''}
             viewTransition
             draggable
+            isActivePath={activePathIds.includes(item._id)}
             onDragStart={(e) => handleDragStart(e, item)}
             onDragOver={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
