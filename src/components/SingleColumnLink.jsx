@@ -145,63 +145,63 @@ const SingleColumnLink = ({ data, className }) => {
   }
 
   return (
-        <div ref={setNodeRef}
-          style={style}
-          {...attributes}
-          {...listeners}
-          id={link._id}
-          className={`${styles.link} ${className !== undefined ? className : ''} link`}
-          data-order={link.order}
-          onContextMenu={(e) => handleContextMenu(e)}
+    <div ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      id={link._id}
+      className={`${styles.link} ${className !== undefined ? className : ''} link`}
+      data-order={link.order}
+      onContextMenu={(e) => handleContextMenu(e)}
+    >
+      <div className={styles.link_wrapper}>
+        <img src={link.imgUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
+        <a
+          ref={linkRef}
+          href={link.url}
+          target='_blank'
+          rel='noreferrer'
+          title={link.name}
+          onClick={(e) => handleSingleColumnContextClick(e)}
         >
-          <div className={styles.link_wrapper}>
-            <img src={link.imgUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
-            <a
-              ref={linkRef}
-              href={link.url}
-              target='_blank'
-              rel='noreferrer'
-              title={link.name}
-              onClick={(e) => handleSingleColumnContextClick(e)}
-            >
-              {
-                linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
-              }
-              <span>{link.name}</span>
-            </a>
-            {
-              className !== 'searchResult' && (
-                <>
-                  <div className={styles.lcontrols}>
-                    <button className='buttonIcon' onClick={handleHeightChange}>
-                      <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
-                    </button>
-                    <button className='buttonIcon' onClick={handleExternalLink} title="Abrir enlace en una nueva pestaña">
-                      <ExternalLink className={'uiIcon_small'} />
-                    </button>
-                    {/* <button className='buttonIcon'>
+          {
+            linkSelectMode && <input type='checkbox' onChange={handleSelectChange} />
+          }
+          <span>{link.name}</span>
+        </a>
+        {
+          className !== 'searchResult' && (
+            <>
+              <div className={styles.lcontrols}>
+                <button className='buttonIcon' onClick={handleHeightChange}>
+                  <ArrowDown className={`uiIcon_small ${styles.arrow_left}`} />
+                </button>
+                <button className='buttonIcon' onClick={handleExternalLink} title="Abrir enlace en una nueva pestaña">
+                  <ExternalLink className={'uiIcon_small'} />
+                </button>
+                {/* <button className='buttonIcon'>
                       <Link to={`/app/${desktopName}/link/${link._id}`} state={link._id}>
                         <MaximizeIcon className='uiIcon_small'/>
                       </Link>
                     </button> */}
-                  </div>
-                </>
-              )
+              </div>
+            </>
+          )
+        }
+      </div>
+      {className !== 'searchResult' && <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>}
+      {
+        className === 'searchResult' && (
+          <div className={styles.additionalInfo}>
+            {/* <span>Escritorio: {link.escritorio}</span> crear función que devuelva la ruta completa desde la categoria superior pasando por todas las intermedias */}
+            <span>Ruta: {link.categoryChain}</span>
+            {
+              link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
             }
           </div>
-          {className !== 'searchResult' && <p ref={linkDesc} className={styles.description}><span>{link.description}</span></p>}
-          {
-            className === 'searchResult' && (
-              <div className={styles.additionalInfo}>
-                {/* <span>Escritorio: {link.escritorio}</span> crear función que devuelva la ruta completa desde la categoria superior pasando por todas las intermedias */}
-                <span>Ruta: {link.categoryChain}</span>
-                {
-                  link.description !== 'Description' ? <span>Descripción: {link.description}</span> : null
-                }
-              </div>
-            )
-          }
-        </div>
+        )
+      }
+    </div>
   )
 }
 
