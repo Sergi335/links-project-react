@@ -3,6 +3,7 @@ import ExtractArticleButton from '../ExtractArticleButton'
 import ArticleRenderer from '../Pages/article'
 import LinkDetailsGallery from './LinkDetailsGallery'
 import Editor from './LinkDetailsNotes'
+import LinkDetailsSummary from './LinkDetailsSummary'
 import styles from './LinkDetailsTabs.module.css'
 
 const sections = [
@@ -17,6 +18,10 @@ const sections = [
   {
     id: 'article',
     name: 'Article'
+  },
+  {
+    id: 'summary',
+    name: 'Summary'
   }
 ]
 
@@ -29,8 +34,10 @@ export default function LinkDetailsTabs ({ data }) {
 
                 <div className={styles.link_details_tabs}>
                 {
-                    sections.map(section => (
-
+                    sections.map(section => {
+                      // Condición para mostrar "Summary" solo si es video
+                    //   if (section.id === 'summary' && data.type !== 'video') return null
+                      return (
                         <button
                             key={section.id}
                             className={`${activeSection === section.id ? styles.active : ''} ${styles.link_details_tab}`}
@@ -38,8 +45,8 @@ export default function LinkDetailsTabs ({ data }) {
                         >
                             {section.name}
                         </button>
-
-                    ))
+                      )
+                    })
                 }
             </div>
             <div className={styles.link_details_content}>
@@ -62,6 +69,13 @@ export default function LinkDetailsTabs ({ data }) {
                         <div>
                             {data.extractedArticle === undefined && <ExtractArticleButton linkId={data._id} />}
                             <ArticleRenderer data={data} />
+                        </div>
+                    )
+                }
+                {
+                    activeSection === 'summary' && (
+                        <div>
+                            <LinkDetailsSummary data={data} />
                         </div>
                     )
                 }

@@ -93,7 +93,8 @@ export async function updateLink ({ items }) {
           bookmarkOrder: item.bookmarkOrder ?? undefined,
           categoryId: item.categoryId ?? undefined,
           order: item.order ?? undefined,
-          extractedArticle: item.extractedArticle === null ? null : undefined
+          extractedArticle: item.extractedArticle === null ? null : undefined,
+          type: item.type ?? undefined
         }
       }))
     })
@@ -603,4 +604,41 @@ export const sendLogoutSignal = async ({ idToken, csrfToken }) => {
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify(body)
   })
+}
+
+/* --------------- AI -------------------- */
+
+export async function generateSummary ({ linkId }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      return { hasError: true, message: data.message || 'Error generating summary' }
+    }
+    return { success: true, data: data.data }
+  } catch (error) {
+    console.error('Error generating summary:', error)
+    return { hasError: true, message: error.message }
+  }
+}
+
+export async function chatWithVideo ({ linkId, message }) {
+  try {
+    const res = await fetch(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ message })
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      return { hasError: true, message: data.message || 'Error communicating with AI' }
+    }
+    return { success: true, data: data.data }
+  } catch (error) {
+    console.error('Error communicating with AI:', error)
+    return { hasError: true, message: error.message }
+  }
 }

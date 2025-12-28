@@ -11,7 +11,7 @@ import FaviconSelector from './FaviconSelector'
 import FormsContainer from './FormsContainer'
 import LinkDetailsColumn from './LinkDetails/LinkDetailsColumn'
 import styles from './SingleColumnPage.module.css'
-export default function SingleColumnPage() {
+export default function SingleColumnPage () {
   // DesktopName es el parentSlug
   const { slug, desktopName, id } = useParams()
   const [navigationLinks, setNavigationLinks] = useState([])
@@ -85,7 +85,7 @@ export default function SingleColumnPage() {
                 context="single"
                 slug={slug}
               />
-            )
+              )
         }
         <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
       </div>

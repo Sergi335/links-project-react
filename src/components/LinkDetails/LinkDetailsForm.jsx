@@ -58,6 +58,27 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
   const handleChangeEditDescription = (event) => {
     setDescriptionEditMode(!descriptionEditMode)
   }
+
+  const handleChangeType = async (e) => {
+    const newType = e.target.value
+    if (data?.type === newType) return
+
+    // Optimistic update
+    const elementIndex = globalLinks.findIndex(link => link._id === data?._id)
+    const newState = [...globalLinks]
+    newState[elementIndex].type = newType
+    setGlobalLinks(newState)
+
+    const response = await updateLink({ items: [{ id: data?._id, type: newType }] })
+    const { hasError, message } = handleResponseErrors(response)
+
+    if (hasError) {
+      toast(message)
+    } else {
+      toast.success('Tipo actualizado correctamente')
+    }
+  }
+
   const handleShowFaviconChanger = (e) => {
     e.stopPropagation()
     setFaviconChangerVisiblePoints({ x: e.pageX, y: e.pageY })
@@ -119,6 +140,27 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
               <div>
                 <img ref={currentImageRef} onClick={handleShowFaviconChanger} className={styles.iconImage} src={data?.imgUrl} alt="" /><span id='notification' className={styles.notification}></span>
               </div>
+            </div>
+            <div className={styles.editBlock}>
+              <p><strong>Tipo:</strong></p>
+              <select
+                className={styles.typeSelect}
+                value={data?.type || 'general'}
+                onChange={handleChangeType}
+                style={{
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                <option value="general">General</option>
+                <option value="video">Video</option>
+                <option value="article">Artículo</option>
+              </select>
             </div>
           </div>
         </div>
