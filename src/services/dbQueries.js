@@ -1,15 +1,15 @@
 import { constants } from './constants'
+import { apiFetch } from './api'
 
 /* ------------ LINKS ------------------- */
 
 // ProfilePage
 export async function getAllLinks () {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    const data = await res.json()
     // console.log(data)
     return data
   } catch (error) {
@@ -20,11 +20,10 @@ export async function getAllLinks () {
 // MoveOtherDeskForm
 export async function getLinksCount ({ categoryId }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/count/?categoryId=${categoryId}`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/count/?categoryId=${categoryId}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    const data = await res.json()
     // console.log(data)
     return data
   } catch (error) {
@@ -35,11 +34,10 @@ export async function getLinksCount ({ categoryId }) {
 // useDragItems
 export async function getLinkById ({ id }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/getbyid/${id}`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/getbyid/${id}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    const data = await res.json()
     // console.log(data)
     return data
   } catch (error) {
@@ -49,18 +47,16 @@ export async function getLinkById ({ id }) {
 }
 // AddLinkForm -- Validar datos
 export async function addLink (body) {
-  return fetch(`${constants.BASE_API_URL}/links`, {
-    method: 'POST',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
     })
-    .catch(error => {
-      return error
-    })
+    return data
+  } catch (error) {
+    return error
+  }
 }
 export async function updateLink ({ items }) {
   if (!items || items.length === 0) {
@@ -73,9 +69,8 @@ export async function updateLink ({ items }) {
 
   // console.log('📤 Enviando al backend:', itemsArray)
 
-  const response = await fetch(`${constants.BASE_API_URL}/links`, {
+  const result = await apiFetch(`${constants.BASE_API_URL}/links`, {
     method: 'PATCH',
-    credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
       updates: itemsArray.map(item => ({
@@ -101,46 +96,31 @@ export async function updateLink ({ items }) {
     })
   })
 
-  if (!response.ok) {
-    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
-  }
-
-  const result = await response.json()
   // console.log(`Successfully updated ${itemsArray.length} items`)
   return result
 }
 export async function setBookMarksOrder ({ links }) {
-  return fetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify({ links })
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/setbookmarksorder`, {
+      method: 'PATCH',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ links })
     })
-    .catch(err => {
-      // console.log(err)
-      return err
-    })
+    return data
+  } catch (error) {
+    // console.log(error)
+    return error
+  }
 }
 // DeleteLinkForm -- Validar datos
 export async function deleteLink ({ body }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
-    if (res.ok) {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    }
+    return data
   } catch (error) {
     // console.log(error)
     return error
@@ -149,19 +129,11 @@ export async function deleteLink ({ body }) {
 // ProfilePage
 export async function findDuplicateLinks () {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/duplicates`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/duplicates`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    if (res.ok) {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    }
+    return data
   } catch (error) {
     // console.log(error)
     return error
@@ -236,9 +208,8 @@ export async function updateCategory ({ items }) {
 
   // console.log('📤 Enviando al backend:', itemsArray)
 
-  const response = await fetch(`${constants.BASE_API_URL}/categories`, {
+  const result = await apiFetch(`${constants.BASE_API_URL}/categories`, {
     method: 'PATCH',
-    credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({
       updates: itemsArray.map(item => ({
@@ -258,11 +229,6 @@ export async function updateCategory ({ items }) {
     })
   })
 
-  if (!response.ok) {
-    throw new Error(`Failed to update items: ${response.status} ${response.statusText}`)
-  }
-
-  const result = await response.json()
   // console.log(`Successfully updated ${itemsArray.length} items`)
   return result
 }
@@ -271,20 +237,12 @@ export async function updateCategory ({ items }) {
 export async function deleteColumn ({ id, level }) {
   try {
     const body = { id, level }
-    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/categories`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
-    if (res.ok) {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    }
+    return data
   } catch (error) {
     // console.log(error)
     return error
@@ -295,20 +253,12 @@ export async function createColumn ({ name, parentId, order, level }) {
   try {
     const body = { name, parentId, order, level }
     // console.log(body)
-    const res = await fetch(`${constants.BASE_API_URL}/categories`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/categories`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify(body)
     })
-    if (res.ok) {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    } else {
-      const data = await res.json()
-      // console.log(data)
-      return data
-    }
+    return data
   } catch (error) {
     console.error('Error de red:', error)
     return error
@@ -322,54 +272,44 @@ export async function changeBackgroundImage (event) {
   const nombre = event.target.alt
   if (event.target.nodeName === 'IMG') {
     // console.log('fetch')
-    return fetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
-      method: 'GET',
-      ...constants.FETCH_OPTIONS
-    })
-      .then(res => res.json())
-      .then(data => {
-        const element = document.querySelector('#root')
-        element.setAttribute('data-background', 'image')
-        element.style.background = `url(${data.data})`
-        element.style.backgroundSize = 'cover'
-        element.style.backgroundAttachment = 'fixed'
-        window.localStorage.setItem('bodyBackground', JSON.stringify(`${data.data}`))
-        return data
+    try {
+      const data = await apiFetch(`${constants.BASE_API_URL}/storage/backgroundurl?nombre=${nombre}`, {
+        method: 'GET',
+        ...constants.FETCH_OPTIONS
       })
-      .catch(error => {
-        return error
-      })
+      const element = document.querySelector('#root')
+      element.setAttribute('data-background', 'image')
+      element.style.background = `url(${data.data})`
+      element.style.backgroundSize = 'cover'
+      element.style.backgroundAttachment = 'fixed'
+      window.localStorage.setItem('bodyBackground', JSON.stringify(`${data.data}`))
+      return data
+    } catch (error) {
+      return error
+    }
   } else {
     return { error: 'Error al cambiar la imagen de fondo' }
   }
 }
 // CustomizeDesktopPanel
 export async function getBackgroundMiniatures () {
-  return fetch(`${constants.BASE_API_URL}/storage/backgrounds`, {
-    method: 'GET',
-    ...constants.FETCH_OPTIONS
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
-    })
-    .catch(error => {
-      return error
-    })
-}
-export async function getLinkImages ({ linkId }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/storage/link/${linkId}/images`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/storage/backgrounds`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    if (res.ok) {
-      const data = await res.json()
-      return data
-    } else {
-      const error = await res.json()
-      return error
-    }
+    return data
+  } catch (error) {
+    return error
+  }
+}
+export async function getLinkImages ({ linkId }) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/storage/link/${linkId}/images`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    return data
   } catch (error) {
     return error
   }
@@ -384,18 +324,12 @@ export async function fetchImage ({ imageUrl, linkId }) {
     const file = new File([blob], 'image', { type: blob.type })
     formData.append('images', file, 'image.png')
     formData.append('linkId', linkId)
-    const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
+    const result = await apiFetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'POST',
       ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
-    if (res.ok) {
-      const result = await res.json()
-      return result
-    } else {
-      console.error('Error al subir las imágenes al servidor.')
-      return { error: 'Error al subir las imágenes al servidor' }
-    }
+    return result
   } catch (error) {
     console.error('Error al obtener la imagen:', error)
     return { error: 'Sin conexión con servidor, inténtalo más tarde' } // TODO hacerlo con todos
@@ -409,38 +343,29 @@ export async function deleteImage ({ imageKey, linkId }) {
       id: linkId
     }
     body = JSON.stringify(body)
-    const res = await fetch(`${constants.BASE_API_URL}/storage/image`, {
+    const result = await apiFetch(`${constants.BASE_API_URL}/storage/image`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body
     })
-    if (res.ok) {
-      const result = await res.json()
-      // console.log(result)
-      const firstKey = Object.keys(result)[0]
-      const firstValue = result[firstKey]
+    // console.log(result)
+    const firstKey = Object.keys(result)[0]
+    const firstValue = result[firstKey]
 
-      if (firstKey === 'error' || firstKey === 'errors') {
-        if (firstKey === 'errors') {
-          return `Error, valor ${firstValue[0].path} no válido`
-        } else {
-          return `${firstKey}, ${firstValue}`
-        }
+    if (firstKey === 'error' || firstKey === 'errors') {
+      if (firstKey === 'errors') {
+        return `Error, valor ${firstValue[0].path} no válido`
       } else {
-        return result
+        return `${firstKey}, ${firstValue}`
       }
     } else {
-      const error = await res.json()
-      if (error.error === 'storage/invalid-url' || error.error === 'storage/object-not-found') {
-        return 'Referencia eliminada'
-      } else {
-        // console.log(error)
-        console.error(error.error)
-        return error.error
-      }
+      return result
     }
   } catch (error) {
     console.error('Error al borrar la imagen:', error)
+    if (error.error === 'storage/invalid-url' || error.error === 'storage/object-not-found') {
+      return 'Referencia eliminada'
+    }
     return error
   }
 }
@@ -452,27 +377,19 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     formData.append('linkId', linkId)
     // console.log(formData)
     try {
-      const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
+      const result = await apiFetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
         ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
 
-      if (response.ok) {
-        const result = await response.json()
-        // const link = document.getElementById(linkId)
-        // link.childNodes[0].src = src
-        const firstKey = Object.keys(result)[0]
-        const firstValue = result[firstKey]
+      const firstKey = Object.keys(result)[0]
+      const firstValue = result[firstKey]
 
-        if (firstKey === 'error') {
-          return (`${firstKey}, ${firstValue}`)
-        } else {
-          return result
-        }
+      if (firstKey === 'error') {
+        return (`${firstKey}, ${firstValue}`)
       } else {
-        console.error('Error al actualizar la ruta de la imagen')
-        return ('Error al cambiar imagen')
+        return result
       }
     } catch (error) {
       console.error('Error al realizar la solicitud:', error)
@@ -486,16 +403,12 @@ export async function saveLinkIcon ({ src, linkId }) {
   formData.append('filePath', src)
   formData.append('linkId', linkId)
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
+    const result = await apiFetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'POST',
       ...constants.STORAGE_FETCH_OPTIONS,
       body: formData
     })
-
-    if (response.ok) {
-      const result = await response.json()
-      return result
-    }
+    return result
   } catch (error) {
     console.error('Error al realizar la solicitud:', error)
     return ('Error al realizar la solicitud')
@@ -504,15 +417,12 @@ export async function saveLinkIcon ({ src, linkId }) {
 // LinkDetails
 export async function deleteLinkImage (imageId) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/storage/icon`, {
+    const result = await apiFetch(`${constants.BASE_API_URL}/storage/icon`, {
       method: 'DELETE',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify({ image: imageId })
     })
-    if (res.ok) {
-      const result = await res.json()
-      return result
-    }
+    return result
   } catch (error) {
     // console.log(error)
     return error
@@ -524,18 +434,12 @@ export async function uploadProfileImg (file) {
     const formData = new FormData()
     formData.append('file', file)
     try {
-      const response = await fetch(`${constants.BASE_API_URL}/storage/profilepic`, {
+      const result = await apiFetch(`${constants.BASE_API_URL}/storage/profilepic`, {
         method: 'POST',
         ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
-      if (response.ok) {
-        const result = await response.json()
-        return result.data.url
-      } else {
-        console.error('Error al actualizar la ruta de la imagen')
-        return ('Error al actualizar la ruta de la imagen')
-      }
+      return result.data.url
     } catch (error) {
       console.error('Error al realizar la solicitud:', error)
       return (`Error al realizar la solicitud:, ${error}`)
@@ -543,14 +447,13 @@ export async function uploadProfileImg (file) {
   }
 }
 export async function getSignedUrl (key) {
-  const response = await fetch(`${constants.BASE_API_URL}/storage/signed-url`, {
+  const data = await apiFetch(`${constants.BASE_API_URL}/storage/signed-url`, {
     method: 'POST',
     credentials: 'include',
     ...constants.FETCH_OPTIONS,
     body: JSON.stringify({ key })
   })
 
-  const data = await response.json()
   return data.data.url
 }
 
@@ -564,19 +467,17 @@ export async function editUserAditionalInfo ({ email, fields }) {
     email,
     fields
   }
-  return fetch(`${constants.BASE_API_URL}/auth/updateuser`, {
-    method: 'PATCH',
-    ...constants.FETCH_OPTIONS,
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/auth/updateuser`, {
+      method: 'PATCH',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify(body)
     })
-    .catch(err => {
-      // console.log(err)
-      return err
-    })
+    return data
+  } catch (err) {
+    // console.log(err)
+    return err
+  }
 }
 export async function deleteAccount ({ email }) {
   try {
@@ -611,35 +512,27 @@ export const sendLogoutSignal = async ({ idToken, csrfToken }) => {
 
 export async function generateSummary ({ linkId }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS
     })
-    const data = await res.json()
-    if (!res.ok) {
-      return { hasError: true, message: data.message || 'Error generating summary' }
-    }
     return { success: true, data: data.data }
   } catch (error) {
     console.error('Error generating summary:', error)
-    return { hasError: true, message: error.message }
+    return { hasError: true, message: error.message || 'Error generating summary' }
   }
 }
 
 export async function chatWithVideo ({ linkId, message }) {
   try {
-    const res = await fetch(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify({ message })
     })
-    const data = await res.json()
-    if (!res.ok) {
-      return { hasError: true, message: data.message || 'Error communicating with AI' }
-    }
     return { success: true, data: data.data }
   } catch (error) {
     console.error('Error communicating with AI:', error)
-    return { hasError: true, message: error.message }
+    return { hasError: true, message: error.message || 'Error communicating with AI' }
   }
 }

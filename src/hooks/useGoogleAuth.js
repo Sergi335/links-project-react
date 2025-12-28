@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { firebaseConfig } from '../config/firebaseConfig'
 import { constants } from '../services/constants'
 import { sendLogoutSignal } from '../services/dbQueries'
+import { apiFetch } from '../services/api'
 import { useGlobalStore } from '../store/global'
 import { useSessionStore } from '../store/session'
 
@@ -23,13 +24,12 @@ export default function useGoogleAuth () {
 
   const postIdTokenToSessionLogin = function ({ url, idToken, csrfToken, uid, nickname, email }) {
     // POST to session login endpoint.
-    return fetch(url, {
+    return apiFetch(url, {
       method: 'POST',
       credentials: 'include',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify({ idToken, csrfToken, uid, nickname, email })
     })
-      .then((res) => res.json())
       .then(async (data) => {
         // Guardar usuario si existe
         if (data._id) {
@@ -37,11 +37,10 @@ export default function useGoogleAuth () {
         }
         // Esperar a que la cookie de sesión esté disponible y pedir el nuevo token CSRF
         try {
-          const response = await fetch(constants.BASE_API_URL, {
+          const result = await apiFetch(`${constants.BASE_API_URL}/csrf-token`, {
             method: 'GET',
             credentials: 'include'
           })
-          const result = await response.json()
           if (result.csrfToken) {
             setCsfrtoken(result.csrfToken)
             localStorage.setItem('csrfToken', JSON.stringify(result.csrfToken))
@@ -76,12 +75,11 @@ export default function useGoogleAuth () {
       })
       .then(() => {
         // Pedir todos es innecesario?
-        fetch(`${constants.BASE_API_URL}/categories/toplevel`, {
+        apiFetch(`${constants.BASE_API_URL}/categories/toplevel`, {
           method: 'GET',
           credentials: 'include',
           ...constants.FETCH_OPTIONS
         })
-          .then(res => res.json())
           .then(desks => {
             const { data } = desks
             const firstDesktop = data.filter(desktop => desktop.order === 0)
@@ -151,12 +149,11 @@ export default function useGoogleAuth () {
         return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/login`, idToken, csrfToken, uid: user.uid, email: user.email })
       })
     }).then(() => {
-      fetch(`${constants.BASE_API_URL}/desktops`, {
+      apiFetch(`${constants.BASE_API_URL}/desktops`, {
         method: 'GET',
         credentials: 'include',
         ...constants.FETCH_OPTIONS
       })
-        .then(res => res.json())
         .then(desks => {
           const { data } = desks
           const firstDesktop = data[0].name

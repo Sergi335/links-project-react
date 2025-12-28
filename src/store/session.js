@@ -26,7 +26,7 @@ export const useSessionStore = create(
         fetchCsrfToken: async () => {
           set({ isTokenReady: false })
           try {
-            const response = await fetch(BASE_API_URL, {
+            const response = await fetch(`${BASE_API_URL}/csrf-token`, {
               method: 'GET',
               credentials: 'include',
               headers: {

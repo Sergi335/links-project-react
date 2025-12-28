@@ -1,4 +1,5 @@
 import { constants } from './constants'
+import { apiFetch } from './api'
 export function setCookie (name, value, days, domain) {
   let expires = ''
   if (days) {
@@ -105,18 +106,11 @@ export function checkUrlMatch (url) {
 export const searchLinks = async ({ search }) => {
   if (search === '') return null
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/search?query=${search}`, {
+    const data = await apiFetch(`${constants.BASE_API_URL}/search?query=${search}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    if (response.ok) {
-      const data = await response.json()
-      // //console.log(data)
-      return data
-    } else {
-      // const data = await response.json()
-      // console.log(data)
-    }
+    return data
   } catch (error) {
     return { error }
   }
@@ -164,11 +158,10 @@ export function formatDate (date) {
 }
 export async function getUrlStatus (url) {
   try {
-    const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(url)}`, {
+    const res = await apiFetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(url)}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
-    const res = await response.json()
     const data = res.data || {}
     const firstKey = Object.keys(data)[0]
     const firstValue = data[firstKey]

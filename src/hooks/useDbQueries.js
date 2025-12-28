@@ -1,48 +1,31 @@
 import { useQuery } from '@tanstack/react-query'
 // import { useNavigate } from 'react-router-dom'
 import { constants } from '../services/constants'
+import { apiFetch } from '../services/api'
 import { useGlobalStore } from '../store/global'
 import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 // import { useSessionStore } from '../store/session'
 
 // Fetch functions
 const fetchDesktops = async () => {
-  const response = await fetch(`${constants.BASE_API_URL}/categories/toplevel`, {
+  return await apiFetch(`${constants.BASE_API_URL}/categories/toplevel`, {
     method: 'GET',
     ...constants.FETCH_OPTIONS
   })
-
-  if (!response.ok) {
-    throw new Error(response.statusText)
-  }
-
-  return response.json()
 }
 
 const fetchColumns = async () => {
-  const response = await fetch(`${constants.BASE_API_URL}/categories`, {
+  return await apiFetch(`${constants.BASE_API_URL}/categories`, {
     method: 'GET',
     ...constants.FETCH_OPTIONS
   })
-
-  if (!response.ok) {
-    throw new Error(response.statusText)
-  }
-
-  return response.json()
 }
 
 const fetchLinks = async () => {
-  const response = await fetch(`${constants.BASE_API_URL}/links`, {
+  return await apiFetch(`${constants.BASE_API_URL}/links`, {
     method: 'GET',
     ...constants.FETCH_OPTIONS
   })
-
-  if (!response.ok) {
-    throw new Error(response.statusText)
-  }
-
-  return response.json()
 }
 
 const useDbQueries = () => {
