@@ -71,6 +71,10 @@
         max-width: 100%;
         flex-direction: column;
     }
+    & ul li {
+        list-style-type: disc;
+        margin-block-end: 1rem;
+    }
 }
 
 .link_details_content::-webkit-scrollbar {
@@ -87,4 +91,31 @@
     background: var(--color-primary);
     border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
     border-radius: var(--scrollbar-border-radius);
+}
+
+.summaryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.deleteButton {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+.deleteButton:hover {
+    background-color: #ff7875;
+}
+
+.deleteButton:disabled {
+    background-color: #ffa39e;
+    cursor: not-allowed;
 }

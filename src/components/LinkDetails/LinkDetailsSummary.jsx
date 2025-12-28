@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
-import { chatWithVideo, generateSummary } from '../../services/dbQueries'
+import { chatWithVideo, generateSummary, updateLink } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetailsTabs.module.css'
 
@@ -17,22 +17,76 @@ export default function LinkDetailsSummary ({ data }) {
   // Por ahora lo manejamos localmente si no existe
   const [localChatHistory, setLocalChatHistory] = useState(data.chatHistory || [])
 
+  // Sincronizar historial si cambia el link (data)
+  useEffect(() => {
+    if (data.chatHistory) {
+      setLocalChatHistory(data.chatHistory)
+    }
+  }, [data._id, data.chatHistory])
+
   const handleGenerateSummary = async () => {
     setLoading(true)
     const result = await generateSummary({ linkId: data._id })
     setLoading(false)
 
     if (result.success) {
-      // Actualizar el store global para reflejar el nuevo resumen
-      const elementIndex = globalLinks.findIndex(link => link._id === data._id)
-      if (elementIndex !== -1) {
-        const newState = [...globalLinks]
-        newState[elementIndex] = { ...newState[elementIndex], summary: result.data.summary }
-        setGlobalLinks(newState)
+      // Extraer el resumen manejando diferentes posibles estructuras de datos
+      const summaryContent = result.data?.summary ||
+                            (Array.isArray(result.data) ? result.data[0]?.summary : null) ||
+                            (typeof result.data === 'string' ? result.data : null)
+
+      if (!summaryContent) {
+        toast.error('No se pudo extraer el contenido del resumen')
+        return
       }
-      toast.success('Resumen generado correctamente')
+
+      // Actualizar el store global para reflejar el nuevo resumen
+      // Usamos useGlobalStore.getState() para asegurar que tenemos el estado más reciente
+      const currentLinks = useGlobalStore.getState().globalLinks
+      const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+
+      if (elementIndex !== -1) {
+        const newState = [...currentLinks]
+        newState[elementIndex] = { ...newState[elementIndex], summary: summaryContent }
+        setGlobalLinks(newState)
+        toast.success('Resumen generado correctamente')
+      }
     } else {
       toast.error(result.message)
+    }
+  }
+
+  const handleDeleteSummary = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres borrar el resumen?')) return
+
+    setLoading(true)
+    try {
+      const result = await updateLink({
+        items: [{
+          id: data._id,
+          summary: null
+        }]
+      })
+
+      if (result.success) {
+        // Actualizar el store global
+        const currentLinks = useGlobalStore.getState().globalLinks
+        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+
+        if (elementIndex !== -1) {
+          const newState = [...currentLinks]
+          newState[elementIndex] = { ...newState[elementIndex], summary: null }
+          setGlobalLinks(newState)
+          toast.success('Resumen borrado correctamente')
+        }
+      } else {
+        toast.error('Error al borrar el resumen')
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Error al borrar el resumen')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -66,15 +120,32 @@ export default function LinkDetailsSummary ({ data }) {
     }
   }
 
+  // Asignamos el summary desde el store si existe el link, para que los cambios se vean al instante
+  // Si el link existe en el store, su estado es la fuente de verdad (incluso si summary es null)
+  const linkInStore = globalLinks.find(link => link._id === data._id)
+  const summary = linkInStore ? linkInStore.summary : data.summary
+
   return (
     <div className={styles.summaryContainer}>
       {/* Sección Resumen */}
       <div className={styles.summaryBlock}>
-        <h3>Resumen del Video</h3>
-        {data.summary
+        <div className={styles.summaryHeader}>
+          <h3>Resumen del Video</h3>
+          {summary && (
+            <button
+              className={styles.deleteButton}
+              onClick={handleDeleteSummary}
+              disabled={loading}
+              title="Borrar resumen"
+            >
+              Borrar
+            </button>
+          )}
+        </div>
+        {summary
           ? (
           <div className={styles.markdownContent}>
-            <ReactMarkdown>{data.summary}</ReactMarkdown>
+            <ReactMarkdown>{summary}</ReactMarkdown>
           </div>
             )
           : (

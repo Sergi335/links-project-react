@@ -33,7 +33,7 @@ export default function LinkDetailsPage ({ linkid, context }) {
       })
       setLinks(dataFinal)
     }
-  }, [desktopName, globalColumns])
+  }, [desktopName, globalColumns, globalLinks])
 
   // console.log(links)
 

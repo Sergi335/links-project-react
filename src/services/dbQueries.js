@@ -94,7 +94,8 @@ export async function updateLink ({ items }) {
           categoryId: item.categoryId ?? undefined,
           order: item.order ?? undefined,
           extractedArticle: item.extractedArticle === null ? null : undefined,
-          type: item.type ?? undefined
+          type: item.type ?? undefined,
+          summary: item.summary === null ? null : (item.summary || undefined)
         }
       }))
     })
