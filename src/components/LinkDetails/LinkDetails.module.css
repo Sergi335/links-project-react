@@ -178,7 +178,29 @@
   min-height: 295px;
   background-size: 50%;
   flex-grow: 1;
+  transition: all 0.2s ease;
+  position: relative;
 }
+
+.imageGalleryContainer.dragging {
+  border: 2px dashed var(--accentColor);
+  background-color: var(--color-primary);
+  opacity: 0.8;
+}
+
+.imageGalleryContainer.dragging::after {
+  content: 'Suelta las imágenes aquí';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: var(--accentColor);
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1;
+}
+
 
 .descriptionTextArea {
   /* width: 37ch; */

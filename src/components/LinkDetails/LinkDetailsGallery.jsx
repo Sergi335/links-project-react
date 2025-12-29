@@ -55,6 +55,7 @@ export function ResponsiveColumnsMasonry ({ images, setImages, linkId, className
 }
 export default function LinkDetailsGallery ({ data }) {
   const [images, setImages] = useState([])
+  const [isDragging, setIsDragging] = useState(false)
 
   const getImages = async () => {
     const response = await getLinkImages({ linkId: data?._id })
@@ -65,6 +66,7 @@ export default function LinkDetailsGallery ({ data }) {
       toast.error(message)
     }
   }
+
   const handlePasteImage = () => {
     const pasteLoading = toast.loading('Subiendo archivo ...')
     navigator.clipboard.read().then(clipboardItems => {
@@ -102,6 +104,87 @@ export default function LinkDetailsGallery ({ data }) {
       }
     })
   }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDragEnter = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // Solo cambiar el estado si salimos del contenedor principal
+    if (e.currentTarget === e.target) {
+      setIsDragging(false)
+    }
+  }
+
+  const handleDrop = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = Array.from(e.dataTransfer.files)
+    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+
+    if (imageFiles.length === 0) {
+      toast.error('No se encontraron imágenes en los archivos soltados')
+      return
+    }
+
+    for (const file of imageFiles) {
+      const uploadLoading = toast.loading(`Subiendo ${file.name}...`)
+
+      // Validar tamaño (10MB máximo)
+      if (file.size > 1e+7) {
+        toast.update(uploadLoading, {
+          render: `${file.name} es muy grande (máx. 10MB)`,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000
+        })
+        continue
+      }
+
+      try {
+        const imageUrl = URL.createObjectURL(file)
+        const response = await fetchImage({ imageUrl, linkId: data._id })
+
+        const { hasError, message } = handleResponseErrors(response)
+
+        if (hasError) {
+          toast.update(uploadLoading, {
+            render: message,
+            type: 'error',
+            isLoading: false,
+            autoClose: 3000
+          })
+        } else {
+          setImages(prevImages => [...prevImages, { url: response.data.signedUrl, key: response.data.key || null }])
+          toast.update(uploadLoading, {
+            render: `${file.name} guardada!`,
+            type: 'success',
+            isLoading: false,
+            autoClose: 1500
+          })
+        }
+      } catch (error) {
+        toast.update(uploadLoading, {
+          render: `Error al subir ${file.name}`,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000
+        })
+      }
+    }
+  }
+
   useEffect(() => {
     if (!data?._id) return
     getImages()
@@ -109,7 +192,14 @@ export default function LinkDetailsGallery ({ data }) {
 
   return (
     <>
-    <div style={{ backgroundImage: images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }} className={styles.imageGalleryContainer}>
+    <div
+      style={{ backgroundImage: images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }}
+      className={`${styles.imageGalleryContainer} ${isDragging ? styles.dragging : ''}`}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       {
         images.length > 0 && (
             <ResponsiveColumnsMasonry className={styles.imageGallery} images={images} setImages={setImages} linkId={data?._id} />
