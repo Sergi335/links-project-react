@@ -50,6 +50,10 @@ export const useGlobalStore = create(
       tabsVisible: true,
       setTabsVisible: (tabsVisible) => {
         set({ tabsVisible })
+      },
+      sidebarCollapseSignal: 0,
+      triggerSidebarCollapse: () => {
+        set(state => ({ sidebarCollapseSignal: state.sidebarCollapseSignal + 1 }))
       }
     }
   }

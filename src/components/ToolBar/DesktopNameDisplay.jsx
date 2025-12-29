@@ -4,7 +4,7 @@ import { kebabToTitleCase } from '../../services/functions'
 import NameLoader from '../NameLoader'
 import styles from './Toolbar.module.css'
 
-export default function DesktopNameDisplay ({ numberOfLinks }) {
+export default function DesktopNameDisplay ({ numberOfLinks, numberOfColumns }) {
   const { desktopName } = useParams()
   const location = useLocation()
   // //console.log(desktopName)
@@ -24,7 +24,8 @@ export default function DesktopNameDisplay ({ numberOfLinks }) {
                     desktopDisplayName
                       ? (<div className={styles.desktop_name_container}>
                           <h1 className={styles.deskTitle} id="deskTitle">{desktopDisplayName}</h1>
-                          <p>{`${numberOfLinks} links`}</p></div>)
+                          <p>{`${numberOfLinks} links`}</p>
+                          <p>{numberOfColumns} columnas</p></div>)
                       : (<NameLoader className={styles.deskTitle}/>)
 
                 }

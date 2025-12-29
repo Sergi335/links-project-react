@@ -46,6 +46,7 @@ const MultiLevelDragDrop = () => {
   const [activePathIds, setActivePathIds] = useState([])
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const globalLinks = useGlobalStore(state => state.globalLinks)
+  const sidebarCollapseSignal = useGlobalStore(state => state.sidebarCollapseSignal)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
@@ -111,11 +112,18 @@ const MultiLevelDragDrop = () => {
   }
 
   const { pathname } = useLocation()
+  const lastCollapseSignal = useRef(sidebarCollapseSignal)
 
   // ✅ Modificar el useEffect para preservar el estado expanded Y abrir el path actual
   useEffect(() => {
     // 1. Guardar el estado expanded actual (interacción del usuario)
-    const expandedState = getExpandedState(items)
+    // Pero si la señal de colapso ha cambiado, ignoramos el estado previo
+    const isCollapseTriggered = lastCollapseSignal.current !== sidebarCollapseSignal
+    const expandedState = isCollapseTriggered ? new Map() : getExpandedState(items)
+
+    if (isCollapseTriggered) {
+      lastCollapseSignal.current = sidebarCollapseSignal
+    }
 
     // 2. Obtener IDs que deben estar abiertos por la URL
     const pathIds = getAncestorIds(globalColumns, pathname)
@@ -131,7 +139,7 @@ const MultiLevelDragDrop = () => {
     const treeWithExpanded = applyExpandedState(treeWithProperties, expandedState)
 
     setItems(treeWithExpanded)
-  }, [globalColumns, pathname])
+  }, [globalColumns, pathname, sidebarCollapseSignal])
 
   const [draggedItem, setDraggedItem] = useState(null)
   const [dragOverItem, setDragOverItem] = useState(null)

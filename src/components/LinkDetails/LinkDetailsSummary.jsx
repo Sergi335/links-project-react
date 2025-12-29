@@ -183,7 +183,7 @@ export default function LinkDetailsSummary ({ data }) {
                 placeholder="Pregunta algo sobre el video..."
                 disabled={chatLoading}
             />
-            <button type="submit" disabled={chatLoading || !chatMessage.trim()}>Enviar</button>
+            <button className="button" type="submit" disabled={chatLoading || !chatMessage.trim()}>Enviar</button>
         </form>
       </div>
     </div>

@@ -77,17 +77,17 @@
     }
 }
 
-.link_details_content::-webkit-scrollbar {
+.link_details_content::-webkit-scrollbar, .summaryBlock::-webkit-scrollbar {
     width: var(--scrollbar-width);
     height: var(--scrollbar-height);
 }
 
-.link_details_content::-webkit-scrollbar-thumb {
+.link_details_content::-webkit-scrollbar-thumb, .summaryBlock::-webkit-scrollbar-thumb {
     background: var(--color-medium);
     border-radius: var(--scrollbar-border-radius);
 }
 
-.link_details_content::-webkit-scrollbar-track {
+.link_details_content::-webkit-scrollbar-track, .summaryBlock::-webkit-scrollbar-track {
     background: var(--color-primary);
     border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
     border-radius: var(--scrollbar-border-radius);
@@ -118,4 +118,26 @@
 .deleteButton:disabled {
     background-color: #ffa39e;
     cursor: not-allowed;
+}
+
+.chatInputForm {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+
+    &>input[type="text"] {
+        width: 100%;
+    }
+}
+
+.summaryContainer {
+    height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.summaryBlock {
+    max-height: 70vh;
+    overflow-y: auto;
 }

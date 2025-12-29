@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGlobalData } from '../hooks/useGlobalData'
 import { useFormsStore } from '../store/forms'
@@ -23,6 +23,11 @@ export default function ListOfLinks () {
 
   const actualDesktop = categories?.find(column => column.slug === desktopName)?._id
   const desktopColumns = categories?.filter(column => column.parentId === actualDesktop)
+  const columnsIds = desktopColumns?.map(column => column._id)
+
+  const numberOfLinksInCategory = useMemo(() => {
+    return links.filter(link => columnsIds.includes(link.categoryId)).length
+  }, [links, columnsIds, desktopName])
 
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
@@ -47,8 +52,8 @@ export default function ListOfLinks () {
 
   return (
     <main className={styles.list_of_links}>
-      <div className={styles.lol_content_wrapper}>
-          <DesktopNameDisplay numberOfLinks={links.length} />
+      <div id="mainContentWrapper" className={styles.lol_content_wrapper}>
+          <DesktopNameDisplay numberOfLinks={numberOfLinksInCategory} numberOfColumns={columnsIds.length} />
         <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
           {
             loading

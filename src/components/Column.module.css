@@ -2,6 +2,9 @@
     min-height: 322.39px;
     transition: var(--columns_transition);
     z-index: 0;
+    background-color: #0d2235;
+    padding: 1rem;
+    border-radius: 8px;
 
 }
 

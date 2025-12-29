@@ -68,7 +68,7 @@ export default function SingleColumnPage () {
 
   return (
     <main className={styles.single_column_page}>
-      <div style={{ gridTemplateColumns: !tabsVisible ? '25% 0px 1fr' : '' }} className={styles.single_column_grid}>
+      <div id="mainContentWrapper" style={{ gridTemplateColumns: !tabsVisible ? '25% 0px 1fr' : '' }} className={styles.single_column_grid}>
         {
           globalLoading
             ? numberOfLoaders.map((item, index) => (
