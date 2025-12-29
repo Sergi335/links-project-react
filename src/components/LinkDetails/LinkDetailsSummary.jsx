@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
-import { chatWithVideo, generateSummary, updateLink } from '../../services/dbQueries'
+import { chatWithVideo, generateSummary, deleteAISummary, deleteAIChat, getLinkById } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetailsTabs.module.css'
 
@@ -19,10 +19,43 @@ export default function LinkDetailsSummary ({ data }) {
 
   // Sincronizar historial si cambia el link (data)
   useEffect(() => {
-    if (data.chatHistory) {
+    // Si ya tenemos historial en data, lo usamos
+    if (data.chatHistory && data.chatHistory.length > 0) {
       setLocalChatHistory(data.chatHistory)
+    } else {
+      // Si no hay historial localmente, intentamos obtenerlo del store global
+      const linkInStore = globalLinks.find(link => link._id === data._id)
+      if (linkInStore?.chatHistory) {
+        setLocalChatHistory(linkInStore.chatHistory)
+      } else {
+        // Si tampoco está en el store, forzamos una recarga de los detalles del link
+        // solo si no estamos ya cargando y si es un video (o según sea necesario)
+        const fetchFullLink = async () => {
+          try {
+            const result = await getLinkById({ id: data._id })
+            if (result.success && result.data.chatHistory) {
+              setLocalChatHistory(result.data.chatHistory)
+
+              // Actualizar el store global para futuras referencias
+              const currentLinks = useGlobalStore.getState().globalLinks
+              const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+              if (elementIndex !== -1) {
+                const newState = [...currentLinks]
+                newState[elementIndex] = { ...newState[elementIndex], chatHistory: result.data.chatHistory }
+                setGlobalLinks(newState)
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching full link details:', error)
+          }
+        }
+
+        if (data._id) {
+          fetchFullLink()
+        }
+      }
     }
-  }, [data._id, data.chatHistory])
+  }, [data._id, data.chatHistory, globalLinks])
 
   const handleGenerateSummary = async () => {
     setLoading(true)
@@ -61,12 +94,7 @@ export default function LinkDetailsSummary ({ data }) {
 
     setLoading(true)
     try {
-      const result = await updateLink({
-        items: [{
-          id: data._id,
-          summary: null
-        }]
-      })
+      const result = await deleteAISummary(data._id)
 
       if (result.success) {
         // Actualizar el store global
@@ -90,6 +118,37 @@ export default function LinkDetailsSummary ({ data }) {
     }
   }
 
+  const handleDeleteChat = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres borrar el historial del chat?')) return
+
+    setChatLoading(true)
+    try {
+      const result = await deleteAIChat(data._id)
+
+      if (result.success) {
+        setLocalChatHistory([])
+
+        // También actualizar el store global si el historial se guarda allí
+        const currentLinks = useGlobalStore.getState().globalLinks
+        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+
+        if (elementIndex !== -1) {
+          const newState = [...currentLinks]
+          newState[elementIndex] = { ...newState[elementIndex], chatHistory: [] }
+          setGlobalLinks(newState)
+          toast.success('Chat borrado correctamente')
+        }
+      } else {
+        toast.error('Error al borrar el chat')
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Error al borrar el chat')
+    } finally {
+      setChatLoading(false)
+    }
+  }
+
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!chatMessage.trim()) return
@@ -109,10 +168,24 @@ export default function LinkDetailsSummary ({ data }) {
       // Actualizar con la respuesta del modelo
       // Asumimos que el backend devuelve el objeto history completo o la respuesta
       // Ajustar según contrato: data.data.history
+      let updatedHistory = []
       if (result.data.history) {
-        setLocalChatHistory(result.data.history)
+        updatedHistory = result.data.history
       } else if (result.data.answer) {
-        setLocalChatHistory([...newHistory, { role: 'model', content: result.data.answer }])
+        updatedHistory = [...newHistory, { role: 'model', content: result.data.answer }]
+      }
+
+      if (updatedHistory.length > 0) {
+        setLocalChatHistory(updatedHistory)
+
+        // Actualizar el store global
+        const currentLinks = useGlobalStore.getState().globalLinks
+        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+        if (elementIndex !== -1) {
+          const newState = [...currentLinks]
+          newState[elementIndex] = { ...newState[elementIndex], chatHistory: updatedHistory }
+          setGlobalLinks(newState)
+        }
       }
     } else {
       toast.error(result.message)
@@ -165,7 +238,19 @@ export default function LinkDetailsSummary ({ data }) {
 
       {/* Sección Chat (Solo visible si hay resumen o si se decide mostrar siempre) */}
       <div className={styles.chatBlock}>
-        <h3>Chat con el Video</h3>
+        <div className={styles.summaryHeader}>
+          <h3>Chat con el Video</h3>
+          {localChatHistory.length > 0 && (
+            <button
+              className={styles.deleteButton}
+              onClick={handleDeleteChat}
+              disabled={chatLoading}
+              title="Borrar historial de chat"
+            >
+              Borrar Chat
+            </button>
+          )}
+        </div>
         <div className={styles.chatHistory}>
             {localChatHistory.map((msg, index) => (
                 <div key={index} className={`${styles.chatMessage} ${msg.role === 'user' ? styles.userMessage : styles.modelMessage}`}>

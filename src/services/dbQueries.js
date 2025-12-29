@@ -519,7 +519,20 @@ export async function generateSummary ({ linkId }) {
     return { success: true, data: data.data }
   } catch (error) {
     console.error('Error generating summary:', error)
-    return { hasError: true, message: error.message || 'Error generating summary' }
+    return { success: false, hasError: true, message: error.message || 'Error generating summary' }
+  }
+}
+
+export async function deleteAISummary (linkId) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS
+    })
+    return { success: true, data: data.data }
+  } catch (error) {
+    console.error('Error deleting summary:', error)
+    return { success: false, hasError: true, message: error.message || 'Error deleting summary' }
   }
 }
 
@@ -533,6 +546,32 @@ export async function chatWithVideo ({ linkId, message }) {
     return { success: true, data: data.data }
   } catch (error) {
     console.error('Error communicating with AI:', error)
-    return { hasError: true, message: error.message || 'Error communicating with AI' }
+    return { success: false, hasError: true, message: error.message || 'Error communicating with AI' }
+  }
+}
+
+export async function deleteAIChat (linkId) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS
+    })
+    return { success: true, data: data.data }
+  } catch (error) {
+    console.error('Error deleting chat history:', error)
+    return { success: false, hasError: true, message: error.message || 'Error deleting chat history' }
+  }
+}
+
+export async function deleteAllAIData (linkId) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai`, {
+      method: 'DELETE',
+      ...constants.FETCH_OPTIONS
+    })
+    return { success: true, data: data.data }
+  } catch (error) {
+    console.error('Error deleting all AI data:', error)
+    return { success: false, hasError: true, message: error.message || 'Error deleting all AI data' }
   }
 }
