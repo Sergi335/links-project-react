@@ -74,6 +74,7 @@
     --scrollbar-border-radius: 12px;
     --scrollbar-height: 30px;
     margin-right: 16px;
+    max-height: 89vh;
 }
 
 .scPage.column_wrapper::-webkit-scrollbar {
