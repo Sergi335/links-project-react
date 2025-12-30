@@ -15,6 +15,7 @@
         font-weight: 600;
         white-space: nowrap;
         margin: 0;
+        color: var(--text-color-secondary);
 
         &.header_info_user {
             font-size: 14px;
@@ -36,7 +37,7 @@
     }
     .search_button_container {
         .search_button {
-            background-color: var(--color-primary);
+            background-color: transparent;
             border: 1px solid transparent;
             transition: border-color .25s, color .25s;
             border-radius: 8px;

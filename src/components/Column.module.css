@@ -2,7 +2,7 @@
     min-height: 322.39px;
     transition: var(--columns_transition);
     z-index: 0;
-    background-color: #0d2235;
+    background-color: #0d223547;
     padding: 1rem;
     border-radius: 8px;
 
@@ -75,6 +75,8 @@
     --scrollbar-height: 30px;
     margin-right: 16px;
     max-height: 89vh;
+    border-radius: 0;
+    background-color: #0d223547;
 }
 
 .scPage.column_wrapper::-webkit-scrollbar {
