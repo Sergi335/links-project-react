@@ -6,6 +6,7 @@
     /* flex: 1; */
     padding: 10px;
     justify-content: space-evenly;
+    /* transition: all 0.8s ease-in-out !important; */
 
     & img {
         max-width: var(--bookmarks_image_width);
@@ -14,6 +15,9 @@
     }
     & a {
         display: flex;
+    }
+    & a:hover {
+        transform: scale(1.5);
     }
 }
 @media (min-width: 1024px) {

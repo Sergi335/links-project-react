@@ -158,7 +158,8 @@ export default function LinkDetailsSummary ({ data }) {
     setChatLoading(true)
 
     // Añadir mensaje del usuario optimísticamente
-    const newHistory = [...localChatHistory, { role: 'user', content: newMessage }]
+    const timestamp = new Date().toLocaleString()
+    const newHistory = [...localChatHistory, { role: 'user', content: newMessage, timestamp }]
     setLocalChatHistory(newHistory)
 
     const result = await chatWithVideo({ linkId: data._id, message: newMessage })
@@ -169,10 +170,15 @@ export default function LinkDetailsSummary ({ data }) {
       // Asumimos que el backend devuelve el objeto history completo o la respuesta
       // Ajustar según contrato: data.data.history
       let updatedHistory = []
+      const modelTimestamp = new Date().toLocaleString()
       if (result.data.history) {
-        updatedHistory = result.data.history
+        // Asegurarse de que todos los mensajes tengan timestamp si el backend no los provee
+        updatedHistory = result.data.history.map(msg => ({
+          ...msg,
+          timestamp: msg.timestamp || new Date().toLocaleString()
+        }))
       } else if (result.data.answer) {
-        updatedHistory = [...newHistory, { role: 'model', content: result.data.answer }]
+        updatedHistory = [...newHistory, { role: 'model', content: result.data.answer, timestamp: modelTimestamp }]
       }
 
       if (updatedHistory.length > 0) {
@@ -200,77 +206,83 @@ export default function LinkDetailsSummary ({ data }) {
 
   return (
     <div className={styles.summaryContainer}>
-      {/* Sección Resumen */}
-      <div className={styles.summaryBlock}>
-        <div className={styles.summaryHeader}>
-          <h3>Resumen del Video</h3>
-          {summary && (
-            <button
-              className={styles.deleteButton}
-              onClick={handleDeleteSummary}
-              disabled={loading}
-              title="Borrar resumen"
-            >
-              Borrar
-            </button>
-          )}
+      <div className={styles.scrollableContent}>
+        {/* Sección Resumen */}
+        <div className={styles.summaryBlock}>
+          <div className={styles.summaryHeader}>
+            <h3>Resumen del Video</h3>
+            {summary && (
+              <button
+                className={styles.deleteButton}
+                onClick={handleDeleteSummary}
+                disabled={loading}
+                title="Borrar resumen"
+              >
+                Borrar
+              </button>
+            )}
+          </div>
+          {summary
+            ? (
+            <div className={styles.markdownContent}>
+              <ReactMarkdown>{summary}</ReactMarkdown>
+            </div>
+              )
+            : (
+            <div className={styles.emptyState}>
+              <p>No hay resumen disponible para este video.</p>
+              <button
+                className={styles.generateButton}
+                onClick={handleGenerateSummary}
+                disabled={loading}
+              >
+                {loading ? 'Generando...' : 'Generar Resumen con IA'}
+              </button>
+            </div>
+              )
+          }
         </div>
-        {summary
-          ? (
-          <div className={styles.markdownContent}>
-            <ReactMarkdown>{summary}</ReactMarkdown>
+
+        {/* Sección Chat */}
+        <div className={styles.chatBlock}>
+          <div className={styles.summaryHeader}>
+            <h3>Chat con el Video</h3>
+            {localChatHistory.length > 0 && (
+              <button
+                className={styles.deleteButton}
+                onClick={handleDeleteChat}
+                disabled={chatLoading}
+                title="Borrar historial de chat"
+              >
+                Borrar Chat
+              </button>
+            )}
           </div>
-            )
-          : (
-          <div className={styles.emptyState}>
-            <p>No hay resumen disponible para este video.</p>
-            <button
-              className={styles.generateButton}
-              onClick={handleGenerateSummary}
-              disabled={loading}
-            >
-              {loading ? 'Generando...' : 'Generar Resumen con IA'}
-            </button>
+          <div className={styles.chatHistory}>
+              {localChatHistory.map((msg, index) => (
+                  <div key={index} className={`${styles.chatMessage} ${msg.role === 'user' ? styles.userMessage : styles.modelMessage}`}>
+                      <div className={styles.chatMessageHeader}>
+                        <strong>{msg.role === 'user' ? 'Tú' : 'IA'}:</strong>
+                        {msg.timestamp && <span className={styles.timestamp}>{msg.timestamp}</span>}
+                      </div>
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+              ))}
+              {chatLoading && <p className={styles.typingIndicator}>Escribiendo...</p>}
           </div>
-            )
-        }
+        </div>
       </div>
 
-      {/* Sección Chat (Solo visible si hay resumen o si se decide mostrar siempre) */}
-      <div className={styles.chatBlock}>
-        <div className={styles.summaryHeader}>
-          <h3>Chat con el Video</h3>
-          {localChatHistory.length > 0 && (
-            <button
-              className={styles.deleteButton}
-              onClick={handleDeleteChat}
+      <form onSubmit={handleSendMessage} className={styles.chatInputForm}>
+          <input
+              type="text"
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+              placeholder="Pregunta algo sobre el video..."
               disabled={chatLoading}
-              title="Borrar historial de chat"
-            >
-              Borrar Chat
-            </button>
-          )}
-        </div>
-        <div className={styles.chatHistory}>
-            {localChatHistory.map((msg, index) => (
-                <div key={index} className={`${styles.chatMessage} ${msg.role === 'user' ? styles.userMessage : styles.modelMessage}`}>
-                    <strong>{msg.role === 'user' ? 'Tú' : 'IA'}:</strong>
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
-                </div>
-            ))}
-            {chatLoading && <p className={styles.typingIndicator}>Escribiendo...</p>}
-        </div>
-        <form onSubmit={handleSendMessage} className={styles.chatInputForm}>
-            <input
-                type="text"
-                value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
-                placeholder="Pregunta algo sobre el video..."
-                disabled={chatLoading}
-            />
-            <button className="button" type="submit" disabled={chatLoading || !chatMessage.trim()}>Enviar</button>
-        </form>
-      </div>
+          />
+          <button className="button" type="submit" disabled={chatLoading || !chatMessage.trim()}>Enviar</button>
+      </form>
     </div>
   )
 }

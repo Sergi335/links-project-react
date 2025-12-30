@@ -121,23 +121,94 @@
 }
 
 .chatInputForm {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-medium);
     width: 100%;
     display: flex;
     gap: 8px;
 
     &>input[type="text"] {
-        width: 100%;
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid var(--color-medium);
+        border-radius: 4px;
+        background-color: var(--color-primary);
+        color: var(--text-color-primary);
     }
 }
 
 .summaryContainer {
-    height: -webkit-fill-available;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    overflow: hidden;
+}
+
+.scrollableContent {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+    max-height: 80dvh;
+}
+
+.scrollableContent::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-height);
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+    background: var(--color-medium);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+    background: var(--color-primary);
+    border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
+    border-radius: var(--scrollbar-border-radius);
 }
 
 .summaryBlock {
-    max-height: 70vh;
-    overflow-y: auto;
+    margin-bottom: 2rem;
+}
+
+.chatBlock {
+    border-top: 1px solid var(--color-medium);
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.chatHistory {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chatMessage {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    max-width: 90%;
+}
+
+.chatMessageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    gap: 1rem;
+}
+
+.timestamp {
+    font-size: 0.7rem;
+    color: var(--text-color-secondary);
+    opacity: 0.7;
+}
+
+.userMessage {
+    align-self: flex-end;
+    background-color: var(--color-medium);
+}
+
+.modelMessage {
+    align-self: flex-start;
+    background-color: var(--color-secondary);
 }
