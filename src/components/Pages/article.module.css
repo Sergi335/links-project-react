@@ -6,8 +6,9 @@
     line-height: 1.6;
     color: #afa5a5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--color-secondary);
+    /* background-color: var(--color-secondary); */
     text-wrap: pretty;
+    max-height: 80dvh;
 }
 
 .articleFeaturedImage {
