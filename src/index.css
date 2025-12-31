@@ -147,6 +147,11 @@ body {
   background-attachment: fixed;
 }
 
+::selection {
+  background-color: var(--accentColor, #d1e7ff);
+  color: var(--text-color-inverse, #000);
+}
+
 /* .rootElement {
   display: flex;
   flex-direction: column;

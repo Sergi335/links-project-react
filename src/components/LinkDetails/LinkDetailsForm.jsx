@@ -150,11 +150,11 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
                 style={{
                   padding: '4px 8px',
                   borderRadius: '4px',
-                  border: '1px solid var(--border-color)',
-                  backgroundColor: 'var(--bg-secondary)',
+                  border: '1px solid var(--firstBorderColor)',
+                  backgroundColor: 'var(--secondColor)',
                   color: 'var(--text-primary)',
                   cursor: 'pointer',
-                  width: '100%'
+                  width: 'fit-content'
                 }}
               >
                 <option value="general">General</option>
