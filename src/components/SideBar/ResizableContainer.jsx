@@ -12,7 +12,7 @@ export const ResizableContainer = ({ children, initialWidth, minWidth, maxWidth,
     <div
       id={id}
       ref={elementRef}
-      className={`${className}`}
+      className={`${className} pinned`}
       style={{ width: `${width}px`, position: 'relative' }}
     >
       {children}
