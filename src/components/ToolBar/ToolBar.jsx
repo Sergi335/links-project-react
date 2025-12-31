@@ -7,7 +7,7 @@ import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddColumnIcon, AddDesktopIcon, ChangeLayoutIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon, SettingsIcon, TrashIcon } from '../Icons/icons'
+import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
@@ -21,10 +21,10 @@ export default function ToolBar () {
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const desktop = topLevelCategoriesStore.find(desk => desk.slug === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  // const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
+  // const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
+  // const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
+  // const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const location = useLocation()
   const isDesktopLocation = location.pathname !== '/profile' && location.pathname !== '/readinglist'
   const isColumnLocation = window.location.pathname.startsWith('/column')
@@ -77,12 +77,12 @@ export default function ToolBar () {
     e.currentTarget.classList.toggle(styles.icon_clicked)
     setGlobalOpenColumns(!globalOpenColumns)
   }
-  const handleShowAddDesktop = () => {
-    setAddDeskFormVisible(!addDeskFormVisible)
-  }
-  const handleShowDeleteDesktop = () => {
-    setDeleteConfFormVisible(!deleteConfFormVisible)
-  }
+  // const handleShowAddDesktop = () => {
+  //   setAddDeskFormVisible(!addDeskFormVisible)
+  // }
+  // const handleShowDeleteDesktop = () => {
+  //   setDeleteConfFormVisible(!deleteConfFormVisible)
+  // }
   // Al recargar la página se queda con el panel abierto
   const handlePinPanel = () => {
     const panel = document.getElementById('sidebar')
@@ -125,7 +125,7 @@ export default function ToolBar () {
               </>
             )
           }
-          {
+          {/* {
             isDesktopLocation && (
               <button className={`${styles.settings} ${styles.sideButtons}`}>
                 <SettingsIcon />
@@ -145,7 +145,7 @@ export default function ToolBar () {
                 </div>
             </button>
             )
-          }
+          } */}
           <button className={styles.sideButtons} onClick={handlePinPanel}>
             <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
           </button>

@@ -1,7 +1,7 @@
 import { useResizable } from '../../hooks/useResizable'
 import styles from './SideBar.module.css'
 // Componente Resizable genérico
-export const ResizableContainer = ({ children, initialWidth, minWidth, maxWidth, className = '' }) => {
+export const ResizableContainer = ({ children, initialWidth, minWidth, maxWidth, className = '', id }) => {
   const { width, elementRef, handleMouseDown, isResizing } = useResizable(
     initialWidth,
     minWidth,
@@ -10,6 +10,7 @@ export const ResizableContainer = ({ children, initialWidth, minWidth, maxWidth,
 
   return (
     <div
+      id={id}
       ref={elementRef}
       className={`${className}`}
       style={{ width: `${width}px`, position: 'relative' }}

@@ -243,7 +243,7 @@ header.main_header {
   width: clamp(300px, 50%, 800px);
 } */
 
-.pinned>.sidebar_wrapper_gc {
+.pinned .sidebar_wrapper_gc {
   visibility: visible;
   opacity: 1;
   transition: visibility .1s, opacity .1s;
@@ -569,7 +569,13 @@ favopt1 {
     margin: .5rem;
   }
 
-  /* .pinned {
-    width: var(--sidebar-desktop-width);
-  } */
+  .pinned {
+    width: var(--sidebar-desktop-width) !important;
+  }
+  #sidebar {
+    transition: width .3s ease-in-out;
+  }
+  #sidebar:hover {
+    width: var(--sidebar-desktop-width) !important;
+  }
 }
