@@ -66,28 +66,34 @@
     display: flex;
 
     &>div:nth-child(1) {
+        height: -webkit-fill-available;
         display: flex;
         flex: 1;
-        max-width: 100%;
+        align-items: stretch;
+        justify-content: center;
         flex-direction: column;
     }
+
     & ul li {
         list-style-type: disc;
         margin-block-end: 1rem;
     }
 }
 
-.link_details_content::-webkit-scrollbar, .summaryBlock::-webkit-scrollbar {
+.link_details_content::-webkit-scrollbar,
+.summaryBlock::-webkit-scrollbar {
     width: var(--scrollbar-width);
     height: var(--scrollbar-height);
 }
 
-.link_details_content::-webkit-scrollbar-thumb, .summaryBlock::-webkit-scrollbar-thumb {
+.link_details_content::-webkit-scrollbar-thumb,
+.summaryBlock::-webkit-scrollbar-thumb {
     background: var(--color-medium);
     border-radius: var(--scrollbar-border-radius);
 }
 
-.link_details_content::-webkit-scrollbar-track, .summaryBlock::-webkit-scrollbar-track {
+.link_details_content::-webkit-scrollbar-track,
+.summaryBlock::-webkit-scrollbar-track {
     background: var(--color-primary);
     border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
     border-radius: var(--scrollbar-border-radius);
@@ -211,4 +217,65 @@
 .modelMessage {
     align-self: flex-start;
     background-color: var(--color-secondary);
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 1s linear infinite;
+    padding: 12px;
+    margin: 25px;
+    display: block;
+    margin: 0 auto;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid var(--inputBackgroundColor);
+    animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+    border-color: var(--accentColor);
+    animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+    inset: 6px;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    }
+
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+    }
 }

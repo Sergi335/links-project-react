@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
-import { chatWithVideo, generateSummary, deleteAISummary, deleteAIChat, getLinkById } from '../../services/dbQueries'
+import { chatWithVideo, deleteAIChat, deleteAISummary, generateSummary, getLinkById } from '../../services/dbQueries'
 import { useGlobalStore } from '../../store/global'
 import styles from './LinkDetailsTabs.module.css'
 
@@ -204,6 +204,15 @@ export default function LinkDetailsSummary ({ data }) {
   const linkInStore = globalLinks.find(link => link._id === data._id)
   const summary = linkInStore ? linkInStore.summary : data.summary
 
+  if (loading) {
+    return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+      <span className={styles.loader}></span>
+      <span>Generando resumen...</span>
+    </div>
+    )
+  }
+
   return (
     <div className={styles.summaryContainer}>
       <div className={styles.scrollableContent}>
@@ -272,7 +281,6 @@ export default function LinkDetailsSummary ({ data }) {
           </div>
         </div>
       </div>
-
       <form onSubmit={handleSendMessage} className={styles.chatInputForm}>
           <input
               type="text"

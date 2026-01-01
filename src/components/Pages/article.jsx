@@ -1,37 +1,58 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { apiFetch } from '../../services/api'
+import { constants } from '../../services/constants'
 import { updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import styles from './article.module.css'
 
 const ArticleRenderer = ({ data }) => {
-  // console.log('🚀 ~ ArticleRenderer ~ data:', data)
   const [article, setArticle] = useState(null)
-  // console.log('🚀 ~ ArticleRenderer ~ article:', article)
+  const [loading, setLoading] = useState(false)
   const globalArticles = useGlobalStore(state => state.globalArticles)
+  const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
+  const globalLinks = useGlobalStore(state => state.globalLinks)
+  const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const { id } = useParams()
-  // console.log('🚀 ~ ArticleRenderer ~ id:', id)
 
   useEffect(() => {
-    // console.log('entramos al useEffect')
     if (data?._id && data?._id === id) {
-      // console.log('entramos')
-
       setArticle(data.extractedArticle)
     } else {
       setArticle(globalArticles)
     }
-    // if (article !== undefined) {
-    //   //console.log('🚀 ~ ArticleRenderer ~ globalArticles:', JSON.parse(article?.content))
-    // }
   }, [globalArticles, data])
-  // console.log('🚀 ~ ArticleRenderer ~ article:', article)
-  if (!article) {
-    return <div className="article-loading">No hay artículo disponible.</div>
-  }
 
+  const handleExtractArticle = async () => {
+    try {
+      setLoading(true)
+      const article = await apiFetch(`${constants.BASE_API_URL}/links/${data._id}/extract`, {
+        method: 'POST',
+        ...constants.FETCH_OPTIONS
+      })
+
+      // console.log('🚀 ~ handleExtractArticle ~ data:', data)
+      if (Array.isArray(article.data) && article.data.length > 0) {
+        setGlobalArticles(article.data[0].extractedArticle)
+        const newState = [...globalLinks]
+        const index = newState.findIndex(link => link._id === data._id)
+        if (index !== -1) {
+          newState[index] = { ...newState[index], extractedArticle: article.data[0].extractedArticle }
+          setGlobalLinks(newState)
+          setLoading(false)
+        }
+      } else {
+        setGlobalArticles(article.data)
+        setLoading(false)
+      }
+    } catch (error) {
+      setLoading(false)
+      console.error('Error fetching article:', error)
+      toast.error('Error fetching article')
+    }
+  }
   const handleUpdateLink = async () => {
     try {
       const response = await updateLink({ items: [{ id, extractedArticle: null }] })
@@ -42,6 +63,19 @@ const ArticleRenderer = ({ data }) => {
     } catch (error) {
       console.error('Error updating link:', error)
     }
+  }
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <span className={styles.loader}></span>
+        <span>Extrayendo artículo...</span>
+      </div>
+    )
+  }
+  if (!loading && !article) {
+    return (
+      <button style={{ width: 'fit-content', margin: '0 auto' }} onClick={handleExtractArticle}>Extraer Artículo</button>
+    )
   }
 
   return (
@@ -99,25 +133,6 @@ const extractImageSrc = (html) => {
   const imgMatch = html.match(/<img[^>]+src="([^">]+)"/)
   return imgMatch ? imgMatch[1] : 'https://via.placeholder.com/800x400?text=Imagen+no+disponible'
 }
-
-// const extractContentBody = (html) => {
-//   const contentMatch = html.match(/<div[^>]*class="[^"]*page[^"]*"[^>]*>([\s\S]*?)<\/div>/)
-//   if (contentMatch && contentMatch[1]) {
-//     // Limpiar el contenido para eliminar elementos no deseados
-//     let cleanedContent = contentMatch[1]
-//       .replace(/<div[^>]*class="[^"]*page[^"]*"[^>]*>/g, '')
-//       .replace(/<div[^>]*id="[^"]*readability-page-[^"]*"[^>]*>/g, '')
-
-//     // Eliminar secciones específicas que no queremos mostrar dos veces
-//     cleanedContent = cleanedContent
-//       .replace(/<figure>[\s\S]*?<\/figure>/, '') // Eliminar figura (ya la mostramos arriba)
-//       .replace(/<div[^>]*class="[^"]*article-header[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
-//       .replace(/<div[^>]*class="[^"]*author-section[^"]*"[^>]*>[\s\S]*?<\/div>/, '')
-
-//     return cleanedContent
-//   }
-//   return html
-// }
 
 const extractAuthorSection = (html) => {
   const authorMatch = html.match(/<div[^>]*class="[^"]*author-section[^"]*"[^>]*>[\s\S]*?<\/div>/)

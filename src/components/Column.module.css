@@ -60,7 +60,14 @@
 }
 
 .scPage .column h2 {
-    font-size: 1.5rem;
+    font-size: 13.333px;
+    margin-left: 5px;
+    padding: 8px;
+    line-height: normal;
+}
+
+.scPage .column .column_header {
+    border-bottom: var(--firstBorder);
 }
 
 /* .scPage .column {
@@ -76,7 +83,9 @@
     margin-right: 16px;
     max-height: 89vh;
     border-radius: 0;
-    background-color: #0d223547;
+    background-color: var(--color-primary);
+    border: var(--firstBorder);
+    padding: 0 0 8px;
 }
 
 .scPage.column_wrapper::-webkit-scrollbar {
@@ -107,16 +116,18 @@
 }
 
 input[type='text'].editInput {
-    min-height: 46.39px !important;
-    max-height: 46.39px !important;
-    font-size: 1.1rem;
+    /* min-height: 46.39px !important;
+    max-height: 46.39px !important; */
+    font-size: 13.333px !important;
     font-weight: 700 !important;
-    border-radius: var(--button-radius);
-    padding-left: 15px;
+    border-radius: 0;
+    padding-left: 8px 8px 8px 15px;
+    line-height: normal !important;
+
 }
 
 input[type='text'].editInput:focus {
-    background: var(--inputBackgroundColor);
+    background: var(--color-medium);
 }
 
 .opener svg.rotate {
