@@ -66,6 +66,7 @@ html.dark {
   /* --hover-color-primary: hsl(from var(--accentColor) h s l / 30%); */
   --text-color-inverse: var(--color-zinc-100);
   --btn-bg-color: var(--color-slate-900);
+  --column-background: #ffffff70;
 
   --placeholderImg: url(/img/placeholderImgLight.png);
   --placeholderVid: url(/img/placeholderVidLight.png);
@@ -111,6 +112,7 @@ html.dark {
   --text-color-secondary: var(--color-neutral-400);
   --text-color-inverse: var(--color-neutral-900);
   --btn-bg-color: var(--color-slate-100);
+  --column-background: #0d223547;
 
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
@@ -178,6 +180,7 @@ body {
   grid-template-columns: 100%;
   grid-template-rows: auto auto 1fr;
   width: 100%;
+  background-color: var(--color-primary);
 }
 
 @media (min-width: 1280px) {
@@ -572,9 +575,11 @@ favopt1 {
   .pinned {
     width: var(--sidebar-desktop-width) !important;
   }
+
   #sidebar {
     transition: width .3s ease-in-out;
   }
+
   #sidebar:hover {
     width: var(--sidebar-desktop-width) !important;
   }

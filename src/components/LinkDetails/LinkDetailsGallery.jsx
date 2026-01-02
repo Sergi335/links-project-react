@@ -193,7 +193,7 @@ export default function LinkDetailsGallery ({ data }) {
   return (
     <>
     <div
-      style={{ backgroundImage: images.length <= 0 ? 'url(\'/img/placeholderImg.png\')' : 'none' }}
+      style={{ backgroundImage: images.length <= 0 ? 'var(--placeholderImg)' : 'none' }}
       className={`${styles.imageGalleryContainer} ${isDragging ? styles.dragging : ''}`}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}

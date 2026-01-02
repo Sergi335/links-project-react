@@ -2,7 +2,7 @@
     min-height: 322.39px;
     transition: var(--columns_transition);
     z-index: 0;
-    background-color: #0d223547;
+    background-color: var(--column-background);
     padding: 1rem;
     border-radius: 8px;
 
@@ -42,12 +42,15 @@
     align-items: center;
     position: relative;
     gap: 10px;
+    border: var(--firstBorder);
+    padding-left: 8px;
+    margin-bottom: 9px;
 }
 
 .column h2 {
     text-align: left;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 13.333px;
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: 5px 0;
@@ -67,7 +70,9 @@
 }
 
 .scPage .column .column_header {
+    border: 0;
     border-bottom: var(--firstBorder);
+    margin-bottom: 9px;
 }
 
 /* .scPage .column {

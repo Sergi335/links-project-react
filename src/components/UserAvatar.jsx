@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getSignedUrl } from '../services/dbQueries'
 import { useSessionStore } from '../store/session'
 
-export default function ProfileImage ({ imageKey, id }) {
+export default function ProfileImage ({ imageKey, id, className, onClick }) {
   const [imageUrl, setImageUrl] = useState(null)
   const csrfToken = useSessionStore(state => state.csfrtoken)
   const isTokenReady = useSessionStore(state => state.isTokenReady)
@@ -14,7 +14,7 @@ export default function ProfileImage ({ imageKey, id }) {
     }
   }, [isTokenReady, csrfToken, imageKey])
 
-  if (!imageUrl) return <img id={id} src='/img/avatar.svg' alt="Profile" />
+  if (!imageUrl) return <img id={id} src='/img/avatar.svg' alt="Profile" className={className} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }} />
 
-  return <img id={id} src={imageUrl} alt="Profile" />
+  return <img id={id} src={imageUrl} alt="Profile" className={className} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }} />
 }

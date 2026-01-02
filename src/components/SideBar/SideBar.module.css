@@ -12,6 +12,7 @@
     background-color: var(--color-primary);
     z-index: 2;
     overscroll-behavior: contain;
+    border-right: var(--firstBorder);
 
     /* Para dispositivos que soportan hover (normalmente no táctiles) */
     @media (hover: hover) {
@@ -335,6 +336,7 @@ a.active:hover {
     /* -0.5rem = -8px */
     right: -8px;
 }
+
 .logo_actions {
     display: flex;
     margin-left: 13px;
