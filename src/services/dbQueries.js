@@ -1,5 +1,5 @@
-import { constants } from './constants'
 import { apiFetch } from './api'
+import { constants } from './constants'
 
 /* ------------ LINKS ------------------- */
 
@@ -282,6 +282,7 @@ export async function changeBackgroundImage (event) {
       element.style.background = `url(${data.data})`
       element.style.backgroundSize = 'cover'
       element.style.backgroundAttachment = 'fixed'
+      element.style.backgroundColor = 'none'
       window.localStorage.setItem('bodyBackground', JSON.stringify(`${data.data}`))
       return data
     } catch (error) {

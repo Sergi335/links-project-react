@@ -44,6 +44,7 @@
             border-radius: 8px;
             gap: 5px;
             color: var(--text-color-secondary);
+            margin-right: var(--gap);
 
             &:hover {
                 border-color: var(--accentColor);
