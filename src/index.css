@@ -572,15 +572,15 @@ favopt1 {
     margin: .5rem;
   }
 
-  .pinned {
+  /* .pinned {
     width: var(--sidebar-desktop-width) !important;
-  }
+  } */
 
   #sidebar {
     transition: width .3s ease-in-out;
   }
 
-  #sidebar:hover {
+  /* #sidebar:hover {
     width: var(--sidebar-desktop-width) !important;
-  }
+  } */
 }

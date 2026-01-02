@@ -5,7 +5,7 @@ import styles from './SideBar.module.css'
 
 export default function SideBar () {
   return (
-    <ResizableContainer id='sidebar' initialWidth={30} minWidth={30} maxWidth={400}>
+    <ResizableContainer id='sidebar' initialWidth={260} minWidth={30} maxWidth={400}>
       <aside className={`${styles.sidebar} resize-drag`}>
         <div className={`${styles.sidebar_wrapper} sidebar_wrapper_gc`}>
           <LogoDisplay />
