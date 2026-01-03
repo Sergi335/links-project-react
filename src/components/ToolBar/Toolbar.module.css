@@ -1,4 +1,8 @@
 /*Bloque Toolbar*/
+.grid.profile-page .toolbar {
+    grid-area: header;
+}
+
 .toolbar {
     position: sticky;
     top: var(--toolbar-mobile-height);
@@ -22,6 +26,7 @@
             left: -2px;
             background-color: var(--accentColor);
         }
+
         /* & > .sideButtons:is(:first-child) {
             border-bottom-left-radius: 11px;
         } */
@@ -142,10 +147,11 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: initial    ;
+    line-height: initial;
     /* color: var(--color-medium); */
     /* display: none; */
 }
+
 .desktop_name_container {
     display: flex;
     gap: 5px;
@@ -160,17 +166,19 @@
 .icon_pinned {
     transform: rotate(-45deg);
 }
+
 @keyframes blurAnimation {
     0% {
-      backdrop-filter: blur(0px);
-      background-color: hsl(from var(--color-primary) h s l / 0%);
+        backdrop-filter: blur(0px);
+        background-color: hsl(from var(--color-primary) h s l / 0%);
     }
-  
+
     100% {
-      backdrop-filter: blur(15px);
-      background-color: hsl(from var(--color-primary) h s l / 75%);
+        backdrop-filter: blur(15px);
+        background-color: hsl(from var(--color-primary) h s l / 75%);
     }
-  }
+}
+
 @media (min-width: 1280px) {
     .toolbar {
         top: 60px;

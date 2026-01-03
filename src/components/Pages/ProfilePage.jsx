@@ -66,7 +66,7 @@ export function UserPreferences ({ user, setUser }) {
         const response = await handleReauthenticateWithGoogle()
         const { hasError, message } = handleResponseErrors(response)
         if (hasError) {
-          // console.log(message.code)
+          console.log(message)
           toast.update(deleteLoading, { render: 'error reauth google', type: 'error', isLoading: false, autoClose: 3000 })
           return
         }
@@ -159,7 +159,7 @@ export function UserSecurity ({ user, setUser }) {
       const authResponse = await handleChangeFirebasePassword(newPasswordState)
       // gestionar error tmb
       toast('Contraseña cambiada con éxito')
-      // console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
+      console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
     } else {
       // console.log(reAuthResponse)
       setReauthVisible(false)
@@ -531,6 +531,8 @@ export function UserInfo ({ user, setUser }) {
   const handleUploadImage = async (e) => {
     setFileToUploadLoading(true)
     const response = await uploadProfileImg(fileToUpload)
+    console.log(response)
+
     if (response.startsWith('https')) {
       setFileToUpload(null)
       setFileToUploadLoading(false)

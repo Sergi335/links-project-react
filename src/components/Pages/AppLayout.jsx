@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
 import { useFormsStore } from '../../store/forms'
@@ -12,6 +12,7 @@ export default function AppLayout () {
   const { desktopName } = useParams()
   useDbQueries()
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
+  const [isProfilePage, setIsProfilePage] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -24,10 +25,16 @@ export default function AppLayout () {
     document.body.classList.remove('home')
   }, [desktopName])
 
+  useEffect(() => {
+    if (window.location.pathname === '/app/profile') {
+      setIsProfilePage(true)
+    }
+  }, [])
+
   return (
     <>
       <SideBar />
-      <div id="grid" className="grid">
+      <div id="grid" className={`grid${isProfilePage ? ' profile-page' : ''}`}>
         <ToolBar />
         <header className='main_header'>
           <Bookmarks />

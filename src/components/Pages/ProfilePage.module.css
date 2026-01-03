@@ -1,15 +1,16 @@
 .profileWrapper {
-    gap: 25px;
+    /* gap: 25px; */
     grid-area: main;
 
     & strong {
         font-weight: 600;
+        color: var(--text-color-secondary);
     }
 }
 
 .content {
     min-height: 90vh;
-    padding: 5px;
+    padding: 14px;
 
     & h3 {
         margin-top: 0;
@@ -35,7 +36,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 5px;
+    /* gap: 5px; */
 }
 
 .about {
@@ -54,11 +55,19 @@
     cursor: pointer;
     transition: background 0.3s ease-in-out;
     gap: 8px;
+    background-color: transparent;
+    color: var(--text-color-primary);
+    border-bottom: var(--firstBorder);
+    border-radius: 0;
+    font-size: 14px;
+    letter-spacing: .5px;
+    color: var(--text-color-secondary);
 }
 
 .tablinks:hover {
     background-color: var(--color-secondary);
     transition: background-color .3s;
+    color: white;
 }
 
 .tabcontent {
@@ -78,7 +87,7 @@
     border-bottom: 1px solid var(--firstBorderColor);
     align-items: start;
     gap: 8px;
-    padding: 15px 0;
+    /* padding: 15px 0; */
 
     & h3 {
         margin: 0;
@@ -139,8 +148,8 @@
 }
 
 .active {
-    background-color: var(--color-secondary);
-    /* color: var(--thirdColor); */
+    background-color: var(--color-medium);
+    color: white;
 
 }
 
@@ -671,7 +680,7 @@ tr:nth-child(odd) {
 
 @media (min-width: 1536px) {
     .profileWrapper {
-        grid-template-columns: 18% 1fr;
+        grid-template-columns: 22ch 1fr;
         grid-template-rows: auto 1fr;
         display: grid;
         grid-template-areas:
@@ -689,10 +698,9 @@ tr:nth-child(odd) {
     .buttons {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        /* background-color: var(--mainColor); */
         grid-area: sidebar;
+        border-right: var(--firstBorder);
+        /* padding: 16px; */
 
     }
 
@@ -706,14 +714,14 @@ tr:nth-child(odd) {
     }
 
     .tablinks {
-        padding: 0 0 0 48px;
+        /* padding: 0 0 0 48px; */
         width: 100%;
     }
 
     .infoHeader {
         flex-direction: row;
         grid-area: header;
-        padding: 0 50px 0;
+        /* padding: 0 50px 0; */
 
         & h3,
         p {
@@ -743,6 +751,8 @@ tr:nth-child(odd) {
         flex-direction: row;
         gap: 50px;
         align-items: center;
+        padding-left: 30px;
+        padding-right: 95px;
     }
 
     .buttons {

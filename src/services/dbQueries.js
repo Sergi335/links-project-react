@@ -440,7 +440,7 @@ export async function uploadProfileImg (file) {
         ...constants.STORAGE_FETCH_OPTIONS,
         body: formData
       })
-      return result.data.url
+      return result.data.key
     } catch (error) {
       console.error('Error al realizar la solicitud:', error)
       return (`Error al realizar la solicitud:, ${error}`)

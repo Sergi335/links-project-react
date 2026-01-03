@@ -82,7 +82,7 @@ export default function ToolBar () {
     menu.classList.toggle('pinned')
   }
   return (
-    <aside className={styles.toolbar}>
+    <aside className={`${styles.toolbar} toolbar`}>
     {
 
         <div className={styles.toolbar_controls}>
