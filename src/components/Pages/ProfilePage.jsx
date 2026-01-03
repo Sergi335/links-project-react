@@ -404,10 +404,10 @@ export function UserStats ({ user }) {
   const handleFindDuplicates = async (e) => {
     setDuplicatesLoading(true)
     const response = await findDuplicateLinks()
-    if (response.length === 0) {
+    if (response.data.length === 0) {
       toast.success('No se encontraron duplicados')
     }
-    setDuplicates(response)
+    setDuplicates(response.data)
     setDuplicatesLoading(false)
   }
   const handleFindBrokenLinks = async (e) => {
@@ -512,9 +512,15 @@ export function UserInfo ({ user, setUser }) {
     const data = Object.fromEntries(formData)
     // console.log(data)
     const response = await editUserAditionalInfo({ email: user.email, fields: { ...data } })
-    // console.log(response)
-    const newUserState = { ...response.data }
-    setUser(newUserState)
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast(message)
+    } else {
+      // console.log(response)
+      const newUserState = { ...response.data }
+      setUser(newUserState)
+      toast('Información actualizada con éxito')
+    }
   }
   const handleUploadImageInputChange = async (e) => {
     const file = e.target.files[0]
@@ -531,7 +537,7 @@ export function UserInfo ({ user, setUser }) {
   const handleUploadImage = async (e) => {
     setFileToUploadLoading(true)
     const response = await uploadProfileImg(fileToUpload)
-    console.log(response)
+    // console.log(response)
 
     // uploadProfileImg devuelve la key de S3 (ej: "users/abc/profile.jpg"), no una URL
     if (response && !response.startsWith('Error')) {

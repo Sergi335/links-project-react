@@ -7,7 +7,7 @@ export default function ProfileImage ({ imageKey, id, className, onClick }) {
   const csrfToken = useSessionStore(state => state.csfrtoken)
   const isTokenReady = useSessionStore(state => state.isTokenReady)
   const user = useSessionStore(state => state.user)
-  console.log('avatar user:', user)
+  // console.log('avatar user:', user)
 
   // Esperar a que el token esté sincronizado antes de pedir la URL
   useEffect(() => {

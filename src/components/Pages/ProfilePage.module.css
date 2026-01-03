@@ -341,7 +341,7 @@ tr:nth-child(even) {
 }
 
 tr:nth-child(odd) {
-    background-color: var(--buttonColor);
+    background-color: var(--color-medium);
 }
 
 .duplicatesResult,
