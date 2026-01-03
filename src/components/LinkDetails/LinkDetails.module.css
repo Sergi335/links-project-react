@@ -458,6 +458,7 @@
   /* justify-content: center; */
   order: 1;
   margin-top: 16px;
+  width: -webkit-fill-available;
 
 }
 
@@ -1019,6 +1020,13 @@
   }
 }
 
+.link_details_content {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
 @media (min-width: 1536px) {
   .mainSection {
     grid-template-columns: calc(50% - (15px / 2)) calc(50% - (15px / 2));
@@ -1084,6 +1092,8 @@
     /* margin-top: 16px; */
     align-items: center;
     /* justify-content: center; */
+    flex-grow: 1;
+    /* width: -webkit-fill-available; */
   }
 
   /* .editFieldsColumn {

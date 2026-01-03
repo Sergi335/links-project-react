@@ -16,7 +16,7 @@ export default function LinkDetailsColumn ({ data, links, actualDesktop, slug })
         <VideoPlayer src={data?.url} />
 
         {/* <LinkDetailsGallery data={data} /> */}
-        <div style={{ marginTop: '12px' }} className={styles.link_details_content}>
+        <div className={styles.link_details_content}>
           <LinkDetailsHeader data={data} context={'singlecol'} />
           <LinkDetailsForm data={data} />
           {/* <PasteImageIcon /> */}

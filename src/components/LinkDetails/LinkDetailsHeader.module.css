@@ -5,7 +5,6 @@
     align-items: flex-start;
     gap: 8px;
     order: initial;
-    margin-bottom: 8px;
     width: min(100%, 500px);
     border: 1px solid var(--firstBorderColor);
     padding: 8px;
