@@ -533,11 +533,12 @@ export function UserInfo ({ user, setUser }) {
     const response = await uploadProfileImg(fileToUpload)
     console.log(response)
 
-    if (response.startsWith('https')) {
+    // uploadProfileImg devuelve la key de S3 (ej: "users/abc/profile.jpg"), no una URL
+    if (response && !response.startsWith('Error')) {
       setFileToUpload(null)
       setFileToUploadLoading(false)
       toast('Imagen cambiada con éxito')
-      // actualizar estado global
+      // actualizar estado global con la key (no URL)
       const newUserState = { ...user, profileImage: response }
       setUser(newUserState)
     } else {
