@@ -59,7 +59,7 @@ html.dark {
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
   --color-primary: white;
-  --color-medium: var(--color-slate-100);
+  --color-medium: hsl(220deg 20% 97% / 22%);
   --color-secondary: var(--color-slate-50);
   --text-color-primary: var(--color-zinc-800);
   --text-color-secondary: var(--color-zinc-500);
@@ -106,7 +106,7 @@ html.dark {
   /* --color-primary: url('/img/fondo.png'); */
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(0% 0.5 360) 0%, oklch(0 0 0 / 0.27) 100%); */
   --color-primary: var(--color-slate-950);
-  --color-medium: var(--color-slate-800);
+  --color-medium: hsl(220deg 16.07% 7.85%);
   --color-secondary: var(--color-slate-900);
   --text-color-primary: var(--color-neutral-300);
   --text-color-secondary: var(--color-neutral-400);
@@ -229,12 +229,12 @@ header.main_header {
 @keyframes blurAnimation {
   0% {
     backdrop-filter: blur(0px);
-    background-color: hsl(from var(--color-primary) h s l / 0%);
+    background-color: hsl(from var(--color-medium) h s l / 100%);
   }
 
   100% {
     backdrop-filter: blur(15px);
-    background-color: hsl(from var(--color-primary) h s l / 75%);
+    background-color: hsl(from var(--color-medium) h s l / 75%);
   }
 }
 

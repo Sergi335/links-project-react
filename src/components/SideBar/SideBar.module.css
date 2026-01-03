@@ -5,14 +5,15 @@
     height: calc(100dvh - var(--sidebar-top-onmobile));
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 0;
     overflow-y: auto;
     /* width: 0px; */
     transition: width 0.3s ease-out;
-    background-color: var(--color-primary);
+    background-color: var(--color-medium);
     z-index: 2;
     overscroll-behavior: contain;
     border-right: var(--firstBorder);
+    padding-left: 16px;
 
     /* Para dispositivos que soportan hover (normalmente no táctiles) */
     @media (hover: hover) {
@@ -44,21 +45,18 @@
 /*Bloque Logo */
 .logo_container {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 40px;
+    height: 60px;
+    align-items: center;
+    border-bottom: var(--firstBorder);
 
     .logo {
         display: flex;
         align-items: center;
         border-radius: var(--button-radius);
         padding: 2px 8px;
-        height: -webkit-fill-available;
-        height: -moz-available;
         background-color: var(--accentColor);
         color: white;
-        margin-bottom: 6px;
-        width: fit-content;
+        flex-grow: 0;
 
         .logo_text {
             text-align: left;
