@@ -209,6 +209,7 @@ header.main_header {
   animation: blurAnimation 1s linear forwards;
   animation-timeline: scroll();
   border-bottom: var(--firstBorder);
+  background-color: var(--color-medium);
 }
 
 @media (min-width: 1024px) {

@@ -21,16 +21,11 @@ export default function ToolBar () {
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const desktop = topLevelCategoriesStore.find(desk => desk.slug === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  // const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  // const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  // const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  // const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const location = useLocation()
-  const isDesktopLocation = location.pathname !== '/profile' && location.pathname !== '/readinglist'
-  const isColumnLocation = window.location.pathname.startsWith('/column')
-  // const navigate = useNavigate()
-  const [newColumnId, setNewColumnId] = useState(null) // Added line
-  // //console.log(location.pathname)
+  const isDesktopLocation = location.pathname !== '/app/profile' && location.pathname !== '/app/readinglist'
+  // const isColumnLocation = location.state
+  // console.log('🚀 ~ ToolBar ~ isColumnLocation:', isColumnLocation)
+  const [newColumnId, setNewColumnId] = useState(null)
 
   const handleAddColumn = async () => {
     if (desktop === undefined) {
@@ -44,10 +39,8 @@ export default function ToolBar () {
       return
     }
     const { data } = response
-    // console.log('🚀 ~ handleAddColumn ~ column:', data[0]._id)
     setGlobalColumns((() => { return [...globalColumns, ...data] })())
-    setNewColumnId(data[0]._id) // Update newColumnId
-    // navigate(`/desktop/${desktop.name}/#${column[0]._id}`)
+    setNewColumnId(data[0]._id)
   }
   useEffect(() => {
     if (newColumnId) {
@@ -77,12 +70,6 @@ export default function ToolBar () {
     e.currentTarget.classList.toggle(styles.icon_clicked)
     setGlobalOpenColumns(!globalOpenColumns)
   }
-  // const handleShowAddDesktop = () => {
-  //   setAddDeskFormVisible(!addDeskFormVisible)
-  // }
-  // const handleShowDeleteDesktop = () => {
-  //   setDeleteConfFormVisible(!deleteConfFormVisible)
-  // }
   // Al recargar la página se queda con el panel abierto
   const handlePinPanel = () => {
     const panel = document.getElementById('sidebar')
@@ -101,55 +88,25 @@ export default function ToolBar () {
         <div className={styles.toolbar_controls}>
           {
             isDesktopLocation && (
-              <button className={styles.sideButtons} onClick={handleHideColumns}>
-                <HidePanels className={styles.uiIcon} id={'hidePanels'} />
-              </button>
-            )
-          }
-          <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
-            <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
-          </button>
-          {
-            isDesktopLocation &&
-            (
               <>
+                <button className={styles.sideButtons} onClick={handleHideColumns}>
+                  <HidePanels className={styles.uiIcon} id={'hidePanels'} />
+                </button>
+                <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
+                  <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
+                </button>
                 <button className={styles.sideButtons} onClick={handleAddColumn}>
                   <AddColumnIcon className={styles.uiIcon} id={'addCol'} />
                 </button>
-                {
-                  !isColumnLocation &&
-                  <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
-                    <ExpandHeightIcon className={styles.uiIcon} />
-                  </button>
-                }
+                <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
+                  <ExpandHeightIcon className={styles.uiIcon} />
+                </button>
               </>
             )
           }
-          {/* {
-            isDesktopLocation && (
-              <button className={`${styles.settings} ${styles.sideButtons}`}>
-                <SettingsIcon />
-                <div className={styles.sidebar_inner_controls}>
-                  <span onClick={handleShowAddDesktop}>
-                    <AddDesktopIcon />
-                    <span>Añade escritorio</span>
-                  </span>
-                  <span>
-                    <ChangeLayoutIcon />
-                    <span>Cambiar vista</span>
-                  </span>
-                  <span onClick={handleShowDeleteDesktop}>
-                    <TrashIcon />
-                    <span>Eliminar escritorio</span>
-                  </span>
-                </div>
-            </button>
-            )
-          } */}
           <button className={styles.sideButtons} onClick={handlePinPanel}>
             <PinPanelIcon id={'pin_icon'} className={`uiIcon ${styles.icon_pinned}`} />
           </button>
-
         </div>
 
     }

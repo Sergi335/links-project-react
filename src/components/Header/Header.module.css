@@ -232,9 +232,19 @@
     /* margin-left: 10px; */
     flex-direction: column;
     background-color: var(--color-primary);
-    top: 50px;
+    top: 40px;
     left: -50px;
     padding: 1rem;
     gap: 8px;
     display: none;
+    border: var(--firstBorder);
+
+    & button {
+        padding: 0;
+        background-color: transparent;
+        color: var(--text-color-secondary);
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 14px;
+    }
 }
