@@ -131,7 +131,7 @@ const ArticleRenderer = ({ data }) => {
 // Funciones auxiliares para extraer partes específicas del HTML
 const extractImageSrc = (html) => {
   const imgMatch = html.match(/<img[^>]+src="([^">]+)"/)
-  return imgMatch ? imgMatch[1] : 'https://via.placeholder.com/800x400?text=Imagen+no+disponible'
+  return imgMatch ? imgMatch[1] : 'https://placeholder.pagebee.io/api/random/800/400'
 }
 
 const extractAuthorSection = (html) => {
