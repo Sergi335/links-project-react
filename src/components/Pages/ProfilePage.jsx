@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
 import { useTitle } from '../../hooks/useTitle'
 import { constants } from '../../services/constants'
-import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, uploadProfileImg } from '../../services/dbQueries'
+import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, getSignedUrl, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
@@ -173,22 +173,24 @@ export function UserSecurity ({ user, setUser }) {
       ...constants.FETCH_OPTIONS
     })
       .then(res => res.json())
-      .then(data => {
-        // console.log(data)
+      .then(async data => {
+        console.log(data)
         const { hasError, message } = handleResponseErrors(data)
         if (hasError) {
           toast(message)
           setBackupLoading(false)
           return
         }
-        const { resultadoDb } = data
-        setUser(resultadoDb)
+        const updateUserResponse = await editUserAditionalInfo({ email: user.email, fields: { lastBackupUrl: data.data.key } })
+        // const { resultadoDb } = data
+        setUser(updateUserResponse.data)
         toast('Copia creada con éxito')
         setBackupLoading(false)
       })
   }
-  const handleDownloadBackup = (e) => {
-    window.open(`${user.lastBackupUrl}`)
+  const handleDownloadBackup = async (e) => {
+    const url = await getSignedUrl(user.lastBackupUrl)
+    window.open(url, '_blank')
   }
   // const handleUploadBackup = (e) => {
   //   const file = e.target.files[0]
@@ -691,12 +693,14 @@ export function ProfileHeader ({ user }) {
 }
 export default function ProfilePage () {
   const user = useSessionStore(state => state.user)
+  console.log(user)
+
   const setUser = useSessionStore(state => state.setUser)
   const infoRef = useRef()
   const statsRef = useRef()
   const secRef = useRef()
   const prefRef = useRef()
-  useTitle({ title: `${user.name} - Profile` })
+  useTitle({ title: `${user.realName} - Profile` })
   useEffect(() => {
     openTab('info', 'infoTab')
   }, [])
