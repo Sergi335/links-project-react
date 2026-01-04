@@ -186,7 +186,7 @@
         flex-direction: column;
         overflow-x: visible;
         background-color: transparent;
-        height: calc(100dvh - 80px);
+        height: calc(100dvh - 60px);
         z-index: 1;
         justify-content: initial;
         animation: none;

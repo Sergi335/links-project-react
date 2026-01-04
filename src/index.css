@@ -200,6 +200,7 @@ body {
 
   .toolbar {
     border-right: var(--firstBorder);
+    background: repeating-linear-gradient(-45deg, var(--color-primary) 0 4px, var(--color-medium) 0 7px);
   }
 }
 
