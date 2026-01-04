@@ -141,7 +141,7 @@
     display: flex;
     /* justify-content: center; */
     align-items: start;
-    /* background-color: var(--mainColor); */
+    /* background-color: var(--color-medium); */
     /* padding: 50px; */
     flex-direction: column;
     flex-grow: 1;
@@ -155,7 +155,7 @@
 
 .info {
     /* padding: 25px; */
-    /* background-color: var(--mainColor); */
+    /* background-color: var(--color-medium); */
     height: -webkit-fill-available;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -309,7 +309,7 @@ h3 {
 .statsControls {
     display: flex;
     justify-content: space-around;
-    /* background-color: var(--mainColor); */
+    /* background-color: var(--color-medium); */
     padding: 50px 0;
     border-top: 1px solid var(--firstBorderColor);
     gap: 100px;
@@ -421,7 +421,7 @@ tr:nth-child(odd) {
     display: flex;
     justify-content: center;
     align-items: start;
-    /* background-color: var(--mainColor); */
+    /* background-color: var(--color-medium); */
     /* padding: 0 50px; */
     flex-direction: column;
     /* flex-grow: 1; */
@@ -451,7 +451,7 @@ tr:nth-child(odd) {
     display: flex;
     /* justify-content: center; */
     /* align-items: center; */
-    /* background-color: var(--mainColor); */
+    /* background-color: var(--color-medium); */
     /* padding: 50px; */
     flex-direction: column;
     flex-grow: 1;
@@ -484,6 +484,23 @@ tr:nth-child(odd) {
     margin: 60px auto;
 }
 
+.cancelButton {
+    display: block;
+    margin: 0 auto;
+    padding: 8px 24px;
+    background-color: var(--danger-color, #dc3545);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+    background-color: color-mix(in srgb, var(--danger-color, #dc3545), black 15%);
+}
+
 .rowGroup p:hover+.display {
     opacity: 1;
     visibility: visible;
@@ -491,8 +508,8 @@ tr:nth-child(odd) {
 }
 
 .loader {
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     position: relative;
     animation: rotate 1s linear infinite;
@@ -574,7 +591,7 @@ tr:nth-child(odd) {
 
 .duplicatesResult::-webkit-scrollbar-track,
 .brokenLinksResult::-webkit-scrollbar-track {
-    background: var(--scrollbar-track-color, var(--mainColor));
+    background: var(--scrollbar-track-color, var(--color-medium));
 }
 
 .duplicatesResult::-webkit-scrollbar-corner,
@@ -604,7 +621,7 @@ tr:nth-child(odd) {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    background-color: var(--buttonColor);
+    background-color: var(--color-primary);
     position: relative;
     opacity: 1;
     transition: opacity 0.5s ease-out;
@@ -649,7 +666,7 @@ tr:nth-child(odd) {
 
 .gt50 .ppcProgress .ppcProgressFill {
     clip: rect(0, 200px, 200px, 100px);
-    background: var(--buttonColor);
+    background: var(--color-primary);
 }
 
 /*contenedor del texto del porcentaje esto creo que no influye*/
@@ -661,7 +678,7 @@ tr:nth-child(odd) {
     top: calc(50% - 173.9130434783px/2);
     width: 173.9130434783px;
     height: 173.9130434783px;
-    background: var(--mainColor);
+    background: var(--color-medium);
     text-align: center;
     display: table;
 }

@@ -272,14 +272,26 @@ export function UserSecurity ({ user, setUser }) {
     </>
   )
 }
-export function PieChart ({ links, setLinks }) {
+export function PieChart ({ links, setLinks, getCategoryName }) {
   const [brokenLinks, setBrokenLinks] = useState([])
+  const [isChecking, setIsChecking] = useState(false)
   const chartRef = useRef()
   const chartFillRef = useRef()
   const chartPercentRef = useRef()
+  const abortControllerRef = useRef(null)
+
+  const handleCancel = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      setIsChecking(false)
+      setLinks([])
+      toast('Operación cancelada')
+    }
+  }
 
   useEffect(() => {
     const abortController = new AbortController()
+    abortControllerRef.current = abortController
     const $currentLink = document.getElementById('currentLink')
     const createChart = async () => {
       // const counter = document.getElementById('counter')
@@ -289,6 +301,7 @@ export function PieChart ({ links, setLinks }) {
 
       // counter.innerHTML = 'Broken Links:' // -> estado?
       if ($ppc) {
+        setIsChecking(true)
         // Reseteamos el circulo
         if ($ppc?.classList.contains(`${styles.gt50}}`)) {
           $ppc.classList.remove(`${styles.gt50}}`)
@@ -301,30 +314,44 @@ export function PieChart ({ links, setLinks }) {
 
         const porcentajePorPaso = 100 / newLinks.length
         let count = 0
-        const downLinks = await Promise.all(newLinks.map(async (link) => {
-          const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${link.URL}`, {
-            method: 'GET',
-            signal: abortController.signal,
-            ...constants.FETCH_OPTIONS
-          })
-          const data = await response.json()
-          if (data.status !== 'success') {
+        const downLinks = []
+
+        // Procesar secuencialmente para ver el progreso
+        for (const link of newLinks) {
+          if (abortController.signal.aborted) break
+
+          try {
+            const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${link.URL}`, {
+              method: 'GET',
+              signal: abortController.signal,
+              ...constants.FETCH_OPTIONS
+            })
+            const data = await response.json()
+
             $currentLink.textContent = `Comprobando ${link.name} ...`
             count += porcentajePorPaso
-            return { data, link }
-          }
-          $currentLink.textContent = `Comprobando ${link.name} ...`
-          count += porcentajePorPaso
-          $ppc.dataset.percent = count
-          progressCircle()
-          return null
-        }))
+            $ppc.dataset.percent = Math.round(count)
 
-        const filteredLinks = downLinks.filter(link => link !== null)
-        if (filteredLinks.length === 0) {
-          toast.success('No se encontraron links caídos')
+            if (data.status !== 'success') {
+              downLinks.push({ data, link })
+            }
+
+            // Actualizar UI y dar tiempo al navegador para repintar
+            progressCircle()
+            await new Promise(resolve => requestAnimationFrame(resolve))
+          } catch (error) {
+            if (error.name === 'AbortError') break
+            console.error('Error checking link:', error)
+          }
         }
-        setBrokenLinks(filteredLinks)
+
+        setIsChecking(false)
+        if (!abortController.signal.aborted) {
+          if (downLinks.length === 0) {
+            toast.success('No se encontraron links caídos')
+          }
+          setBrokenLinks(downLinks)
+        }
         // counter.innerHTML = `Broken Links: ${filteredLinks.length}`
         setLinks([])
       }
@@ -365,6 +392,11 @@ export function PieChart ({ links, setLinks }) {
         </div>
       </div>
       <p id='currentLink' className={styles.currentLink}></p>
+      {isChecking && (
+        <button onClick={handleCancel} className={styles.cancelButton}>
+          Cancelar
+        </button>
+      )}
       </>)
       : null
       }
@@ -379,12 +411,12 @@ export function PieChart ({ links, setLinks }) {
           brokenLinks && brokenLinks.map((link, index) => {
             return (
               <div key={link.link._id + index} className={styles.link}>
-                <a target="_blank" href={link.link.URL} rel="noreferrer">
-                  <img src={link.link.imgURL}/>{link.link.name}
+                <a target="_blank" href={link.link.url} rel="noreferrer">
+                  <img src={link.link.imgUrl}/>{link.link.name}
                 </a>
-                <p><span className={styles.bold}>Escritorio:</span> {link.link.escritorio}</p>
-                <p><span className={styles.bold}>Panel:</span> {link.link.panel}</p>
-                <p><span className={styles.bold}>url:</span> {link.link.URL}</p>
+                {/* <p><span className={styles.bold}>Escritorio:</span> {link.link.escritorio}</p> */}
+                <p><span className={styles.bold}>Panel:</span> {getCategoryName(link.link.categoryId)}</p>
+                <p><span className={styles.bold}>url:</span> {link.link.url}</p>
               </div>
             )
           })
@@ -400,6 +432,11 @@ export function UserStats ({ user }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
+
+  const getCategoryName = (categoryId) => {
+    const category = globalColumns.find(cat => cat._id === categoryId)
+    return category ? category.name : 'Desconocido'
+  }
   // TODO Errores
   const handleFindDuplicates = async (e) => {
     setDuplicatesLoading(true)
@@ -417,8 +454,8 @@ export function UserStats ({ user }) {
       toast(message)
       return
     }
-    const { links } = response
-    setLinks(links)
+    const { data } = response
+    setLinks(data)
   }
 
   return (
@@ -465,7 +502,7 @@ export function UserStats ({ user }) {
               )
             }
 
-            <PieChart links={links} setLinks={setLinks}/>
+            <PieChart links={links} setLinks={setLinks} getCategoryName={getCategoryName}/>
             {
 
               duplicatesLoading && (<span className={styles.loader}></span>)
@@ -477,12 +514,12 @@ export function UserStats ({ user }) {
                 return (
                   <>
                     <div key={duplicate._id + index} className={styles.link}>
-                      <a target="_blank" href={duplicate.URL} rel="noreferrer">
-                        <img src={duplicate.imgURL}/>{duplicate.name}
+                      <a target="_blank" href={duplicate.url} rel="noreferrer">
+                        <img src={duplicate.imgUrl}/>{duplicate.name}
                       </a>
-                      <p><span className={styles.bold}>Escritorio:</span> {duplicate.escritorio}</p>
-                      <p><span className={styles.bold}>Panel:</span> {duplicate.panel}</p>
-                      <p><span className={styles.bold}>url:</span> {duplicate.URL}</p>
+                      {/* <p><span className={styles.bold}>Escritorio:</span> {duplicate.escritorio}</p> */}
+                      <p><span className={styles.bold}>Panel:</span> {getCategoryName(duplicate.categoryId)}</p>
+                      <p><span className={styles.bold}>url:</span> {duplicate.url}</p>
                     </div>
                   </>
                 )
