@@ -459,6 +459,7 @@
   order: 1;
   margin-top: 16px;
   width: -webkit-fill-available;
+  padding-left: 16px;
 
 }
 
@@ -511,7 +512,8 @@
   /* justify-content: center; */
   position: relative;
   width: min(100%, 500px);
-  border: 1px solid var(--firstBorderColor);
+  border-block: 1px solid var(--firstBorderColor);
+  border-right: 1px solid var(--firstBorderColor);
   padding: 8px;
 }
 
@@ -1024,7 +1026,7 @@
   margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  /* gap: 16px; */
 }
 
 @media (min-width: 1536px) {

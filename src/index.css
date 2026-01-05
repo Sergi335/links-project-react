@@ -187,7 +187,7 @@ body {
   .grid {
     grid-template-areas: "header header header"
       "toolbar main favopt1";
-    grid-template-columns: 55px 1fr 100px;
+    grid-template-columns: 55px 1fr 0px;
     grid-template-rows: 60px 1fr;
   }
 

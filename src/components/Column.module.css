@@ -85,11 +85,11 @@
     --scrollbar-border-thickness: 0px;
     --scrollbar-border-radius: 12px;
     --scrollbar-height: 30px;
-    margin-right: 16px;
+    /* margin-right: 16px; */
     max-height: 89vh;
     border-radius: 0;
     background-color: var(--color-primary);
-    border: var(--firstBorder);
+    /* border: var(--firstBorder); */
     padding: 0 0 8px;
 }
 

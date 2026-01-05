@@ -21,6 +21,7 @@ export default function SingleColumn ({ data, children, childCount }) {
   const setPoints = useFormsStore(state => state.setPoints)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const tabsVisible = useGlobalStore(state => state.tabsVisible)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const selectModeGlobal = usePreferencesStore(state => state.selectModeGlobal)
   const setSelectModeGlobal = usePreferencesStore(state => state.setSelectModeGlobal)
@@ -133,6 +134,7 @@ export default function SingleColumn ({ data, children, childCount }) {
         id={columna._id}
         className={`${styles.column_wrapper} colOpen ${styles.scPage}`}
         data-order={columna.order}
+        style={!tabsVisible ? { borderRight: 'var(--firstBorder)' } : {}}
       >
         <div
           ref={colRef}

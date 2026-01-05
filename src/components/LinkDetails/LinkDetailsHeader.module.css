@@ -6,7 +6,8 @@
     gap: 8px;
     order: initial;
     width: min(100%, 500px);
-    border: 1px solid var(--firstBorderColor);
+    border-block: 1px solid var(--firstBorderColor);
+    border-right: 1px solid var(--firstBorderColor);
     padding: 8px;
     flex-grow: 1;
 

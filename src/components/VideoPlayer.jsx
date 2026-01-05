@@ -59,7 +59,7 @@ export default function VideoPlayer ({ src, width, height }) {
             <div className={styles.video_player_placeholder}></div>
             {
               !tabsVisible && (
-                  <button style={{ marginTop: '7px' }} className='button_small' onClick={handleHideTabs}>
+                  <button style={{ marginTop: '7px', marginLeft: '16px' }} className='button_small' onClick={handleHideTabs}>
                     <MaximizeVideoIcon />
                   </button>
               )

@@ -21,7 +21,7 @@ export default function LinkDetailsColumn ({ data, links, actualDesktop, slug })
           <LinkDetailsForm data={data} />
           {/* <PasteImageIcon /> */}
           <LinkDetailsNav links={links} actualDesktop={actualDesktop} linkId={data?._id} context={'singlecol'} slug={slug} />
-          <h3>Related Links</h3>
+          {/* <h3>Related Links</h3> */}
         </div>
       </div>
     </>

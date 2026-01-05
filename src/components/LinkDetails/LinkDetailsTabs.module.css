@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-right: 16px;
+    /* padding-right: 16px; */
 
     /* &>div:nth-child(1) {
         display: flex;
@@ -31,8 +31,9 @@
     display: flex;
     justify-content: space-between;
     border-inline: var(--firstBorder);
-    border-top: var(--firstBorder);
+    /* border-top: var(--firstBorder); */
     /* margin-top: 1em; */
+    height: 32px;
 }
 
 .link_details_tab {

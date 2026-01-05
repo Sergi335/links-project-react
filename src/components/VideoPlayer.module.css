@@ -9,6 +9,7 @@
     background-image: var(--placeholderVid);
     background-size: 50%;
     background-position: center;
-    border: var(--firstBorder);
+    border-bottom: var(--firstBorder);
+    border-right: var(--firstBorder);
     background-repeat: no-repeat;
 }
