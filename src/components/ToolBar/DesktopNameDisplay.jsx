@@ -1,4 +1,5 @@
 import { useLocation, useParams } from 'react-router-dom'
+import { useGlobalData } from '../../hooks/useGlobalData'
 import { useTitle } from '../../hooks/useTitle'
 import { kebabToTitleCase } from '../../services/functions'
 import NameLoader from '../NameLoader'
@@ -6,13 +7,15 @@ import styles from './Toolbar.module.css'
 
 export default function DesktopNameDisplay ({ numberOfLinks, numberOfColumns }) {
   const { desktopName } = useParams()
+  const { categories } = useGlobalData()
   const location = useLocation()
-  // //console.log(desktopName)
+
   let desktopDisplayName
   if (location.pathname === '/readinglist') {
     desktopDisplayName = 'Reading List'
   } else if (desktopName) {
-    desktopDisplayName = kebabToTitleCase(desktopName)
+    const category = categories?.find(cat => cat.slug === desktopName)
+    desktopDisplayName = category ? category.name : kebabToTitleCase(desktopName)
   } else if (location.pathname === '/profile') {
     desktopDisplayName = 'Profile'
   }

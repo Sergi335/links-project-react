@@ -128,7 +128,7 @@ export default function Columns ({
                   }
 
                   {/* Subcategories - only for multi-column context */}
-                  {context === 'multi' && categories && (
+                  {categories && (
                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                       {categories.map((col) => {
                         if (col.parentId === columna._id) {
