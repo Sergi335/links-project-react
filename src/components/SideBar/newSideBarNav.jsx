@@ -491,12 +491,29 @@ const MultiLevelDragDrop = () => {
     const className = `${isDragOver && dragOverItem.position === 'before' ? styles.drag_to_top : ''} ${isDragOver && dragOverItem.position === 'after' ? styles.drag_to_bottom : ''} ${isDragOver && dragOverItem.position === 'inside' ? styles.drag_over : ''}`
     const firstColumnLink = globalLinks.filter(link => link.categoryId === item._id).toSorted((a, b) => a.order - b.order)[0]
 
+    // ✅ Determinar si tiene subcategorías
+    const hasChildren = item.children && item.children.length > 0
+
+    // ✅ Construir la URL según el caso
+    const getItemUrl = () => {
+      if (item.level === 0) {
+        // Nivel 0: /app/desktopName
+        return `${rootPath}${basePath}/${item.slug}`
+      }
+
+      if (hasChildren) {
+        // Nivel 1+ con subcategorías: /app/desktopName/slug
+        return `${rootPath}${basePath}/${item.parentSlug}/${item.slug}`
+      }
+
+      // Nivel 1+ sin subcategorías (tiene links): /app/desktopName/slug/linkId
+      return `${rootPath}${basePath}/${item.parentSlug}/${item.slug}/${firstColumnLink?._id || ''}`
+    }
+
     return (
       <li key={item._id} data-order={item.order} className={className} data-id={item._id} data-level={item.level}>
         <NavLinkIgnoraId
-            // to={`${rootPath}${basePath}/${item.slug}`}
-            to={item.level === 0 ? `${rootPath}${basePath}/${item.slug}` : `${rootPath}${basePath}/${item.parentSlug}/${item.slug}/${firstColumnLink?._id}`}
-            // className={({ isActive }) => isActive ? styles.active : ''}
+            to={getItemUrl()}
             viewTransition
             draggable
             isActivePath={activePathIds.includes(item._id)}
@@ -529,14 +546,12 @@ const MultiLevelDragDrop = () => {
             }
           }
             }>
-            {/* <GripVertical className={styles.grab_icon} /> */}
-            {/* <Folder className="w-5 h-5 text-blue-600" /> */}
             {item.name}
               {
-                item.children && item.children.length > 0 && (
+                hasChildren && (
                   <button
                       onClick={(e) => {
-                        e.preventDefault() // ✅ Evita que el click se propague al NavLink padre
+                        e.preventDefault()
                         toggleExpand(item._id)
                       }}
                       className="p-0.5 hover:bg-gray-200 rounded"

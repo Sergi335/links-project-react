@@ -14,20 +14,37 @@ import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 
 export default function ListOfLinks () {
   const { links, loading, categories } = useGlobalData()
-  const { desktopName } = useParams()
+  const { desktopName, slug } = useParams()
 
   const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
   const styleOfColumns = usePreferencesStore(state => state.styleOfColumns)
   const setSelectedLinks = usePreferencesStore(state => state.setSelectedLinks)
   const numberOfColumnLoaders = Array(Number(numberOfColumns)).fill(null)
 
-  const actualDesktop = categories?.find(column => column.slug === desktopName)?._id
+  // Determinar qué categoría es el "padre" actual
+  const actualDesktop = useMemo(() => {
+    if (slug) {
+      // Si hay slug, buscar la categoría con ese slug (es una subcategoría nivel 1)
+      return categories?.find(column => column.slug === slug)?._id
+    }
+    // Si no hay slug, usar desktopName (categoría nivel 0)
+    return categories?.find(column => column.slug === desktopName)?._id
+  }, [categories, desktopName, slug])
+
+  // Obtener el nombre para mostrar
+  const displayCategory = useMemo(() => {
+    if (slug) {
+      return categories?.find(column => column.slug === slug)
+    }
+    return categories?.find(column => column.slug === desktopName)
+  }, [categories, desktopName, slug])
+
   const desktopColumns = categories?.filter(column => column.parentId === actualDesktop)
   const columnsIds = desktopColumns?.map(column => column._id)
 
   const numberOfLinksInCategory = useMemo(() => {
-    return links.filter(link => columnsIds.includes(link.categoryId)).length
-  }, [links, columnsIds, desktopName])
+    return links.filter(link => columnsIds?.includes(link.categoryId)).length
+  }, [links, columnsIds])
 
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
@@ -53,7 +70,7 @@ export default function ListOfLinks () {
   return (
     <main className={styles.list_of_links}>
       <div id="mainContentWrapper" className={styles.lol_content_wrapper}>
-          <DesktopNameDisplay numberOfLinks={numberOfLinksInCategory} numberOfColumns={columnsIds.length} />
+          <DesktopNameDisplay numberOfLinks={numberOfLinksInCategory} numberOfColumns={columnsIds?.length || 0} categoryName={displayCategory?.name} />
         <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
           {
             loading
