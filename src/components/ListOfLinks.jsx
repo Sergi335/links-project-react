@@ -96,6 +96,7 @@ export default function ListOfLinks () {
                   categories={categories}
                   getFirstColumnLink={getFirstColumnLink}
                   getLinksForColumn={getLinksForColumn}
+                  parentCategoryId={actualDesktop}
                 />
                 )
           }

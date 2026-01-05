@@ -24,7 +24,8 @@ export default function Columns ({
   categories,
   slug,
   getFirstColumnLink,
-  getLinksForColumn
+  getLinksForColumn,
+  parentCategoryId
 }) {
   const { desktopName } = useParams()
   const rootPath = import.meta.env.VITE_ROOT_PATH
@@ -33,9 +34,10 @@ export default function Columns ({
   const [filteredColumns, setFilteredColumns] = useState([])
 
   // Get the appropriate drag items hook based on context
+  // Usar parentCategoryId si está disponible (viene de ListOfLinks con el ID correcto)
   const dragHookProps = context === 'single'
     ? { desktopName }
-    : { desktopId: categories?.find(category => category.slug === desktopName)?._id }
+    : { desktopId: parentCategoryId || categories?.find(category => category.slug === desktopName)?._id }
 
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, activeLink, activeColumn } = useDragItems(dragHookProps)
 

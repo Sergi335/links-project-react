@@ -37,29 +37,76 @@ export const useDragItems = ({ desktopId }) => {
 
     if (event.active.data.current?.type === 'link' && over !== null) {
       if (active.id !== over.id) {
-        const oldIndex = currentLinksState.findIndex((t) => t._id === active.id)
-        const newIndex = currentLinksState.findIndex((t) => t._id === over.id)
+        const activeLink = event.active.data.current.link
 
-        // 🚀 Usar el estado interno actualizado para el reordenamiento
-        const reorderedLinks = arrayMove(currentLinksState, oldIndex, newIndex)
+        // Solo reordenar links de la misma categoría
+        const categoryId = activeLink?.categoryId
+        if (!categoryId) return
+
+        // Filtrar solo los links de la misma categoría
+        const categoryLinks = currentLinksState
+          .filter(l => l.categoryId === categoryId)
+          .sort((a, b) => a.order - b.order)
+        const otherLinks = currentLinksState.filter(l => l.categoryId !== categoryId)
+
+        const oldIndex = categoryLinks.findIndex((t) => t._id === active.id)
+        const newIndex = categoryLinks.findIndex((t) => t._id === over.id)
+
+        if (oldIndex === -1 || newIndex === -1) return
+
+        // Reordenar dentro de la categoría
+        const reorderedCategoryLinks = arrayMove(categoryLinks, oldIndex, newIndex)
+
+        // 🚀 Actualizar el campo order de cada link reordenado
+        const updatedCategoryLinks = reorderedCategoryLinks.map((link, index) => ({
+          ...link,
+          order: index
+        }))
+
+        // Combinar con los otros links
+        const finalLinks = [...otherLinks, ...updatedCategoryLinks]
 
         // 🚀 Actualizar tanto el estado global como el interno
-        setGlobalLinks(reorderedLinks)
-        setCurrentLinksState(reorderedLinks)
+        setGlobalLinks(finalLinks)
+        setCurrentLinksState(finalLinks)
 
         // 🚀 Usar el link del array recién reordenado
-        const updatedLink = reorderedLinks.find(link => link._id === active.id)
+        const updatedLink = updatedCategoryLinks.find(link => link._id === active.id)
         setMovedLink(updatedLink)
       }
     }
 
-    // Para columnas, mantener igual
+    // Para columnas - reordenar solo las que tienen el mismo parentId
     if (event.active.data.current?.type === 'Column' && over !== null) {
       if (active.id !== over.id) {
-        const oldIndex = globalColumns.findIndex((t) => t._id === active.id)
-        const newIndex = globalColumns.findIndex((t) => t._id === over.id)
-        setGlobalColumns(arrayMove(globalColumns, oldIndex, newIndex))
-        setMovedColumn(activeColumn)
+        const activeColumn = event.active.data.current.columna
+        const overColumn = over.data.current?.columna
+
+        // Solo reordenar si ambas columnas tienen el mismo parentId
+        if (activeColumn && overColumn && activeColumn.parentId === overColumn.parentId) {
+          // Obtener solo las columnas con el mismo parentId, ordenadas por order
+          const siblingColumns = globalColumns
+            .filter(col => col.parentId === activeColumn.parentId)
+            .sort((a, b) => a.order - b.order)
+          const otherColumns = globalColumns.filter(col => col.parentId !== activeColumn.parentId)
+
+          const oldIndex = siblingColumns.findIndex((t) => t._id === active.id)
+          const newIndex = siblingColumns.findIndex((t) => t._id === over.id)
+
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const reorderedSiblings = arrayMove(siblingColumns, oldIndex, newIndex)
+
+            // 🚀 Actualizar el campo order de cada columna reordenada
+            const updatedSiblings = reorderedSiblings.map((col, index) => ({
+              ...col,
+              order: index
+            }))
+
+            // Recombinar con las otras columnas
+            setGlobalColumns([...otherColumns, ...updatedSiblings])
+            setMovedColumn(activeColumn)
+          }
+        }
       }
     }
 
@@ -74,14 +121,14 @@ export const useDragItems = ({ desktopId }) => {
     setCurrentLinksState(globalLinks)
     setGlobalColumns(globalColumns)
     setGlobalLinks(globalLinks)
-    //console.log('cancel')
+    // console.log('cancel')
   }
 
   function handleDragOver (event) {
     const { active, over } = event
 
     if (!over) {
-      //console.log('no over')
+      // console.log('no over')
       return
     }
 
@@ -89,7 +136,7 @@ export const useDragItems = ({ desktopId }) => {
     const overId = over.id
 
     if (activeId === overId) {
-      //console.log('same')
+      // console.log('same')
       return
     }
 
@@ -103,12 +150,18 @@ export const useDragItems = ({ desktopId }) => {
         const oldIndex = currentLinksState.findIndex((t) => t._id === active.id)
         const newIndex = currentLinksState.findIndex((t) => t._id === over.id)
 
-        if (currentLinksState[oldIndex].categoryId !== currentLinksState[newIndex].categoryId) {
-          //console.log('other column')
+        if (oldIndex === -1 || newIndex === -1) return
 
-          // 🚀 Actualizar el estado interno directamente
-          const updatedLinksStore = [...currentLinksState]
-          updatedLinksStore[oldIndex].categoryId = currentLinksState[newIndex].categoryId
+        if (currentLinksState[oldIndex].categoryId !== currentLinksState[newIndex].categoryId) {
+          // console.log('other column')
+
+          // 🚀 Actualizar el estado interno de forma inmutable
+          const updatedLinksStore = currentLinksState.map((link, index) => {
+            if (index === oldIndex) {
+              return { ...link, categoryId: currentLinksState[newIndex].categoryId }
+            }
+            return link
+          })
 
           // 🚀 Actualizar ambos estados
           setCurrentLinksState(updatedLinksStore)
@@ -121,15 +174,22 @@ export const useDragItems = ({ desktopId }) => {
 
     if (activeLink && isOverAColumn) {
       const oldIndex = currentLinksState.findIndex((t) => t._id === active.id)
-      const newState = [...currentLinksState]
-      newState[oldIndex].categoryId = over.id
+      const overColumn = over.data.current?.columna
 
-      // 🚀 No necesitas arrayMove aquí, solo cambiar categoría
-      const updatedState = newState
+      // 🚀 Si es una columna virtual, usar el originalCategoryId
+      const targetCategoryId = overColumn?.isVirtual
+        ? overColumn.originalCategoryId
+        : over.id
+
+      const newState = [...currentLinksState]
+      newState[oldIndex] = {
+        ...newState[oldIndex],
+        categoryId: targetCategoryId
+      }
 
       // 🚀 Actualizar ambos estados
-      setCurrentLinksState(updatedState)
-      setGlobalLinks(updatedState)
+      setCurrentLinksState(newState)
+      setGlobalLinks(newState)
     }
   }
 
@@ -151,8 +211,8 @@ export const useDragItems = ({ desktopId }) => {
           categoryId: link.categoryId
         }))
 
-        //console.log('🚀 ~ handleSortItems ~ ids (destino):', ids)
-        //console.log('🚀 ~ movedLink.categoryId:', movedLink.categoryId)
+        // console.log('🚀 ~ handleSortItems ~ ids (destino):', ids)
+        // console.log('🚀 ~ movedLink.categoryId:', movedLink.categoryId)
 
         // 🚀 Filtrar y obtener IDs de origen (donde estaba antes el link)
         const originLinks = currentLinks.filter(link => link.categoryId === prevData.categoryId)
@@ -163,16 +223,16 @@ export const useDragItems = ({ desktopId }) => {
           categoryId: link.categoryId
         }))
 
-        //console.log('🚀 ~ handleSortItems ~ prevIds (origen):', prevIds)
-        //console.log('🚀 ~ prevData.categoryId:', prevData.categoryId)
+        // console.log('🚀 ~ handleSortItems ~ prevIds (origen):', prevIds)
+        // console.log('🚀 ~ prevData.categoryId:', prevData.categoryId)
 
         // 🚀 Debug adicional
-        //console.log('🚀 ~ Son iguales las categorías?:', movedLink.categoryId === prevData.categoryId)
-        //console.log('🚀 ~ Número de links en destino:', destinationLinks.length)
-        //console.log('🚀 ~ Número de links en origen:', originLinks.length)
+        // console.log('🚀 ~ Son iguales las categorías?:', movedLink.categoryId === prevData.categoryId)
+        // console.log('🚀 ~ Número de links en destino:', destinationLinks.length)
+        // console.log('🚀 ~ Número de links en origen:', originLinks.length)
 
         const items = [...ids, ...prevIds]
-        //console.log('🚀 ~ handleSortItems ~ items:', items)
+        // console.log('🚀 ~ handleSortItems ~ items:', items)
         const response = await updateLink({ items })
 
         const { hasError, message } = handleResponseErrors(response)
