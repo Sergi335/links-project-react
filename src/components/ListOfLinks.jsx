@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { useCategoryColumns } from '../hooks/useCategoryColumns'
 import { useGlobalData } from '../hooks/useGlobalData'
 import { useFormsStore } from '../store/forms'
 import { useLinksStore } from '../store/links'
@@ -39,12 +40,14 @@ export default function ListOfLinks () {
     return categories?.find(column => column.slug === desktopName)
   }, [categories, desktopName, slug])
 
-  const desktopColumns = categories?.filter(column => column.parentId === actualDesktop)
-  const columnsIds = desktopColumns?.map(column => column._id)
+  // Usar el hook para obtener columnas (incluyendo virtuales)
+  const { columns: desktopColumns, totalLinks, getLinksForColumn } = useCategoryColumns(
+    actualDesktop,
+    categories,
+    links
+  )
 
-  const numberOfLinksInCategory = useMemo(() => {
-    return links.filter(link => columnsIds?.includes(link.categoryId)).length
-  }, [links, columnsIds])
+  const columnsIds = desktopColumns?.map(column => column._id)
 
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
@@ -58,19 +61,21 @@ export default function ListOfLinks () {
     setSelectedLinks([])
   }, [links])
 
-  // Obtener ids para DND
+  // Obtener ids para DND - modificado para manejar columnas virtuales
   const getLinksIds = (columna) => {
-    return links.filter(link => link.categoryId === columna._id).map(link => link._id)
+    const columnLinks = getLinksForColumn(columna)
+    return columnLinks.map(link => link._id)
   }
 
   const getFirstColumnLink = (columna) => {
-    return links.find(link => link.categoryId === columna._id && link.order === 0)
+    const columnLinks = getLinksForColumn(columna)
+    return columnLinks.find(link => link.order === 0) || columnLinks[0]
   }
 
   return (
     <main className={styles.list_of_links}>
       <div id="mainContentWrapper" className={styles.lol_content_wrapper}>
-          <DesktopNameDisplay numberOfLinks={numberOfLinksInCategory} numberOfColumns={columnsIds?.length || 0} categoryName={displayCategory?.name} />
+          <DesktopNameDisplay numberOfLinks={totalLinks} numberOfColumns={columnsIds?.length || 0} categoryName={displayCategory?.name} />
         <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>
           {
             loading
@@ -90,6 +95,7 @@ export default function ListOfLinks () {
                   styleOfColumns={styleOfColumns}
                   categories={categories}
                   getFirstColumnLink={getFirstColumnLink}
+                  getLinksForColumn={getLinksForColumn}
                 />
                 )
           }

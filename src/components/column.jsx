@@ -13,7 +13,7 @@ import styles from './Column.module.css'
 import { ArrowDown, ChangeLayoutIcon, SelectIcon } from './Icons/icons'
 import LinkLoader from './Loaders/LinkLoader'
 
-export default function Columna ({ data, children, childCount, context, getFirstColumnLink }) {
+export default function Columna ({ data, children, childCount, context, getFirstColumnLink, isVirtual = false }) {
   const { desktopName } = useParams()
   const columna = data.columna || data.activeColumn
   const [editMode, setEditMode] = useState(false)
@@ -175,7 +175,8 @@ export default function Columna ({ data, children, childCount, context, getFirst
     data: {
       type: 'Column',
       columna
-    }
+    },
+    disabled: isVirtual // Deshabilitar drag en columnas virtuales
   })
   const style = {
     transform: CSS.Transform.toString(transform)

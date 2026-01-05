@@ -23,7 +23,8 @@ export default function Columns ({
   styleOfColumns,
   categories,
   slug,
-  getFirstColumnLink
+  getFirstColumnLink,
+  getLinksForColumn
 }) {
   const { desktopName } = useParams()
   const rootPath = import.meta.env.VITE_ROOT_PATH
@@ -48,8 +49,10 @@ export default function Columns ({
   )
 
   useEffect(() => {
-    // Get column IDs for DND
-    const columnsId = desktopColumns?.map((col) => col?._id)
+    // Get column IDs for DND - excluir columnas virtuales
+    const columnsId = desktopColumns
+      ?.filter(col => !col?.isVirtual)
+      ?.map((col) => col?._id)
     setColumnsId(columnsId)
     // Filter columns based on context
     const choosenColumns = context === 'single'
@@ -108,27 +111,31 @@ export default function Columns ({
                 childCount={getLinksIds(columna).length}
                 context={context === 'single' ? 'singlecol' : undefined}
                 getFirstColumnLink={getFirstColumnLink}
+                isVirtual={columna.isVirtual}
               >
                 <SortableContext strategy={verticalListSortingStrategy} items={getLinksIds(columna)}>
                   {!activeColumn &&
-                    desktopLinks.map((link) =>
-                      (context === 'single' ? link.categoryId === columna._id : link.categoryId === columna._id)
-                        ? (
-                          <LinkComponent
-                            key={link._id}
-                            data={{ link }}
-                            idpanel={columna._id}
-                            desktopName={desktopName}
-                            className={context === 'single' ? 'flex' : undefined}
-                            context={context === 'single' ? 'singlecol' : undefined}
-                          />
-                          )
-                        : null
-                    ).filter(link => link !== null)
+                    (() => {
+                      // Usar getLinksForColumn si está disponible, sino filtrar por categoryId
+                      const columnLinks = getLinksForColumn
+                        ? getLinksForColumn(columna)
+                        : desktopLinks.filter(link => link.categoryId === columna._id)
+
+                      return columnLinks.map((link) => (
+                        <LinkComponent
+                          key={link._id}
+                          data={{ link }}
+                          idpanel={columna.isVirtual ? columna.originalCategoryId : columna._id}
+                          desktopName={desktopName}
+                          className={context === 'single' ? 'flex' : undefined}
+                          context={context === 'single' ? 'singlecol' : undefined}
+                        />
+                      ))
+                    })()
                   }
 
-                  {/* Subcategories - only for multi-column context */}
-                  {categories && (
+                  {/* Subcategories - only for multi-column context and non-virtual columns */}
+                  {categories && !columna.isVirtual && (
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       {categories.map((col) => {
                         if (col.parentId === columna._id) {
