@@ -11,7 +11,7 @@ import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, Pi
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
-  const { desktopName } = useParams()
+  const { desktopName, slug } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktopColumns = globalColumns.filter(column => column.slug === desktopName).toSorted((a, b) => a.orden - b.orden)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
@@ -23,16 +23,39 @@ export default function ToolBar () {
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const location = useLocation()
   const isDesktopLocation = location.pathname !== '/app/profile' && location.pathname !== '/app/readinglist'
-  // const isColumnLocation = location.state
-  // console.log('🚀 ~ ToolBar ~ isColumnLocation:', isColumnLocation)
   const [newColumnId, setNewColumnId] = useState(null)
+
+  const getParentId = () => {
+    if (slug) {
+      const subcategory = globalColumns.find(col => col.slug === slug)
+      return subcategory?._id
+    } else {
+      return desktop?._id
+    }
+  }
+  const getLevel = () => {
+    if (slug) {
+      const subcategory = globalColumns.find(col => col.slug === slug)
+      return subcategory?.level + 1
+    } else {
+      return 1
+    }
+  }
+  const getParentSlug = () => {
+    if (slug) {
+      return slug
+    } else {
+      return desktop?.slug
+    }
+  }
 
   const handleAddColumn = async () => {
     if (desktop === undefined) {
       toast.error('Debes crear un escritorio primero')
       return
     }
-    const response = await createColumn({ name: 'New Column', parentId: desktop._id, order: desktopColumns.length + 1, level: 1, parentSlug: desktop.slug })
+
+    const response = await createColumn({ name: 'New Column', parentId: getParentId(), order: desktopColumns.length + 1, level: getLevel(), parentSlug: getParentSlug() })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)
@@ -42,6 +65,7 @@ export default function ToolBar () {
     setGlobalColumns((() => { return [...globalColumns, ...data] })())
     setNewColumnId(data[0]._id)
   }
+  // Use effect to scroll to new column when created
   useEffect(() => {
     if (newColumnId) {
       const element = document.getElementById(newColumnId)
@@ -55,6 +79,7 @@ export default function ToolBar () {
       setNewColumnId(null)
     }
   }, [newColumnId])
+
   const handleHideColumns = (e) => {
     e.currentTarget.classList.toggle(styles.icon_clicked)
     const containerSp = document.getElementById('spMainContentWrapper')
@@ -70,7 +95,6 @@ export default function ToolBar () {
     e.currentTarget.classList.toggle(styles.icon_clicked)
     setGlobalOpenColumns(!globalOpenColumns)
   }
-  // Al recargar la página se queda con el panel abierto
   const handlePinPanel = () => {
     const panel = document.getElementById('sidebar')
     const icon = document.getElementById('pin_icon')

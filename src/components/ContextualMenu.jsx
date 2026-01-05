@@ -10,7 +10,8 @@ import styles from './ContextualMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
-  const { desktopName } = useParams()
+  const { desktopName, slug } = useParams()
+  const [desktopColumns, setDesktopColumns] = useState([])
   const menuRef = useRef(null)
   const subMenuRef = useRef(null)
   const [subMenuSide, setSubMenuSide] = useState('')
@@ -21,15 +22,23 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktop = globalColumns.filter(column => column.slug === desktopName)
-  const desktopColumns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
   const firstLinkId = Array.isArray(params) ? params[0] : params._id
   const firstLink = globalLinks.find(link => link._id === firstLinkId)
   const sourceCategoryId = firstLink?.categoryId
   const navigate = useNavigate()
   // const globalArticles = useGlobalStore(state => state.globalArticles)
   const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
-  // console.log(globalArticles)
-
+  // Establish desktopColumns when desktopName or slug changes
+  useEffect(() => {
+    if (slug) {
+      const subcategory = globalColumns.find(col => col.slug === slug)
+      const columns = globalColumns.filter(column => column.parentId === subcategory?._id)
+      setDesktopColumns(columns)
+    } else {
+      const columns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
+      setDesktopColumns(columns)
+    }
+  }, [desktopName, slug, globalColumns])
   const handleMoveClick = async (event) => {
     const previousLinks = [...globalLinks]
     const linksToEdit = Array.isArray(params) ? params : [params._id]
