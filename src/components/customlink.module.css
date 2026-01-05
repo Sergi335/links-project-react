@@ -86,7 +86,8 @@
 
   & img {
     width: 16px;
-    margin-inline: 10px;
+    margin-right: 10px;
+    margin-left: 17px;
     transition: margin .3s ease-in-out;
     border-radius: 3px;
     aspect-ratio: 1/1;
