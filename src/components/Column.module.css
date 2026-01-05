@@ -42,9 +42,10 @@
     align-items: center;
     position: relative;
     gap: 10px;
-    border: var(--firstBorder);
+    border-bottom: var(--firstBorder);
     padding-left: 8px;
     margin-bottom: 9px;
+    cursor: grab;
 }
 
 .column h2 {
@@ -60,6 +61,7 @@
     transition: margin .3s ease-in-out;
     overflow: hidden;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .scPage .column h2 {
@@ -86,7 +88,7 @@
     --scrollbar-border-radius: 12px;
     --scrollbar-height: 30px;
     /* margin-right: 16px; */
-    max-height: 89vh;
+    max-height: calc(100dvh - 60px);
     border-radius: 0;
     background-color: var(--color-primary);
     /* border: var(--firstBorder); */

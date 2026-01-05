@@ -2,7 +2,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  border-left: 1px solid var(--firstBorderColor);
+  /* border-left: 1px solid var(--firstBorderColor); */
   justify-content: center;
   padding: 7px 0;
 
@@ -20,7 +20,8 @@
       text-align: left;
       font-size: 0.75rem;
       color: var(--text-color-secondary);
-      padding-left: 41px;
+      padding-left: 38px;
+      margin-top: 10px;
     }
 
     &.link_open {

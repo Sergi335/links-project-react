@@ -231,7 +231,12 @@ export default function Columna ({ data, children, childCount, context, getFirst
                    <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
                     <SelectIcon className='uiIcon_small'/>
                   </div>
-                  <Link to={`${rootPath}${basePath}/${desktopName}/${columna.slug}/${firstLink?._id}`} className={styles.selector}>
+                  <Link
+                    to={
+                      firstLink !== undefined
+                        ? `${rootPath}${basePath}/${desktopName}/${columna.slug}/${firstLink?._id}`
+                        : `${rootPath}${basePath}/${desktopName}/${columna.slug}`
+                    } className={styles.selector}>
                     <ChangeLayoutIcon className='uiIcon_small'/>
                   </Link>
                  </div>

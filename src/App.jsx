@@ -68,6 +68,11 @@ function App () {
           errorElement: <InternalError />
         },
         {
+          path: `${rootPath}${basePath}/:desktopName/:slug`,
+          element: <ListOfLinks />,
+          errorElement: <InternalError />
+        },
+        {
           path: `${rootPath}${basePath}/:desktopName/:slug/:id`,
           element: <SingleColumnPage />,
           errorElement: <InternalError />
