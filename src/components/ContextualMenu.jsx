@@ -28,6 +28,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const navigate = useNavigate()
   // const globalArticles = useGlobalStore(state => state.globalArticles)
   const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
+
   // Establish desktopColumns when desktopName or slug changes
   useEffect(() => {
     if (slug) {

@@ -75,6 +75,10 @@
         flex-direction: column;
     }
 
+    &>.link_details_tabs_notes_wrapper {
+        justify-content: flex-start !important;
+    }
+
     & ul li {
         list-style-type: disc;
         margin-block-end: 1rem;
