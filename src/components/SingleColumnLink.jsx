@@ -121,7 +121,7 @@ const SingleColumnLink = ({ data, className }) => {
       setIconUrl('/img/opcion1.svg')
       return
     }
-    if (link.imgUrl.startsWith('http') || link.imgUrl.startsWith('/img/')) {
+    if (link.imgUrl.startsWith('http') || link.imgUrl.startsWith('blob:') || link.imgUrl.startsWith('/img/')) {
       setIconUrl(link.imgUrl)
     } else {
       // Es una key de storage, obtener URL firmada

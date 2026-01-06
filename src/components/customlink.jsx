@@ -112,7 +112,8 @@ const CustomLink = ({ data, className }) => {
       setIconUrl('/img/opcion1.svg')
       return
     }
-    if (link.imgUrl.startsWith('http') || link.imgUrl.startsWith('/img/')) {
+    // URLs directas: http, https, blob (temporal), o rutas locales /img/
+    if (link.imgUrl.startsWith('http') || link.imgUrl.startsWith('blob:') || link.imgUrl.startsWith('/img/')) {
       setIconUrl(link.imgUrl)
     } else {
       // Es una key de storage, obtener URL firmada

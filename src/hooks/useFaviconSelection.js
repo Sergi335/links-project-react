@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { constants } from '../services/constants'
-import { deleteLinkImage, fetchLinkIconFile, saveLinkIcon } from '../services/dbQueries'
+import { deleteLinkImage, fetchLinkIconFile, getSignedUrl, saveLinkIcon } from '../services/dbQueries'
 import { getFileNameFromUrl, handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
 
@@ -13,7 +13,6 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
   const linkToChangeFavicon = useGlobalStore(state => state.linkToChangeFavicon)
 
   // Checa si la imagen es una de las subidas por el usuario para deshabilitar el boton de borrar
-  // Como lo vamos a hacer: se van a poner todas las por defecto en la carpeta public, ya no tiramos de las de SergioSR
   useEffect(() => {
     const baseurl = new URL(import.meta.env.VITE_CUSTOM_BASE_URL)
     const autoUrlHost = import.meta.env.VITE_AUTO_FAVICON_HOST
@@ -115,8 +114,9 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
     if (hasError) {
       toast.error(message)
     } else {
-      setIcons([...icons, { url: response.data.url, nombre: response.data.name }])
-      newState[elementIndex].imgUrl = response.data.url
+      const signedurl = await getSignedUrl(response.data.url)
+      setIcons([...icons, { url: signedurl, nombre: response.data.name }])
+      newState[elementIndex].imgUrl = signedurl
       setGlobalLinks(newState)
       // adjudicar el id con el nombre del icono para poder borrarlo, importante
       // currentImageRef.current.id = response.data.name
@@ -142,10 +142,12 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
       // }, 1500)
     }
   }
-  const handleDeleteLinkIcon = async () => {
+  const handleDeleteLinkIcon = async (e) => {
     const url = linkToChangeFavicon?.imgUrl
     const fileName = getFileNameFromUrl(url)
-    console.log(fileName)
+    console.log(url)
+    console.log(linkToChangeFavicon)
+    console.log(e.currentTarget)
     const response = await deleteLinkImage(fileName)
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {

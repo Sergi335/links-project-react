@@ -1,5 +1,5 @@
-import { constants } from './constants'
 import { apiFetch } from './api'
+import { constants } from './constants'
 export function setCookie (name, value, days, domain) {
   let expires = ''
   if (days) {
@@ -206,10 +206,16 @@ export function keepServerAwake (apiUrl, intervalMinutes = 14) {
   return setInterval(wakeUp, intervalMinutes * 60 * 1000)
 }
 export function getFileNameFromUrl (url) {
-  const decodedUrl = decodeURIComponent(url)
-  // Busca el último segmento después de la última barra
-  const match = decodedUrl.match(/\/(\d+-\d+\.(png|jpg|jpeg|svg|gif|webp))(\?|$)/i)
-  return match ? match[1] : null
+  try {
+    const decodedUrl = decodeURIComponent(url)
+    // Extrae solo el nombre del archivo después de icons/ y antes de ?
+    // Ejemplo: 1767695328482-933104038.png
+    const match = decodedUrl.match(/icons\/([^?]+)\?/)
+    return match ? match[1] : null
+  } catch (error) {
+    console.error('Error parsing URL:', error)
+    return null
+  }
 }
 // function convertHtmlEntityToEmoji (htmlEntity) {
 //   // Elimina los primeros tres caracteres ('&#x') y el último (';'), luego convierte el resultado de hexadecimal a decimal
