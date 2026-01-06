@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import React, { useEffect, useRef, useState } from 'react'
+import { getSignedUrl } from '../services/dbQueries'
 import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { useLinksStore } from '../store/links'
@@ -12,6 +13,7 @@ const CustomLink = ({ data, className }) => {
   const link = data.link || data.activeLink
   const [linkSelectMode, setLinkSelectMode] = useState(false)
   const [localFaviconVisible, setLocalFaviconVisible] = useState(false)
+  const [iconUrl, setIconUrl] = useState(link.imgUrl?.startsWith('http') ? link.imgUrl : '/img/opcion1.svg')
   // Ref del link y descripción
   const linkRef = useRef(null)
   const linkDesc = useRef(null)
@@ -104,6 +106,22 @@ const CustomLink = ({ data, className }) => {
     }
   }, [])
 
+  // Obtener URL firmada si el favicon está en storage privado
+  useEffect(() => {
+    if (!link.imgUrl) {
+      setIconUrl('/img/opcion1.svg')
+      return
+    }
+    if (link.imgUrl.startsWith('http') || link.imgUrl.startsWith('/img/')) {
+      setIconUrl(link.imgUrl)
+    } else {
+      // Es una key de storage, obtener URL firmada
+      getSignedUrl(link.imgUrl)
+        .then(url => setIconUrl(url))
+        .catch(() => setIconUrl('/img/opcion1.svg'))
+    }
+  }, [link.imgUrl])
+
   const {
     setNodeRef,
     attributes,
@@ -146,7 +164,7 @@ const CustomLink = ({ data, className }) => {
           onContextMenu={(e) => handleContextMenu(e)}
         >
           <div className={styles.link_wrapper}>
-            <img src={link.imgUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
+            <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
             <a
               ref={linkRef}
               href={link.url}

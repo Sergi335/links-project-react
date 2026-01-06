@@ -53,9 +53,9 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
   }, [])
 
   const handleSelectIconOnClick = async (event) => {
+    // El icono de la lista en el que se ha hecho click
     const $linkIcon = document.getElementById(event.currentTarget.id)
     console.log('🚀 ~ handleSelectIconOnClick ~ $linkIcon:', $linkIcon)
-    // const $notification = document.getElementById('notification')
     // Encuentra el link actual entre todos los links
     const elementIndex = globalLinks.findIndex(link => link._id === linkToChangeFavicon?._id)
     const newState = [...globalLinks]
@@ -68,7 +68,7 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
     // Está desabilitado porque el cambio se hace automaticamente al seleccionar un icono, pero cuidado no se quede asi
     saveButtonRef.current.disabled = true
     setGlobalLinks(newState)
-    const response = await saveLinkIcon({ src: $linkIcon.src, linkId: linkToChangeFavicon?._id })
+    const response = await saveLinkIcon({ src: $linkIcon.id, linkId: linkToChangeFavicon?._id })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)

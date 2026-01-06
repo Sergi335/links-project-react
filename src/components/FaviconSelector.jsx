@@ -46,10 +46,10 @@ const FaviconSelector = forwardRef(function FaviconSelector ({ links, setLinks, 
         <div ref={containerRef} className={faviconChangerVisible ? `${styles.showIcons} ${styles.imgOptions}` : `${styles.imgOptions}` } style={{ top: `${top}px`, left: `${left}px` }}>
             <div className={styles.imgOptionsWrapper}>
               {
-                constants.DEFAULT_LINK_ICONS.map(icon => (<img key={icon.option} id={icon.option} className='default' onClick={handleSelectIconOnClick} src={icon.url} alt={icon.option} />))
+                constants.DEFAULT_LINK_ICONS.map(icon => (<img key={icon.option} id={icon.url} className='default' onClick={handleSelectIconOnClick} src={icon.url} alt={icon.option} />))
               }
               {
-                icons?.map(icon => (<img key={icon.nombre} id={icon.nombre} className={icon.clase} onClick={handleSelectIconOnClick} src={icon.url} alt="" />))
+                icons?.map(icon => (<img key={icon.key} id={icon.key} className={icon.clase} onClick={handleSelectIconOnClick} src={icon.url} alt="" />))
               }
             </div>
             <div className={styles.imgOptionsControls}>
