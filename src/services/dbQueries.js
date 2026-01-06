@@ -377,6 +377,8 @@ export async function fetchLinkIconFile ({ file, linkId }) {
     formData.append('linkImg', file)
     formData.append('linkId', linkId)
     // console.log(formData)
+    console.log('seguimos')
+
     try {
       const result = await apiFetch(`${constants.BASE_API_URL}/storage/icon`, {
         method: 'POST',
