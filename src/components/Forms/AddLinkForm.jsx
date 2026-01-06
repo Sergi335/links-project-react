@@ -14,6 +14,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
   const formRef = useRef()
   const nameRef = useRef()
   const urlRef = useRef()
+  const typeRef = useRef()
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
@@ -27,8 +28,8 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
       name: nameRef.current.value,
       url: urlRef.current.value,
       imgUrl,
-      order: addedLinkOrder // añadir al final
-
+      order: addedLinkOrder,
+      type: typeRef.current.value
     }
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -49,6 +50,13 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
         <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required/>
         <label htmlFor="linkURL">URL</label>
         <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000"/>
+        <label htmlFor="linkType">Tipo</label>
+        <select ref={typeRef} id="linkType" name="linkType" defaultValue="general">
+          <option value="general">General</option>
+          <option value="video">Vídeo</option>
+          <option value="note">Nota</option>
+          <option value="article">Artículo</option>
+        </select>
         <div className="button_group">
           <button type="submit">Enviar</button>
           <button type="button" onClick={() => setFormVisible(false)}>Cancelar</button>

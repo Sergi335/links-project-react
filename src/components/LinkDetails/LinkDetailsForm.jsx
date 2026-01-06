@@ -159,6 +159,7 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
               >
                 <option value="general">General</option>
                 <option value="video">Video</option>
+                <option value="note">Nota</option>
                 <option value="article">Artículo</option>
               </select>
             </div>
