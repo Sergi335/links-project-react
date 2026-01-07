@@ -8,7 +8,7 @@ import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon } from '../Icons/icons'
+import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon, UploadIcon } from '../Icons/icons'
 import UserAvatar from '../UserAvatar.jsx'
 import styles from './ProfilePage.module.css'
 
@@ -120,6 +120,8 @@ export function UserSecurity ({ user, setUser }) {
   const [backupLoading, setBackupLoading] = useState(false)
   const [reauthVisible, setReauthVisible] = useState(false)
   const [newPasswordState, setNewPasswordState] = useState('')
+  const [confirmRestoreVisible, setConfirmRestoreVisible] = useState(false)
+  const [pendingFile, setPendingFile] = useState(null)
   const { handleChangeFirebasePassword, handleReauthenticate } = useGoogleAuth()
 
   const handleChangePassword = (e) => {
@@ -192,29 +194,64 @@ export function UserSecurity ({ user, setUser }) {
     const url = await getSignedUrl(user.lastBackupUrl)
     window.open(url, '_blank')
   }
-  // const handleUploadBackup = (e) => {
-  //   const file = e.target.files[0]
-  //   const formData = new FormData()
-  //   formData.append('backup', file)
-  //   fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
-  //     method: 'POST',
-  //     credentials: 'include',
-  //     headers: {
-  //       'x-justlinks-user': 'SergioSR',
-  //       'x-justlinks-token': 'otroheader'
-  //     },
-  //     body: formData
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       const { hasError, message } = handleResponseErrors(data)
-  //       if (hasError) {
-  //         toast(message)
-  //         return
-  //       }
-  //       toast('Copia subida con éxito')
-  //     })
-  // }
+  const handleUploadBackup = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Guardar el archivo y mostrar confirmación
+    setPendingFile(file)
+    setConfirmRestoreVisible(true)
+  }
+
+  const handleConfirmRestore = () => {
+    if (!pendingFile) return
+
+    const formData = new FormData()
+    formData.append('backup', pendingFile)
+
+    setConfirmRestoreVisible(false)
+    const restoreToast = toast.loading('Restaurando copia de seguridad...')
+
+    fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'x-justlinks-user': 'SergioSR',
+        'x-justlinks-token': 'otroheader'
+      },
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        const { hasError, message } = handleResponseErrors(data)
+        if (hasError) {
+          toast.update(restoreToast, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+          return
+        }
+        toast.update(restoreToast, { render: 'Copia restaurada con éxito', type: 'success', isLoading: false, autoClose: 2000 })
+        // Recargar la página para reflejar los cambios
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      })
+      .catch(error => {
+        toast.update(restoreToast, { render: 'Error al restaurar la copia', type: 'error', isLoading: false, autoClose: 3000 })
+      })
+      .finally(() => {
+        setPendingFile(null)
+        // Limpiar el input file
+        const fileInput = document.getElementById('upFile')
+        if (fileInput) fileInput.value = ''
+      })
+  }
+
+  const handleCancelRestore = () => {
+    setConfirmRestoreVisible(false)
+    setPendingFile(null)
+    // Limpiar el input file
+    const fileInput = document.getElementById('upFile')
+    if (fileInput) fileInput.value = ''
+  }
   return (
     <>
       <h3>Seguridad</h3>
@@ -258,7 +295,7 @@ export function UserSecurity ({ user, setUser }) {
         }
         <p id="errorMessage"> </p>
         <p id="successMessage"></p>
-        {/* <form onChange={handleUploadBackup}>
+        <form onChange={handleUploadBackup}>
           <p>Restaurar Copia</p>
           <button className={styles.upFile}>
             <label htmlFor="upFile">
@@ -269,7 +306,20 @@ export function UserSecurity ({ user, setUser }) {
           </button>
           <p id="errorUpMessage"> </p>
           <p id="successUpMessage"></p>
-        </form> */}
+        </form>
+        {
+          confirmRestoreVisible && (
+            <div className='deskForm'>
+              <p style={{ fontWeight: 'bold', marginBottom: '1rem' }}>¿Seguro que quieres restaurar esta copia de seguridad?</p>
+              <p style={{ marginBottom: '0.5rem' }}>Todos tus datos actuales serán borrados.</p>
+              <p style={{ color: '#ff6b6b', marginBottom: '1.5rem' }}><strong>¡Importante!</strong> Los archivos de imágenes no serán restaurados.</p>
+              <div className='button_group'>
+                <button id="confirmRestore" onClick={handleConfirmRestore}>Sí, restaurar</button>
+                <button id="cancelRestore" onClick={handleCancelRestore}>No, cancelar</button>
+              </div>
+            </div>
+          )
+        }
       </div>
     </>
   )

@@ -3,9 +3,9 @@ import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, 
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { firebaseConfig } from '../config/firebaseConfig'
+import { apiFetch } from '../services/api'
 import { constants } from '../services/constants'
 import { sendLogoutSignal } from '../services/dbQueries'
-import { apiFetch } from '../services/api'
 import { useGlobalStore } from '../store/global'
 import { useSessionStore } from '../store/session'
 
@@ -52,22 +52,25 @@ export default function useGoogleAuth () {
       .catch((error) => {
         toast.error('Error al iniciar sesión, servidor no disponible en estos momentos', { toastId: 'login-error' })
         console.error('Error in postIdTokenToSessionLogin:', error)
-        setLoginLoading(false)
       }) // Control de errores
   }
 
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider()
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    })
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         setLoginLoading(true)
         // This gives you a Google Access Token. You can use it to access the Google API.
         // console.log(result)
         const googleUser = result.user
+        const idToken = await googleUser.getIdToken()
         return postIdTokenToSessionLogin(
           {
             url: `${constants.BASE_API_URL}/auth/googlelogin`,
-            idToken: googleUser.auth.currentUser.accessToken,
+            idToken,
             csrfToken,
             uid: googleUser.uid,
             email: googleUser.email
@@ -91,6 +94,7 @@ export default function useGoogleAuth () {
           })
       })
       .catch((error) => {
+        setLoginLoading(false)
         const errorCode = error.code
         console.log(errorCode)
         const errorMessage = error.message
@@ -131,43 +135,46 @@ export default function useGoogleAuth () {
     }
   }
   // TODO
-  const handleLoginWithMail = (e) => {
+  const handleLoginWithMail = async (e) => {
     e.preventDefault()
+    setLoginLoading(true)
     const form = new FormData(e.currentTarget)
     const email = form.get('email')
     const password = form.get('password')
-    // As httpOnly cookies are to be used, do not persist any state client side.
-    // setPersistence(auth, inMemoryPersistence)
 
-    // When the user signs in with email and password.
-    signInWithEmailAndPassword(auth, email, password).then(({ user }) => {
-      // Get the user's ID token as it is needed to exchange for a session cookie.
-      return user.getIdToken().then(idToken => {
-        // Session login endpoint is queried and the session cookie is set.
-        // CSRF protection should be taken into account.
-        // const csrfToken = getCookie('csrfToken')
-        return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/login`, idToken, csrfToken, uid: user.uid, email: user.email })
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password)
+      const idToken = await user.getIdToken()
+
+      await postIdTokenToSessionLogin({
+        url: `${constants.BASE_API_URL}/auth/login`,
+        idToken,
+        csrfToken,
+        uid: user.uid,
+        email: user.email
       })
-    }).then(() => {
-      apiFetch(`${constants.BASE_API_URL}/desktops`, {
+
+      const desks = await apiFetch(`${constants.BASE_API_URL}/categories/toplevel`, {
         method: 'GET',
         credentials: 'include',
         ...constants.FETCH_OPTIONS
       })
-        .then(desks => {
-          const { data } = desks
-          const firstDesktop = data[0].name
-          navigate(`${rootPath}${basePath}/${firstDesktop}`) // --> si esto te redirige el login ha sido correcto en Firebase
-        })
-    })
-      .catch((e) => {
-        // console.log(e)
-        // Ver los tipos de errores en la documentación
-        toast.error('Usuario o contraseña incorrectos')
-      })
+
+      const { data } = desks
+      const firstDesktop = data.filter(desktop => desktop.order === 0)
+      const firstDesktopSlug = firstDesktop[0]?.slug
+      if (firstDesktopSlug) {
+        setLoginLoading(false)
+        navigate(`${rootPath}${basePath}/${firstDesktopSlug}`)
+      }
+    } catch (error) {
+      console.error('Error en login:', error)
+      setLoginLoading(false)
+      toast.error('Usuario o contraseña incorrectos')
+    }
   }
   // TODO
-  const handleRegisterWithMail = (e) => {
+  const handleRegisterWithMail = async (e) => {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
     const email = form.get('email')
@@ -175,36 +182,27 @@ export default function useGoogleAuth () {
     const nickname = form.get('name')
     setRegisterLoading(true)
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user
-        // //console.log(user)
-        getAuth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-          // Send token to your backend via HTTPS
-          // ...
-          // //console.log(idToken)
-          // const csrfToken = getCookie('csrfToken')
-          return postIdTokenToSessionLogin({ url: `${constants.BASE_API_URL}/auth/register`, idToken, csrfToken, uid: user.uid, nickname }
-          )
-            .then(data => {
-              // console.log(data)
-              setRegisterLoading(false)
-              // redirect(`${rootPath}${basePath}/start`)
-              // window.location.href = '/desktop/start' // -> esto esta mal? en realidad si por si cambia algun dia
-            })
-        }).catch(function (error) {
-          // Handle error
-          console.log(error)
-        })
-        // ...
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+      const idToken = await user.getIdToken(true)
+
+      await postIdTokenToSessionLogin({
+        url: `${constants.BASE_API_URL}/auth/register`,
+        idToken,
+        csrfToken,
+        uid: user.uid,
+        nickname,
+        email: user.email
       })
-      .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorCode, errorMessage)
-        // ..
-      })
+
+      setRegisterLoading(false)
+    } catch (error) {
+      console.error('Error en registro:', error)
+      setRegisterLoading(false)
+      const errorMessage = error.message || 'Error desconocido'
+      toast.error('Error al registrar usuario: ' + errorMessage)
+    }
   }
   // TODO
   const handleDeleteUser = () => {
