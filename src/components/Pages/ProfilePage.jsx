@@ -191,7 +191,8 @@ export function UserSecurity ({ user, setUser }) {
       })
   }
   const handleDownloadBackup = async (e) => {
-    const url = await getSignedUrl(user.lastBackupUrl)
+    const url = await getSignedUrl(user.lastBackupUrl, true)
+
     window.open(url, '_blank')
   }
   const handleUploadBackup = (e) => {
@@ -235,6 +236,7 @@ export function UserSecurity ({ user, setUser }) {
         }, 2000)
       })
       .catch(error => {
+        console.error('Error restoring backup:', error)
         toast.update(restoreToast, { render: 'Error al restaurar la copia', type: 'error', isLoading: false, autoClose: 3000 })
       })
       .finally(() => {

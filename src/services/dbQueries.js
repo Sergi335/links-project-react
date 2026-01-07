@@ -449,12 +449,12 @@ export async function uploadProfileImg (file) {
     }
   }
 }
-export async function getSignedUrl (key) {
+export async function getSignedUrl (key, forceDownload = false) {
   const data = await apiFetch(`${constants.BASE_API_URL}/storage/signed-url`, {
     method: 'POST',
     credentials: 'include',
     ...constants.FETCH_OPTIONS,
-    body: JSON.stringify({ key })
+    body: JSON.stringify({ key, forceDownload })
   })
 
   return data.data.url
