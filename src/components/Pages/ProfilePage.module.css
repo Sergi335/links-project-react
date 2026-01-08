@@ -147,6 +147,32 @@
     flex-grow: 1;
 }
 
+.importSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--color-light);
+}
+
+.importSection h3 {
+    margin: 0 0 5px 0;
+}
+
+.importSection p {
+    margin: 0 0 15px 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+}
+
+.importSection form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .active {
     background-color: var(--color-medium);
     color: white;
@@ -476,6 +502,42 @@ tr:nth-child(odd) {
 
 .textSecurity {
     -webkit-text-security: disc;
+}
+
+.passwordInputWrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.passwordInputWrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.togglePasswordButton {
+    position: absolute;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+.togglePasswordButton:hover {
+    opacity: 0.7;
+}
+
+.togglePasswordButton svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-dark);
 }
 
 .currentLink {

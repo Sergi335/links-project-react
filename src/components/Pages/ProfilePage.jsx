@@ -8,7 +8,7 @@ import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon, UploadIcon } from '../Icons/icons'
+import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon, EyeIcon, EyeOffIcon, UploadIcon } from '../Icons/icons'
 import UserAvatar from '../UserAvatar.jsx'
 import styles from './ProfilePage.module.css'
 
@@ -27,6 +27,7 @@ export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
 export function UserPreferences ({ user, setUser }) {
   const [visible, setVisible] = useState(false)
   const [reauthVisible, setReauthVisible] = useState(false)
+  const [bookmarksLoading, setBookmarksLoading] = useState(false)
   const { handleDeleteUser, handleReauthenticate, handleReauthenticateWithGoogle } = useGoogleAuth()
 
   const handleReauth = async (e) => {
@@ -87,10 +88,88 @@ export function UserPreferences ({ user, setUser }) {
       setUser(null)
     }, 2000)
   }
+
+  const handleUploadBookmarks = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.name.endsWith('.html')) {
+      toast.error('Por favor selecciona un archivo HTML válido')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('bookmarks', file)
+
+    setBookmarksLoading(true)
+    const importToast = toast.loading('Importando marcadores...')
+
+    try {
+      const response = await fetch(`${constants.BASE_API_URL}/storage/import-bookmarks`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'x-justlinks-user': 'SergioSR',
+          'x-justlinks-token': 'otroheader'
+        },
+        body: formData
+      })
+
+      const data = await response.json()
+      const { hasError, message } = handleResponseErrors(data)
+
+      if (hasError) {
+        toast.update(importToast, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+        return
+      }
+
+      toast.update(importToast, {
+        render: `Marcadores importados con éxito: ${data.imported || 0} enlaces`,
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000
+      })
+
+      // Recargar la página para reflejar los cambios
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
+    } catch (error) {
+      console.error('Error importing bookmarks:', error)
+      toast.update(importToast, { render: 'Error al importar marcadores', type: 'error', isLoading: false, autoClose: 3000 })
+    } finally {
+      setBookmarksLoading(false)
+      // Limpiar el input file
+      const fileInput = document.getElementById('bookmarksFile')
+      if (fileInput) fileInput.value = ''
+    }
+  }
+
   return (
     <>
     <h3>Preferencias</h3>
     <div className={`${styles.preferences}`} id="preferences">
+      <div className={styles.importSection}>
+        <h3>Importar Marcadores de Chrome</h3>
+        <p>Sube tu archivo de marcadores exportado desde Chrome</p>
+        <form onChange={handleUploadBookmarks}>
+          <button className={styles.upFile} disabled={bookmarksLoading}>
+            <label htmlFor="bookmarksFile">
+              <UploadIcon />
+              Subir Archivo HTML
+            </label>
+            <input
+              id="bookmarksFile"
+              className={styles.upFileInput}
+              type="file"
+              name="bookmarksFile"
+              accept=".html"
+              disabled={bookmarksLoading}
+            />
+          </button>
+        </form>
+        {bookmarksLoading && <span className={styles.loader}></span>}
+      </div>
       <button id="closeAccount" onClick={() => setVisible(true)}>
         Cerrar Cuenta
       </button>
@@ -116,58 +195,107 @@ export function UserPreferences ({ user, setUser }) {
   )
 }
 export function UserSecurity ({ user, setUser }) {
-  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [changePasswordStep, setChangePasswordStep] = useState(0) // 0: no visible, 1: current password, 2: new password
   const [backupLoading, setBackupLoading] = useState(false)
-  const [reauthVisible, setReauthVisible] = useState(false)
-  const [newPasswordState, setNewPasswordState] = useState('')
   const [confirmRestoreVisible, setConfirmRestoreVisible] = useState(false)
   const [pendingFile, setPendingFile] = useState(null)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [currentPasswordCache, setCurrentPasswordCache] = useState('') // Guardar contraseña actual para reauth posterior
   const { handleChangeFirebasePassword, handleReauthenticate } = useGoogleAuth()
 
   const handleChangePassword = (e) => {
     e.preventDefault()
-    setPasswordVisible(true)
+    setChangePasswordStep(1) // Mostrar formulario de contraseña actual
   }
-  const handleChangePasswordSubmit = async (e) => {
+
+  const handleCurrentPasswordSubmit = async (e) => {
+    e.preventDefault()
+    const form = e.currentTarget
+    const currentPassword = form.currentPassword.value
+
+    if (!currentPassword) {
+      toast.error('Por favor ingrese su contraseña actual')
+      return
+    }
+
+    const reAuthResponse = await handleReauthenticate(currentPassword)
+
+    if (reAuthResponse.status === 'success') {
+      setCurrentPasswordCache(currentPassword) // Guardar para reauth posterior
+      setChangePasswordStep(2) // Pasar al formulario de nueva contraseña
+      toast.success('Contraseña verificada correctamente')
+    } else {
+      if (reAuthResponse.error.code === 'auth/wrong-password') {
+        toast.error('Contraseña incorrecta')
+      } else {
+        toast.error('Error al verificar la contraseña')
+      }
+    }
+  }
+
+  const handleNewPasswordSubmit = async (e) => {
     e.preventDefault()
     const form = e.currentTarget
     const newPassword = form.newPassword.value
-    setNewPasswordState(newPassword)
-    // console.log('🚀 ~ handleChangePasswordSubmit ~ newPassword:', newPassword)
+    const confirmPassword = form.confirmPassword.value
+
+    if (!newPassword || !confirmPassword) {
+      toast.error('Por favor complete todos los campos')
+      return
+    }
+
+    if (newPassword.length < 6) {
+      toast.error('La contraseña debe tener al menos 6 caracteres')
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error('Las contraseñas no coinciden')
+      return
+    }
+
+    // Reautenticar justo antes de cambiar la contraseña para asegurar que es reciente
+    const reAuthResponse = await handleReauthenticate(currentPasswordCache)
+
+    if (reAuthResponse.status !== 'success') {
+      toast.error('Error de autenticación. Por favor intente nuevamente.')
+      setChangePasswordStep(1) // Volver al paso 1
+      setCurrentPasswordCache('') // Limpiar caché
+      return
+    }
+
+    // Ahora sí cambiar la contraseña inmediatamente después del reauth
     const response = await handleChangeFirebasePassword(newPassword)
     if (response.status === 'success') {
-      toast('Contraseña cambiada con éxito')
-      setPasswordVisible(false)
-      setNewPasswordState('')
+      toast.success('Contraseña cambiada con éxito')
+      setChangePasswordStep(0)
+      setCurrentPasswordCache('') // Limpiar caché de contraseña
+      setShowCurrentPassword(false)
+      setShowNewPassword(false)
+      setShowConfirmPassword(false)
     } else {
       if (response.error.code === 'auth/weak-password') {
-        toast('La contraseña debe tener al menos 6 caracteres')
-      }
-      if (response.error.code === 'auth/requires-recent-login') {
-        setPasswordVisible(false)
-        setReauthVisible(true)
+        toast.error('La contraseña debe tener al menos 6 caracteres')
+      } else if (response.error.code === 'auth/requires-recent-login') {
+        toast.error('Sesión expirada, por favor vuelva a intentarlo')
+        setChangePasswordStep(1) // Volver a pedir contraseña actual
+        setCurrentPasswordCache('') // Limpiar caché
+      } else {
+        toast.error('Error al cambiar la contraseña')
       }
     }
-    // console.log('🚀 ~ handleChangePasswordSubmit ~ response:', response)
   }
-  const handleReauth = async (e) => {
-    e.preventDefault()
-    const form = e.currentTarget
-    const password = form.currentPassword.value
-    const reAuthResponse = await handleReauthenticate(password)
-    // console.log(reAuthResponse)
-    if (reAuthResponse.status === 'success') {
-      setReauthVisible(false)
-      const authResponse = await handleChangeFirebasePassword(newPasswordState)
-      // gestionar error tmb
-      toast('Contraseña cambiada con éxito')
-      console.log('🚀 ~ handleReauth ~ authResponse:', authResponse)
-    } else {
-      // console.log(reAuthResponse)
-      setReauthVisible(false)
-      toast('Error al reautenticar')
-    }
+
+  const handleCancelChangePassword = () => {
+    setChangePasswordStep(0)
+    setCurrentPasswordCache('') // Limpiar caché de contraseña
+    setShowCurrentPassword(false)
+    setShowNewPassword(false)
+    setShowConfirmPassword(false)
   }
+
   const handleCreateBackup = (e) => {
     setBackupLoading(true)
     fetch(`${constants.BASE_API_URL}/storage/backup`, {
@@ -262,25 +390,76 @@ export function UserSecurity ({ user, setUser }) {
           {/* <KeyIcon /> */}
           <h3>Cambiar contraseña</h3>
           <form onSubmit={handleChangePassword} className={styles.flexForm}>
-            <button id="changePassword">Cambiar</button>
+            <button id="changePassword" type="submit">Cambiar</button>
           </form>
           {
-            passwordVisible
-              ? (
-                <form onSubmit={handleChangePasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
-                  <p>Introduzca la nueva contraseña</p>
-                  <input type="hidden" name="email" id='email' value={user.email} />
-                  <input type="password" id="newPassword" name='newPassword'/>
-                  <div className={styles.flexButtons}>
-                    <button id="changePasswordSubmit" type='submit'>Enviar</button>
-                    <button id="changePasswordCancel" onClick={() => setPasswordVisible(false)}>Cancelar</button>
-                  </div>
+            changePasswordStep === 1 && (
+              <form onSubmit={handleCurrentPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
+                <p>Primero, confirme su contraseña actual</p>
+                <div className={styles.passwordInputWrapper}>
+                  <input
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    id="currentPassword"
+                    name='currentPassword'
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    className={styles.togglePasswordButton}
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  >
+                    {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  </button>
+                </div>
+                <div className={styles.flexButtons}>
+                  <button id="currentPasswordSubmit" type='submit'>Siguiente</button>
+                  <button id="currentPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
+                </div>
               </form>
-                )
-              : null
+            )
           }
           {
-            reauthVisible && <ConfirmPasswordForm handleReauth={handleReauth} setReauthVisible={setReauthVisible}/>
+            changePasswordStep === 2 && (
+              <form onSubmit={handleNewPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
+                <p>Ahora, ingrese su nueva contraseña</p>
+                <div className={styles.passwordInputWrapper}>
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    id="newPassword"
+                    name='newPassword'
+                    placeholder="Nueva contraseña"
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className={styles.togglePasswordButton}
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  </button>
+                </div>
+                <div className={styles.passwordInputWrapper}>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    id="confirmPassword"
+                    name='confirmPassword'
+                    placeholder="Confirmar nueva contraseña"
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className={styles.togglePasswordButton}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  </button>
+                </div>
+                <div className={styles.flexButtons}>
+                  <button id="newPasswordSubmit" type='submit'>Cambiar Contraseña</button>
+                  <button id="newPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
+                </div>
+              </form>
+            )
           }
         </div>)
       }

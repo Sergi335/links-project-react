@@ -6,7 +6,7 @@
 .toolbar {
     position: sticky;
     top: var(--toolbar-mobile-height);
-    display: flex;
+    display: none;
     z-index: 2;
     justify-content: center;
     grid-area: toolbar;
@@ -110,20 +110,6 @@
             }
         }
 
-        /*Bloque boton menu*/
-        .mobile_menu_button {
-            background-color: transparent;
-            border-radius: 0;
-            position: fixed;
-            left: 0;
-
-            .mobile_menu_icon {
-                width: 24px;
-                height: 24px;
-                color: var(--accentColor);
-            }
-        }
-
     }
 
     @media (min-width: 1280px) {
@@ -191,10 +177,7 @@
         justify-content: initial;
         animation: none;
         align-items: center;
-    }
-
-    .mobile_menu_button {
-        display: none;
+        display: flex;
     }
 
     /* .deskTitle {

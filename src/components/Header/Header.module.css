@@ -197,6 +197,18 @@
     }
 }
 
+.mobile_menu_button {
+    background-color: transparent;
+    border-radius: 0;
+    /* position: fixed;
+    left: 0; */
+
+    .mobile_menu_icon {
+        width: 24px;
+        height: 24px;
+        color: var(--accentColor);
+    }
+}
 
 @media (min-width: 1024px) {
     .header_info {
@@ -205,6 +217,10 @@
         display: flex;
         order: initial;
 
+    }
+
+    .mobile_menu_button {
+        display: none;
     }
 }
 

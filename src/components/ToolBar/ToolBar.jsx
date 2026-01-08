@@ -7,7 +7,7 @@ import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, MenuIcon, PinPanelIcon } from '../Icons/icons'
+import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, PinPanelIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
@@ -101,10 +101,6 @@ export default function ToolBar () {
     icon.classList.toggle(styles.icon_pinned)
     panel.classList.toggle('pinned')
   }
-  const toggleMobileMenu = () => {
-    const menu = document.getElementById('sidebar')
-    menu.classList.toggle('pinned')
-  }
   return (
     <aside className={`${styles.toolbar} toolbar`}>
     {
@@ -134,10 +130,6 @@ export default function ToolBar () {
         </div>
 
     }
-    <button className={styles.mobile_menu_button} onClick={toggleMobileMenu}>
-      <MenuIcon className={styles.mobile_menu_icon} />
-        Escritorios
-    </button>
   </aside>
   )
 }

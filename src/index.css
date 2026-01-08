@@ -45,8 +45,8 @@ html.dark {
   --columns_transition: height 300ms ease;
   --navBarContentHeight: 42px;
   --nav-height: 1128px;
-  --toolbar-mobile-height: 92px;
-  --sidebar-top-onmobile: 153px;
+  --toolbar-mobile-height: 99px;
+  --sidebar-top-onmobile: 99px;
   --sidebar-desktop-width: 260px;
   --link-height: 43px;
 
@@ -265,6 +265,10 @@ header.main_header {
   opacity: 1;
   transition: visibility .1s, opacity .1s;
   transition-delay: .3s;
+}
+
+.pinned.resize-drag {
+  width: 0;
 }
 
 .colOpen {
