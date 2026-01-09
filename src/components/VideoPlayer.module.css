@@ -11,5 +11,12 @@
     background-position: center;
     border-bottom: var(--firstBorder);
     border-right: var(--firstBorder);
+    border-left: var(--firstBorder);
     background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+    .video_player_placeholder {
+        border-left: 0;
+    }
 }

@@ -514,6 +514,7 @@
   width: min(100%, 500px);
   border-block: 1px solid var(--firstBorderColor);
   border-right: 1px solid var(--firstBorderColor);
+  border-left: 1px solid var(--firstBorderColor);
   padding: 8px;
 }
 
@@ -1027,6 +1028,12 @@
   display: flex;
   flex-wrap: wrap;
   /* gap: 16px; */
+}
+
+@media (min-width: 768px) {
+  .infoContainer {
+    border-left: 0;
+  }
 }
 
 @media (min-width: 1536px) {

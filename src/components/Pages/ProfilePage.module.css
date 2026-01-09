@@ -81,13 +81,12 @@
 
 .infoHeader {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    /* padding: 0 50px 0; */
     border-bottom: 1px solid var(--firstBorderColor);
-    align-items: start;
+    align-items: center;
     gap: 8px;
-    /* padding: 15px 0; */
+    padding: 16px;
+    flex-wrap: wrap;
 
     & h3 {
         margin: 0;
@@ -100,6 +99,7 @@
     font-size: 14px;
     text-align: left;
     text-wrap: balance;
+    flex-grow: 1;
 }
 
 .infoHeader p:first-child {
@@ -217,7 +217,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: fit-content;
+    width: 225px;
     /* padding: 15px; */
     /* border: 1px solid var(--firstBorderColor);
     border-radius: 5px;
@@ -830,8 +830,15 @@ tr:nth-child(odd) {
         flex-direction: row;
         gap: 50px;
         align-items: center;
-        padding-left: 30px;
-        padding-right: 95px;
+        padding: 0;
+    }
+
+    /* .profileImage {
+        width: fit-content;
+    } */
+
+    .infoHeader p {
+        flex-grow: 0;
     }
 
     .buttons {

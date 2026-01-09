@@ -854,7 +854,7 @@ export function UserInfo ({ user, setUser }) {
         <h3>Información Básica</h3>
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
-            <UserAvatar imageKey={user?.profileImage} id="preview-image" />
+            <UserAvatar imageKey={user?.profileImage} id="preview-image" className='uploadForm' />
           </div>
           <div className={styles.uploadImageTooltip}>
             <p>Sube tu imagen de perfil</p>

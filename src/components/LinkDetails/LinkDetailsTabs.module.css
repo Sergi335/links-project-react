@@ -31,7 +31,7 @@
     display: flex;
     justify-content: space-between;
     border-inline: var(--firstBorder);
-    /* border-top: var(--firstBorder); */
+    border-top: var(--firstBorder);
     /* margin-top: 1em; */
     height: 32px;
 }
@@ -251,6 +251,12 @@
     border-color: var(--accentColor);
     animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
     inset: 6px;
+}
+
+@media(min-width: 1024px) {
+    .link_details_tabs {
+        border-top: 0;
+    }
 }
 
 @keyframes rotate {

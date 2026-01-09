@@ -6,8 +6,9 @@
     gap: 8px;
     order: initial;
     width: min(100%, 500px);
-    border-block: 1px solid var(--firstBorderColor);
+    border-top: 1px solid var(--firstBorderColor);
     border-right: 1px solid var(--firstBorderColor);
+    border-left: 1px solid var(--firstBorderColor);
     padding: 8px;
     flex-grow: 1;
 
@@ -70,6 +71,13 @@
     align-items: center;
     justify-content: flex-end;
     /* margin-left: 5px; */
+}
+
+@media (min-width: 768px) {
+    .header {
+        border-left: 0;
+        border-bottom: 1px solid var(--firstBorderColor);
+    }
 }
 
 @media (min-width: 1536px) {
