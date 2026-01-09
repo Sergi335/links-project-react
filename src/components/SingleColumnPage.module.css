@@ -5,10 +5,17 @@
 
 .single_column_grid {
     display: grid;
-    grid-template-columns: 25% 80ch 1fr;
+    grid-template-columns: initial;
     /* gap: 16px; */
     width: 100%;
     min-height: calc(100vh - 92px);
     background-color: var(--color-primary);
-    /* padding: 24px; */
+    padding: 24px;
+}
+
+@media (min-width: 1280px) {
+    .single_column_grid {
+        grid-template-columns: 25% 80ch 1fr;
+        padding: 0;
+    }
 }

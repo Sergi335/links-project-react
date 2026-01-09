@@ -37,17 +37,18 @@
         overflow: hidden;
         visibility: hidden;
         opacity: 0;
+        padding: 14px;
     }
 }
 
 
 /*Bloque Logo */
 .logo_container {
-    display: flex;
     height: 60px;
     align-items: center;
     border-bottom: var(--firstBorder);
     border-left: var(--firstBorder);
+    display: none;
 
     .logo {
         display: flex;
@@ -271,6 +272,10 @@ a.active:hover {
         height: 100dvh;
     }
 
+    .sidebar_wrapper {
+        padding: 0 !important;
+    }
+
     .nav {
         flex: 1;
         max-height: calc(100dvh - 20px);
@@ -283,6 +288,10 @@ a.active:hover {
         &[data-overlayscrollbars="host"] {
             overflow: initial;
         }
+    }
+
+    .logo_container {
+        display: flex;
     }
 }
 
