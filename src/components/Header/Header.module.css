@@ -25,15 +25,9 @@
     }
 
     .header_info_wrapper {
-        display: none;
+        /* display: none; */
         flex-direction: column;
 
-    }
-
-    @media (min-width: 768px) {
-        .header_info_wrapper {
-            display: flex;
-        }
     }
 
     .search_button_container {
@@ -45,6 +39,7 @@
             gap: 5px;
             color: var(--text-color-secondary);
             margin-right: var(--gap);
+            margin-left: auto;
 
             &:hover {
                 border-color: var(--accentColor);
@@ -57,7 +52,9 @@
                 gap: 5px;
                 font-family: 'Inter Variable', sans-serif;
                 font-weight: 600;
+
             }
+
 
             .search_button_icon {
                 font-size: 1rem;
@@ -70,6 +67,7 @@
                 border: var(--firstBorder);
                 border-radius: var(--button-radius);
                 padding: 2px 5px;
+                display: none;
             }
 
             .search_button_key_ctrl::before {
@@ -102,8 +100,13 @@
             vertical-align: middle;
             cursor: pointer;
 
-            &:hover {
-                filter: drop-shadow(0px 0px 20px var(--accentColor));
+            anchor-name: --profile-button;
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    filter: drop-shadow(0px 0px 20px var(--accentColor));
+                }
+
             }
         }
     }
@@ -186,10 +189,13 @@
             padding: 0;
             background-color: initial;
 
-            &:hover {
+            @media (hover: hover) and (pointer: fine) {
 
-                >svg {
-                    filter: drop-shadow(0 0 2px var(--accentColor));
+                &:hover {
+
+                    >svg {
+                        filter: drop-shadow(0 0 2px var(--accentColor));
+                    }
                 }
             }
 
@@ -203,11 +209,16 @@
     /* position: fixed;
     left: 0; */
 
-    .mobile_menu_icon {
+    .mobile_menu_icon,
+    .mobile_close_menu_icon {
         width: 24px;
         height: 24px;
         color: var(--accentColor);
     }
+}
+
+.logo {
+    margin-left: 14px;
 }
 
 @media (min-width: 1024px) {
@@ -221,6 +232,14 @@
 
     .mobile_menu_button {
         display: none;
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .search_button_keys {
+        display: initial !important;
     }
 }
 
@@ -242,18 +261,16 @@
 }
 
 .header_info_user_menu {
-    position: absolute;
-    /* display: flex; */
     align-items: flex-start;
-    /* margin-left: 10px; */
     flex-direction: column;
     background-color: var(--color-primary);
-    top: 40px;
-    left: -50px;
     padding: 1rem;
     gap: 8px;
-    display: none;
     border: var(--firstBorder);
+    position-anchor: --profile-button;
+    position: absolute;
+    inset: auto;
+    position-area: bottom center;
 
     & button {
         padding: 0;
@@ -263,4 +280,9 @@
         font-weight: 600;
         font-size: 14px;
     }
+}
+
+
+.header_info_user_menu:popover-open {
+    display: flex;
 }

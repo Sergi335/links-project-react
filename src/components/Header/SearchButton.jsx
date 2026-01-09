@@ -10,7 +10,8 @@ export default function SearchButton () {
   }
   return (
         <div id="docsearch" className={`${styles.search_button_container}`}>
-            <button type="button" className={styles.search_button} aria-label="Search" onClick={handleShowSearch}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <button popovertarget='searchbox' type="button" className={styles.search_button} aria-label="Search" onClick={handleShowSearch}>
                 <span className={styles.search_button_text}>
                     <span className={`ti ti-search ${styles.search_button_icon}`}></span>
                     <span className="DocSearch-Button-Placeholder">Search</span>

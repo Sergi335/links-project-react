@@ -399,7 +399,7 @@ button,
   justify-content: center;
   align-items: center;
   border: 0;
-  padding: 8px 19px;
+  padding: 8px 14px;
   cursor: pointer;
   color: var(--text-color-inverse);
   background-color: var(--btn-bg-color);
@@ -426,6 +426,10 @@ button:hover {
   transition: opacity .3s;
   /* color: var(--accentColor); */
   /* box-shadow: var(--secondNeumoShadow); */
+}
+
+.DocSearch-Button-Placeholder {
+  display: none;
 }
 
 button:active,
@@ -584,6 +588,10 @@ favopt1 {
 
   .home>#root {
     flex-direction: column;
+  }
+
+  .DocSearch-Button-Placeholder {
+    display: initial;
   }
 
   .root {

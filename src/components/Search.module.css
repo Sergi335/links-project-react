@@ -1,22 +1,17 @@
 .searchbox {
-    position: fixed;
-    left: 37%;
     background-color: var(--color-primary);
-    top: 150px;
-    display: none;
+    top: -75%;
     flex-direction: column;
-    width: 60ch;
+    width: 85%;
     padding: 10px;
     border-radius: var(--button-radius);
     min-height: 115px;
-    z-index: 1;
     box-shadow: 0px 1px 15px var(--firstShadow);
     border: 1px dashed var(--firstBorderColor);
 }
 
-.flex {
+.searchbox:popover-open {
     display: flex;
-    /* animation: appear .1s ease-in-out; */
 }
 
 @keyframes appear {
@@ -314,6 +309,9 @@
         width: 100%;
         margin-left: 25px;
     } */
+    .searchbox {
+        width: 60ch;
+    }
 
     .searchButton {
         background-color: var(--inputBackgroundColor);

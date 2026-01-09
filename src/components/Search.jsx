@@ -1,6 +1,5 @@
 import debounce from 'just-debounce-it'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import useHideForms from '../hooks/useHideForms'
 import { searchLinks } from '../services/functions'
 import { useFormsStore } from '../store/forms'
 import { CloseIcon, SearchIcon } from './Icons/icons'
@@ -20,7 +19,7 @@ export default function Search () {
   const [media] = useState(window.matchMedia('(max-width: 768px)'))
   const searchBoxVisible = useFormsStore(state => state.searchBoxVisible)
   const setSearchBoxVisible = useFormsStore(state => state.setSearchBoxVisible)
-  useHideForms({ form: boxRef.current, setFormVisible: setSearchBoxVisible })
+  // useHideForms({ form: boxRef.current, setFormVisible: setSearchBoxVisible })
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -58,12 +57,34 @@ export default function Search () {
   }, [sort, results])
 
   useEffect(() => {
-    if (searchBoxVisible) inputRef.current.focus()
+    if (searchBoxVisible) {
+      boxRef.current?.showPopover()
+      inputRef.current.focus()
+    } else {
+      // Intentar cerrar solo si el elemento existe
+      try {
+        boxRef.current?.hidePopover()
+      } catch (e) {
+        // El navegador puede lanzar error si ya está cerrado
+      }
+    }
   }, [searchBoxVisible])
 
   useEffect(() => {
+    const handleToggle = (event) => {
+      // Sincronizar el estado global cuando el popover se cierra (por ejemplo con Esc)
+      if (event.newState === 'closed') {
+        setSearchBoxVisible(false)
+      } else {
+        setSearchBoxVisible(true)
+      }
+    }
+
+    const currentBox = boxRef.current
+    currentBox?.addEventListener('toggle', handleToggle)
+
     const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === 'k') {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
         event.preventDefault()
         setSearchBoxVisible(!searchBoxVisible)
       }
@@ -73,11 +94,13 @@ export default function Search () {
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
+      currentBox?.removeEventListener('toggle', handleToggle)
     }
   }, [searchBoxVisible, setSearchBoxVisible])
 
   return (
-        <section ref={boxRef} id='searchbox' className={searchBoxVisible ? `${styles.searchbox} ${styles.flex}` : `${styles.searchbox}`}>
+        // eslint-disable-next-line react/no-unknown-property
+        <section popover="" ref={boxRef} className={styles.searchbox}>
           <form id='searchForm' className={styles.searchForm} onSubmit={handleSubmit}>
               <input ref={inputRef}
                 className={sortedLinks?.length > 0 ? `${styles.active} ${styles.searchInput}` : `${styles.searchInput}`}

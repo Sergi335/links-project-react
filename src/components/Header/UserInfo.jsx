@@ -1,7 +1,6 @@
-import { useState } from 'react'
 // import { useTime } from '../../hooks/useTime'
 import { useSessionStore } from '../../store/session'
-import UserAvatar from '../UserAvatar.jsx'
+import UserAvatar from './UserAvatar.jsx'
 // import Clock from './Clock'
 import styles from './Header.module.css'
 import UserInfoMenu from './UserInfoMenu.jsx'
@@ -10,7 +9,7 @@ import UserInfoMenu from './UserInfoMenu.jsx'
 export default function UserInfo () {
   const user = useSessionStore(state => state.user)
   // const { hours, minutes } = useTime()
-  const [visible, setVisible] = useState(false)
+  // const [visible, setVisible] = useState(false)
   // const isProd = import.meta.env.MODE === 'production'
   return (
       <div className={styles.header_info_user_group}>
@@ -18,8 +17,8 @@ export default function UserInfo () {
           {/* <Clock hours={hours} minutes={minutes} /> */}
           {/* {isProd && <WeatherComponent />} */}
         </div>
-        <UserAvatar onClick={() => setVisible(!visible)} imageKey={user?.profileImage} className={styles.header_image_link} />
-        <UserInfoMenu visible={visible} setVisible={setVisible} />
+        <UserAvatar imageKey={user?.profileImage} className={styles.header_image_link} />
+        <UserInfoMenu />
       </div>
   )
 }

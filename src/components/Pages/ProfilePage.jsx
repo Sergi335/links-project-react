@@ -8,8 +8,8 @@ import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
+import UserAvatar from '../Header/UserAvatar.jsx'
 import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon, EyeIcon, EyeOffIcon, UploadIcon } from '../Icons/icons'
-import UserAvatar from '../UserAvatar.jsx'
 import styles from './ProfilePage.module.css'
 
 export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {

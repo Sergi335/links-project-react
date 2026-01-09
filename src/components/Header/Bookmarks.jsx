@@ -10,7 +10,7 @@ import { useGlobalStore } from '../../store/global'
 import BookmarkLoader from './BookmarkLoader'
 import styles from './Bookmarks.module.css'
 
-function BookmarkItem ({ bookmark }) {
+function BookmarkItem ({ bookmark, isMobile }) {
   const {
     setNodeRef,
     attributes,
@@ -19,7 +19,8 @@ function BookmarkItem ({ bookmark }) {
     transition,
     isDragging
   } = useSortable({
-    id: bookmark._id,
+    id: bookmark?._id,
+    disabled: isMobile || !bookmark,
     data: {
       type: 'bookmark',
       bookmark
@@ -29,6 +30,9 @@ function BookmarkItem ({ bookmark }) {
     transition,
     transform: CSS.Transform.toString(transform)
   }
+
+  if (!bookmark) return null
+
   if (isDragging) {
     return (
       <div ref={setNodeRef} className={styles.book_dragged} style={style}>
@@ -36,7 +40,7 @@ function BookmarkItem ({ bookmark }) {
     )
   }
   return (
-    <a ref={setNodeRef} style={style} href={bookmark.URL} title={bookmark.name} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...listeners}>
+    <a ref={setNodeRef} style={style} href={bookmark.URL} title={bookmark.name} target='_blank' data-order={bookmark.bookmarkOrder} rel="noreferrer" {...attributes} {...(!isMobile ? listeners : {})}>
       <img className={styles.bookmark} src={bookmark.imgUrl} alt="" />
     </a>
   )
@@ -48,14 +52,23 @@ export default function Bookmarks () {
   // console.log('🚀 ~ Bookmarks ~ books:', books)
   const [booksOrder, setBooksOrder] = useState([])
   const [activeBook, setActiveBook] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
   const [prevBooks, setPrevBooks] = useState([]) // Nuevo estado para guardar el orden anterior
   const bookmarksId = books.map((book) => book._id)
   const globalLoading = useGlobalStore(state => state.globalLoading)
 
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    setIsMobile(media.matches)
+    const handleMediaChange = (e) => setIsMobile(e.matches)
+    media.addEventListener('change', handleMediaChange)
+    return () => media.removeEventListener('change', handleMediaChange)
+  }, [])
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 0
+        distance: 5
       }
     })
   )
@@ -133,7 +146,7 @@ export default function Bookmarks () {
   return (
     <div className={styles.bookmarks}>
       <DndContext
-        sensors={sensors}
+        sensors={isMobile ? [] : sensors}
         collisionDetection={closestCorners}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
@@ -148,7 +161,7 @@ export default function Bookmarks () {
             (
               books?.map((book) =>
                 (
-                <BookmarkItem key={book._id} bookmark={book} />
+                <BookmarkItem key={book._id} bookmark={book} isMobile={isMobile} />
                 )
               )
             )
@@ -159,7 +172,7 @@ export default function Bookmarks () {
           createPortal(
             <DragOverlay>
               {
-                <BookmarkItem bookmark={activeBook} />
+                activeBook ? <BookmarkItem bookmark={activeBook} isMobile={isMobile} /> : null
               }
             </DragOverlay>
             , document.body)

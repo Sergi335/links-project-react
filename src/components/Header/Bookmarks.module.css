@@ -6,6 +6,8 @@
     /* flex: 1; */
     padding: 10px;
     justify-content: space-evenly;
+    overflow-x: auto;
+    padding-inline: 24px;
     /* transition: all 0.8s ease-in-out !important; */
 
     & img {
@@ -13,13 +15,16 @@
         border-radius: 2px;
         height: auto;
     }
+
     & a {
         display: flex;
     }
+
     & a:hover {
         transform: scale(1.5);
     }
 }
+
 @media (min-width: 1024px) {
     .bookmarks {
         order: initial;
@@ -27,12 +32,14 @@
         padding: 0;
     }
 }
+
 .book_dragged {
     background-color: var(--accentColor);
     width: 25px;
     height: 25px;
     border-radius: 2px;
 }
+
 /*El que se arrastra*/
 .bookmark {
     max-width: var(--bookmarks_image_width);
