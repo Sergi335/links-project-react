@@ -286,3 +286,15 @@
 .header_info_user_menu:popover-open {
     display: flex;
 }
+
+.weather {
+    display: flex;
+    gap: 8px;
+}
+
+.weatherSlider {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    padding-right: 28px;
+}

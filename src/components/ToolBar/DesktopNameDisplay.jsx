@@ -4,6 +4,7 @@ import { useTitle } from '../../hooks/useTitle'
 import { kebabToTitleCase } from '../../services/functions'
 import NameLoader from '../NameLoader'
 import styles from './Toolbar.module.css'
+import WeatherSlider from './WeatherSlider'
 
 export default function DesktopNameDisplay ({ numberOfLinks, numberOfColumns, categoryName }) {
   const { desktopName, slug } = useParams()
@@ -33,9 +34,11 @@ export default function DesktopNameDisplay ({ numberOfLinks, numberOfColumns, ca
                 {
                     desktopDisplayName
                       ? (<div className={styles.desktop_name_container}>
-                          <h1 className={styles.deskTitle} id="deskTitle">{desktopDisplayName}</h1>
+                          <h1 className={styles.deskTitle} id="deskTitle">{`${desktopDisplayName}: `}</h1>
                           <p>{`${numberOfLinks} links`}</p>
-                          <p>{numberOfColumns} columnas</p></div>)
+                          <p>{`${numberOfColumns} columnas`}</p>
+                          <WeatherSlider />
+                          </div>)
                       : (<NameLoader className={styles.deskTitle}/>)
 
                 }

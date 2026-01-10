@@ -73,7 +73,7 @@ export default function ListOfLinks () {
   }
 
   return (
-    <main className={styles.list_of_links}>
+    <main className={`${styles.list_of_links} list_of_links`}>
       <div id="mainContentWrapper" className={styles.lol_content_wrapper}>
           <DesktopNameDisplay numberOfLinks={totalLinks} numberOfColumns={columnsIds?.length || 0} categoryName={displayCategory?.name} />
         <div id='maincontent' className={styles.lol_content} style={{ gridTemplateColumns: styleOfColumns }}>

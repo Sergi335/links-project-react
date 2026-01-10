@@ -165,6 +165,9 @@ const CustomLink = ({ data, className }) => {
           onContextMenu={(e) => handleContextMenu(e)}
         >
           <div className={styles.link_wrapper}>
+            {
+              linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
+            }
             <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
             <a
               ref={linkRef}
@@ -173,9 +176,6 @@ const CustomLink = ({ data, className }) => {
               rel='noreferrer'
               title={link.name}
             >
-              {
-                linkSelectMode && <input type='checkbox' onChange={handleSelectChange}/>
-              }
               <span>{link.name}</span>
             </a>
             {

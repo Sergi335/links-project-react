@@ -2,8 +2,8 @@
     min-height: 322.39px;
     transition: var(--columns_transition);
     z-index: 0;
-    background-color: var(--column-background);
-    padding: 1rem;
+    background-color: var(--color-medium);
+    padding: 8px;
     border-radius: 8px;
 
 }
@@ -54,7 +54,7 @@
     font-size: 13.333px;
     white-space: nowrap;
     text-overflow: ellipsis;
-    padding: 5px 0;
+    padding: 3px 0 8px 0px;
     color: var(--text-color-primary);
     /* flex-grow: 1; */
     /* margin-left: 15px; */

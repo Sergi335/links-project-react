@@ -151,6 +151,20 @@
         font-weight: normal;
         margin: 7px 0;
     }
+
+    & p:first-of-type {
+        background-color: rgb(47, 5, 83);
+        color: rgb(216, 180, 254);
+        padding: 0 5px;
+        border-radius: 4px;
+    }
+
+    & p:last-of-type {
+        background-color: rgb(4, 39, 19);
+        color: rgb(134, 239, 172);
+        border-radius: 4px;
+        padding: 0 5px;
+    }
 }
 
 .icon_pinned {

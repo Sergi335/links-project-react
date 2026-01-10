@@ -232,6 +232,10 @@ header.main_header {
   }
 }
 
+.list_of_links .link img {
+  margin-left: 8px;
+}
+
 @media (min-width: 1280px) {
   header.main_header {
     padding-inline: 18px;

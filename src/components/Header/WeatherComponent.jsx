@@ -11,7 +11,7 @@ export default function WeatherComponent () {
       const apiKey = import.meta.env.VITE_WEATHER_API_KEY
       const ciudad = 'Alicante' // Reemplaza con la ciudad deseada
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&units=metric&lang=es&appid=${apiKey}`
-      //console.log('Actualizando datos meteorológicos...')
+      // console.log('Actualizando datos meteorológicos...')
 
       try {
         const respuesta = await fetch(url)
@@ -60,8 +60,8 @@ export default function WeatherComponent () {
       {temperatura !== null && icono
         ? (
         <div className={styles.weather}>
-          <p>{temperatura}°C</p>
           <p><i className={icono}></i></p>
+          <p>{temperatura}°C</p>
         </div>
           )
         : (

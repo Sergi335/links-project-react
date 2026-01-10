@@ -7,6 +7,7 @@ import { useDragItems } from '../hooks/useDragItems'
 import Columna from './column'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
+import FolderIcon from './Icons/folder'
 import styles from './ListOfLinks.module.css'
 import LinkLoader from './Loaders/LinkLoader'
 import SingleColumn from './SingleColumn'
@@ -147,6 +148,7 @@ export default function Columns ({
                               className={styles.subcategories}
                               to={`${rootPath}${basePath}/${columna.slug}/${col.slug}/${getFirstColumnLink(col)?._id}`}
                             >
+                              <FolderIcon width={16} height={16} style={{ marginRight: '5px' }} />
                               {col.name}
                             </Link>
                           )
