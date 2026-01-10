@@ -21,6 +21,7 @@ export default function ToolBar () {
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const desktop = topLevelCategoriesStore.find(desk => desk.slug === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
+  const triggerSidebarCollapse = useGlobalStore(state => state.triggerSidebarCollapse)
   const location = useLocation()
   const isDesktopLocation = location.pathname !== '/app/profile' && location.pathname !== '/app/readinglist'
   const [newColumnId, setNewColumnId] = useState(null)
@@ -120,6 +121,9 @@ export default function ToolBar () {
                 </button>
                 <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
                   <ExpandHeightIcon className={styles.uiIcon} />
+                </button>
+                <button className={styles.sideButtons} onClick={triggerSidebarCollapse} title="Colapsar categorías">
+                  <ExpandHeightIcon className={'uiIcon rotate180'} />
                 </button>
               </>
             )

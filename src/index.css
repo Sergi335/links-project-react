@@ -234,7 +234,7 @@ header.main_header {
 
 @media (min-width: 1280px) {
   header.main_header {
-    padding-inline: 100px;
+    padding-inline: 18px;
 
   }
 }
@@ -574,6 +574,10 @@ textarea {
 
 .show {
   display: flex;
+}
+
+.rotate180 {
+  transform: rotate(180deg);
 }
 
 favopt1 {

@@ -10,6 +10,7 @@ import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 import styles from './CustomizeDesktopPanel.module.css'
+import { AddDesktopIcon, TrashIcon } from './Icons/icons'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
@@ -27,6 +28,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
+  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
+  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
+  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   // const globalLoading = useGlobalStore(state => state.globalLoading)
   // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
   // console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
@@ -245,6 +250,15 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
     // setHiddenDesktops(newHiddenState)
   }
+  const handleShowAddDesktop = (e) => {
+    // e.preventDefault()
+    e.stopPropagation() // 1. Evita que el click se propague a hooks de cierre u otros listeners
+    setAddDeskFormVisible(!addDeskFormVisible)
+  }
+  const handleShowDeleteDesktop = (e) => {
+    e.stopPropagation()
+    setDeleteConfFormVisible(!deleteConfFormVisible)
+  }
   // Useeffect para aplicar las opciones marcadas en el panel de personalización
   useEffect(() => {
     const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
@@ -310,6 +324,25 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           />
                           <button className={styles.inputButton} type='submit'>Modificar</button>
                       </div>
+                      </div>
+                  </form>
+                  <h3>Añadir Nuevo Escritorio</h3>
+                    <button
+                      className={styles.collapse_btn}
+                      onClick={handleShowAddDesktop}
+                      title="Añadir escritorio"
+                    >
+                      <AddDesktopIcon className={styles.collapse_icon} />
+                    </button>
+                  <h3>Eliminar Escritorio Actual</h3>
+                    <button
+                      className={styles.collapse_btn}
+                      onClick={handleShowDeleteDesktop}
+                      title="Eliminar escritorio"
+                          >
+                      <TrashIcon className={styles.collapse_icon} />
+                    </button>
+                    <h3>Número de Columnas</h3>
                       <div className={styles.rowGroup}>
                           <label htmlFor="" style={{ marginBottom: '6px', width: '100%' }}>Número de columnas:&nbsp;<strong>{numberOfColumns}</strong></label>
                           <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} />
@@ -321,7 +354,6 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                             <option>5</option>
                           </datalist>
                       </div>
-                    </div>
                       <h3>Ocultar Escritorios</h3>
                       <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                          <div className={styles.rowGroup}>
@@ -347,8 +379,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           })
                         }
                         </div>
-                      </div>
-                  </form>
+                    </div>
+
                   <h3>Fondos</h3>
                   <div id='bgMiniatures' className={styles.selectBackground}>
                       {

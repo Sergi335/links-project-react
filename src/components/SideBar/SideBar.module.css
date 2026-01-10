@@ -55,10 +55,10 @@
         align-items: center;
         border-radius: var(--button-radius);
         padding: 2px 8px;
-        background-color: var(--accentColor);
-        color: white;
+        /* background-color: var(--accentColor);
+        color: white; */
         flex-grow: 0;
-        margin-left: 16px;
+        margin-left: 13px;
 
         .logo_text {
             text-align: left;
@@ -146,6 +146,7 @@
             >a.active {
                 color: var(--text-color-primary);
                 border-left-color: var(--accentColor);
+                background-color: var(--color-primary);
             }
 
             ul {

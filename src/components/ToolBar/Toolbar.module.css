@@ -115,7 +115,7 @@
     @media (min-width: 1280px) {
         .toolbar_controls {
             flex-direction: column;
-            margin-top: 15px;
+            margin-top: 0;
             /* position: relative;
             left: -1px;
             gap: 0;
@@ -134,18 +134,22 @@
     text-overflow: ellipsis;
     overflow: hidden;
     line-height: initial;
-    /* color: var(--color-medium); */
-    /* display: none; */
+    margin: 7px 0;
+    font-weight: normal;
+    margin-left: 10px;
 }
 
 .desktop_name_container {
     display: flex;
     gap: 5px;
     align-items: center;
+    border-bottom: var(--firstBorder);
+    color: var(--text-color-secondary);
 
     & p {
         font-size: 14px;
-        font-weight: 500;
+        font-weight: normal;
+        margin: 7px 0;
     }
 }
 

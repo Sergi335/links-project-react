@@ -1,21 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useFormsStore } from '../../store/forms'
-import { useGlobalStore } from '../../store/global'
-import { AddDesktopIcon, ExpandHeightIcon, TrashIcon } from '../Icons/icons'
 import styles from './SideBar.module.css'
 
 export default function LogoDisplay () {
-  const triggerSidebarCollapse = useGlobalStore(state => state.triggerSidebarCollapse)
-  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
-  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  const handleShowAddDesktop = () => {
-    setAddDeskFormVisible(!addDeskFormVisible)
-  }
-  const handleShowDeleteDesktop = () => {
-    setDeleteConfFormVisible(!deleteConfFormVisible)
-  }
+  // const triggerSidebarCollapse = useGlobalStore(state => state.triggerSidebarCollapse)
   return (
     <div className={styles.logo_container}>
       <Link className={styles.logo} to={'/'}>
@@ -24,7 +11,7 @@ export default function LogoDisplay () {
           <span>ZenMarks</span>
         </div>
       </Link>
-      <div className={styles.logo_actions}>
+      {/* <div className={styles.logo_actions}>
         <button
           className={styles.collapse_btn}
           onClick={triggerSidebarCollapse}
@@ -32,21 +19,7 @@ export default function LogoDisplay () {
         >
           <ExpandHeightIcon className={styles.collapse_icon} />
         </button>
-        <button
-          className={styles.collapse_btn}
-          onClick={handleShowAddDesktop}
-          title="Añadir escritorio"
-        >
-          <AddDesktopIcon className={styles.collapse_icon} />
-        </button>
-        <button
-          className={styles.collapse_btn}
-          onClick={handleShowDeleteDesktop}
-          title="Eliminar escritorio"
-        >
-          <TrashIcon className={styles.collapse_icon} />
-        </button>
-      </div>
+      </div> */}
     </div>
   )
 }
