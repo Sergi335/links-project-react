@@ -17,14 +17,9 @@
     .toolbar_controls {
         display: flex;
 
-        .icon_clicked::before {
-            content: '';
-            display: block;
-            width: 5px;
-            height: 36px;
-            position: absolute;
-            left: -2px;
-            background-color: var(--accentColor);
+        .icon_clicked {
+            background-color: var(--color-medium);
+            border: 1px dashed var(--firstBorderColor) !important;
         }
 
         /* & > .sideButtons:is(:first-child) {
@@ -47,9 +42,10 @@
             background-color: var(--color-primary);
             padding: 8px;
             border-radius: 0;
+            border: 1px dashed transparent;
 
             &:hover {
-                background-color: var(--hover-color-primary);
+                border-color: var(--firstBorderColor) !important;
             }
         }
 
@@ -59,7 +55,7 @@
             position: relative;
 
             &:hover {
-                background-color: var(--hover-color-primary);
+                border-color: var(--firstBorderColor) !important;
 
                 >svg {
                     filter: drop-shadow(0 0 2px var(--accentColor));
@@ -129,7 +125,7 @@
 
 /*No se usa, componente: desktopdisplayname*/
 .deskTitle {
-    font-size: 14px;
+    font-size: 12px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -145,9 +141,10 @@
     align-items: center;
     border-bottom: var(--firstBorder);
     color: var(--text-color-secondary);
+    background-color: var(--color-medium);
 
     & p {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: normal;
         margin: 7px 0;
     }

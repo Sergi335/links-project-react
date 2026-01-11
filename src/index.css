@@ -58,14 +58,14 @@ html.dark {
 
 
   /* --color-primary: radial-gradient(farthest-corner circle at 100% 100% in oklab, oklch(87% 0 0) 0%, oklch(100% 0.00 0) 100%); */
-  --color-primary: white;
-  --color-medium: hsl(220deg 20% 97% / 22%);
+  --color-primary: hsl(220 20% 94% / 1);
+  --color-medium: hsl(220 20% 97% / 1);
   --color-secondary: var(--color-slate-50);
   --text-color-primary: var(--color-zinc-800);
   --text-color-secondary: var(--color-zinc-500);
   /* --hover-color-primary: hsl(from var(--accentColor) h s l / 30%); */
   --text-color-inverse: var(--color-zinc-100);
-  --btn-bg-color: var(--color-slate-900);
+  --btn-bg-color: hsl(220 18% 27% / 1);
   --column-background: hsl(220deg 20% 97% / 38%);
 
   --placeholderImg: url(/img/placeholderImgLight.png);

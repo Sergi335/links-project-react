@@ -47,7 +47,7 @@ export default function VideoPlayer ({ src, width, height }) {
               src={checkUrlMatch(src)} width={width}
               height={height}>
             </iframe>
-            <button style={{ marginTop: '7px' }} className='button_small' onClick={handleHideTabs}>
+            <button style={{ marginTop: '7px', marginLeft: '16px' }} className='button_small' onClick={handleHideTabs}>
               {tabsVisible
                 ? (<MaximizeVideoIcon />)
                 : (<MinimizeVideoIcon />)

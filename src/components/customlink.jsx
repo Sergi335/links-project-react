@@ -32,6 +32,7 @@ const CustomLink = ({ data, className }) => {
   const setFaviconChangerVisiblePoints = useGlobalStore(state => state.setFaviconChangerVisiblePoints)
   const setLinkToChangeFavicon = useGlobalStore(state => state.setLinkToChangeFavicon)
 
+  // Activa y desactiva el modo selección de múltiples links
   useEffect(() => {
     if (columnSelectModeId.includes(link.categoryId)) {
       setLinkSelectMode(true) // no estamos comprobando el idpanel de los que quedan
@@ -61,7 +62,7 @@ const CustomLink = ({ data, className }) => {
     // e.preventDefault()
     e.stopPropagation()
 
-    const linkElement = e.currentTarget.parentNode.parentNode.parentNode
+    const linkElement = e.currentTarget.parentNode.parentNode
     const linkId = linkElement.id
 
     // Obtener el estado actual directamente del store

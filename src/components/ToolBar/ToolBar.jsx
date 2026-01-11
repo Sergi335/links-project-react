@@ -7,7 +7,7 @@ import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddColumnIcon, EditDeskIcon, ExpandHeightIcon, HidePanels, PinPanelIcon } from '../Icons/icons'
+import { AddColumnIcon, ExpandHeightIcon, HidePanels, PinPanelIcon, SettingsWheelIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
@@ -114,7 +114,7 @@ export default function ToolBar () {
                   <HidePanels className={styles.uiIcon} id={'hidePanels'} />
                 </button>
                 <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
-                  <EditDeskIcon className={styles.uiIcon} id={'editDesk'} />
+                  <SettingsWheelIcon className={styles.uiIcon} id={'editDesk'} />
                 </button>
                 <button className={styles.sideButtons} onClick={handleAddColumn}>
                   <AddColumnIcon className={styles.uiIcon} id={'addCol'} />
