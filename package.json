@@ -22,6 +22,8 @@
     "@fontsource-variable/noto-sans": "5.0.1",
     "@fontsource-variable/open-sans": "5.0.25",
     "@fontsource-variable/readex-pro": "5.0.8",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.1",
     "@tabler/icons-webfont": "3.20.0",
     "@tanstack/react-query": "5.61.3",
     "@yoopta/accordion": "^4.9.9",

@@ -12,6 +12,7 @@ import { ArrowDown } from './Icons/icons'
 export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
   const { desktopName, slug } = useParams()
   const [desktopColumns, setDesktopColumns] = useState([])
+  const [realColumn, setRealColumn] = useState({})
   const menuRef = useRef(null)
   const subMenuRef = useRef(null)
   const [subMenuSide, setSubMenuSide] = useState('')
@@ -34,9 +35,23 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     if (slug) {
       const subcategory = globalColumns.find(col => col.slug === slug)
       const columns = globalColumns.filter(column => column.parentId === subcategory?._id)
+      const virtualColumn = Array.from(document.getElementsByClassName('column_wrapper'))
+      const virtualColumnIds = virtualColumn.map(col => col.id)
+      if (virtualColumnIds[0].startsWith('virtual-')) {
+        const realId = virtualColumnIds[0].split('virtual-')[1]
+        setRealColumn(globalColumns.find(col => col._id === realId))
+        console.log(realColumn)
+      }
       setDesktopColumns(columns)
     } else {
       const columns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
+      const virtualColumn = Array.from(document.getElementsByClassName('column_wrapper'))
+      const virtualColumnIds = virtualColumn.map(col => col.id)
+      if (virtualColumnIds[0].startsWith('virtual-')) {
+        const realId = virtualColumnIds[0].split('virtual-')[1]
+        setRealColumn(globalColumns.find(col => col._id === realId))
+        console.log(realColumn)
+      }
       setDesktopColumns(columns)
     }
   }, [desktopName, slug, globalColumns])
@@ -45,22 +60,38 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     const linksToEdit = Array.isArray(params) ? params : [params._id]
     const firstLink = globalLinks.find(link => link._id === linksToEdit[0])
 
-    // Obtener categorías ANTES de cualquier actualización
     const targetCategoryId = event.target.id
     const sourceCategoryId = firstLink?.categoryId
 
-    const newLinkBrothers = globalLinks.filter(link => link.categoryId === targetCategoryId)
-    const oldLinkBrothers = globalLinks.filter(link =>
-      link.categoryId === sourceCategoryId && !linksToEdit.includes(link._id) // ⬅️ Excluir los que se van a mover
-    )
+    // 1. Obtener hermanos actuales de DESTINO y ORIGEN (excluyendo los que se mueven) de forma ordenada
+    const targetLinkBrothers = globalLinks
+      .filter(link => link.categoryId === targetCategoryId)
+      .toSorted((a, b) => (a.order - b.order))
 
-    let startingOrder = newLinkBrothers.length
+    const sourceLinkBrothers = globalLinks
+      .filter(link => link.categoryId === sourceCategoryId && !linksToEdit.includes(link._id))
+      .toSorted((a, b) => (a.order - b.order))
 
-    // Actualización optimista del estado
+    // 2. Actualización optimista: Re-indexar AMBAS categorías
     const updatedDesktopLinks = globalLinks.map(link => {
+      // Caso A: Es uno de los links que estamos moviendo
       if (linksToEdit.includes(link._id)) {
-        return { ...link, categoryId: targetCategoryId, order: startingOrder++ }
+        const moveIdx = linksToEdit.indexOf(link._id)
+        return { ...link, categoryId: targetCategoryId, order: targetLinkBrothers.length + moveIdx }
       }
+
+      // Caso B: Son los links que YA ESTABAN en el destino (re-indexamos para limpiar huecos)
+      if (link.categoryId === targetCategoryId) {
+        const newIdx = targetLinkBrothers.findIndex(item => item._id === link._id)
+        if (newIdx !== -1) return { ...link, order: newIdx }
+      }
+
+      // Caso C: Son los links que SE QUEDAN en el origen (re-indexamos para limpiar el hueco del movido)
+      if (link.categoryId === sourceCategoryId) {
+        const newIdx = sourceLinkBrothers.findIndex(item => item._id === link._id)
+        if (newIdx !== -1) return { ...link, order: newIdx }
+      }
+
       return link
     }).toSorted((a, b) => (a.order - b.order))
 
@@ -68,27 +99,23 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks))
 
     try {
-      // Links que se mueven
+      // 3. Preparar items para el backend con el nuevo orden limpio
       const movedItems = linksToEdit.map((linkId, index) => ({
         id: linkId,
         categoryId: targetCategoryId,
-        order: newLinkBrothers.length + index
+        order: targetLinkBrothers.length + index
       }))
 
-      // Links en la categoría destino (reordenar)
-      const destinyItems = newLinkBrothers.map((link, index) => ({
+      const destinyItems = targetLinkBrothers.map((link, index) => ({
         id: link._id,
         order: index,
-        name: link.name,
-        categoryId: link.categoryId
+        categoryId: targetCategoryId
       }))
 
-      // Links que quedan en la categoría origen (reordenar)
-      const remainingItems = oldLinkBrothers.map((link, index) => ({
+      const remainingItems = sourceLinkBrothers.map((link, index) => ({
         id: link._id,
         order: index,
-        name: link.name,
-        categoryId: link.categoryId
+        categoryId: sourceCategoryId
       }))
 
       const items = [...movedItems, ...destinyItems, ...remainingItems]
@@ -211,7 +238,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     }
     setPoints(newPoints)
   }, [params]) // se puede meter params en un useRef
-
+  // Seleccionar por clase - columnWrapper  - luego buscar el id que coincida con virtual-xxx
   return (
     <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
@@ -222,6 +249,11 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
+          {
+            realColumn._id && realColumn._id !== sourceCategoryId
+              ? <li key={realColumn._id} onClick={handleMoveClick}><span id={realColumn._id}>{realColumn.name}</span></li>
+              : null
+          }
           {
             desktopColumns.map(col => col._id === sourceCategoryId
               ? null

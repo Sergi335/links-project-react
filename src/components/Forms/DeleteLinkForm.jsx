@@ -11,7 +11,7 @@ import styles from './AddLinkForm.module.css'
 // TODO hay que navegar al siguiente link o al anterior si es el último en un contexto de singlecol.
 export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
   const navigate = useNavigate()
-  const { desktopName } = useParams()
+  const { desktopName, id } = useParams()
   const [isDeleting, setIsDeleting] = useState(false)
   const visibleClassName = deleteFormVisible ? styles.flex : styles.hidden
   const formRef = useRef()
@@ -42,9 +42,9 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
 
       const slug = globalColumns.find(column => column._id === params.categoryId)?.slug
       if (slug) {
-        if (nextLink) {
+        if (nextLink && id) {
           autoNavigationUrl = `/app/${desktopName}/${slug}/${nextLink._id}`
-        } else if (prevLink) {
+        } else if (prevLink && id) {
           autoNavigationUrl = `/app/${desktopName}/${slug}/${prevLink._id}`
         }
       }
@@ -54,9 +54,33 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
 
     // Actualización optimista del estado global
     const idsToDelete = Array.isArray(params) ? params : [params._id]
-    const newList = globalLinks.filter(link => !idsToDelete.includes(link._id))
+
+    // Identificar categorías afectadas antes de filtrar
+    const affectedCategories = [...new Set(globalLinks
+      .filter(link => idsToDelete.includes(link._id))
+      .map(link => link.categoryId)
+    )]
+
+    const remainingLinks = globalLinks.filter(link => !idsToDelete.includes(link._id))
+
+    // Re-ordenar secuencialmente los links en las categorías afectadas
+    const orderMap = {}
+    affectedCategories.forEach(catId => {
+      remainingLinks
+        .filter(l => l.categoryId === catId)
+        .sort((a, b) => a.order - b.order)
+        .forEach((l, index) => {
+          orderMap[l._id] = index
+        })
+    })
+
+    const newList = remainingLinks.map(link => ({
+      ...link,
+      order: orderMap[link._id] !== undefined ? orderMap[link._id] : link.order
+    }))
+
     setGlobalLinks(newList)
-    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.sort((a, b) => (a.order - b.order))))
+    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.order - b.order))))
 
     const body = {
       linkId: Array.isArray(params) ? params : params._id

@@ -14,9 +14,11 @@ import AppLayout from './components/Pages/AppLayout'
 import ArticleRenderer from './components/Pages/article'
 import HomePage from './components/Pages/HomePage'
 import Login from './components/Pages/LoginPage'
+import PricingPage from './components/Pages/PricingPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
+import SubscriptionSuccessPage from './components/Pages/SubscriptionSuccessPage'
 import { ProtectedRoute } from './components/Routes/ProtectedRoute'
 import { PublicOnlyRoute } from './components/Routes/PublicOnlyRoute'
 import SingleColumnPage from './components/SingleColumnPage'
@@ -53,6 +55,13 @@ function App () {
     {
       path: rootPath,
       element: <HomePage />,
+      errorElement: <InternalError />
+    },
+
+    // Página de precios (pública)
+    {
+      path: `${rootPath}pricing`,
+      element: <PricingPage />,
       errorElement: <InternalError />
     },
 
@@ -119,6 +128,20 @@ function App () {
         {
           path: `${rootPath}${basePath}/readinglist`,
           element: <ReadingList />,
+          errorElement: <InternalError />
+        }
+      ]
+    },
+
+    // Suscripción (protegida)
+    {
+      path: `${rootPath}${basePath}/subscription`,
+      element: <ProtectedRoute><AppLayout /></ProtectedRoute>,
+      errorElement: <InternalError />,
+      children: [
+        {
+          path: `${rootPath}${basePath}/subscription/success`,
+          element: <SubscriptionSuccessPage />,
           errorElement: <InternalError />
         }
       ]

@@ -846,3 +846,117 @@ tr:nth-child(odd) {
         flex-wrap: nowrap;
     }
 }
+/* ------------ SUBSCRIPTION SECTION ------------ */
+
+.subscriptionSection {
+    padding: 20px;
+    background: var(--color-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--firstBorderColor);
+    margin-bottom: 25px;
+}
+
+.subscriptionInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.planRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-color-primary);
+}
+
+.planBadge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.freeBadge {
+    background: var(--color-medium);
+    color: var(--text-color-secondary);
+}
+
+.proBadge {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+.enterpriseBadge {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: white;
+}
+
+.statusText {
+    color: var(--text-color-secondary);
+}
+
+.limitsInfo {
+    padding-top: 12px;
+    border-top: 1px solid var(--firstBorderColor);
+    font-size: 13px;
+
+    p {
+        margin: 6px 0;
+        color: var(--text-color-secondary);
+
+        strong {
+            color: var(--text-color-primary);
+        }
+    }
+}
+
+.subscriptionActions {
+    display: flex;
+    gap: 12px;
+}
+
+.upgradeBtn {
+    flex: 1;
+    padding: 12px 20px;
+    background: var(--accentColor);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        filter: brightness(1.1);
+        transform: scale(1.02);
+    }
+}
+
+.manageBtn {
+    flex: 1;
+    padding: 12px 20px;
+    background: transparent;
+    color: var(--text-color-primary);
+    border: 1px solid var(--firstBorderColor);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: var(--color-primary);
+        border-color: var(--accentColor);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}

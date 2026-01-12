@@ -14,7 +14,22 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   const columnRef = useRef(document.getElementById(params._id))
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-
+  const getAddedLinkOrder = () => {
+    if (String(params?._id).startsWith('virtual-')) {
+      const destinyId = String(params._id).split('virtual-')[1]
+      return globalLinks?.filter(link => link.categoryId === destinyId).length ?? 0
+    } else {
+      return globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
+    }
+  }
+  console.log(getAddedLinkOrder())
+  const getDestinyId = () => {
+    if (String(params?._id).startsWith('virtual-')) {
+      return String(params._id).split('virtual-')[1]
+    } else {
+      return params?._id
+    }
+  }
   async function pasteLink () {
     setLinkLoader(true) // estamos usando???
     // lee el contenido del portapapeles entonces ...
@@ -29,7 +44,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
           for (const type of clipboardItem.types) {
             console.log(type)
             if (type === 'text/plain') {
-              handlePastedTextLinks(clipboardItem, type, params, desktopName, activeLocalStorage)
+              handlePastedTextLinks(clipboardItem, type, params)
               // console.log('Texto plano')
             }
           }
@@ -37,7 +52,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
           for (const type of clipboardItem.types) {
             console.log(type)
             if (type === 'text/html') {
-              handlePastedHtmlLinks(event, clipboardItem, type, params, desktopName, activeLocalStorage)
+              handlePastedHtmlLinks(clipboardItem, type, params)
               // console.log('html text')
             }
             if (type.startsWith('image/')) {
@@ -75,15 +90,15 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   }
   async function processTextLinks (text, params) {
     // console.log(text)
-    const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
+    // const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
     const nombre = await getNameByUrl({ url: text }) // Iniciar el proceso de carga dentro de la función
 
     const body = {
-      categoryId: params._id,
+      categoryId: getDestinyId(),
       name: nombre,
       url: text,
       imgUrl: `${constants.BASE_LINK_IMG_URL(text)}`,
-      order
+      order: getAddedLinkOrder()
     }
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -104,7 +119,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   const handlePastedHtmlLinks = (clipboardItem, type, params) => {
     clipboardItem.getType(type).then(blob => {
       blob.text().then(text => {
-        if (text.indexOf('<a href') === 0) {
+        if (text.includes('<a href')) {
           // console.log('Es un enlace html')
           // console.log(text)
           // console.log(typeof (text))
@@ -116,7 +131,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
   }
   async function processHtmlLink (text, params) {
-    const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
+    // const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
     const range = document.createRange()
     range.selectNode(document.body)
     const fragment = range.createContextualFragment(text)
@@ -126,11 +141,11 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     // const escritorio = params.escritorio
 
     const body = {
-      categoryId: params._id,
+      categoryId: getDestinyId(),
       name: nombre,
       url,
       imgUrl: `${constants.BASE_LINK_IMG_URL(url)}`,
-      order
+      order: getAddedLinkOrder()
     }
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
@@ -150,11 +165,11 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   }
   async function pasteMultipleLinks (array, params) {
     const pasteLoading = toast.loading('Procesando links ...')
-    let order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 2 : 0 // que pasa si está vacia? 1 - 2 = -1 orden++ = 0
+    let order = getAddedLinkOrder() - 1
     const bodies = array.map(link => {
       order++
       return {
-        categoryId: params._id,
+        categoryId: getDestinyId(),
         url: link,
         imgUrl: `${constants.BASE_LINK_IMG_URL(link)}`,
         order

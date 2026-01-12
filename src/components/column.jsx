@@ -46,18 +46,39 @@ export default function Columna ({ data, children, childCount, context, getFirst
 
   const firstLink = getFirstColumnLink ? getFirstColumnLink(columna) : null
 
+  const getColumnId = (id) => {
+    if (String(id).startsWith('virtual-')) {
+      return String(id).split('virtual-')[1]
+    } else {
+      return id
+    }
+  }
   const handleSetSelectMode = (e) => {
     e.stopPropagation()
-    const column = document.getElementById(columna._id)
+    // column apunta a una columna virtual, ejemplo virtual-12345
+    const column = document.getElementById(e.currentTarget.id)
+    console.log(e.currentTarget.id)
+
     setSelectModeGlobal(!selectModeGlobal)
+
     const prevState = [...columnSelectModeId]
-    if (prevState.includes(e.currentTarget.id)) {
+    console.log(prevState)
+
+    // Si es virtual los links no lo detectan porque buscan el id sin el virtual
+    // Y si lo ponemos asi pierde el enlace con la col virtual, meter las dos?
+    if (prevState.includes(getColumnId(e.currentTarget.id))) {
+      // Si el estado previo incluye el id de la columna, lo quitamos
       column.classList.remove('selectMode')
-      const index = prevState.findIndex((id) => id === e.currentTarget.id)
+      const index = prevState.findIndex((id) => id === getColumnId(e.currentTarget.id))
       prevState.splice(index, 1)
+      const indexVirtual = prevState.findIndex((id) => id === e.currentTarget.id)
+      prevState.splice(index, 1)
+      prevState.splice(indexVirtual, 1)
       setColumnSelectModeId(prevState)
     } else {
+      // Si no lo incluye, lo añadimos
       column.classList.add('selectMode')
+      prevState.push(getColumnId(e.currentTarget.id))
       prevState.push(e.currentTarget.id)
       setColumnSelectModeId(prevState)
     }
@@ -198,7 +219,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
         ref={setNodeRef}
         id={columna._id}
         style={style}
-        className={localOpenColumn ? `${styles.column_wrapper} colOpen` : styles.column_wrapper}
+        className={localOpenColumn ? `${styles.column_wrapper} colOpen column_wrapper` : `${styles.column_wrapper} column_wrapper`}
         data-order={columna.order}
       >
         <div

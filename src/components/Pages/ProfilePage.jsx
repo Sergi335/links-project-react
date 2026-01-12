@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
 import { useTitle } from '../../hooks/useTitle'
 import { constants } from '../../services/constants'
-import { deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, getSignedUrl, uploadProfileImg } from '../../services/dbQueries'
+import { createPortalSession, deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, getSignedUrl, getSubscriptionStatus, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
@@ -194,6 +195,124 @@ export function UserPreferences ({ user, setUser }) {
     </>
   )
 }
+
+export function UserSubscription ({ user }) {
+  const navigate = useNavigate()
+  const rootPath = import.meta.env.VITE_ROOT_PATH
+  const basePath = import.meta.env.VITE_BASE_PATH
+  const [subscription, setSubscription] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [portalLoading, setPortalLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const response = await getSubscriptionStatus()
+        if (!response.hasError) {
+          setSubscription(response)
+        }
+      } catch (error) {
+        console.error('Error fetching subscription:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchSubscription()
+  }, [])
+
+  const handleManageSubscription = async () => {
+    setPortalLoading(true)
+    try {
+      const response = await createPortalSession({
+        returnUrl: `${window.location.origin}${rootPath}${basePath}/profile`
+      })
+      if (response.hasError) {
+        toast.error(response.message)
+        return
+      }
+      window.location.href = response.url
+    } catch (error) {
+      toast.error('Error al abrir el portal de facturación')
+    } finally {
+      setPortalLoading(false)
+    }
+  }
+
+  const handleUpgrade = () => {
+    navigate(`${rootPath}pricing`)
+  }
+
+  const getPlanBadgeClass = (plan) => {
+    switch (plan) {
+      case 'PRO': return styles.proBadge
+      case 'ENTERPRISE': return styles.enterpriseBadge
+      default: return styles.freeBadge
+    }
+  }
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'active': return 'Activa'
+      case 'canceled': return 'Cancelada'
+      case 'past_due': return 'Pago pendiente'
+      case 'trialing': return 'En prueba'
+      default: return status || 'Activa'
+    }
+  }
+
+  return (
+    <>
+      <h3>Tu Suscripción</h3>
+      <div className={styles.subscriptionSection}>
+        {isLoading
+          ? (
+          <p>Cargando...</p>
+            )
+          : (
+          <>
+            <div className={styles.subscriptionInfo}>
+              <div className={styles.planRow}>
+                <span>Plan actual:</span>
+                <span className={`${styles.planBadge} ${getPlanBadgeClass(subscription?.plan)}`}>
+                  {subscription?.plan || 'FREE'}
+                </span>
+              </div>
+              <div className={styles.planRow}>
+                <span>Estado:</span>
+                <span className={styles.statusText}>{getStatusText(subscription?.status)}</span>
+              </div>
+              {subscription?.limits && (
+                <div className={styles.limitsInfo}>
+                  <p><strong>Almacenamiento:</strong> {subscription.limits.storageMB} MB</p>
+                  <p><strong>Llamadas IA:</strong> {subscription.limits.llmCallsPerMonth === -1 ? 'Ilimitadas' : `${subscription.limits.llmCallsPerMonth}/mes`}</p>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.subscriptionActions}>
+              {subscription?.plan === 'FREE'
+                ? (
+                <button className={styles.upgradeBtn} onClick={handleUpgrade}>
+                  Mejorar plan
+                </button>
+                  )
+                : (
+                <button
+                  className={styles.manageBtn}
+                  onClick={handleManageSubscription}
+                  disabled={portalLoading}
+                >
+                  {portalLoading ? 'Abriendo...' : 'Gestionar suscripción'}
+                </button>
+                  )}
+            </div>
+          </>
+            )}
+      </div>
+    </>
+  )
+}
+
 export function UserSecurity ({ user, setUser }) {
   const [changePasswordStep, setChangePasswordStep] = useState(0) // 0: no visible, 1: current password, 2: new password
   const [backupLoading, setBackupLoading] = useState(false)
@@ -979,6 +1098,7 @@ export default function ProfilePage () {
           <UserSecurity user={user} setUser={setUser}/>
         </div>
         <div ref={prefRef} className={styles.tabcontent} id="preferences">
+          <UserSubscription user={user}/>
           <UserPreferences user={user} setUser={setUser}/>
         </div>
       </section>

@@ -18,17 +18,31 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
   useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const addedLinkOrder = globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
 
+  const getAddedLinkOrder = () => {
+    if (String(params?._id).startsWith('virtual-')) {
+      const destinyId = String(params._id).split('virtual-')[1]
+      return globalLinks?.filter(link => link.categoryId === destinyId).length ?? 0
+    } else {
+      return globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
+    }
+  }
+  const getDestinyId = () => {
+    if (String(params?._id).startsWith('virtual-')) {
+      return String(params._id).split('virtual-')[1]
+    } else {
+      return params?._id
+    }
+  }
   const handleAddLinkSubmit = async (event) => {
     event.preventDefault()
     const imgUrl = constants.BASE_LINK_IMG_URL(urlRef.current.value)
     const body = {
-      categoryId: params._id,
+      categoryId: getDestinyId(),
       name: nameRef.current.value,
       url: urlRef.current.value,
       imgUrl,
-      order: addedLinkOrder,
+      order: getAddedLinkOrder(),
       type: typeRef.current.value
     }
     const response = await addLink(body)

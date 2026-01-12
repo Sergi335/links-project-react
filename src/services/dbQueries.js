@@ -578,3 +578,49 @@ export async function deleteAllAIData (linkId) {
     return { success: false, hasError: true, message: error.message || 'Error deleting all AI data' }
   }
 }
+
+/* ------------ STRIPE / SUBSCRIPTIONS ------------------- */
+
+// PricingPage - Crear sesión de checkout
+export async function createCheckoutSession ({ priceId, successUrl, cancelUrl }) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/stripe/checkout`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ priceId, successUrl, cancelUrl })
+    })
+    return data
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    return { hasError: true, message: error.message || 'Error al crear la sesión de pago' }
+  }
+}
+
+// ProfilePage - Crear sesión del portal de cliente
+export async function createPortalSession ({ returnUrl }) {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/stripe/portal`, {
+      method: 'POST',
+      ...constants.FETCH_OPTIONS,
+      body: JSON.stringify({ returnUrl })
+    })
+    return data
+  } catch (error) {
+    console.error('Error creating portal session:', error)
+    return { hasError: true, message: error.message || 'Error al abrir el portal de facturación' }
+  }
+}
+
+// ProfilePage - Obtener estado de la suscripción
+export async function getSubscriptionStatus () {
+  try {
+    const data = await apiFetch(`${constants.BASE_API_URL}/stripe/status`, {
+      method: 'GET',
+      ...constants.FETCH_OPTIONS
+    })
+    return data
+  } catch (error) {
+    console.error('Error getting subscription status:', error)
+    return { hasError: true, message: error.message || 'Error al obtener el estado de la suscripción' }
+  }
+}
