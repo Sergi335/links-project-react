@@ -11,6 +11,7 @@ import styles from './customlink.module.css'
 
 const CustomLink = ({ data, className }) => {
   const link = data.link || data.activeLink
+  console.log(link)
   const [linkSelectMode, setLinkSelectMode] = useState(false)
   const [localFaviconVisible, setLocalFaviconVisible] = useState(false)
   const [iconUrl, setIconUrl] = useState(link.imgUrl?.startsWith('http') ? link.imgUrl : '/img/opcion1.svg')

@@ -26,6 +26,7 @@ export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
   )
 }
 export function UserPreferences ({ user, setUser }) {
+  console.log(user)
   const [visible, setVisible] = useState(false)
   const [reauthVisible, setReauthVisible] = useState(false)
   const [bookmarksLoading, setBookmarksLoading] = useState(false)

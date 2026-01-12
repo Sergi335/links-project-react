@@ -9,8 +9,8 @@
 
         & .lol_content {
             display: grid;
-            gap: 16px;
-            padding: 24px;
+            gap: 40px;
+            padding: 78px;
         }
 
         & .sp_lol_content {
