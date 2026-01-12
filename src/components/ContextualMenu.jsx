@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { constants } from '../services/constants'
 import { updateLink } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 import { useGlobalStore } from '../store/global'
@@ -26,9 +25,9 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const firstLinkId = Array.isArray(params) ? params[0] : params._id
   const firstLink = globalLinks.find(link => link._id === firstLinkId)
   const sourceCategoryId = firstLink?.categoryId
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   // const globalArticles = useGlobalStore(state => state.globalArticles)
-  const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
+  // const setGlobalArticles = useGlobalStore(state => state.setGlobalArticles)
 
   // Establish desktopColumns when desktopName or slug changes
   useEffect(() => {
@@ -186,34 +185,34 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       toast('Error al actualizar favoritos')
     }
   }
-  const handleExtractArticle = () => {
-    setVisible(false)
-    fetch(`${constants.BASE_API_URL}/links/${params._id}/extract`, {
-      method: 'POST',
-      ...constants.FETCH_OPTIONS
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then(data => {
-        // console.log('🚀 ~ handleExtractArticle ~ data:', data)
-        if (Array.isArray(data.data) && data.data.length > 0) {
-          setGlobalArticles(data.data[0].extractedArticle)
-        } else {
-          setGlobalArticles(data.data)
-        }
-      })
-      .then(() => {
-        const articleUrl = `/app/article/${params._id}`
-        navigate(articleUrl)
-      })
-      .catch(error => {
-        console.error('Error fetching article:', error)
-      })
-  }
+  // const handleExtractArticle = () => {
+  //   setVisible(false)
+  //   fetch(`${constants.BASE_API_URL}/links/${params._id}/extract`, {
+  //     method: 'POST',
+  //     ...constants.FETCH_OPTIONS
+  //   })
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok')
+  //       }
+  //       return response.json()
+  //     })
+  //     .then(data => {
+  //       // console.log('🚀 ~ handleExtractArticle ~ data:', data)
+  //       if (Array.isArray(data.data) && data.data.length > 0) {
+  //         setGlobalArticles(data.data[0].extractedArticle)
+  //       } else {
+  //         setGlobalArticles(data.data)
+  //       }
+  //     })
+  //     .then(() => {
+  //       const articleUrl = `/app/article/${params._id}`
+  //       navigate(articleUrl)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching article:', error)
+  //     })
+  // }
   useEffect(() => {
     // //console.log(window.innerHeight)
     // //console.log(document.body.scrollHeight)
@@ -238,12 +237,11 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     }
     setPoints(newPoints)
   }, [params]) // se puede meter params en un useRef
-  // Seleccionar por clase - columnWrapper  - luego buscar el id que coincida con virtual-xxx
   return (
     <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
       <p>{params.name}</p>
-      <span onClick={handleExtractArticle}>Leer Artículo</span>
+      {/* <span onClick={handleExtractArticle}>Leer Artículo</span> */}
       <span onClick={handleEditClick}>Editar</span>
       <span onClick={handleAddToFavorites}>Favoritos</span>
       <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
