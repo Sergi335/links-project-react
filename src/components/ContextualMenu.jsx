@@ -37,7 +37,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       const columns = globalColumns.filter(column => column.parentId === subcategory?._id)
       const virtualColumn = Array.from(document.getElementsByClassName('column_wrapper'))
       const virtualColumnIds = virtualColumn.map(col => col.id)
-      if (virtualColumnIds[0].startsWith('virtual-')) {
+      if (virtualColumnIds[0]?.startsWith('virtual-')) {
         const realId = virtualColumnIds[0].split('virtual-')[1]
         setRealColumn(globalColumns.find(col => col._id === realId))
         console.log(realColumn)
