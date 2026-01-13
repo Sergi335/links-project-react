@@ -287,6 +287,11 @@ header.main_header {
   visibility: hidden;
 }
 
+[id^="virtual-"] {
+  background: repeating-linear-gradient(-45deg, var(--color-primary) 0 4px, var(--color-medium) 0 7px);
+  border: 1px solid hsl(from var(--accentColor) h s l / 37%);
+}
+
 .linkCount {
   font-size: .75rem;
   font-style: italic;
