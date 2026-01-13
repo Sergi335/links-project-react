@@ -111,7 +111,7 @@
   object-fit: cover;
 }
 
-.inputButton {
+/* .inputButton {
   position: absolute;
   right: 3px;
   padding: 0 5px;
@@ -120,7 +120,7 @@
   top: 34px;
   width: 35%;
   background-color: var(--buttonColor);
-}
+} */
 
 .rowGroup {
   display: flex;
@@ -234,10 +234,7 @@
   border-radius: 5px;
   color: var(--text-color-primary);
   padding: 0 11px;
-  /* border: 1px solid var(--firstBorderColor); */
-  border: 0;
-  appearance: none;
-  font-family: monospace;
+  border: 5px solid var(--firstBorderColor);
 }
 
 /* input[type=range]:after {

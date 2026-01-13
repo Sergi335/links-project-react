@@ -37,7 +37,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   // console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
   // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
-  const themeVariants = Object.keys(constants.THEME_VARIANTS)
+  // const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
@@ -191,22 +191,22 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
   }
-  const handleChangeThemeVariant = (event) => {
-    event.target.classList.add(`${styles.optionSelected}`)
-    const style = event.target.id
-    const element = document.documentElement
-    const options = document.getElementById('themeVariant')
-    options.childNodes.forEach(option => {
-      if (option !== event.target) {
-        option.classList.remove(`${styles.optionSelected}`)
-      }
-    })
-    // element.classList.add('transparent')
-    constants.THEME_VARIANTS[style].applyStyles(element)
-    const currentStyle = event?.target.id
-    constants.THEME_VARIANTS[currentStyle].applyStyles(element)
-    window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
-  }
+  // const handleChangeThemeVariant = (event) => {
+  //   event.target.classList.add(`${styles.optionSelected}`)
+  //   const style = event.target.id
+  //   const element = document.documentElement
+  //   const options = document.getElementById('themeVariant')
+  //   options.childNodes.forEach(option => {
+  //     if (option !== event.target) {
+  //       option.classList.remove(`${styles.optionSelected}`)
+  //     }
+  //   })
+  //   // element.classList.add('transparent')
+  //   constants.THEME_VARIANTS[style].applyStyles(element)
+  //   const currentStyle = event?.target.id
+  //   constants.THEME_VARIANTS[currentStyle].applyStyles(element)
+  //   window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
+  // }
   const handleHideDesktops = async (event) => {
     const select = event.target
     const selectedOption = select.options[select.selectedIndex]
@@ -261,9 +261,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   }
   // Useeffect para aplicar las opciones marcadas en el panel de personalización
   useEffect(() => {
-    const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
-    const optionsContainer = document.getElementById('themeVariant')
-    optionsContainer.querySelector(`#${themeVariant}`).classList.add(`${styles.optionSelected}`)
+    // const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
+    // const optionsContainer = document.getElementById('themeVariant')
+    // optionsContainer.querySelector(`#${themeVariant}`).classList.add(`${styles.optionSelected}`)
 
     const accentColor = JSON.parse(window.localStorage.getItem('accentColorName')) ?? accentColors[0]
     const colorOptions = document.getElementById('accentColor')
@@ -310,10 +310,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
              <div ref={formRef} className={`${styles.customizePanel} ${visibleClassName}`}>
                 <div className={styles.wrapper}>
                   <h3>Personalizar Escritorio</h3>
-                  <form onSubmit={handleSubmit}>
                     <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                       <div className={styles.rowGroup} style={{ position: 'relative' }}>
-                          <label htmlFor="changeDesktopName" style={{ marginBottom: '6px', textAlign: 'left', width: '100%' }}>Nombre:</label>
+                        <form onSubmit={handleSubmit}>
+                          <label htmlFor="changeDesktopName"><h3 style={{ borderBottom: '0' }}>Cambiar Nombre:</h3></label>
                           <input
                             ref={inputRef}
                             type="text"
@@ -323,28 +323,11 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                             onChange={e => setDesktopNameInput(e.target.value)}
                           />
                           <button className={styles.inputButton} type='submit'>Modificar</button>
+                      </form>
                       </div>
-                      </div>
-                  </form>
-                  <h3>Añadir Nuevo Escritorio</h3>
-                    <button
-                      className={styles.collapse_btn}
-                      onClick={handleShowAddDesktop}
-                      title="Añadir escritorio"
-                    >
-                      <AddDesktopIcon className={styles.collapse_icon} />
-                    </button>
-                  <h3>Eliminar Escritorio Actual</h3>
-                    <button
-                      className={styles.collapse_btn}
-                      onClick={handleShowDeleteDesktop}
-                      title="Eliminar escritorio"
-                          >
-                      <TrashIcon className={styles.collapse_icon} />
-                    </button>
-                    <h3>Número de Columnas</h3>
                       <div className={styles.rowGroup}>
-                          <label htmlFor="" style={{ marginBottom: '6px', width: '100%' }}>Número de columnas:&nbsp;<strong>{numberOfColumns}</strong></label>
+                      <h3 style={{ borderBottom: '0' }}>Número de Columnas</h3>
+                          <label htmlFor="" style={{ marginBottom: '6px', width: '100%' }}><strong>{numberOfColumns}</strong></label>
                           <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} />
                           <datalist id="steplist">
                             <option>1</option>
@@ -354,6 +337,30 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                             <option>5</option>
                           </datalist>
                       </div>
+                      </div>
+                    <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
+                      <div className={styles.rowGroup}>
+                        <h3 style={{ margin: '0 auto' }}>Añadir Nuevo Escritorio</h3>
+                        <button
+                          className={styles.collapse_btn}
+                          onClick={handleShowAddDesktop}
+                          title="Añadir escritorio"
+                        >
+                          <AddDesktopIcon className={styles.collapse_icon} />
+                        </button>
+                      </div>
+                      <div className={styles.rowGroup}>
+                        <h3 style={{ margin: '0 auto' }}>Eliminar Escritorio Actual</h3>
+                        <button
+                          className={styles.collapse_btn}
+                          onClick={handleShowDeleteDesktop}
+                          title="Eliminar escritorio"
+                        >
+                          <TrashIcon className={styles.collapse_icon} />
+                        </button>
+                        </div>
+                    </div>
+
                       <h3>Ocultar Escritorios</h3>
                       <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                          <div className={styles.rowGroup}>
@@ -369,7 +376,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           }
                           </select>
                          </div>
-                        <div className={styles.rowGroup}>
+                        <div className={styles.rowGroup} style={{ border: '1px dashed var(--firstBorderColor)', backgroundColor: 'var(--inputBackgroundColor)' }}>
                         {
                           topLevelCategoriesStore?.map(desktop => {
                             if (desktop.hidden) {
@@ -392,14 +399,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       }
                       <div id='color' className={styles.removeBackground} onClick={handleRemoveBackgroundImage}></div>
                   </div>
-                  <h3>Estilo del tema</h3>
+                  {/* <h3>Estilo del tema</h3>
                   <div id='themeVariant' className={styles.selectThemeVariant}>
                       {
                         themeVariants && themeVariants.map(style => {
                           return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
                         })
                       }
-                  </div>
+                  </div> */}
                   {/* <h3>Estilo del Panel</h3>
                   <div id='infoColor' className={styles.selectInfoColor}>
                       {

@@ -16,12 +16,12 @@
     /* gap: 3px; */
 }
 
-[data-background='image'] .column_wrapper {
+/* [data-background='image'] .column_wrapper {
     background-color: var(--color-primary);
     padding: 16px;
     border-radius: 8px;
 
-}
+} */
 
 .opener {
     display: flex;

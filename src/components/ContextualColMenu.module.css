@@ -1,11 +1,12 @@
 .hidden {
     display: none;
 }
+
 .flex {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    background-color: var(--color-primary);
+    background-color: var(--color-medium);
     backdrop-filter: blur(20px);
     padding: 5px;
     border-radius: var(--border-radius);
@@ -15,7 +16,9 @@
     border: var(--firstBorder);
     z-index: 1;
 }
-.flex p, .flex span {
+
+.flex p,
+.flex span {
     margin: 0;
     min-width: 186px;
     text-align: left;
@@ -26,6 +29,7 @@
     align-items: center;
     justify-content: space-between;
 }
+
 /* .flex p:first-of-type {
     padding-bottom: 0;
 } */
@@ -41,9 +45,11 @@
     border-radius: 0;
     margin-bottom: 8px;
 }
+
 .rotate {
     transform: rotate(270deg);
 }
+
 .moveList {
     position: absolute;
     left: 95%;
@@ -53,7 +59,7 @@
     border-radius: 5px;
     top: 94px;
     width: max-content;
-    background-color: var(--color-primary);
+    background-color: var(--color-medium);
     backdrop-filter: blur(20px);
     box-shadow: 0px 0px 30px var(--firstShadow);
     border: var(--firstBorder);
@@ -61,21 +67,27 @@
     opacity: 0;
     transition: visibility 0.1s, opacity 0.1s linear;
 }
+
 .moveList li {
     padding: 8px 10px;
     border-radius: 5px;
 }
+
 .moveList li:hover {
-    background-color: var(--color-secondary);
+    background-color: var(--color-primary);
 }
-.flex p:not(:first-child):hover, .flex span:hover {
-    background-color: var(--color-secondary);
+
+.flex p:not(:first-child):hover,
+.flex span:hover {
+    background-color: var(--color-primary);
     cursor: pointer;
 }
+
 .flex p:nth-child(2):hover {
     background-color: transparent;
     cursor: default;
 }
+
 .moveTo:hover .moveList {
     /* display: flex; */
     visibility: visible;
