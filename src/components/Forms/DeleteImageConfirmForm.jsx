@@ -1,15 +1,17 @@
 import { useRef } from 'react'
 import { toast } from 'react-toastify'
-import useHideForms from '../../hooks/useHideForms'
 import { deleteImage } from '../../services/dbQueries'
-import styles from './AddLinkForm.module.css'
+// import styles from './AddLinkForm.module.css'
 
 export default function DeleteImageConfirmForm ({ visible, setVisible, imageKey, setImages, images, linkId }) {
-  const visibleClassName = visible ? styles.flex : styles.hidden
+  // const visibleClassName = visible ? styles.flex : styles.hidden
   const formRef = useRef()
-  useHideForms({ form: formRef.current, setFormVisible: setVisible })
+  const popoverRef = useRef(null)
+  // useHideForms({ form: formRef.current, setFormVisible: setVisible })
   const handleDeleteImage = async (event) => {
     event.preventDefault()
+    event.stopPropagation()
+    popoverRef.current?.hidePopover()
     const response = await deleteImage({ imageKey, linkId })
     if (response.message) {
       const newState = images.filter(image => image.key !== imageKey)
@@ -22,13 +24,17 @@ export default function DeleteImageConfirmForm ({ visible, setVisible, imageKey,
     }
   }
   return (
-    <form ref={formRef} onSubmit={handleDeleteImage} className={`${visibleClassName} deskForm`}>
+    // eslint-disable-next-line react/no-unknown-property
+    <div popover="" id='delete-image-form' ref={popoverRef}>
+      <form ref={formRef} onSubmit={handleDeleteImage}>
         <h2>{`Seguro que quieres borrar esta imagen?
         Esta acción no se puede deshacer`}</h2>
         <div className="button_group">
           <button id="confDeletedeskSubmit" type="submit">Si</button>
-          <button id="noDeletedeskSubmit" type="button" onClick={() => { setVisible(false) }}>No</button>
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <button id="noDeletedeskSubmit" type="button" popovertarget="delete-image-form" popovertargetaction="hide">No</button>
         </div>
-    </form>
+      </form>
+    </div>
   )
 }

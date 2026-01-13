@@ -1,13 +1,11 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import useHideForms from '../../hooks/useHideForms'
 import { createColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import styles from './AddLinkForm.module.css'
+// import styles from './AddLinkForm.module.css'
 
 export default function AddDesktopForm () {
   const navigate = useNavigate()
@@ -15,15 +13,13 @@ export default function AddDesktopForm () {
   const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
   const inputRef = useRef()
   const formRef = useRef()
-  const visibleClassName = addDeskFormVisible ? styles.flex : styles.hidden
-  useHideForms({ form: formRef.current, setFormVisible: setAddDeskFormVisible })
+  const popoverRef = useRef()
 
   const handleAddDesktopSubmit = async (event) => {
     event.preventDefault()
+    popoverRef.current?.hidePopover()
     const name = inputRef.current.value.trim()
     const order = topLevelCategoriesStore.length + 1
 
@@ -35,8 +31,6 @@ export default function AddDesktopForm () {
     }
     const { data } = response
     const [newCategory] = data
-    // console.log('🚀 ~ handleAddDesktopSubmit ~ newCategory:', newCategory)
-    setAddDeskFormVisible(false)
     toast.success('Escritorio Añadido!', { autoClose: 1500 })
     const newState = [...topLevelCategoriesStore, newCategory]
     const newGlobalState = [...globalColumns, newCategory]
@@ -45,13 +39,17 @@ export default function AddDesktopForm () {
     navigate(`/app/${data[0].slug}`)
   }
   return (
-        <form ref={formRef} className={`${visibleClassName} deskForm`} onSubmit={handleAddDesktopSubmit}>
-          <h3>Añade Escritorio</h3>
-          <input ref={inputRef} id='deskName' type='text' name='deskName' maxLength='250' required />
-          <div className="button_group">
-            <button type='submit'>Enviar</button>
-            <button type='button' onClick={() => setAddDeskFormVisible(false)}>Cancelar</button>
-          </div>
-        </form>
+        // eslint-disable-next-line react/no-unknown-property
+        <div ref={popoverRef} popover="" id='add-desktop-form'>
+          <form ref={formRef} onSubmit={handleAddDesktopSubmit}>
+            <h3>Añade Escritorio</h3>
+            <input ref={inputRef} id='deskName' type='text' name='deskName' maxLength='250' required />
+            <div className="button_group">
+              <button type='submit'>Enviar</button>
+              {/* eslint-disable-next-line react/no-unknown-property */}
+              <button type='button' popovertarget="add-desktop-form" popovertargetaction="hide">Cancelar</button>
+            </div>
+          </form>
+        </div>
   )
 }

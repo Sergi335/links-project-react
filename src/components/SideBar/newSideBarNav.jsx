@@ -73,8 +73,6 @@ const MultiLevelDragDrop = () => {
     extractExpanded(items)
     return expandedMap
   }
-  // Cuando subimos una categoría que no tiene subcategorías, de nivel 1 a 0, no encuentra columnas
-  // que mostrar y no se muestran los links
 
   // 🔧 Función para aplicar el estado expanded a un árbol
   const applyExpandedState = (items, expandedMap) => {

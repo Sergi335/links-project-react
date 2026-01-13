@@ -15,6 +15,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
   const nameRef = useRef()
   const urlRef = useRef()
   const descriptionRef = useRef()
+  const popoverRef = useRef(null)
   const { desktopName } = useParams()
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   // Link sobre el que se hace click contextual se setea en customlink, podriamos pasarselo desde el custom hook y limpiar mas el componente?
@@ -33,6 +34,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
   // Habrá que hacer un custom hook que devuelva la funcion handleEditLinkSubmit
   const handleSubmit = async (event) => {
     event.preventDefault()
+    popoverRef.current?.hidePopover()
     const { elements } = event.currentTarget
     const name = elements.namedItem('editlinkName').value
     const url = elements.namedItem('editlinkURL').value
@@ -84,21 +86,25 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
     }
   }
   return (
-      <form ref={formRef} onSubmit={handleSubmit} className={`deskForm ${visibleClassName}`}>
-        <h2>Edita Link</h2>
-        <fieldset>
-          <legend>Nombre, URL y Descripción</legend>
-          <label htmlFor="editLinkName">Nombre</label>
-          <input ref={nameRef} id="editlinkName" type="text" name="editlinkName" required defaultValue={name || ''} />
-          <label htmlFor="editLinkURL">URL</label>
-          <input ref={urlRef} id="editlinkURL" type="text" name="editlinkURL" required defaultValue={URL || ''}/>
-          <label htmlFor="editLinkDescription">Descripción</label>
-          <input ref={descriptionRef} id="editlinkDescription" type="text" name="editlinkDescription" defaultValue={description || ''}/>
-          <div className='button_group'>
-            <button id="editlinkSubmit" type="submit">Modificar</button>
-            <button type='button' onClick={() => setFormVisible(false)}>Cancelar</button>
-          </div>
-        </fieldset>
-      </form>
+      // eslint-disable-next-line react/no-unknown-property
+      <div popover="" id='edit-link-form' ref={popoverRef}>
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <h2>Edita Link</h2>
+          <fieldset>
+            <legend>Nombre, URL y Descripción</legend>
+            <label htmlFor="editLinkName">Nombre</label>
+            <input ref={nameRef} id="editlinkName" type="text" name="editlinkName" required defaultValue={name || ''} />
+            <label htmlFor="editLinkURL">URL</label>
+            <input ref={urlRef} id="editlinkURL" type="text" name="editlinkURL" required defaultValue={URL || ''}/>
+            <label htmlFor="editLinkDescription">Descripción</label>
+            <input ref={descriptionRef} id="editlinkDescription" type="text" name="editlinkDescription" defaultValue={description || ''}/>
+            <div className='button_group'>
+              <button id="editlinkSubmit" type="submit">Modificar</button>
+              {/* eslint-disable-next-line react/no-unknown-property */}
+              <button type='button' popovertarget="edit-link-form" popovertargetaction="hide">Cancelar</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
   )
 }

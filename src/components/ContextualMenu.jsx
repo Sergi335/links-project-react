@@ -46,7 +46,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       const columns = globalColumns.filter(column => column.parentId === desktop[0]?._id)
       const virtualColumn = Array.from(document.getElementsByClassName('column_wrapper'))
       const virtualColumnIds = virtualColumn.map(col => col.id)
-      if (virtualColumnIds[0].startsWith('virtual-')) {
+      if (virtualColumnIds[0]?.startsWith('virtual-')) {
         const realId = virtualColumnIds[0].split('virtual-')[1]
         setRealColumn(globalColumns.find(col => col._id === realId))
         console.log(realColumn)
@@ -138,11 +138,11 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     setVisible(false)
   }
   const handleEditClick = () => {
-    setEditFormVisible(true)
+    // setEditFormVisible(true)
     setVisible(false)
   }
   const handleDeleteClick = () => {
-    setDeleteFormVisible(true)
+    // setDeleteFormVisible(true)
     setVisible(false)
   }
   const handleMoveFormClick = () => {
@@ -242,7 +242,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       <p><strong>Opciones Enlace</strong></p>
       <p>{params.name}</p>
       {/* <span onClick={handleExtractArticle}>Leer Artículo</span> */}
-      <span onClick={handleEditClick}>Editar</span>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <button onClick={handleEditClick} popovertarget="edit-link-form" popovertargetaction="show">Editar</button>
       <span onClick={handleAddToFavorites}>Favoritos</span>
       <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
@@ -259,7 +260,8 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
           }
         </ul>
       </span>
-      <span onClick={handleDeleteClick}>Borrar</span>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <button onClick={handleDeleteClick} popovertarget="delete-link-form" popovertargetaction="show">Borrar</button>
     </div>
   )
 }

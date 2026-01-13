@@ -8,7 +8,7 @@ import ContextLinkMenu from './ContextualMenu'
 import AddDesktopForm from './Forms/AddDesktopForm'
 import AddLinkForm from './Forms/AddLinkForm'
 import DeleteColConfirmForm from './Forms/DeleteColConfirmForm'
-import DeleteConfirmForm from './Forms/DeleteConfirmForm'
+import DeleteConfirmForm from './Forms/DeleteDesktopConfirmForm'
 import DeleteLinkForm from './Forms/DeleteLinkForm'
 import EditLinkForm from './Forms/EditLinkForm'
 import MoveOtherDeskForm from './Forms/MoveOtherDeskForm'
@@ -26,8 +26,8 @@ export default function FormsContainer () {
   const activeElement = useFormsStore(state => state.activeElement)
   const deleteFormVisible = useFormsStore(state => state.deleteFormVisible)
   const setDeleteFormVisible = useFormsStore(state => state.setDeleteFormVisible)
-  const deleteColFormVisible = useFormsStore(state => state.deleteColFormVisible)
-  const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
+  // const deleteColFormVisible = useFormsStore(state => state.deleteColFormVisible)
+  // const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const moveFormVisible = useFormsStore(state => state.moveFormVisible)
   const setMoveFormVisible = useFormsStore(state => state.setMoveFormVisible)
   const addLinkFormVisible = useFormsStore(state => state.addLinkFormVisible)
@@ -37,8 +37,8 @@ export default function FormsContainer () {
   const activeColumn = useFormsStore(state => state.activeColumn)
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  // const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
+  // const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
   const selectedLinks = usePreferencesStore(state => state.selectedLinks)
   const links = selectedLinks.length > 0 ? selectedLinks : activeLink
 
@@ -97,8 +97,6 @@ export default function FormsContainer () {
             formVisible={addLinkFormVisible}
         />
          <DeleteColConfirmForm
-            visible={deleteColFormVisible}
-            setVisible={setDeleteColFormVisible}
             itemType='columna'
             params={activeColumn}
         />
@@ -106,13 +104,10 @@ export default function FormsContainer () {
             visible={addDeskFormVisible}
         />
         <DeleteConfirmForm
-            visible={deleteConfFormVisible}
-            setVisible={setDeleteConfFormVisible}
             itemType='escritorio'
         />
           {
-            linkContextMenuVisible
-              ? <ContextLinkMenu
+            <ContextLinkMenu
                   visible={linkContextMenuVisible}
                   setVisible={setContextMenuVisible}
                   points={points}
@@ -122,11 +117,10 @@ export default function FormsContainer () {
                   setDeleteFormVisible={setDeleteFormVisible}
                   setMoveFormVisible={setMoveFormVisible}
                 />
-              : null
+
           }
           {
-            columnContextMenuVisible
-              ? <ContextualColMenu
+             <ContextualColMenu
                   visible={columnContextMenuVisible}
                   points={points}
                   setPoints={setPoints}
@@ -134,7 +128,7 @@ export default function FormsContainer () {
                   desktops={topLevelCategoriesStore}
                   setAddLinkFormVisible={setAddLinkFormVisible}
                 />
-              : null
+
           }
           <Search />
         </>

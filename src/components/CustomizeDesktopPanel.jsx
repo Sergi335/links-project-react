@@ -342,6 +342,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       <div className={styles.rowGroup}>
                         <h3 style={{ margin: '0 auto' }}>Añadir Nuevo Escritorio</h3>
                         <button
+                          // eslint-disable-next-line react/no-unknown-property
+                          popovertarget='add-desktop-form'
                           className={styles.collapse_btn}
                           onClick={handleShowAddDesktop}
                           title="Añadir escritorio"
@@ -352,6 +354,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       <div className={styles.rowGroup}>
                         <h3 style={{ margin: '0 auto' }}>Eliminar Escritorio Actual</h3>
                         <button
+                          // eslint-disable-next-line react/no-unknown-property
+                          popovertarget='delete-desktop-confirm-form'
                           className={styles.collapse_btn}
                           onClick={handleShowDeleteDesktop}
                           title="Eliminar escritorio"

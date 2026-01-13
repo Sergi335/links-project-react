@@ -292,6 +292,10 @@ header.main_header {
   border: 1px solid hsl(from var(--accentColor) h s l / 37%);
 }
 
+[popover]:-internal-popover-in-top-layer::backdrop {
+  background-color: hsl(from var(--color-medium) h s l / 75%);
+}
+
 .linkCount {
   font-size: .75rem;
   font-style: italic;

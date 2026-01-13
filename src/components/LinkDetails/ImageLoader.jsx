@@ -56,10 +56,11 @@ export default function ImageLoader ({ src, alt, handleDeleteImage, imageKey }) 
             height: 'auto'
           }}
         />
-        {!loading && (
-          <span id={imageKey} onClick={handleDeleteImage}><CloseIcon/></span>
-        )}
       </a>
+        {!loading && (
+          // eslint-disable-next-line react/no-unknown-property
+          <button id={imageKey} onClick={handleDeleteImage} popovertarget="delete-image-form" popovertargetaction="show"><CloseIcon/></button>
+        )}
     </div>
   )
 }

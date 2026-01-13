@@ -2,21 +2,19 @@ import { useRef, useState } from 'react'
 // import { useLinksStore } from '../../store/links'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import useHideForms from '../../hooks/useHideForms'
 import { deleteLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-import styles from './AddLinkForm.module.css'
+// import styles from './AddLinkForm.module.css'
 // TODO hay que navegar al siguiente link o al anterior si es el último en un contexto de singlecol.
 export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
   const navigate = useNavigate()
   const { desktopName, id } = useParams()
   const [isDeleting, setIsDeleting] = useState(false)
-  const visibleClassName = deleteFormVisible ? styles.flex : styles.hidden
   const formRef = useRef()
+  const popoverRef = useRef(null)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
-  useHideForms({ form: formRef.current, setFormVisible: setDeleteFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
@@ -27,6 +25,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
     event.preventDefault()
     if (isDeleting) return
     setIsDeleting(true)
+    popoverRef.current?.hidePopover()
 
     let autoNavigationUrl = null
 
@@ -101,12 +100,16 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
     }
   }
   return (
-      <form ref={formRef} onSubmit={handleClick} className={`deskForm ${visibleClassName}`}>
-        <h2>Seguro que quieres borrar <small>{params?.name}</small>?</h2>
-        <div className="button_group">
-          <button type='submit'>Si</button>
-          <button type='button' onClick={() => setDeleteFormVisible(false)}>No</button>
-        </div>
-      </form>
+      // eslint-disable-next-line react/no-unknown-property
+      <div popover="" id='delete-link-form' ref={popoverRef}>
+        <form ref={formRef} onSubmit={handleClick}>
+          <h2>Seguro que quieres borrar <small>{params?.name}</small>?</h2>
+          <div className="button_group">
+            <button type='submit'>Si</button>
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <button type='button' popovertarget="delete-link-form" popovertargetaction="hide">No</button>
+          </div>
+        </form>
+      </div>
   )
 }

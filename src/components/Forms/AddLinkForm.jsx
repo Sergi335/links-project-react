@@ -1,21 +1,21 @@
 import { useRef } from 'react'
 import { toast } from 'react-toastify'
-import useHideForms from '../../hooks/useHideForms'
 import { constants } from '../../services/constants'
 import { addLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
-import { usePreferencesStore } from '../../store/preferences'
-import styles from './AddLinkForm.module.css'
+// import { usePreferencesStore } from '../../store/preferences'
+// import styles from './AddLinkForm.module.css'
 
 export default function AddLinkForm ({ setFormVisible, params, desktopName, formVisible }) {
-  const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
-  const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
+  // const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
+  // const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const formRef = useRef()
   const nameRef = useRef()
   const urlRef = useRef()
   const typeRef = useRef()
-  useHideForms({ form: formRef.current, setFormVisible })
+  const popoverRef = useRef(null)
+  // useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
 
@@ -36,6 +36,7 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
   }
   const handleAddLinkSubmit = async (event) => {
     event.preventDefault()
+    popoverRef.current?.hidePopover()
     const imgUrl = constants.BASE_LINK_IMG_URL(urlRef.current.value)
     const body = {
       categoryId: getDestinyId(),
@@ -55,26 +56,30 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
     const newList = [...globalLinks, data]
     setFormVisible(false)
     setGlobalLinks(newList)
-    activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
+    // activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   return (
-      <form ref={formRef} className={`deskForm ${visibleClassName}`} onSubmit={handleAddLinkSubmit}>
-        <h2>Añade Link</h2>
-        <label htmlFor="linkName">Nombre</label>
-        <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required/>
-        <label htmlFor="linkURL">URL</label>
-        <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000"/>
-        <label htmlFor="linkType">Tipo</label>
-        <select ref={typeRef} id="linkType" name="linkType" defaultValue="general">
-          <option value="general">General</option>
-          <option value="video">Vídeo</option>
-          <option value="note">Nota</option>
-          <option value="article">Artículo</option>
-        </select>
-        <div className="button_group">
-          <button type="submit">Enviar</button>
-          <button type="button" onClick={() => setFormVisible(false)}>Cancelar</button>
-        </div>
-      </form>
+      // eslint-disable-next-line react/no-unknown-property
+      <div popover="" id="add-link-form" ref={popoverRef}>
+        <form ref={formRef} onSubmit={handleAddLinkSubmit}>
+          <h2>Añade Link</h2>
+          <label htmlFor="linkName">Nombre</label>
+          <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required/>
+          <label htmlFor="linkURL">URL</label>
+          <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000"/>
+          <label htmlFor="linkType">Tipo</label>
+          <select ref={typeRef} id="linkType" name="linkType" defaultValue="general">
+            <option value="general">General</option>
+            <option value="video">Vídeo</option>
+            <option value="note">Nota</option>
+            <option value="article">Artículo</option>
+          </select>
+          <div className="button_group">
+            <button type="submit">Enviar</button>
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <button type="button" popovertarget="add-link-form" popovertargetaction="hide">Cancelar</button>
+          </div>
+        </form>
+      </div>
   )
 }

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { usePasteLink } from '../hooks/usePasteLink'
 import { updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
-import { useFormsStore } from '../store/forms'
+// import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import styles from './ContextualColMenu.module.css'
@@ -17,7 +17,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   // const globalLinks = useGlobalStore(state => state.globalLinks)
   // const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
-  const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
+  // const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const { pasteLink } = usePasteLink({ params, desktopName, activeLocalStorage })
   const menuRef = useRef(null)
   const subMenuRef = useRef(null)
@@ -92,7 +92,8 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
           } style={{ left: points.x, top: points.y }}>
             <p><strong>Opciones Columna</strong></p>
             <p>{params.name}</p>
-            <span onClick={() => setAddLinkFormVisible(true)}>Nuevo</span>
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <button popovertarget='add-link-form' popovertargetaction='show'>Nuevo</button>
             <span onClick={() => { pasteLink() }}>Pegar</span>
             {/* <span>Renombrar</span> */}
             <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
@@ -106,7 +107,8 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
                 }
               </ul>
             </span>
-            <span onClick={() => setDeleteColFormVisible(true)}>Borrar</span>
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <button popovertarget='delete-col-confirm-form' popovertargetaction='show'>Borrar</button>
         </div>
   )
 }
