@@ -7,7 +7,7 @@ import { useGlobalStore } from '../../store/global'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
 // import styles from './AddLinkForm.module.css'
 
-export default function DeleteConfirmForm ({ itemType = 'escritorio' }) {
+export default function DeleteDesktopConfirmForm () {
   // const visibleClassName = visible ? styles.flex : styles.hidden
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
@@ -48,8 +48,8 @@ export default function DeleteConfirmForm ({ itemType = 'escritorio' }) {
   return (
         // eslint-disable-next-line react/no-unknown-property
         <div popover="" id='delete-desktop-confirm-form' ref={popoverRef}>
-          <form ref={formRef} onSubmit={handleDeleteDesktop}>
-            <h2>{`Seguro que quieres borrar este ${itemType}`}</h2>
+          <form ref={formRef} onSubmit={handleDeleteDesktop} className='deskForm'>
+            <h2>{'Seguro que quieres borrar este escritorio?'}</h2>
             <div className="button_group">
               <button id="confDeletedeskSubmit" type="submit">Si</button>
               {/* eslint-disable-next-line react/no-unknown-property */}

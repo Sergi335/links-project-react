@@ -296,6 +296,10 @@ header.main_header {
   background-color: hsl(from var(--color-medium) h s l / 75%);
 }
 
+[popover] {
+  border: 0;
+}
+
 .linkCount {
   font-size: .75rem;
   font-style: italic;
@@ -319,7 +323,7 @@ input[type='password'],
 input[type='email'] {
   padding-left: 11px;
   background-color: var(--inputBackgroundColor);
-  border-radius: var(--button-radius);
+  /* border-radius: var(--button-radius); */
   border: 0;
   color: var(--text-color-primary);
   outline: none;
@@ -330,7 +334,7 @@ input[type='email'] {
 
 input[type='text']::placeholder,
 input[type='password']::placeholder {
-  color: var(--text-color-primary);
+  color: var(--text-color-secondary);
   font-family: inherit;
   font-weight: 500;
   font-style: italic;
@@ -504,26 +508,21 @@ button:active,
 }
 
 .deskForm {
-  min-width: 525px;
+  width: 550px;
   height: auto;
-  top: 15%;
-  background: var(--color-primary);
+  background: var(--color-medium);
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, 0);
   border: var(--firstBorder);
-  z-index: 7;
-  padding: 25px 50px;
+  padding: 35px 100px;
   border-radius: var(--border-radius);
-  gap: 15px;
+  /* gap: 15px; */
   box-shadow: 0px 0px 35px var(--firstShadow);
-  backdrop-filter: blur(20px);
+  display: flex;
 
   & input {
-    width: 80%;
+    width: 100%;
     margin-bottom: 15px;
   }
 
@@ -531,11 +530,20 @@ button:active,
     padding: 0 16px;
     margin-bottom: 15px;
     font-size: .84rem;
+    text-align: center;
   }
 
   & h2 {
     font-size: 1.2rem;
-    margin-bottom: 0;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  & h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    text-align: center;
+    text-wrap: balance;
   }
 
   & fieldset {
@@ -551,9 +559,16 @@ button:active,
     border-top: 1px solid var(--firstBorderColor);
   }
 
+  & select {
+    width: 100%;
+    margin-bottom: 15px;
+    height: 36px;
+    background-color: var(--inputBackgroundColor);
+  }
+
   & label {
     display: flex;
-    width: 80%;
+    width: 99%;
     font-size: .84rem;
     font-weight: 600;
   }
@@ -563,7 +578,12 @@ button:active,
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin: 15px;
+    margin: 15px 0;
+    width: -webkit-fill-available;
+
+    & button {
+      width: 100%;
+    }
   }
 }
 

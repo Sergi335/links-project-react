@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import useHideForms from '../../hooks/useHideForms'
 import { updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-import styles from './AddLinkForm.module.css'
+// import styles from './AddLinkForm.module.css'
 
-export default function EditLinkForm ({ formVisible, setFormVisible }) {
-  const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
+export default function EditLinkForm () {
   const formRef = useRef()
   const nameRef = useRef()
   const urlRef = useRef()
@@ -20,10 +18,9 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   // Link sobre el que se hace click contextual se setea en customlink, podriamos pasarselo desde el custom hook y limpiar mas el componente?
   const activeLink = useFormsStore(state => state.activeLink)
-  const name = useMemo(() => activeLink?.name, [activeLink, visibleClassName])
-  const url = useMemo(() => activeLink?.url, [activeLink, visibleClassName])
-  const description = useMemo(() => activeLink?.description, [activeLink, visibleClassName])
-  useHideForms({ form: formRef.current, setFormVisible })
+  const name = useMemo(() => activeLink?.name, [activeLink])
+  const url = useMemo(() => activeLink?.url, [activeLink])
+  const description = useMemo(() => activeLink?.description, [activeLink])
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   useEffect(() => {
@@ -52,8 +49,6 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
       setGlobalLinks(optimisticState)
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(optimisticState.toSorted((a, b) => (a.orden - b.orden))))
     }
-
-    setFormVisible(false)
 
     try {
       const response = await updateLink({ items: [{ id, name, url, description }] })
@@ -88,7 +83,7 @@ export default function EditLinkForm ({ formVisible, setFormVisible }) {
   return (
       // eslint-disable-next-line react/no-unknown-property
       <div popover="" id='edit-link-form' ref={popoverRef}>
-        <form ref={formRef} onSubmit={handleSubmit}>
+        <form ref={formRef} onSubmit={handleSubmit} className='deskForm'>
           <h2>Edita Link</h2>
           <fieldset>
             <legend>Nombre, URL y Descripción</legend>

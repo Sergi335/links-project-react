@@ -8,7 +8,7 @@ import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 // import styles from './AddLinkForm.module.css'
 // TODO hay que navegar al siguiente link o al anterior si es el último en un contexto de singlecol.
-export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisible, params }) {
+export default function DeleteLinkForm ({ params }) {
   const navigate = useNavigate()
   const { desktopName, id } = useParams()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -48,9 +48,6 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
         }
       }
     }
-
-    setDeleteFormVisible(false)
-
     // Actualización optimista del estado global
     const idsToDelete = Array.isArray(params) ? params : [params._id]
 
@@ -102,7 +99,7 @@ export default function DeleteLinkForm ({ deleteFormVisible, setDeleteFormVisibl
   return (
       // eslint-disable-next-line react/no-unknown-property
       <div popover="" id='delete-link-form' ref={popoverRef}>
-        <form ref={formRef} onSubmit={handleClick}>
+        <form ref={formRef} onSubmit={handleClick} className='deskForm'>
           <h2>Seguro que quieres borrar <small>{params?.name}</small>?</h2>
           <div className="button_group">
             <button type='submit'>Si</button>

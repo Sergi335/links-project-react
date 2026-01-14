@@ -26,7 +26,7 @@ export default function DeleteImageConfirmForm ({ visible, setVisible, imageKey,
   return (
     // eslint-disable-next-line react/no-unknown-property
     <div popover="" id='delete-image-form' ref={popoverRef}>
-      <form ref={formRef} onSubmit={handleDeleteImage}>
+      <form ref={formRef} onSubmit={handleDeleteImage} className='deskForm'>
         <h2>{`Seguro que quieres borrar esta imagen?
         Esta acción no se puede deshacer`}</h2>
         <div className="button_group">

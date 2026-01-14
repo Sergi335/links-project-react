@@ -7,7 +7,7 @@ import { useGlobalStore } from '../../store/global'
 // import { usePreferencesStore } from '../../store/preferences'
 // import styles from './AddLinkForm.module.css'
 
-export default function AddLinkForm ({ setFormVisible, params, desktopName, formVisible }) {
+export default function AddLinkForm ({ params }) {
   // const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
   // const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const formRef = useRef()
@@ -54,19 +54,18 @@ export default function AddLinkForm ({ setFormVisible, params, desktopName, form
     }
     const { data } = response
     const newList = [...globalLinks, data]
-    setFormVisible(false)
     setGlobalLinks(newList)
     // activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   return (
       // eslint-disable-next-line react/no-unknown-property
       <div popover="" id="add-link-form" ref={popoverRef}>
-        <form ref={formRef} onSubmit={handleAddLinkSubmit}>
+        <form ref={formRef} onSubmit={handleAddLinkSubmit} className='deskForm'>
           <h2>Añade Link</h2>
           <label htmlFor="linkName">Nombre</label>
-          <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required/>
+          <input ref={nameRef} id="linkName" type="text" name="linkName" maxLength="250" required placeholder='ej. Google'/>
           <label htmlFor="linkURL">URL</label>
-          <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000"/>
+          <input ref={urlRef} id="linkURL" type="text" name="linkURL" maxLength="2000" required placeholder='ej. https://www.google.com'/>
           <label htmlFor="linkType">Tipo</label>
           <select ref={typeRef} id="linkType" name="linkType" defaultValue="general">
             <option value="general">General</option>

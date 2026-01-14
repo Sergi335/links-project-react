@@ -18,7 +18,8 @@
 }
 
 .flex p,
-.flex span {
+.flex span,
+.flex button {
     margin: 0;
     min-width: 186px;
     text-align: left;
@@ -28,6 +29,10 @@
     gap: 13px;
     align-items: center;
     justify-content: space-between;
+    font-size: 14px;
+    background-color: transparent;
+    color: var(--text-color-primary);
+    line-height: 21px;
 }
 
 /* .flex p:first-of-type {
@@ -87,7 +92,8 @@
     background-color: var(--color-primary);
 }
 
-.flex span:hover {
+.flex span:hover,
+.flex button:hover {
     background-color: var(--color-primary);
     cursor: pointer;
 }

@@ -8,7 +8,7 @@ import { usePreferencesStore } from '../store/preferences'
 import styles from './ContextualMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
-export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setDeleteFormVisible, setEditFormVisible, setMoveFormVisible }) {
+export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setMoveFormVisible }) {
   const { desktopName, slug } = useParams()
   const [desktopColumns, setDesktopColumns] = useState([])
   const [realColumn, setRealColumn] = useState({})
@@ -22,7 +22,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const desktop = globalColumns.filter(column => column.slug === desktopName)
-  const firstLinkId = Array.isArray(params) ? params[0] : params._id
+  const firstLinkId = Array.isArray(params) ? params[0] : params?._id
   const firstLink = globalLinks.find(link => link._id === firstLinkId)
   const sourceCategoryId = firstLink?.categoryId
   // const navigate = useNavigate()
@@ -56,7 +56,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   }, [desktopName, slug, globalColumns])
   const handleMoveClick = async (event) => {
     const previousLinks = [...globalLinks]
-    const linksToEdit = Array.isArray(params) ? params : [params._id]
+    const linksToEdit = Array.isArray(params) ? params : [params?._id]
     const firstLink = globalLinks.find(link => link._id === linksToEdit[0])
 
     const targetCategoryId = event.target.id
@@ -152,13 +152,13 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   const handleAddToFavorites = async () => {
     // console.log(params)
     setVisible(false)
-    const booked = params.bookmark === true
+    const booked = params?.bookmark === true
     // console.log(!booked)
 
     // Actualizaciones optimistas - actualizar estado inmediatamente
     const previousLinks = [...globalLinks]
     const updatedDesktopLinks = globalLinks.map(link => {
-      if (link._id === params._id) {
+      if (link._id === params?._id) {
       // Modifica la propiedad del elemento encontrado
         return { ...link, bookmark: !booked }
       }
@@ -169,7 +169,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(updatedDesktopLinks.toSorted((a, b) => (a.orden - b.orden))))
 
     try {
-      const response = await updateLink({ items: [{ id: params._id, bookmark: !booked }] })
+      const response = await updateLink({ items: [{ id: params?._id, bookmark: !booked }] })
 
       const { hasError, message } = handleResponseErrors(response)
       if (hasError) {
@@ -240,7 +240,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   return (
     <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
       <p><strong>Opciones Enlace</strong></p>
-      <p>{params.name}</p>
+      <p>{params?.name}</p>
       {/* <span onClick={handleExtractArticle}>Leer Artículo</span> */}
       {/* eslint-disable-next-line react/no-unknown-property */}
       <button onClick={handleEditClick} popovertarget="edit-link-form" popovertargetaction="show">Editar</button>

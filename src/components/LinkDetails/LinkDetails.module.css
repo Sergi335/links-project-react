@@ -238,10 +238,10 @@
   object-fit: contain;
 }
 
-.imageGallery img+span {
+.imageGallery button {
   position: absolute;
   left: 5px;
-  background-color: var(--mainColor);
+  background-color: var(--color-primary);
   color: var(--text-color-primary);
   border-radius: 2px;
   display: none;
@@ -252,16 +252,16 @@
   align-items: center;
 }
 
-.imageGallery img+span:hover {
+.imageGallery>div:hover button {
   display: inline-flex;
   background-color: var(--buttonHoverColor);
 }
 
-.imageGallery img:hover+span {
+.imageGallery img:hover button {
   display: inline-flex;
 }
 
-.imageGallery img+span svg {
+.imageGallery button svg {
   width: 14px;
 }
 

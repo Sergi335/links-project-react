@@ -11,7 +11,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   const setColumnLoaderTarget = useLinksStore(state => state.setColumnLoaderTarget)
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
   const setNumberOfPastedLinks = useLinksStore(state => state.setNumberOfPastedLinks)
-  const columnRef = useRef(document.getElementById(params._id))
+  const columnRef = useRef(document.getElementById(params?._id))
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const getAddedLinkOrder = () => {
@@ -95,7 +95,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
 
     const body = {
       categoryId: getDestinyId(),
-      name: nombre,
+      name: nombre ?? '',
       url: text,
       imgUrl: `${constants.BASE_LINK_IMG_URL(text)}`,
       order: getAddedLinkOrder()
@@ -205,18 +205,21 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     // activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   async function getNameByUrl ({ url }) {
-    // console.log(url)
-    const res = await fetch(`${constants.BASE_API_URL}/links/getname?url=${url}`, {
-      method: 'GET',
-      ...constants.FETCH_OPTIONS
-    })
-    if (!res.ok) {
-      return { status: res.status, statusText: res.statusText }
+    try {
+      const res = await fetch(`${constants.BASE_API_URL}/links/getname?url=${url}`, {
+        method: 'GET',
+        ...constants.FETCH_OPTIONS
+      })
+      if (!res.ok) {
+        return null
+      }
+      const response = await res.json()
+      const { data } = response
+      return data
+    } catch (error) {
+      console.error('Error getting name by URL:', error)
+      return null
     }
-    const response = await res.json()
-    const { data } = response
-    // console.log(title)
-    return data
   }
   return { pasteLink }
 }

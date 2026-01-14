@@ -5,7 +5,7 @@ import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 // import styles from './AddLinkForm.module.css'
 
-export default function DeleteColConfirmForm ({ itemType = 'columna', params }) {
+export default function DeleteColConfirmForm ({ params }) {
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const formRef = useRef()
@@ -27,8 +27,8 @@ export default function DeleteColConfirmForm ({ itemType = 'columna', params }) 
   return (
         // eslint-disable-next-line react/no-unknown-property
         <div popover="" id='delete-col-confirm-form' ref={popoverRef}>
-          <form ref={formRef} onSubmit={handleDeleteCol}>
-            <h2>{`Seguro que quieres borrar este ${itemType}`}</h2>
+          <form ref={formRef} onSubmit={handleDeleteCol} className='deskForm'>
+            <h2>{'Seguro que quieres borrar esta columna?'}</h2>
             <div className="button_group">
               <button id="confDeletedeskSubmit" type="submit">Si</button>
               {/* eslint-disable-next-line react/no-unknown-property */}

@@ -41,9 +41,16 @@ export default function AddDesktopForm () {
   return (
         // eslint-disable-next-line react/no-unknown-property
         <div ref={popoverRef} popover="" id='add-desktop-form'>
-          <form ref={formRef} onSubmit={handleAddDesktopSubmit}>
+          <form ref={formRef} onSubmit={handleAddDesktopSubmit} className='deskForm'>
             <h3>Añade Escritorio</h3>
-            <input ref={inputRef} id='deskName' type='text' name='deskName' maxLength='250' required />
+            <input
+              ref={inputRef}
+              id='deskName'
+              type='text'
+              name='deskName'
+              maxLength='250'
+              placeholder='Introduce un nombre ...'
+            required />
             <div className="button_group">
               <button type='submit'>Enviar</button>
               {/* eslint-disable-next-line react/no-unknown-property */}

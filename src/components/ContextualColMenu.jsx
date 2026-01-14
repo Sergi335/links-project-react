@@ -10,7 +10,7 @@ import { usePreferencesStore } from '../store/preferences'
 import styles from './ContextualColMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
-export default function ContextualColMenu ({ visible, points, setPoints, params, desktops, setAddLinkFormVisible }) {
+export default function ContextualColMenu ({ visible, points, setPoints, params, desktops }) {
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -91,7 +91,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
             visible ? styles.flex : styles.hidden
           } style={{ left: points.x, top: points.y }}>
             <p><strong>Opciones Columna</strong></p>
-            <p>{params.name}</p>
+            <p>{params?.name}</p>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <button popovertarget='add-link-form' popovertargetaction='show'>Nuevo</button>
             <span onClick={() => { pasteLink() }}>Pegar</span>
