@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import { deleteColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
-// import styles from './AddLinkForm.module.css'
 
 export default function DeleteColConfirmForm ({ params }) {
   const globalColumns = useGlobalStore(state => state.globalColumns)

@@ -1,13 +1,10 @@
 import { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { deleteImage } from '../../services/dbQueries'
-// import styles from './AddLinkForm.module.css'
 
 export default function DeleteImageConfirmForm ({ visible, setVisible, imageKey, setImages, images, linkId }) {
-  // const visibleClassName = visible ? styles.flex : styles.hidden
   const formRef = useRef()
   const popoverRef = useRef(null)
-  // useHideForms({ form: formRef.current, setFormVisible: setVisible })
   const handleDeleteImage = async (event) => {
     event.preventDefault()
     event.stopPropagation()

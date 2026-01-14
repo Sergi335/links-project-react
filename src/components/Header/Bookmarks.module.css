@@ -3,12 +3,10 @@
     gap: 12px;
     align-items: center;
     order: 2;
-    /* flex: 1; */
     padding: 10px;
     justify-content: space-evenly;
     overflow-x: auto;
     padding-inline: 24px;
-    /* transition: all 0.8s ease-in-out !important; */
 
     & img {
         max-width: var(--bookmarks_image_width);

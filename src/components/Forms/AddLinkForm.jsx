@@ -4,18 +4,13 @@ import { constants } from '../../services/constants'
 import { addLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
-// import { usePreferencesStore } from '../../store/preferences'
-// import styles from './AddLinkForm.module.css'
 
 export default function AddLinkForm ({ params }) {
-  // const visibleClassName = formVisible ? `${styles.flex}` : `${styles.hidden}`
-  // const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
   const formRef = useRef()
   const nameRef = useRef()
   const urlRef = useRef()
   const typeRef = useRef()
   const popoverRef = useRef(null)
-  // useHideForms({ form: formRef.current, setFormVisible })
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
 
@@ -55,7 +50,6 @@ export default function AddLinkForm ({ params }) {
     const { data } = response
     const newList = [...globalLinks, data]
     setGlobalLinks(newList)
-    // activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   return (
       // eslint-disable-next-line react/no-unknown-property

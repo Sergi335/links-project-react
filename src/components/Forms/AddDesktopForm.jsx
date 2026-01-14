@@ -5,7 +5,6 @@ import { createColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-// import styles from './AddLinkForm.module.css'
 
 export default function AddDesktopForm () {
   const navigate = useNavigate()

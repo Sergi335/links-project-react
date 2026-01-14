@@ -1,7 +1,7 @@
 // import { PasteImageIcon } from '../Icons/icons'
-import VideoPlayer from '../VideoPlayer'
 import styles from './LinkDetails.module.css'
 import LinkDetailsForm from './LinkDetailsForm'
+import VideoPlayer from './VideoPlayer'
 // import LinkDetailsGallery from './LinkDetailsGallery'
 
 import LinkDetailsHeader from './LinkDetailsHeader'

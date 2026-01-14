@@ -86,11 +86,11 @@ const CategoryItem = memo(function CategoryItem ({ category, allCategories, onSe
   return (
     <li
       onClick={hasChildren ? handleToggleAccordion : handleClickLeaf}
-      className={hasChildren ? styles.accordion : ''}
+      className={`${styles.accordion} ${isTopLevel && !hasChildren ? styles.topLevelEmpty : ''}`.trim()}
       id={category._id}
       data-db={category.escritorio}
     >
-      {hasChildren && <FolderIcon className='uiIcon' />}
+      <FolderIcon className='uiIcon' />
       <span
         className={`${styles.categoryName} ${isSelectable ? 'destination' : ''}`.trim()}
         onClick={isSelectable ? handleSelect : undefined}

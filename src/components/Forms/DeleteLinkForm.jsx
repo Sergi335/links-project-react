@@ -1,12 +1,10 @@
 import { useRef, useState } from 'react'
-// import { useLinksStore } from '../../store/links'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { deleteLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
-// import styles from './AddLinkForm.module.css'
 // TODO hay que navegar al siguiente link o al anterior si es el último en un contexto de singlecol.
 export default function DeleteLinkForm ({ params }) {
   const navigate = useNavigate()
@@ -19,7 +17,6 @@ export default function DeleteLinkForm ({ params }) {
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
 
-  // //console.log(params)
   // Habrá que hacer un custom hook que devuelva la funcion handleDeleteLinkSubmit
   const handleClick = async (event) => {
     event.preventDefault()

@@ -6,7 +6,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useSessionStore } from '../src/store/session'
-import LinkDetailsPage from './components/LinkDetails/LinkDetailsPage'
 import ListOfLinks from './components/ListOfLinks'
 import NotFound from './components/Pages/404'
 import InternalError from './components/Pages/500'
@@ -18,10 +17,10 @@ import PricingPage from './components/Pages/PricingPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
+import SingleColumnPage from './components/Pages/SingleColumnPage'
 import SubscriptionSuccessPage from './components/Pages/SubscriptionSuccessPage'
 import { ProtectedRoute } from './components/Routes/ProtectedRoute'
 import { PublicOnlyRoute } from './components/Routes/PublicOnlyRoute'
-import SingleColumnPage from './components/SingleColumnPage'
 import { constants } from './services/constants'
 import { keepServerAwake } from './services/functions'
 import { useGlobalStore } from './store/global'
@@ -84,11 +83,6 @@ function App () {
         {
           path: `${rootPath}${basePath}/:desktopName/:slug/:id`,
           element: <SingleColumnPage />,
-          errorElement: <InternalError />
-        },
-        {
-          path: `${rootPath}${basePath}/:desktopName/link/:id`,
-          element: <LinkDetailsPage />,
           errorElement: <InternalError />
         },
         // 🔧 Corregir rutas de columna

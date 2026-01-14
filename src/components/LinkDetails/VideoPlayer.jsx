@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { checkUrlMatch } from '../services/functions'
-import { useGlobalStore } from '../store/global'
-import MaximizeVideoIcon from './Icons/maximizevideoicon'
-import MinimizeVideoIcon from './Icons/minimizevideoicon'
+import { checkUrlMatch } from '../../services/functions'
+import { useGlobalStore } from '../../store/global'
+import MaximizeVideoIcon from '../Icons/maximizevideoicon'
+import MinimizeVideoIcon from '../Icons/minimizevideoicon'
 import styles from './VideoPlayer.module.css'
 
 export default function VideoPlayer ({ src, width, height }) {

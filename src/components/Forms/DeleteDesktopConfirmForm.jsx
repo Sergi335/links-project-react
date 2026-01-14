@@ -5,10 +5,8 @@ import { deleteColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
 import { useGlobalStore } from '../../store/global'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-// import styles from './AddLinkForm.module.css'
 
 export default function DeleteDesktopConfirmForm () {
-  // const visibleClassName = visible ? styles.flex : styles.hidden
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const setTopLevelCategoriesStore = useTopLevelCategoriesStore(state => state.setTopLevelCategoriesStore)
   const globalColumns = useGlobalStore(state => state.globalColumns)

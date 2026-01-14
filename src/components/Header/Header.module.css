@@ -124,10 +124,6 @@
             border-radius: 6px;
             transition: background-color .2s;
 
-            &:hover {
-                background-color: var(--hover-color-primary);
-            }
-
             & p {
                 display: flex;
                 align-items: center;
@@ -252,16 +248,8 @@
 }
 
 .divider_right {
-    /* border-right: 1px solid var(--firstBorderColor); */
     padding-right: var(--gap);
-    /* margin-right: var(--gap); */
 }
-
-/* .divider_left {
-    border-left: 1px solid var(--firstBorderColor);
-    padding-left: var(--gap);
-    margin-left: var(--gap);
-} */
 
 .flex_center {
     display: flex;
