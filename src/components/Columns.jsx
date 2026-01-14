@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
@@ -33,8 +33,21 @@ export default function Columns ({
   const { desktopName } = useParams()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
-  const [columnsId, setColumnsId] = useState([])
-  const [filteredColumns, setFilteredColumns] = useState([])
+
+  // Calcular columnsId síncronamente para evitar render intermedio
+  const columnsId = useMemo(() => {
+    return desktopColumns
+      ?.filter(col => !col?.isVirtual)
+      ?.map(col => col?._id) || []
+  }, [desktopColumns])
+
+  // Calcular filteredColumns síncronamente para evitar flash del mensaje vacío
+  const filteredColumns = useMemo(() => {
+    if (!desktopColumns) return []
+    return context === 'single'
+      ? desktopColumns.filter(columna => columna?.slug === slug)
+      : desktopColumns
+  }, [desktopColumns, context, slug])
 
   // Get the appropriate drag items hook based on context
   // Usar parentCategoryId si está disponible (viene de ListOfLinks con el ID correcto)
@@ -52,19 +65,6 @@ export default function Columns ({
       }
     })
   )
-
-  useEffect(() => {
-    // Get column IDs for DND - excluir columnas virtuales
-    const columnsId = desktopColumns
-      ?.filter(col => !col?.isVirtual)
-      ?.map((col) => col?._id)
-    setColumnsId(columnsId)
-    // Filter columns based on context
-    const choosenColumns = context === 'single'
-      ? desktopColumns?.filter(columna => columna?.slug === slug)
-      : desktopColumns
-    setFilteredColumns(choosenColumns)
-  }, [desktopColumns, context, slug])
 
   // Choose the appropriate column component
   const ColumnComponent = context === 'single' ? SingleColumn : Columna
@@ -88,7 +88,7 @@ export default function Columns ({
     return <ColumnsLoader />
   }
 
-  if (!filteredColumns || filteredColumns.length === 0) {
+  if (!loading && (!filteredColumns || filteredColumns.length === 0)) {
     return (
       <div className={wrapperClass}>
         <div className={contentClass} style={contentStyle}>
