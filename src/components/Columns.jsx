@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { Link, useParams } from 'react-router-dom'
 import { useDragItems } from '../hooks/useDragItems'
 import Columna from './column'
+import ColumnsLoader from './ColumnsLoader'
 import CustomLink from './customlink'
 import linkStyles from './customlink.module.css'
 import FolderIcon from './Icons/folder'
@@ -26,7 +27,8 @@ export default function Columns ({
   slug,
   getFirstColumnLink,
   getLinksForColumn,
-  parentCategoryId
+  parentCategoryId,
+  loading = false
 }) {
   const { desktopName } = useParams()
   const rootPath = import.meta.env.VITE_ROOT_PATH
@@ -81,6 +83,10 @@ export default function Columns ({
   const contentClass = context === 'single'
     ? styles.sp_lol_content
     : styles.lol_content
+
+  if (loading) {
+    return <ColumnsLoader />
+  }
 
   if (!filteredColumns || filteredColumns.length === 0) {
     return (
