@@ -15,16 +15,16 @@ export default function LinkDetailsSummary ({ data }) {
   // Si no hay historial en la respuesta, lo inicializamos vacío
   // Nota: data.chatHistory debe venir del backend si queremos persistencia
   // Por ahora lo manejamos localmente si no existe
-  const [localChatHistory, setLocalChatHistory] = useState(data.chatHistory || [])
+  const [localChatHistory, setLocalChatHistory] = useState(data?.chatHistory || [])
 
   // Sincronizar historial si cambia el link (data)
   useEffect(() => {
     // Si ya tenemos historial en data, lo usamos
-    if (data.chatHistory && data.chatHistory.length > 0) {
+    if (data?.chatHistory && data.chatHistory.length > 0) {
       setLocalChatHistory(data.chatHistory)
     } else {
       // Si no hay historial localmente, intentamos obtenerlo del store global
-      const linkInStore = globalLinks.find(link => link._id === data._id)
+      const linkInStore = globalLinks.find(link => link?._id === data?._id)
       if (linkInStore?.chatHistory) {
         setLocalChatHistory(linkInStore.chatHistory)
       } else {
@@ -32,13 +32,13 @@ export default function LinkDetailsSummary ({ data }) {
         // solo si no estamos ya cargando y si es un video (o según sea necesario)
         const fetchFullLink = async () => {
           try {
-            const result = await getLinkById({ id: data._id })
-            if (result.success && result.data.chatHistory) {
+            const result = await getLinkById({ id: data?._id })
+            if (result.success && result.data?.chatHistory) {
               setLocalChatHistory(result.data.chatHistory)
 
               // Actualizar el store global para futuras referencias
               const currentLinks = useGlobalStore.getState().globalLinks
-              const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+              const elementIndex = currentLinks.findIndex(link => link?._id === data?._id)
               if (elementIndex !== -1) {
                 const newState = [...currentLinks]
                 newState[elementIndex] = { ...newState[elementIndex], chatHistory: result.data.chatHistory }
@@ -50,16 +50,16 @@ export default function LinkDetailsSummary ({ data }) {
           }
         }
 
-        if (data._id) {
+        if (data?._id) {
           fetchFullLink()
         }
       }
     }
-  }, [data._id, data.chatHistory, globalLinks])
+  }, [data?._id, data?.chatHistory, globalLinks])
 
   const handleGenerateSummary = async () => {
     setLoading(true)
-    const result = await generateSummary({ linkId: data._id })
+    const result = await generateSummary({ linkId: data?._id })
     setLoading(false)
 
     if (result.success) {
@@ -76,7 +76,7 @@ export default function LinkDetailsSummary ({ data }) {
       // Actualizar el store global para reflejar el nuevo resumen
       // Usamos useGlobalStore.getState() para asegurar que tenemos el estado más reciente
       const currentLinks = useGlobalStore.getState().globalLinks
-      const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+      const elementIndex = currentLinks.findIndex(link => link?._id === data?._id)
 
       if (elementIndex !== -1) {
         const newState = [...currentLinks]
@@ -94,12 +94,12 @@ export default function LinkDetailsSummary ({ data }) {
 
     setLoading(true)
     try {
-      const result = await deleteAISummary(data._id)
+      const result = await deleteAISummary(data?._id)
 
       if (result.success) {
         // Actualizar el store global
         const currentLinks = useGlobalStore.getState().globalLinks
-        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+        const elementIndex = currentLinks.findIndex(link => link?._id === data?._id)
 
         if (elementIndex !== -1) {
           const newState = [...currentLinks]
@@ -123,14 +123,14 @@ export default function LinkDetailsSummary ({ data }) {
 
     setChatLoading(true)
     try {
-      const result = await deleteAIChat(data._id)
+      const result = await deleteAIChat(data?._id)
 
       if (result.success) {
         setLocalChatHistory([])
 
         // También actualizar el store global si el historial se guarda allí
         const currentLinks = useGlobalStore.getState().globalLinks
-        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+        const elementIndex = currentLinks.findIndex(link => link?._id === data?._id)
 
         if (elementIndex !== -1) {
           const newState = [...currentLinks]
@@ -162,7 +162,7 @@ export default function LinkDetailsSummary ({ data }) {
     const newHistory = [...localChatHistory, { role: 'user', content: newMessage, timestamp }]
     setLocalChatHistory(newHistory)
 
-    const result = await chatWithVideo({ linkId: data._id, message: newMessage })
+    const result = await chatWithVideo({ linkId: data?._id, message: newMessage })
     setChatLoading(false)
 
     if (result.success) {
@@ -171,13 +171,13 @@ export default function LinkDetailsSummary ({ data }) {
       // Ajustar según contrato: data.data.history
       let updatedHistory = []
       const modelTimestamp = new Date().toLocaleString()
-      if (result.data.history) {
+      if (result.data?.history) {
         // Asegurarse de que todos los mensajes tengan timestamp si el backend no los provee
         updatedHistory = result.data.history.map(msg => ({
           ...msg,
-          timestamp: msg.timestamp || new Date().toLocaleString()
+          timestamp: msg?.timestamp || new Date().toLocaleString()
         }))
-      } else if (result.data.answer) {
+      } else if (result.data?.answer) {
         updatedHistory = [...newHistory, { role: 'model', content: result.data.answer, timestamp: modelTimestamp }]
       }
 
@@ -186,7 +186,7 @@ export default function LinkDetailsSummary ({ data }) {
 
         // Actualizar el store global
         const currentLinks = useGlobalStore.getState().globalLinks
-        const elementIndex = currentLinks.findIndex(link => link._id === data._id)
+        const elementIndex = currentLinks.findIndex(link => link?._id === data?._id)
         if (elementIndex !== -1) {
           const newState = [...currentLinks]
           newState[elementIndex] = { ...newState[elementIndex], chatHistory: updatedHistory }
@@ -201,8 +201,8 @@ export default function LinkDetailsSummary ({ data }) {
 
   // Asignamos el summary desde el store si existe el link, para que los cambios se vean al instante
   // Si el link existe en el store, su estado es la fuente de verdad (incluso si summary es null)
-  const linkInStore = globalLinks.find(link => link._id === data._id)
-  const summary = linkInStore ? linkInStore.summary : data.summary
+  const linkInStore = globalLinks.find(link => link?._id === data?._id)
+  const summary = linkInStore ? linkInStore.summary : data?.summary
 
   if (loading) {
     return (
@@ -268,13 +268,13 @@ export default function LinkDetailsSummary ({ data }) {
             )}
           </div>
           <div className={styles.chatHistory}>
-              {localChatHistory.map((msg, index) => (
-                  <div key={index} className={`${styles.chatMessage} ${msg.role === 'user' ? styles.userMessage : styles.modelMessage}`}>
+              {localChatHistory?.map((msg, index) => (
+                  <div key={index} className={`${styles.chatMessage} ${msg?.role === 'user' ? styles.userMessage : styles.modelMessage}`}>
                       <div className={styles.chatMessageHeader}>
-                        <strong>{msg.role === 'user' ? 'Tú' : 'IA'}:</strong>
-                        {msg.timestamp && <span className={styles.timestamp}>{msg.timestamp}</span>}
+                        <strong>{msg?.role === 'user' ? 'Tú' : 'IA'}:</strong>
+                        {msg?.timestamp && <span className={styles.timestamp}>{msg.timestamp}</span>}
                       </div>
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      <ReactMarkdown>{msg?.content}</ReactMarkdown>
                   </div>
               ))}
               {chatLoading && <p className={styles.typingIndicator}>Escribiendo...</p>}

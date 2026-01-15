@@ -262,6 +262,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
                     <ChangeLayoutIcon className='uiIcon_small'/>
                   </Link>
                  </div>
+                 <div className={styles.grab_area}></div>
                 </div>
           }
             {children}

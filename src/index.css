@@ -296,6 +296,10 @@ header.main_header {
   background-color: hsl(from var(--color-medium) h s l / 75%);
 }
 
+#user-info-menu::backdrop {
+  background-color: transparent;
+}
+
 [popover] {
   border: 0;
 }

@@ -64,6 +64,7 @@
     overflow: hidden;
     font-weight: 700;
     cursor: pointer;
+    width: -webkit-fill-available;
 }
 
 .scPage .column h2 {
@@ -131,13 +132,24 @@ input[type='text'].editInput {
     font-size: 13.333px !important;
     font-weight: 700 !important;
     border-radius: 0;
-    padding-left: 8px 8px 8px 15px;
+    /* padding: 0 0 10px 8px; */
+    margin-bottom: 20px;
     line-height: normal !important;
+    height: auto !important;
 
 }
 
 input[type='text'].editInput:focus {
     background: var(--color-medium);
+}
+
+.grab_area {
+    width: 70%;
+    height: 19.98px;
+    cursor: grab;
+    background: repeating-linear-gradient(-45deg, var(--color-primary) 0 2px, var(--color-medium) 0 5px);
+    border: var(--firstBorder);
+    border-top-right-radius: 6px;
 }
 
 .opener svg.rotate {

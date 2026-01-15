@@ -15,22 +15,6 @@ export const useFormsStore = create(
       setPoints: (points) => {
         set({ points })
       },
-      addLinkFormVisible: false,
-      setAddLinkFormVisible: (addLinkFormVisible) => {
-        set({ addLinkFormVisible })
-      },
-      editFormVisible: false,
-      setEditFormVisible: (editFormVisible) => {
-        set({ editFormVisible })
-      },
-      deleteFormVisible: false,
-      setDeleteFormVisible: (deleteFormVisible) => {
-        set({ deleteFormVisible })
-      },
-      deleteColFormVisible: false,
-      setDeleteColFormVisible: (deleteColFormVisible) => {
-        set({ deleteColFormVisible })
-      },
       moveFormVisible: false,
       setMoveFormVisible: (moveFormVisible) => {
         set({ moveFormVisible })
@@ -38,14 +22,6 @@ export const useFormsStore = create(
       customizePanelVisible: false,
       setCustomizePanelVisible: (customizePanelVisible) => {
         set({ customizePanelVisible })
-      },
-      addDeskFormVisible: false,
-      setAddDeskFormVisible: (addDeskFormVisible) => {
-        set({ addDeskFormVisible })
-      },
-      deleteConfFormVisible: false,
-      setDeleteConfFormVisible: (deleteConfFormVisible) => {
-        set({ deleteConfFormVisible })
       },
       searchBoxVisible: false,
       setSearchBoxVisible: (searchBoxVisible) => {
