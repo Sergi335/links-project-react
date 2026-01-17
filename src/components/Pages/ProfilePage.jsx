@@ -284,8 +284,8 @@ export function UserSubscription ({ user }) {
               </div>
               {subscription?.limits && (
                 <div className={styles.limitsInfo}>
-                  <p><strong>Almacenamiento:</strong> {subscription.limits.storageMB} MB</p>
-                  <p><strong>Llamadas IA:</strong> {subscription.limits.llmCallsPerMonth === -1 ? 'Ilimitadas' : `${subscription.limits.llmCallsPerMonth}/mes`}</p>
+                  <p><strong>Almacenamiento:</strong> {`${(subscription.limits.storageMB - subscription.remainingQuota).toFixed(2)} MB usados de ${subscription.limits.storageMB} MB`}</p>
+                  <p><strong>Llamadas IA:</strong> {subscription.limits.llmCallsPerMonth === -1 ? 'Ilimitadas' : `${subscription.llmCallsThisMonth} de ${subscription.limits.llmCallsPerMonth}`}</p>
                 </div>
               )}
             </div>

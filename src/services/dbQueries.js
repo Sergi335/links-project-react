@@ -333,7 +333,7 @@ export async function fetchImage ({ imageUrl, linkId }) {
     return result
   } catch (error) {
     console.error('Error al obtener la imagen:', error)
-    return { error: 'Sin conexión con servidor, inténtalo más tarde' } // TODO hacerlo con todos
+    return error
   }
 }
 // DeleteImageConfirmForm
@@ -396,7 +396,7 @@ export async function fetchLinkIconFile ({ file, linkId }) {
       }
     } catch (error) {
       console.error('Error al realizar la solicitud:', error)
-      return ('Error al cambiar imagen')
+      return error
     }
   }
 }
@@ -618,6 +618,7 @@ export async function getSubscriptionStatus () {
       method: 'GET',
       ...constants.FETCH_OPTIONS
     })
+    console.log(data)
     return data
   } catch (error) {
     console.error('Error getting subscription status:', error)

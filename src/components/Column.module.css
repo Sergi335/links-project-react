@@ -12,16 +12,22 @@
 .column {
     display: flex;
     flex-direction: column;
-    /* padding: 5px; */
-    /* gap: 3px; */
 }
 
-/* [data-background='image'] .column_wrapper {
-    background-color: var(--color-primary);
-    padding: 16px;
-    border-radius: 8px;
+.column_header_controls button,
+.column_header_controls a {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 8px;
+}
 
-} */
+.column_header_controls a,
+.column_header_controls button {
+    & :hover {
+        color: var(--accentColor);
+        filter: drop-shadow(0px 0px 4px var(--accentColor));
+    }
+}
 
 .opener {
     display: flex;
@@ -33,21 +39,19 @@
 
 .selector {
     display: flex;
-    margin-right: 11px;
+    /* margin-right: 11px; */
     transition: visibility .3s ease-in-out, opacity .3s ease-in-out;
 }
 
 .column_header {
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
     position: relative;
-    gap: 10px;
     border-bottom: var(--firstBorder);
     padding-left: 8px;
     margin-bottom: 9px;
     cursor: grab;
-    padding-bottom: 9px;
+    background: repeating-linear-gradient(-45deg, var(--color-primary) 0 2px, var(--color-medium) 0 5px);
 }
 
 .column h2 {
@@ -64,7 +68,7 @@
     overflow: hidden;
     font-weight: 700;
     cursor: pointer;
-    width: -webkit-fill-available;
+    width: max-content;
 }
 
 .scPage .column h2 {
@@ -79,6 +83,7 @@
     border-bottom: var(--firstBorder);
     margin-bottom: 9px;
     padding-bottom: 0;
+    padding-right: 8px;
 }
 
 /* .scPage .column {
@@ -97,6 +102,7 @@
     background-color: var(--color-primary);
     /* border: var(--firstBorder); */
     padding: 0 0 8px;
+    border: 0;
 }
 
 .scPage.column_wrapper::-webkit-scrollbar {
@@ -127,25 +133,26 @@
 }
 
 input[type='text'].editInput {
-    /* min-height: 46.39px !important;
-    max-height: 46.39px !important; */
     font-size: 13.333px !important;
     font-weight: 700 !important;
     border-radius: 0;
-    /* padding: 0 0 10px 8px; */
-    margin-bottom: 20px;
+    margin-bottom: 9px;
     line-height: normal !important;
-    height: auto !important;
+    height: 34px !important;
 
 }
 
 input[type='text'].editInput:focus {
+    background: var(--color-primary);
+}
+
+.scPage input[type='text'].editInput:focus {
     background: var(--color-medium);
 }
 
 .grab_area {
-    width: 70%;
-    height: 19.98px;
+    width: 40%;
+    height: -webkit-fill-available;
     cursor: grab;
     background: repeating-linear-gradient(-45deg, var(--color-primary) 0 2px, var(--color-medium) 0 5px);
     border: var(--firstBorder);

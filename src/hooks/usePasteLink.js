@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { constants } from '../services/constants'
 import { addLink } from '../services/dbQueries'
@@ -11,7 +10,6 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   const setColumnLoaderTarget = useLinksStore(state => state.setColumnLoaderTarget)
   const setPastedLinkId = useLinksStore(state => state.setPastedLinkId)
   const setNumberOfPastedLinks = useLinksStore(state => state.setNumberOfPastedLinks)
-  const columnRef = useRef(document.getElementById(params?._id))
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const getAddedLinkOrder = () => {
@@ -89,9 +87,12 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
   }
   async function processTextLinks (text, params) {
-    // console.log(text)
-    // const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
-    const nombre = await getNameByUrl({ url: text }) // Iniciar el proceso de carga dentro de la función
+    // Activar loader ANTES de la petición
+    setColumnLoaderTarget({ id: params?._id })
+    setNumberOfPastedLinks(1)
+    setLinkLoader(true)
+
+    const nombre = await getNameByUrl({ url: text })
 
     const body = {
       categoryId: getDestinyId(),
@@ -103,15 +104,16 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
+      setLinkLoader(false)
+      setColumnLoaderTarget(null)
       toast.error(message)
       return
     }
     const { data } = response
     const newList = [...globalLinks, data]
-    setColumnLoaderTarget(columnRef.current)
     setTimeout(() => {
       setLinkLoader(false)
-      setGlobalLinks(newList) // hay que actualizar globalLinks
+      setGlobalLinks(newList)
       setColumnLoaderTarget(null)
     }, 1000)
     setPastedLinkId([data._id])
@@ -131,14 +133,17 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
   }
   async function processHtmlLink (text, params) {
-    // const order = columnRef.current.childNodes.length ? columnRef.current.childNodes.length - 1 : 0
+    // Activar loader ANTES de la petición
+    setColumnLoaderTarget({ id: params?._id })
+    setNumberOfPastedLinks(1)
+    setLinkLoader(true)
+
     const range = document.createRange()
     range.selectNode(document.body)
     const fragment = range.createContextualFragment(text)
     const a = fragment.querySelector('a')
     const url = a.href
     const nombre = a.innerText
-    // const escritorio = params.escritorio
 
     const body = {
       categoryId: getDestinyId(),
@@ -150,12 +155,13 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     const response = await addLink(body)
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
+      setLinkLoader(false)
+      setColumnLoaderTarget(null)
       toast.error(message)
       return
     }
     const { data } = response
     const newList = [...globalLinks, data]
-    setColumnLoaderTarget(columnRef.current)
     setTimeout(() => {
       setLinkLoader(false)
       setGlobalLinks(newList)
@@ -165,6 +171,12 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
   }
   async function pasteMultipleLinks (array, params) {
     const pasteLoading = toast.loading('Procesando links ...')
+
+    // Activar loader ANTES de las peticiones
+    setColumnLoaderTarget({ id: params?._id })
+    setNumberOfPastedLinks(array.length)
+    setLinkLoader(true)
+
     let order = getAddedLinkOrder() - 1
     const bodies = array.map(link => {
       order++
@@ -177,9 +189,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
     for (const bodie of bodies) {
       bodie.name = await getNameByUrl({ url: bodie.url })
-      // console.log(bodie)
     }
-    setNumberOfPastedLinks(bodies.length)
     const requests = bodies.map(async body => {
       const response = await addLink(body)
       const { hasError, message } = handleResponseErrors(response)
@@ -192,9 +202,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     })
 
     const links = await Promise.all(requests)
-    console.log('🚀 ~ pasteMultipleLinks ~ links:', links)
     const newList = [...globalLinks, ...links]
-    setColumnLoaderTarget(columnRef.current)
     setTimeout(() => {
       setLinkLoader(false)
       setGlobalLinks(newList)
@@ -202,7 +210,6 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
       setNumberOfPastedLinks(1)
     }, 1000)
     setPastedLinkId([...links.map(link => link._id)])
-    // activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(newList.toSorted((a, b) => (a.orden - b.orden))))
   }
   async function getNameByUrl ({ url }) {
     try {

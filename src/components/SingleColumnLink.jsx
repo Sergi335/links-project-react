@@ -172,6 +172,9 @@ const SingleColumnLink = ({ data, className }) => {
       onContextMenu={(e) => handleContextMenu(e)}
     >
       <div className={styles.link_wrapper}>
+        {
+          linkSelectMode && <input type='checkbox' onChange={handleSelectChange} />
+        }
         <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
         <a
           ref={linkRef}
@@ -181,9 +184,6 @@ const SingleColumnLink = ({ data, className }) => {
           title={link.name}
           onClick={(e) => handleSingleColumnContextClick(e)}
         >
-          {
-            linkSelectMode && <input type='checkbox' onChange={handleSelectChange} />
-          }
           <span>{link.name}</span>
         </a>
         {

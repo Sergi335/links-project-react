@@ -164,8 +164,8 @@ export default function Columns ({
                     </div>
                   )}
 
-                  {/* Link loaders */}
-                  {linkLoader && columna._id === columnLoaderTarget?.id && (
+                  {/* Link loaders - solo en el cuerpo cuando hay menos de 7 links */}
+                  {linkLoader && columna._id === columnLoaderTarget?.id && getLinksIds(columna).length < 7 && (
                     numberOfLinkLoaders.map((item, index) => (
                       <LinkLoader key={index} />
                     ))

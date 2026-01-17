@@ -229,41 +229,46 @@ export default function Columna ({ data, children, childCount, context, getFirst
           {...listeners}
         >
           {
-            editMode
-              ? <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
-              : <div className={styles.column_header} onContextMenu={(e) => handleContextMenu(e) }>
-                {columnSelectModeId.includes(columna._id) && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange}/>}
-                  <h2 onClick={() => setEditMode(true) } ref={headRef} style={linkLoader ? { flexGrow: 0, marginRight: '15px' } : {}}>
+            (() => {
+              // Determinar si estamos en modo "cargando en header"
+              const isHeaderLoading = linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && !localOpenColumn
+
+              if (editMode) {
+                return <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
+              }
+
+              return (
+                <div className={styles.column_header} onContextMenu={(e) => handleContextMenu(e) }>
+                  {!isHeaderLoading && columnSelectModeId.includes(columna._id) && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange}/>}
+                  <h2 onClick={() => setEditMode(true) } ref={headRef} style={isHeaderLoading ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
-                    {
-                      childCount > 7 && <span ref={spanCountRef} className='linkCount'>{`+${childCount - 7}`}</span>
-                    }
+                    {childCount > 7 && <span ref={spanCountRef} className='linkCount'>{`+${childCount - 7}`}</span>}
                   </h2>
-                    {
-                      linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && !localOpenColumn && <LinkLoader stylesOnHeader={stylesOnHeader}/>
-                    }
-                    {
-                      context !== 'singlecol' && <div className={styles.opener} onClick={handleChangeColumnHeight}>
-                        {
-                          childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>
-                        }
-                      </div>
-                    }
-                 <div style={{ display: 'flex' }}>
-                   <div id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
-                    <SelectIcon className='uiIcon_small'/>
-                  </div>
-                  <Link
-                    to={
-                      firstLink !== undefined
-                        ? `${rootPath}${basePath}/${desktopName}/${columna.slug}/${firstLink?._id}`
-                        : `${rootPath}${basePath}/${desktopName}/${columna.slug}`
-                    } className={styles.selector}>
-                    <ChangeLayoutIcon className='uiIcon_small'/>
-                  </Link>
-                 </div>
-                 <div className={styles.grab_area}></div>
+                  {isHeaderLoading && <LinkLoader stylesOnHeader={stylesOnHeader}/>}
+                  {!isHeaderLoading && (
+                    <div className={styles.column_header_controls} style={{ display: 'flex' }}>
+                      {context !== 'singlecol' && (
+                        <button className={styles.opener} onClick={handleChangeColumnHeight}>
+                          {childCount > 7 && <ArrowDown className={localOpenColumn ? `${styles.rotate} uiIcon_small` : 'uiIcon_small'}/>}
+                        </button>
+                      )}
+                      <button id={columna._id} onClick={handleSetSelectMode} className={styles.selector}>
+                        <SelectIcon className='uiIcon_small'/>
+                      </button>
+                      <Link
+                        to={
+                          firstLink !== undefined
+                            ? `${rootPath}${basePath}/${desktopName}/${columna.slug}/${firstLink?._id}`
+                            : `${rootPath}${basePath}/${desktopName}/${columna.slug}`
+                        } className={styles.selector}>
+                        <ChangeLayoutIcon className='uiIcon_small'/>
+                      </Link>
+                    </div>
+                  )}
+                  {/* {!isHeaderLoading && <div className={styles.grab_area}></div>} */}
                 </div>
+              )
+            })()
           }
             {children}
         </div>
