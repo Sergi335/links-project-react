@@ -928,23 +928,23 @@ export function UserInfo ({ user, setUser }) {
     setFileToUploadLoading(true)
     const response = await uploadProfileImg(fileToUpload)
     // console.log(response)
-
-    // uploadProfileImg devuelve la key de S3 (ej: "users/abc/profile.jpg"), no una URL
-    if (response && !response.startsWith('Error')) {
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+      setFileToUploadLoading(false)
+    } else {
       setFileToUpload(null)
       setFileToUploadLoading(false)
       toast('Imagen cambiada con éxito')
       // actualizar estado global con la key (no URL)
       const newUserState = { ...user, profileImage: response }
       setUser(newUserState)
-    } else {
-      setFileToUploadLoading(false)
-      toast('Error al cambiar la imagen')
     }
   }
-  const handleCancelUploadImage = (e) => {
+  const handleCancelUploadImage = async (e) => {
+    console.log(user)
     const previewImage = document.getElementById('preview-image')
-    previewImage.src = user.profileImage
+    previewImage.src = await getSignedUrl(user.profileImage)
     setFileToUpload(null)
   }
   const handleEditInfo = (e) => {

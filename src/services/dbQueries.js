@@ -445,7 +445,7 @@ export async function uploadProfileImg (file) {
       return result.data.key
     } catch (error) {
       console.error('Error al realizar la solicitud:', error)
-      return (`Error al realizar la solicitud:, ${error}`)
+      return error
     }
   }
 }
