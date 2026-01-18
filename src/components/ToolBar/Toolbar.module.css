@@ -39,7 +39,7 @@
         } */
 
         .sideButtons {
-            background-color: var(--color-primary);
+            background-color: transparent;
             padding: 8px;
             border-radius: 0;
             border: 1px dashed transparent;
@@ -111,7 +111,7 @@
     @media (min-width: 1280px) {
         .toolbar_controls {
             flex-direction: column;
-            margin-top: 0;
+            margin-top: 33px;
             /* position: relative;
             left: -1px;
             gap: 0;

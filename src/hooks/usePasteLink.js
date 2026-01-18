@@ -29,18 +29,17 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     }
   }
   async function pasteLink () {
-    setLinkLoader(true) // estamos usando???
     // lee el contenido del portapapeles entonces ...
     // Arrow function anónima con los items de param
     navigator.clipboard.read().then(clipboardItems => {
       // por cada clipboardItem ...
       for (const clipboardItem of clipboardItems) {
-        console.log('🚀 ~ pasteLink ~ clipboardItem:', clipboardItem)
+        // console.log('🚀 ~ pasteLink ~ clipboardItem:', clipboardItem)
         // Si el length de la propiedad types es 1, es texto plano
         if (clipboardItem.types.length === 1) {
           // lo confirmamos
           for (const type of clipboardItem.types) {
-            console.log(type)
+            // console.log(type)
             if (type === 'text/plain') {
               handlePastedTextLinks(clipboardItem, type, params)
               // console.log('Texto plano')
@@ -48,7 +47,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
           }
         } else {
           for (const type of clipboardItem.types) {
-            console.log(type)
+            // console.log(type)
             if (type === 'text/html') {
               handlePastedHtmlLinks(clipboardItem, type, params)
               // console.log('html text')
@@ -67,7 +66,7 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
     // Pasamos el blob a texto
     clipboardItem.getType(type).then(blob => {
       blob.text().then(text => {
-        console.log(text)
+        // console.log(text)
         // Si tiene un enlace
         if (text.indexOf('http') === 0) {
           const urls = text.match(/https?:\/\/[^\s]+/g)
