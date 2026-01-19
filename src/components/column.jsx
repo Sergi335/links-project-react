@@ -21,7 +21,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
   const colRef = useRef(null)
   const headRef = useRef(null)
   const spanCountRef = useRef(null)
-  const stylesOnHeader = { height: 'auto' }
+  const stylesOnHeader = { height: '33px' }
   const setPoints = useFormsStore(state => state.setPoints)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
