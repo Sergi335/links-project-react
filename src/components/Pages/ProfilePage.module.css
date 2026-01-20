@@ -11,6 +11,7 @@
 .content {
     min-height: 90vh;
     padding: 14px;
+    background: radial-gradient(at right bottom, var(--color-primary), var(--color-medium));
 
     & h3 {
         margin-top: 0;
@@ -140,24 +141,31 @@
 
 .preferences {
     display: flex;
-    /* justify-content: center; */
+    justify-content: flex-start;
     align-items: start;
-    /* background-color: var(--color-medium); */
-    /* padding: 50px; */
-    flex-direction: column;
-    flex-grow: 1;
+    gap: 100px;
 }
 
 .importSection {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: var(--color-light);
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between;
+    width: fit-content;
+    margin-bottom: 15px;
 }
-
+.closeAccount {
+    display: flex;
+    flex-direction: column;
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between;
+    width: fit-content;
+    margin-bottom: 15px;
+}
 .importSection h3 {
     margin: 0 0 5px 0;
 }
@@ -281,7 +289,7 @@
 }
 
 .otherInfo form input {
-    height: 37px;
+    height: -webkit-fill-available;
     border: 1px solid var(--firstBorderColor);
     padding: 0 15px;
     color: var(--text-color-primary);
@@ -313,12 +321,9 @@
 }
 
 .userInfo {
-    /* padding: 15px 50px; */
-    margin-top: 18.72px;
-    /* box-shadow: var(--secondNeumoShadow);
-    border: 1px solid var(--firstColor);
-    border-radius: 5px;
-    text-align: left; */
+    margin-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: var(--firstBorder);
 }
 
 /* .userInfo p:first-child {
@@ -336,7 +341,6 @@ h3 {
 .statsControls {
     display: flex;
     justify-content: space-around;
-    /* background-color: var(--color-medium); */
     padding: 50px 0;
     border-top: 1px solid var(--firstBorderColor);
     gap: 100px;
@@ -345,14 +349,23 @@ h3 {
 .groupControl {
     display: flex;
     flex-direction: column;
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between; 
+
+    & button {
+        width: fit-content;
+        gap: 5px;
+    }
 }
 
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    /* width: 45%; */
+    width: 45%;
     border-radius: var(--border-radius);
-    margin: 0 0 40px 0;
+    margin: 0 0px 16px 0;
 }
 
 td,
@@ -386,7 +399,7 @@ tr:nth-child(odd) {
 
 .link {
     height: auto;
-    background-color: var(--secondColor);
+    background-color: var(--color-medium);
     border-radius: 15px;
     padding: 25px;
     display: flex;
@@ -446,13 +459,11 @@ tr:nth-child(odd) {
 
 .password {
     display: flex;
-    justify-content: center;
-    align-items: start;
-    /* background-color: var(--color-medium); */
-    /* padding: 0 50px; */
     flex-direction: column;
-    /* flex-grow: 1; */
-    /* gap: 15px; */
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between;
     width: fit-content;
     margin-bottom: 15px;
 }
@@ -476,14 +487,17 @@ tr:nth-child(odd) {
 
 .backup {
     display: flex;
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* background-color: var(--color-medium); */
-    /* padding: 50px; */
     flex-direction: column;
-    flex-grow: 1;
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between;
+    width: fit-content;
 }
-
+.securityWrapper {
+    display: flex;
+    justify-content: space-around;
+}
 .flexForm {
     display: flex;
     flex-direction: column;
@@ -516,6 +530,7 @@ tr:nth-child(odd) {
 .passwordInputWrapper input {
     width: 100%;
     padding-right: 45px;
+    margin-bottom: 0 !important;
 }
 
 .togglePasswordButton {
@@ -538,7 +553,7 @@ tr:nth-child(odd) {
 .togglePasswordButton svg {
     width: 20px;
     height: 20px;
-    color: var(--color-dark);
+    color: var(--text-color-primary);
 }
 
 .currentLink {
@@ -812,6 +827,8 @@ tr:nth-child(odd) {
     .aditionalInfo {
         flex-direction: row;
         gap: 50px;
+        border-bottom: var(--firstBorder);
+        padding-bottom: 16px;
     }
 
     .results {
@@ -849,11 +866,14 @@ tr:nth-child(odd) {
 /* ------------ SUBSCRIPTION SECTION ------------ */
 
 .subscriptionSection {
-    padding: 20px;
-    background: var(--color-secondary);
-    border-radius: 12px;
-    border: 1px solid var(--firstBorderColor);
-    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    min-height: 365px;
+    border: var(--firstBorder);
+    padding: 32px;
+    justify-content: space-between;
+    width: fit-content;
+    margin-bottom: 15px;
 }
 
 .subscriptionInfo {

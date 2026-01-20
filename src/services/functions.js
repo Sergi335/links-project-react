@@ -187,6 +187,7 @@ export async function getUrlStatus (url) {
 export function handleResponseErrors (response) {
   console.log(response.message)
   if (response.success !== true) {
+    console.log(response)
     return { hasError: true, message: response.message || 'Error al efectuar la operación', error: response.error || '' }
   }
   return { hasError: false, message: '' }

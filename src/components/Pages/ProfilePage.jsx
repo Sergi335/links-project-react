@@ -172,9 +172,12 @@ export function UserPreferences ({ user, setUser }) {
         </form>
         {bookmarksLoading && <span className={styles.loader}></span>}
       </div>
+      <div className={styles.closeAccount}>
+      <h3>Cierra tu Cuenta</h3>
       <button id="closeAccount" onClick={() => setVisible(true)}>
         Cerrar Cuenta
       </button>
+      </div>
       {
         visible
           ? (
@@ -324,9 +327,16 @@ export function UserSecurity ({ user, setUser }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [currentPasswordCache, setCurrentPasswordCache] = useState('') // Guardar contraseña actual para reauth posterior
   const { handleChangeFirebasePassword, handleReauthenticate } = useGoogleAuth()
+  const popoverRef = useRef()
+  const newPopoverRef = useRef()
 
-  const handleChangePassword = (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (changePasswordStep === 2 && newPopoverRef.current) {
+      newPopoverRef.current.showPopover()
+    }
+  }, [changePasswordStep])
+
+  const handleChangePassword = () => {
     setChangePasswordStep(1) // Mostrar formulario de contraseña actual
   }
 
@@ -503,82 +513,87 @@ export function UserSecurity ({ user, setUser }) {
     if (fileInput) fileInput.value = ''
   }
   return (
-    <>
-      <h3>Seguridad</h3>
+    <div className={styles.securityWrapper}>
       {
         user.signMethod !== 'google' && (<div className={styles.password}>
-          {/* <KeyIcon /> */}
           <h3>Cambiar contraseña</h3>
-          <form onSubmit={handleChangePassword} className={styles.flexForm}>
-            <button id="changePassword" type="submit">Cambiar</button>
-          </form>
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <button id="changePassword" onClick={handleChangePassword} type="submit" popovertarget="currentPasswordPopover" popovertargetaction="show">Cambiar</button>
           {
             changePasswordStep === 1 && (
-              <form onSubmit={handleCurrentPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
-                <p>Primero, confirme su contraseña actual</p>
-                <div className={styles.passwordInputWrapper}>
-                  <input
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    id="currentPassword"
-                    name='currentPassword'
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    className={styles.togglePasswordButton}
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  >
-                    {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-                <div className={styles.flexButtons}>
-                  <button id="currentPasswordSubmit" type='submit'>Siguiente</button>
-                  <button id="currentPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
-                </div>
-              </form>
+              // eslint-disable-next-line react/no-unknown-property
+              <div popover="" id="currentPasswordPopover" ref={popoverRef}>
+                <form onSubmit={handleCurrentPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
+                  <p>Primero, confirme su contraseña actual</p>
+                  <div className={styles.passwordInputWrapper}>
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      id="currentPassword"
+                      name='currentPassword'
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      className={styles.togglePasswordButton}
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    >
+                      {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
+                    </button>
+                  </div>
+                  <div className={styles.flexButtons}>
+                    <button id="currentPasswordSubmit" type='submit'>Siguiente</button>
+                    {/* eslint-disable-next-line react/no-unknown-property */}
+                    <button id="currentPasswordCancel" type="button" onClick={handleCancelChangePassword} popovertarget="currentPasswordPopover" popovertargetaction="hide">Cancelar</button>
+                  </div>
+                </form>
+              </div>
             )
           }
           {
             changePasswordStep === 2 && (
-              <form onSubmit={handleNewPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
-                <p>Ahora, ingrese su nueva contraseña</p>
-                <div className={styles.passwordInputWrapper}>
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    id="newPassword"
-                    name='newPassword'
-                    placeholder="Nueva contraseña"
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    className={styles.togglePasswordButton}
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-                <div className={styles.passwordInputWrapper}>
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    id="confirmPassword"
-                    name='confirmPassword'
-                    placeholder="Confirmar nueva contraseña"
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    className={styles.togglePasswordButton}
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-                <div className={styles.flexButtons}>
-                  <button id="newPasswordSubmit" type='submit'>Cambiar Contraseña</button>
-                  <button id="newPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
-                </div>
-              </form>
+              // eslint-disable-next-line react/no-unknown-property
+              <div popover="" id="newPasswordPopover" ref={newPopoverRef}>
+                <form onSubmit={handleNewPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
+                  <p>Ahora, ingrese su nueva contraseña</p>
+                  <div className={styles.passwordInputWrapper}>
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      id="newPassword"
+                      name='newPassword'
+                      placeholder="Nueva contraseña"
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      className={styles.togglePasswordButton}
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+                    </button>
+                  </div>
+                  <div className={styles.passwordInputWrapper}>
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      id="confirmPassword"
+                      name='confirmPassword'
+                      placeholder="Confirmar nueva contraseña"
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      className={styles.togglePasswordButton}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                    </button>
+                  </div>
+                  <div className={styles.flexButtons}>
+                    <button id="newPasswordSubmit" type='submit'>Cambiar Contraseña</button>
+                    <button id="newPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
+                  </div>
+                </form>
+              </div>
+
             )
           }
         </div>)
@@ -622,7 +637,7 @@ export function UserSecurity ({ user, setUser }) {
           )
         }
       </div>
-    </>
+    </div>
   )
 }
 export function PieChart ({ links, setLinks, getCategoryName }) {
@@ -813,7 +828,7 @@ export function UserStats ({ user }) {
 
   return (
         <>
-          <h3>Estadísticas</h3>
+          {/* <h3>Estadísticas</h3> */}
           <div className={styles.statsInfo}>
             <table>
               <tbody>
@@ -927,22 +942,20 @@ export function UserInfo ({ user, setUser }) {
   const handleUploadImage = async (e) => {
     setFileToUploadLoading(true)
     const response = await uploadProfileImg(fileToUpload)
-    // console.log(response)
+
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)
       setFileToUploadLoading(false)
     } else {
       setFileToUpload(null)
+      const newUserState = { ...user, profileImage: response.data.key }
+      setUser(newUserState)
       setFileToUploadLoading(false)
       toast('Imagen cambiada con éxito')
-      // actualizar estado global con la key (no URL)
-      const newUserState = { ...user, profileImage: response }
-      setUser(newUserState)
     }
   }
   const handleCancelUploadImage = async (e) => {
-    console.log(user)
     const previewImage = document.getElementById('preview-image')
     previewImage.src = await getSignedUrl(user.profileImage)
     setFileToUpload(null)
@@ -971,7 +984,7 @@ export function UserInfo ({ user, setUser }) {
   return (
     <div className={styles.info}>
       <div className={styles.wrapper}>
-        <h3>Información Básica</h3>
+        {/* <h3>Información Básica</h3> */}
         <div className={styles.aditionalInfo}>
           <div className={styles.profileImage}>
             <UserAvatar imageKey={user?.profileImage} id="preview-image" className='uploadForm' />
