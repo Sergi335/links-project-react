@@ -29,6 +29,13 @@ export default function HomePage () {
     <div className={styles.home}>
       <header className={styles.header}>
         <nav className={styles.nav}>
+          <div>
+            <Link to={'/'}>
+              <div className={styles.logo}>
+                <span>ZenMarks</span>
+              </div>
+            </Link>
+          </div>
           <div className={styles.navlinks}>
             <a href="">About</a>
             <a href="">Donate</a>
@@ -36,20 +43,47 @@ export default function HomePage () {
           </div>
         </nav>
         <div className={styles.heroSection}>
-          <div className={styles.logo}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 19V5m6 14V5M6 19V5" /></svg>
-            <h2 className={styles.logoText}>Zenmarks</h2>
-          </div>
-          <h2 className={styles.subtitle}>Organiza Tu Mundo Digital</h2>
+          <h1>Your Digital Universe, <span>Organized.</span></h1>
+          <p>Organize your digital universe with ZenMarks, the ultimate link manager for productivity and organization.</p>
           <div className={styles.actionLinks}>
             <Link className={styles.start} to={'/login'}>Get Started</Link>
             <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
           </div>
-          <p className={styles.headingText}>Bienvenido a <strong className={styles.strong}>Zenmarks</strong>, la herramienta definitiva para gestionar tus enlaces y maximizar tu productividad. Con funciones intuitivas y personalizables, para simplificar tu experiencia digital.</p>
-          {/* <video src="img/zenmarks2.webm" autoPlay loop muted></video> */}
+          <img src="img/heroimage2.png" />
         </div>
       </header>
       <main className={styles.main}>
+        <section className={styles.cards}>
+          <h2>Features built for power users</h2>
+          <p>Everything you need to curate, consume, and comprehend content faster.</p>
+          <div className={styles.cardsContainer}>
+            <div className={styles.card}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-brand-chrome"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M12 9h8.4" /><path d="M14.598 13.5l-4.2 7.275" /><path d="M9.402 13.5l-4.2 -7.275" /></svg>
+            <h3>Importa tus enlaces</h3>
+            <p>Traete tus enlaces favoritos de chrome con un solo click</p>
+          </div>
+          <div className={styles.card}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-notebook"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" /><path d="M13 8l2 0" /><path d="M13 12l2 0" /></svg>
+            <h3>No olvides nada</h3>
+            <p>Añade notas, descripciones, imágenes ...</p>
+          </div>
+          <div className={styles.card}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="icon icon-tabler icons-tabler-filled icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-12a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-9 6v6a1 1 0 0 0 1.514 .857l5 -3a1 1 0 0 0 0 -1.714l-5 -3a1 1 0 0 0 -1.514 .857z" /></svg>
+            <h3>Todos tus vídeos</h3>
+            <p>Visualiza y resume videos de youtube</p>
+          </div>
+          <div className={styles.card}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-settings-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.483 20.935c-.862 .239 -1.898 -.178 -2.158 -1.252a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.08 .262 1.496 1.308 1.247 2.173" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+            <h3>Añade nuevos enlaces</h3>
+            <p>Añade nuevos enlaces mediante la extension de chrome</p>
+          </div>
+          <div className={styles.card}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-category-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6v-6" /><path d="M14 4h6v6h-6v-6" /><path d="M4 14h6v6h-6v-6" /><path d="M14 17h6m-3 -3v6" /></svg>
+            <h3>Organiza y personaliza</h3>
+            <p>Organiza tus enlaces de la manera que prefieras</p>
+          </div>
+          </div>
+        </section>
         <section className={styles.section}>
           <div className={styles.textColumn}>
             <h2>Potentes Funciones a tu Alcance</h2>
@@ -57,27 +91,52 @@ export default function HomePage () {
             <p><strong>Zenmarks</strong> ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces. Reordénarlos con facilidad, reproduce vídeos directamente desde la aplicación y más.</p>
           </div>
           <div className={styles.mediaColumn} id='my-gallery'>
-            <a href="img/557shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/557shots_so.png" width='960' height='640' alt="" /></a>
+            <a href="img/airesume.webp" data-pswp-width="960" data-pswp-height="601" target='_blank' ><img src="img/airesume.webp" width='960' height='601' alt="" /></a>
           </div>
         </section>
-        <section className={styles.section}>
-          <div className={styles.mediaColumn} id='my-gallery2'>
-            <a href="img/717shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/717shots_so.png" width='960' height='640' alt="" /></a>
-          </div>
-          <div className={styles.textColumn}>
-            <h2>Amplias opciones de personalización</h2>
-            <p>Diseña tu experiencia a tu gusto, temas, colores, fondos, iconos de los links ... tú tienes el control.</p>
-            <p> Mantén tu espacio de trabajo organizado y estéticamente agradable para una experiencia de usuario agradable.</p>
-          </div>
-        </section>
-        <section className={styles.section}>
-          <div className={styles.textColumn}>
-            <h2>Mejora continua</h2>
-            <p>Estamos comprometidos con la mejora continua. Nuestro equipo está constantemente trabajando en nuevas funciones y mejoras para hacer de Zenmarks la herramienta definitiva para la gestión de enlaces.</p>
-            <p> <strong>Próximamente:</strong> Lista de lectura y modo lectura, snippets de código, extensión para el navegador y más. Mantente al tanto de nuestras actualizaciones.</p>
-          </div>
-          <div className={styles.mediaColumn} id='my-gallery3'>
-            <a href="img/189shots_so.png" data-pswp-width="960" data-pswp-height="640" target='_blank' ><img src="img/189shots_so.png" width='960' height='640' alt="" /></a>
+        <section className={styles.pricingSection}>
+          <h2>Pricing Plans</h2>
+          <div className={styles.pricingContainer}>
+            <div className={styles.pricingCard}>
+              <h3>Free</h3>
+              <p className={styles.price}>$0</p>
+              <p className={styles.billingPeriod}>/month</p>
+              <ul className={styles.featuresList}>
+                <li>Up to 100 Links</li>
+                <li>Basic Search</li>
+                <li>1GB Storage</li>
+                <li>Community Support</li>
+              </ul>
+              <button className={styles.ctaButton}>Get Started</button>
+            </div>
+
+            <div className={`${styles.pricingCard} ${styles.pro}`}>
+              <h3>Pro</h3>
+              <p className={styles.price}>$9</p>
+              <p className={styles.billingPeriod}>/month</p>
+              <ul className={styles.featuresList}>
+                <li>Unlimited Links</li>
+                <li>Advanced AI Search</li>
+                <li>Full AI Features</li>
+                <li>10GB Storage</li>
+                <li>Priority Support</li>
+              </ul>
+              <button className={styles.ctaButton}>Go Pro</button>
+            </div>
+
+            <div className={styles.pricingCard}>
+              <h3>Enterprise</h3>
+              <p className={styles.price}>Custom</p>
+              <p className={styles.billingPeriod}>contact us</p>
+              <ul className={styles.featuresList}>
+                <li>Everything in Pro</li>
+                <li>Unlimited Storage</li>
+                <li>Team Collaboration</li>
+                <li>Dedicated Account Manager</li>
+                <li>SSO Integration</li>
+              </ul>
+              <button className={styles.ctaButton}>Contact Sales</button>
+            </div>
           </div>
         </section>
       </main>
