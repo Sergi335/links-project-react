@@ -25,10 +25,10 @@
     background: radial-gradient(circle, rgba(42, 123, 155, 0.01) 0%, var(--color-primary) 140%);
 }
 
-.nav {
+/* .nav {
     max-width: 65%;
     margin: 0 auto;
-}
+} */
 
 .home p {
     text-wrap: pretty;
@@ -61,16 +61,17 @@
 }
 
 .card {
+    --svg-size: 150px;
     min-height: 365px;
     border: var(--firstBorder);
     border-radius: 14px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 20px;
-    width: 30ch;
+    /* gap: 20px; */
+    width: 28ch;
 }
 
 .card:nth-of-type(1) {
@@ -79,21 +80,26 @@
     overflow: hidden;
 
     & svg {
-        width: 85px;
+        width: var(--svg-size);
+        height: var(--svg-size);
         position: absolute;
-        top: 15px;
-        right: 30px;
-        height: 85px;
+        top: 0px;
+        right: 10px;
         color: #1e232d;
+        opacity: .5;
     }
 
     & h3 {
-        color: var(--text-color-secondary);
+        color: hsl(220deg 20.59% 31.46%);
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     & p {
         text-align: left;
         color: var(--text-color-primary);
+        z-index: 1;
+        font-size: 14px;
     }
 }
 
@@ -103,21 +109,26 @@
     overflow: hidden;
 
     & svg {
-        width: 85px;
+        width: var(--svg-size);
+        height: var(--svg-size);
         position: absolute;
-        top: 15px;
-        right: 30px;
-        height: 85px;
+        top: 0px;
+        right: 10px;
         color: #34415b;
+        opacity: .5;
     }
 
     & h3 {
-        color: var(--text-color-secondary);
+        color: hsl(220deg 26.85% 19.98%);
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     & p {
         text-align: left;
         color: var(--text-color-primary);
+        z-index: 1;
+        font-size: 14px;
     }
 }
 
@@ -127,21 +138,26 @@
     overflow: hidden;
 
     & svg {
-        width: 85px;
+        width: var(--svg-size);
+        height: var(--svg-size);
         position: absolute;
-        top: 15px;
-        right: 30px;
-        height: 85px;
+        top: 0px;
+        right: 10px;
         color: #5d3535;
+        opacity: .5;
     }
 
     & h3 {
-        color: var(--text-color-secondary);
+        color: hsl(0deg 28.97% 19.04%);
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     & p {
         text-align: left;
         color: var(--text-color-primary);
+        z-index: 1;
+        font-size: 14px;
     }
 }
 
@@ -151,22 +167,69 @@
     overflow: hidden;
 
     & svg {
-        width: 85px;
+        width: var(--svg-size);
+        height: var(--svg-size);
         position: absolute;
-        top: 15px;
-        right: 30px;
-        height: 85px;
+        top: 0px;
+        right: 10px;
         color: #386550;
+        opacity: .5;
     }
 
     & h3 {
-        color: var(--text-color-secondary);
+        color: hsl(152deg 28.97% 20.87%);
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     & p {
         text-align: left;
         color: var(--text-color-primary);
+        z-index: 1;
+        font-size: 14px;
     }
+}
+
+.cardButton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #333;
+    transition: all 0.2s ease;
+    width: fit-content;
+    margin-top: auto;
+    flex-grow: 0;
+}
+
+.cardButton:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cardButton span {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+.cardButton b {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cardButton svg {
+    position: static !important;
+    width: 28px !important;
+    height: 28px !important;
+    color: white !important;
 }
 
 .card:nth-of-type(5) {
@@ -175,22 +238,35 @@
     overflow: hidden;
 
     & svg {
-        width: 85px;
+        width: var(--svg-size);
+        height: var(--svg-size);
         position: absolute;
-        top: 15px;
-        right: 30px;
-        height: 85px;
+        top: 0px;
+        right: 10px;
         color: #3a5f65;
+        opacity: .5;
     }
 
     & h3 {
-        color: var(--text-color-secondary);
+        color: hsl(188.37deg 26.51% 19.41%);
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     & p {
         text-align: left;
         color: var(--text-color-primary);
+        z-index: 1;
+        font-size: 14px;
     }
+}
+
+.cards {
+    /* background-image: url('img/backgrounds/bg-footer-dark-800w.jpg');
+    background-size: contain;
+    background-attachment: fixed; */
+    padding-bottom: 60px;
+    background-color: var(--color-primary);
 }
 
 .cardsContainer {
@@ -199,14 +275,15 @@
     align-items: center;
     gap: 40px;
     flex-wrap: wrap;
+    max-width: 1450px;
+    margin: 85px auto;
 }
 
 .main {
-    max-width: 1450px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 160px;
+    /* gap: 160px; */
 }
 
 .cards h2,
@@ -216,11 +293,15 @@
 
 .cards h2 {
     font-size: 3rem;
+
+    & span {
+        color: coral;
+    }
 }
 
 .cards p {
     color: var(--text-color-secondary);
-    margin-bottom: 65px;
+    /* margin-bottom: 65px; */
     margin-top: 8px;
 }
 
@@ -298,8 +379,11 @@
 .section {
     display: flex;
     justify-content: center;
-    padding: 16px;
+    padding: 85px 0;
     gap: 50px;
+    background-color: var(--color-medium);
+    /* max-width: 60%;
+    margin: 0 auto; */
     /* background-size: 14px 14px;
     background-image: var(--homeHeroGradient); */
 }
@@ -307,8 +391,30 @@
 .nav {
     display: flex;
     justify-content: space-between;
-    padding: 20px 65px;
+    padding: 20px 250px;
     align-items: center;
+    border-bottom: var(--firstBorder);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    margin: 0 auto;
+    animation: headerAnimation 0.5s ease-in-out;
+    animation-timeline: scroll();
+    animation-range: 0 150px;
+    animation-fill-mode: both;
+}
+
+@keyframes headerAnimation {
+    to {
+        width: 60%;
+        border-radius: 50px;
+        top: 20px;
+        border: var(--firstBorder);
+        background-color: hsl(from var(--color-primary) h s l / 0.6);
+        backdrop-filter: blur(10px);
+        padding: 20px 50px;
+    }
 }
 
 .start {
@@ -334,8 +440,8 @@
     display: flex;
     flex-direction: column;
     text-wrap: balance;
-    width: calc(50% - 25px);
-    flex-grow: 1;
+    width: 46ch;
+    /* flex-grow: 1; */
     justify-content: center;
 }
 
@@ -347,7 +453,7 @@
 
 .mediaColumn {
     display: flex;
-    width: calc(50% - 25px);
+    /* width: calc(50% - 25px); */
     text-align: center;
 }
 
@@ -356,23 +462,57 @@
 }
 
 .mediaColumn img {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
     border-radius: 5px;
-    aspect-ratio: 3/2;
+    /* aspect-ratio: 3/2; */
 }
 
 .footer {
-    display: flex;
-    /* min-height: 14vh; */
-    background-color: var(--homeFooterColor);
-    margin-top: 85px;
-    justify-content: center;
-    align-items: center;
+    background-color: var(--color-medium);
+    padding: 80px 20px 40px;
+    /* margin-top: 85px; */
+    /* border-top: var(--firstBorder); */
+}
 
-    & .copy {
-        font-size: .8rem;
-    }
+.footerContent {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.footerLogo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color-primary);
+}
+
+.footerLinks {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footerLinks a {
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.footerLinks a:hover {
+    color: coral;
+}
+
+.copy {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 20px;
+    text-align: center;
 }
 
 .pricingSection {
@@ -381,6 +521,7 @@
     align-items: center;
     gap: 50px;
     padding: 80px 20px;
+    background-color: var(--color-primary);
 
     & h2 {
         text-align: center;
