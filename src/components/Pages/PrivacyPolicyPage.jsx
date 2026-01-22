@@ -1,5 +1,5 @@
 import { HomeFooter, HomeNav } from './HomePage'
-import styles from './privacyPolicyPage.module.css'
+import styles from './PrivacyPolicyPage.module.css'
 export default function PrivacyPolicyPage () {
   return (
     <div style={{
