@@ -24,6 +24,7 @@ import { PublicOnlyRoute } from './components/Routes/PublicOnlyRoute'
 import { constants } from './services/constants'
 import { keepServerAwake } from './services/functions'
 import { useGlobalStore } from './store/global'
+import LegalAdvisePage from './components/Pages/LegalAdvisePage'
 
 function App () {
   const fetchCsrfToken = useSessionStore(state => state.fetchCsrfToken)
@@ -61,6 +62,11 @@ function App () {
     {
       path: `${rootPath}pricing`,
       element: <PricingPage />,
+      errorElement: <InternalError />
+    },
+    {
+      path: `${rootPath}aviso-legal`,
+      element: <LegalAdvisePage />,
       errorElement: <InternalError />
     },
 
