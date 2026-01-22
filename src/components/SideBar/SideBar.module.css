@@ -113,6 +113,8 @@
         margin: 0;
 
         & li {
+            margin-bottom: 0;
+
             >a {
                 text-decoration: none;
                 overflow: hidden;
