@@ -1,6 +1,16 @@
+import { HomeFooter, HomeNav } from './HomePage'
 import styles from './LegalAdvisePage.module.css'
 export default function LegalAdvisePage () {
   return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+      margin: '0 auto',
+      alignItems: 'center',
+      width: '100%'
+    }}>
+        <HomeNav />
        <main className={styles.container}>
       <h1 className={styles.title}>Aviso Legal</h1>
 
@@ -110,5 +120,7 @@ export default function LegalAdvisePage () {
         </p>
       </section>
     </main>
+    <HomeFooter />
+    </div>
   )
 }

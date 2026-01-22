@@ -11,20 +11,23 @@ import NotFound from './components/Pages/404'
 import InternalError from './components/Pages/500'
 import AppLayout from './components/Pages/AppLayout'
 import ArticleRenderer from './components/Pages/article'
+import CookiesPolicy from './components/Pages/CookiesPolicyPage'
 import HomePage from './components/Pages/HomePage'
+import LegalAdvisePage from './components/Pages/LegalAdvisePage'
 import Login from './components/Pages/LoginPage'
 import PricingPage from './components/Pages/PricingPage'
+import PrivacyPolicyPage from './components/Pages/PrivacyPolicyPage'
 import ProfilePage from './components/Pages/ProfilePage'
 import ReadingList from './components/Pages/ReadingList'
 import RecoveryPassword from './components/Pages/RecoveryPassword'
 import SingleColumnPage from './components/Pages/SingleColumnPage'
 import SubscriptionSuccessPage from './components/Pages/SubscriptionSuccessPage'
+import TermsAndConditions from './components/Pages/TermsAndConditionsPage'
 import { ProtectedRoute } from './components/Routes/ProtectedRoute'
 import { PublicOnlyRoute } from './components/Routes/PublicOnlyRoute'
 import { constants } from './services/constants'
 import { keepServerAwake } from './services/functions'
 import { useGlobalStore } from './store/global'
-import LegalAdvisePage from './components/Pages/LegalAdvisePage'
 
 function App () {
   const fetchCsrfToken = useSessionStore(state => state.fetchCsrfToken)
@@ -67,6 +70,21 @@ function App () {
     {
       path: `${rootPath}aviso-legal`,
       element: <LegalAdvisePage />,
+      errorElement: <InternalError />
+    },
+    {
+      path: `${rootPath}privacidad`,
+      element: <PrivacyPolicyPage />,
+      errorElement: <InternalError />
+    },
+    {
+      path: `${rootPath}terminos-y-condiciones`,
+      element: <TermsAndConditions />,
+      errorElement: <InternalError />
+    },
+    {
+      path: `${rootPath}politica-de-cookies`,
+      element: <CookiesPolicy />,
       errorElement: <InternalError />
     },
 

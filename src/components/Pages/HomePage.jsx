@@ -4,6 +4,44 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './HomePage.module.css'
 
+export function HomeNav () {
+  return (
+        <nav className={styles.nav}>
+          <div>
+            <Link to={'/'}>
+              <div className={styles.logo}>
+                <span>ZenMarks</span>
+              </div>
+            </Link>
+          </div>
+          <div className={styles.navlinks}>
+            <a href="">About</a>
+            <a href="">Donate</a>
+            <a href="">Github</a>
+          </div>
+        </nav>
+  )
+}
+
+export function HomeFooter () {
+  return (
+    <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerLogo}>
+            <span>ZenMarks</span>
+          </div>
+          <div className={styles.footerLinks}>
+            <Link to="/aviso-legal">Aviso Legal</Link>
+            <Link to="/privacidad">Política de Privacidad</Link>
+            <Link to="/terminos-y-condiciones">Términos de Uso</Link>
+            <Link to="/politica-de-cookies">Cookies</Link>
+          </div>
+          <p className={styles.copy}>© {new Date().getFullYear()} ZenMarks. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+  )
+}
+
 export default function HomePage () {
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
@@ -27,20 +65,7 @@ export default function HomePage () {
   })
   return (
     <div className={styles.home}>
-        <nav className={styles.nav}>
-          <div>
-            <Link to={'/'}>
-              <div className={styles.logo}>
-                <span>ZenMarks</span>
-              </div>
-            </Link>
-          </div>
-          <div className={styles.navlinks}>
-            <a href="">About</a>
-            <a href="">Donate</a>
-            <a href="">Github</a>
-          </div>
-        </nav>
+      <HomeNav />
       <header className={styles.header}>
         <div className={styles.heroSection}>
           <h1>Tu Mundo Digital <span>Organizado.</span></h1>
@@ -147,20 +172,7 @@ export default function HomePage () {
           </div>
         </section>
       </main>
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.footerLogo}>
-            <span>ZenMarks</span>
-          </div>
-          <div className={styles.footerLinks}>
-            <a href="#">Aviso Legal</a>
-            <a href="#">Política de Privacidad</a>
-            <a href="#">Términos de Uso</a>
-            <a href="#">Cookies</a>
-          </div>
-          <p className={styles.copy}>© {new Date().getFullYear()} ZenMarks. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+      <HomeFooter />
     </div>
   )
 }
