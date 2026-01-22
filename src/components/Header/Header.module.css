@@ -8,6 +8,7 @@
     justify-items: stretch;
     padding: 10px;
     order: 1;
+    margin: 0;
 
     p {
         font-size: 15px;
