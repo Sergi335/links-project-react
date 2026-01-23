@@ -16,7 +16,7 @@
     margin-bottom: 15px;
 
     & span {
-        color: coral;
+        color: #2d6edf;
     }
 }
 
@@ -49,7 +49,7 @@
 }
 
 .home a:hover {
-    color: coral;
+    color: #2d6edf;
 }
 
 .home video {
@@ -72,6 +72,10 @@
     align-items: center;
     /* gap: 20px; */
     width: 28ch;
+
+    & p:last-of-type {
+        color: var(--text-color-secondary) !important;
+    }
 }
 
 .card:nth-of-type(1) {
@@ -90,7 +94,7 @@
     }
 
     & h3 {
-        color: hsl(220deg 20.59% 31.46%);
+        color: hsl(220deg 20.9% 37.24%);
         text-transform: uppercase;
         z-index: 1;
     }
@@ -295,7 +299,7 @@
     font-size: 3rem;
 
     & span {
-        color: coral;
+        color: #2d6edf;
     }
 }
 
@@ -311,7 +315,7 @@
 
 .heroSection .subtitle {
     margin: 0;
-    /* color: coral; */
+    /* color: #2d6edf; */
     font-weight: 400;
     letter-spacing: 2.5px;
 
@@ -446,7 +450,7 @@
 }
 
 /* .textColumn p {
-    border-left: 2px solid coral;
+    border-left: 2px solid #2d6edf;
     padding-left: 15px;
     margin-left: 3px;
 } */
@@ -458,7 +462,7 @@
 }
 
 .strong {
-    color: coral;
+    color: #2d6edf;
 }
 
 .mediaColumn img {
@@ -506,7 +510,7 @@
 }
 
 .footerLinks a:hover {
-    color: coral;
+    color: #2d6edf;
 }
 
 .copy {
@@ -553,7 +557,7 @@
 
 /* .pricingCard:hover {
     transform: translateY(-5px);
-    border-color: coral;
+    border-color: #2d6edf;
 } */
 
 .pricingCard h3 {
@@ -567,7 +571,7 @@
     font-weight: bold;
     margin: 0;
     text-align: center;
-    color: coral;
+    color: #2d6edf;
 }
 
 .billingPeriod {
@@ -596,16 +600,16 @@
 
 .featuresList li::before {
     content: "✓";
-    color: coral;
+    color: #2d6edf;
     font-weight: bold;
 }
 
 .ctaButton {
     padding: 12px;
     border-radius: 5px;
-    border: 1px solid coral;
+    border: 1px solid #2d6edf;
     background-color: transparent;
-    color: coral;
+    color: #2d6edf;
     font-weight: bold;
     cursor: pointer;
     margin-top: auto;
@@ -614,23 +618,23 @@
 }
 
 .ctaButton:hover {
-    background-color: coral;
+    background-color: #2d6edf;
     color: white;
 }
 
 .pricingCard.pro {
-    border-color: coral;
+    border-color: #2d6edf;
     box-shadow: 0 0 15px rgba(255, 127, 80, 0.1);
 }
 
 .pricingCard.pro .ctaButton {
-    background-color: coral;
+    background-color: #2d6edf;
     color: white;
 }
 
 .pricingCard.pro .ctaButton:hover {
     background-color: transparent;
-    color: coral;
+    color: #2d6edf;
 }
 
 @media (max-width: 1325px) {
