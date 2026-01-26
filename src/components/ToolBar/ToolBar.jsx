@@ -13,9 +13,9 @@ import styles from './Toolbar.module.css'
 export default function ToolBar () {
   const { desktopName, slug } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  const actualDesktop = globalColumns.find(column => column.slug === desktopName && column.level === 0)
-  const desktopColumns = globalColumns.filter(column => column.parentId === actualDesktop?._id).toSorted((a, b) => a.orden - b.orden)
-  console.log('🚀 ~ ToolBar ~ desktopColumns:', desktopColumns)
+  console.log('🚀 ~ ToolBar ~ globalColumns:', globalColumns)
+  const actualDesktop = globalColumns?.find(column => column.slug === desktopName && column.level === 0)
+  const desktopColumns = globalColumns?.filter(column => column.parentId === actualDesktop?._id).toSorted((a, b) => a.orden - b.orden)
   const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)

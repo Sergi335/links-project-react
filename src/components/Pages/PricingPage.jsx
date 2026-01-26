@@ -5,14 +5,14 @@ import { PLANS } from '../../lib/stripe'
 import { createCheckoutSession } from '../../services/dbQueries'
 import { useSessionStore } from '../../store/session'
 import styles from './PricingPage.module.css'
+import { HomeNav, HomeFooter } from './HomePage'
 
-export default function PricingPage () {
+export function PricingTable ({ style = {} }) {
   const navigate = useNavigate()
   const user = useSessionStore(state => state.user)
   const [loadingPlan, setLoadingPlan] = useState(null)
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
-
   const handleSubscribe = async (plan) => {
     if (!plan.priceId) {
       // Plan gratuito - redirigir a registro o app
@@ -53,9 +53,8 @@ export default function PricingPage () {
       setLoadingPlan(null)
     }
   }
-
   return (
-    <div className={styles.pricingContainer}>
+    <div className={styles.pricingContainer} style={style}>
       <header className={styles.header}>
         <h1>Elige tu plan</h1>
         <p>Selecciona el plan que mejor se adapte a tus necesidades</p>
@@ -105,6 +104,16 @@ export default function PricingPage () {
           Los pagos son procesados de forma segura por Stripe. Puedes cancelar en cualquier momento.
         </p>
       </footer>
+    </div>
+  )
+}
+
+export default function PricingPage () {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }} >
+    <HomeNav />
+    <PricingTable />
+    <HomeFooter />
     </div>
   )
 }

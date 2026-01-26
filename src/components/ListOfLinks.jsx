@@ -2,14 +2,11 @@ import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useCategoryColumns } from '../hooks/useCategoryColumns'
 import { useGlobalData } from '../hooks/useGlobalData'
-import { useFormsStore } from '../store/forms'
 import { useLinksStore } from '../store/links'
 import { usePreferencesStore } from '../store/preferences'
 import Columns from './Columns'
 import ColumnsLoader from './ColumnsLoader'
-import CustomizeDesktopPanel from './CustomizeDesktopPanel'
 import FaviconSelector from './FaviconSelector'
-import FormsContainer from './FormsContainer'
 import styles from './ListOfLinks.module.css'
 import DesktopNameDisplay from './ToolBar/DesktopNameDisplay'
 
@@ -54,8 +51,6 @@ export default function ListOfLinks () {
   console.log(numberOfPastedLinks)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
-
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
 
   // Limpia selectedLinks al mover los seleccionados a otra columna
   useEffect(() => {
@@ -102,8 +97,6 @@ export default function ListOfLinks () {
                 />
                 )
           }
-          <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
-          <FormsContainer />
           <FaviconSelector />
         </div>
       </div>

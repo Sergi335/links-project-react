@@ -49,6 +49,7 @@ html.dark {
   --sidebar-top-onmobile: 99px;
   --sidebar-desktop-width: 260px;
   --link-height: 43px;
+  --homePageAccentColor: #2d6edf;
 
   /* --text: oklch(17.30% 0.007 34.32);
   --background: oklch(98.07% 0.002 17.19);

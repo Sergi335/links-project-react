@@ -7,6 +7,8 @@ import HeaderInfo from '../Header/HeaderInfo'
 import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
 import ToolBar from '../ToolBar/ToolBar'
+import CustomizeDesktopPanel from '../CustomizeDesktopPanel'
+import FormsContainer from '../FormsContainer'
 
 export default function AppLayout () {
   const { desktopName } = useParams()
@@ -14,6 +16,7 @@ export default function AppLayout () {
   useDbQueries()
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
   const [isProfilePage, setIsProfilePage] = useState(false)
+  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -45,6 +48,8 @@ export default function AppLayout () {
         </header>
         <Outlet />
       </div>
+      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
+      <FormsContainer />
       <ScrollToTop />
     </>
   )

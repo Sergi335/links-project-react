@@ -13,6 +13,7 @@ import AppLayout from './components/Pages/AppLayout'
 import ArticleRenderer from './components/Pages/article'
 import CookiesPolicy from './components/Pages/CookiesPolicyPage'
 import HomePage from './components/Pages/HomePage'
+import FeaturesPage from './components/Pages/FeaturesPage'
 import LegalAdvisePage from './components/Pages/LegalAdvisePage'
 import Login from './components/Pages/LoginPage'
 import PricingPage from './components/Pages/PricingPage'
@@ -58,6 +59,11 @@ function App () {
     {
       path: rootPath,
       element: <HomePage />,
+      errorElement: <InternalError />
+    },
+    {
+      path: `${rootPath}features`,
+      element: <FeaturesPage />,
       errorElement: <InternalError />
     },
 

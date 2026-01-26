@@ -20,7 +20,7 @@ export const PLANS = [
     description: 'Para uso personal',
     features: [
       '50MB de almacenamiento',
-      '20 llamadas IA al mes',
+      '5 llamadas IA al mes',
       'Soporte básico'
     ],
     priceId: null,
@@ -34,7 +34,7 @@ export const PLANS = [
     description: 'Para usuarios avanzados',
     features: [
       '5GB de almacenamiento',
-      '500 llamadas IA al mes',
+      '50 llamadas IA al mes',
       'Soporte prioritario',
       'Exportación de datos'
     ],

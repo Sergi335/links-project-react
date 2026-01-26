@@ -14,13 +14,14 @@
     text-align: center;
     font-size: 5rem;
     margin-bottom: 15px;
+    line-height: 1;
 
     & span {
-        color: #2d6edf;
+        color: var(--homePageAccentColor);
     }
 }
 
-.home header {
+.home>header {
     min-height: 50vh;
     background: radial-gradient(circle, rgba(42, 123, 155, 0.01) 0%, var(--color-primary) 140%);
 }
@@ -48,10 +49,6 @@
     width: 100%;
 }
 
-.home a:hover {
-    color: #2d6edf;
-}
-
 .home video {
     width: 90vw;
     height: 678px;
@@ -76,6 +73,14 @@
     & p:last-of-type {
         color: var(--text-color-secondary) !important;
     }
+
+    & p {
+        margin-top: 0;
+    }
+
+    & h3 {
+        font-weight: 600;
+    }
 }
 
 .card:nth-of-type(1) {
@@ -90,7 +95,7 @@
         top: 0px;
         right: 10px;
         color: #1e232d;
-        opacity: .5;
+        opacity: .3;
     }
 
     & h3 {
@@ -119,11 +124,11 @@
         top: 0px;
         right: 10px;
         color: #34415b;
-        opacity: .5;
+        opacity: .3;
     }
 
     & h3 {
-        color: hsl(220deg 26.85% 19.98%);
+        color: hsl(220deg 27.2% 18.07%);
         text-transform: uppercase;
         z-index: 1;
     }
@@ -148,7 +153,7 @@
         top: 0px;
         right: 10px;
         color: #5d3535;
-        opacity: .5;
+        opacity: .3;
     }
 
     & h3 {
@@ -177,7 +182,7 @@
         top: 0px;
         right: 10px;
         color: #386550;
-        opacity: .5;
+        opacity: .3;
     }
 
     & h3 {
@@ -248,7 +253,7 @@
         top: 0px;
         right: 10px;
         color: #3a5f65;
-        opacity: .5;
+        opacity: .3;
     }
 
     & h3 {
@@ -299,14 +304,8 @@
     font-size: 3rem;
 
     & span {
-        color: #2d6edf;
+        color: var(--homePageAccentColor);
     }
-}
-
-.cards p {
-    color: var(--text-color-secondary);
-    /* margin-bottom: 65px; */
-    margin-top: 8px;
 }
 
 .logo {
@@ -315,7 +314,7 @@
 
 .heroSection .subtitle {
     margin: 0;
-    /* color: #2d6edf; */
+    /* color: var(--homePageAccentColor); */
     font-weight: 400;
     letter-spacing: 2.5px;
 
@@ -331,6 +330,10 @@
     & a {
         font-size: 1.2rem;
         font-weight: 500;
+
+        &:hover {
+            color: var(--homePageAccentColor);
+        }
     }
 }
 
@@ -395,7 +398,7 @@
 .nav {
     display: flex;
     justify-content: space-between;
-    padding: 20px 250px;
+    padding: 12px 250px;
     align-items: center;
     border-bottom: var(--firstBorder);
     position: sticky;
@@ -407,6 +410,7 @@
     animation-timeline: scroll();
     animation-range: 0 150px;
     animation-fill-mode: both;
+    background-color: var(--color-primary);
 }
 
 @keyframes headerAnimation {
@@ -423,8 +427,8 @@
 
 .start {
     padding: 12px 0;
-    background-color: #f9f9f9;
-    color: #121212;
+    background-color: var(--homePageAccentColor);
+    color: #ffffff;
     border-radius: 5px;
     font-size: 1rem;
     position: relative;
@@ -433,6 +437,11 @@
     justify-content: center;
     /* box-shadow: 0px 0px 25px var(--firstShadow); */
     border: var(--firstBorder);
+}
+
+.start:hover {
+    background-color: var(--homePageAccentColor);
+    color: #ffffff;
 }
 
 .start.try {
@@ -450,7 +459,7 @@
 }
 
 /* .textColumn p {
-    border-left: 2px solid #2d6edf;
+    border-left: 2px solid var(--homePageAccentColor);
     padding-left: 15px;
     margin-left: 3px;
 } */
@@ -462,7 +471,7 @@
 }
 
 .strong {
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
 }
 
 .mediaColumn img {
@@ -510,7 +519,7 @@
 }
 
 .footerLinks a:hover {
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
 }
 
 .copy {
@@ -525,7 +534,7 @@
     flex-direction: column;
     align-items: center;
     gap: 50px;
-    padding: 80px 20px;
+    /* padding: 80px 20px; */
     background-color: var(--color-primary);
 
     & h2 {
@@ -557,7 +566,7 @@
 
 /* .pricingCard:hover {
     transform: translateY(-5px);
-    border-color: #2d6edf;
+    border-color: var(--homePageAccentColor);
 } */
 
 .pricingCard h3 {
@@ -571,7 +580,7 @@
     font-weight: bold;
     margin: 0;
     text-align: center;
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
 }
 
 .billingPeriod {
@@ -600,16 +609,16 @@
 
 .featuresList li::before {
     content: "✓";
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
     font-weight: bold;
 }
 
 .ctaButton {
     padding: 12px;
     border-radius: 5px;
-    border: 1px solid #2d6edf;
+    border: 1px solid var(--homePageAccentColor);
     background-color: transparent;
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
     font-weight: bold;
     cursor: pointer;
     margin-top: auto;
@@ -618,23 +627,40 @@
 }
 
 .ctaButton:hover {
-    background-color: #2d6edf;
+    background-color: var(--homePageAccentColor);
     color: white;
 }
 
 .pricingCard.pro {
-    border-color: #2d6edf;
+    border-color: var(--homePageAccentColor);
     box-shadow: 0 0 15px rgba(255, 127, 80, 0.1);
 }
 
 .pricingCard.pro .ctaButton {
-    background-color: #2d6edf;
+    background-color: var(--homePageAccentColor);
     color: white;
 }
 
 .pricingCard.pro .ctaButton:hover {
     background-color: transparent;
-    color: #2d6edf;
+    color: var(--homePageAccentColor);
+}
+
+.navLogin a {
+    background-color: var(--homePageAccentColor);
+    color: white;
+    padding: 6px 21px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: var(--firstBorder);
+}
+
+.navLogin a:hover {
+    background-color: transparent;
+    color: var(--homePageAccentColor);
 }
 
 @media (max-width: 1325px) {

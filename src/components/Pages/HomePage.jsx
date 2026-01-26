@@ -3,6 +3,7 @@ import 'photoswipe/style.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './HomePage.module.css'
+import { PricingTable } from './PricingPage'
 
 export function HomeNav () {
   return (
@@ -15,9 +16,12 @@ export function HomeNav () {
             </Link>
           </div>
           <div className={styles.navlinks}>
-            <a href="#features">About</a>
-            <a href="">Donate</a>
-            <a href="#pricing">Pricing</a>
+            <Link to="/features">Features</Link>
+            <Link to="/pricing">Pricing</Link>
+            <a href="#footer">About</a>
+          </div>
+          <div className={styles.navLogin}>
+            <Link to="/login">Login</Link>
           </div>
         </nav>
   )
@@ -25,7 +29,7 @@ export function HomeNav () {
 
 export function HomeFooter () {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} id="footer">
         <div className={styles.footerContent}>
           <div className={styles.footerLogo}>
             <span>ZenMarks</span>
@@ -69,7 +73,7 @@ export default function HomePage () {
       <header className={styles.header}>
         <div className={styles.heroSection}>
           <h1>Tu Mundo Digital <span>Organizado.</span></h1>
-          <p>Organiza tu mundo digital con ZenMarks, el gestor de enlaces para productividad y organización.</p>
+          <p>Organiza tu mundo digital con ZenMarks, el gestor de enlaces para productividad y ocio.</p>
           <div className={styles.actionLinks}>
             <Link className={styles.start} to={'/login'}>Get Started</Link>
             <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
@@ -132,49 +136,7 @@ export default function HomePage () {
           </div>
         </section>
         <section className={styles.pricingSection} id="pricing">
-          <h2>Pricing Plans</h2>
-          <div className={styles.pricingContainer}>
-            <div className={styles.pricingCard}>
-              <h3>Free</h3>
-              <p className={styles.price}>$0</p>
-              <p className={styles.billingPeriod}>/month</p>
-              <ul className={styles.featuresList}>
-                <li>Up to 100 Links</li>
-                <li>Basic Search</li>
-                <li>1GB Storage</li>
-                <li>Community Support</li>
-              </ul>
-              <button className={styles.ctaButton}>Get Started</button>
-            </div>
-
-            <div className={`${styles.pricingCard} ${styles.pro}`}>
-              <h3>Pro</h3>
-              <p className={styles.price}>$9</p>
-              <p className={styles.billingPeriod}>/month</p>
-              <ul className={styles.featuresList}>
-                <li>Unlimited Links</li>
-                <li>Advanced AI Search</li>
-                <li>Full AI Features</li>
-                <li>10GB Storage</li>
-                <li>Priority Support</li>
-              </ul>
-              <button className={styles.ctaButton}>Go Pro</button>
-            </div>
-
-            <div className={styles.pricingCard}>
-              <h3>Enterprise</h3>
-              <p className={styles.price}>Custom</p>
-              <p className={styles.billingPeriod}>contact us</p>
-              <ul className={styles.featuresList}>
-                <li>Everything in Pro</li>
-                <li>Unlimited Storage</li>
-                <li>Team Collaboration</li>
-                <li>Dedicated Account Manager</li>
-                <li>SSO Integration</li>
-              </ul>
-              <button className={styles.ctaButton}>Contact Sales</button>
-            </div>
-          </div>
+          <PricingTable style={{ minHeight: 'auto' }} />
         </section>
       </main>
       <HomeFooter />

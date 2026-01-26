@@ -49,8 +49,8 @@
 }
 
 .highlighted {
-    border-color: var(--accentColor);
-    box-shadow: 0 0 0 2px var(--accentColor);
+    border-color: var(--homePageAccentColor);
+    box-shadow: 0 0 0 2px var(--homePageAccentColor);
 }
 
 .badge {
@@ -58,7 +58,7 @@
     top: -12px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--accentColor);
+    background: var(--homePageAccentColor);
     color: white;
     padding: 4px 16px;
     border-radius: 20px;
@@ -137,7 +137,7 @@
 }
 
 .primaryBtn {
-    background: var(--accentColor);
+    background: var(--homePageAccentColor);
     color: white;
     border: none;
 
@@ -150,22 +150,23 @@
 .secondaryBtn {
     background: transparent;
     color: var(--text-color-primary);
-    border: 1px solid var(--firstBorderColor);
+    border: 1px solid var(--homePageAccentColor);
 
     &:hover:not(:disabled) {
-        background: var(--color-secondary);
+        background: var(--homePageAccentColor);
         border-color: var(--accentColor);
     }
 }
 
 .footer {
-    margin-top: 50px;
+    margin-top: 125px;
     text-align: center;
     color: var(--text-color-secondary);
 
     a {
         color: var(--accentColor);
         text-decoration: none;
+        justify-content: center;
 
         &:hover {
             text-decoration: underline;
