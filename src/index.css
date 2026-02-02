@@ -239,7 +239,7 @@ header.main_header {
 
 @media (min-width: 1280px) {
   header.main_header {
-    padding-inline: 18px;
+    padding: 0 60px 0 18px;
 
   }
 }

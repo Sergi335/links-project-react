@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './HomePage.module.css'
 import { PricingTable } from './PricingPage'
+import { YouTube, Sparkles } from '../Icons/icons'
 
 export function HomeNav () {
   return (
@@ -73,12 +74,12 @@ export default function HomePage () {
       <header className={styles.header}>
         <div className={styles.heroSection}>
           <h1>Tu Mundo Digital <span>Organizado.</span></h1>
-          <p>Organiza tu mundo digital con ZenMarks, el gestor de enlaces para productividad y ocio.</p>
+          <p>Organiza tu mundo digital con ZenMarks, el gestor de marcadores para productividad y ocio.</p>
           <div className={styles.actionLinks}>
             <Link className={styles.start} to={'/login'}>Get Started</Link>
             <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
           </div>
-          <img src="img/heroimage2.png" />
+          <img src="img/heroimage4.png" />
         </div>
       </header>
       <main className={styles.main}>
@@ -126,7 +127,11 @@ export default function HomePage () {
           <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'row', gap: '50px' }}>
             <div className={styles.textColumn}>
               <h2>Potentes Funciones a tu Alcance</h2>
-              <p>Guardar enlaces con un simple copiar y pegar, añadir descripciones detalladas, imágenes, notas...</p>
+              <p>Resume y chatea con videos de Youtube, guarda enlaces con un simple copiar y pegar, añade descripciones detalladas, imágenes, notas...</p>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
+                <YouTube />
+                <Sparkles />
+              </div>
               <p><strong>Zenmarks</strong> ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces.</p>
               <p>Reordénarlos con facilidad, reproducir vídeos directamente desde la aplicación y más.</p>
             </div>

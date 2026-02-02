@@ -27,7 +27,8 @@ export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
 }
 export function UserPreferences ({ user, setUser }) {
   console.log(user)
-  const [visible, setVisible] = useState(false)
+  // const [visible, setVisible] = useState(false)
+  const deleteAccountRef = useRef(null)
   const [reauthVisible, setReauthVisible] = useState(false)
   const [bookmarksLoading, setBookmarksLoading] = useState(false)
   const { handleDeleteUser, handleReauthenticate, handleReauthenticateWithGoogle } = useGoogleAuth()
@@ -64,7 +65,8 @@ export function UserPreferences ({ user, setUser }) {
     const googleResponse = await handleDeleteUser()
     if (googleResponse.code === 'auth/requires-recent-login') {
       if (user.signMethod === 'google') {
-        setVisible(false)
+        // setVisible(false)
+        deleteAccountRef.current.hidePopover()
         toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
         const response = await handleReauthenticateWithGoogle()
         const { hasError, message } = handleResponseErrors(response)
@@ -80,7 +82,8 @@ export function UserPreferences ({ user, setUser }) {
         }, 2000)
         return
       }
-      setVisible(false)
+      // setVisible(false)
+      deleteAccountRef.current.hidePopover()
       toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
       setReauthVisible(true)
       return
@@ -174,24 +177,25 @@ export function UserPreferences ({ user, setUser }) {
       </div>
       <div className={styles.closeAccount}>
       <h3>Cierra tu Cuenta</h3>
-      <button id="closeAccount" onClick={() => setVisible(true)}>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <button id="closeAccount" popovertarget="deleteAccount">
         Cerrar Cuenta
       </button>
       </div>
-      {
-        visible
-          ? (
-            <div className='deskForm'>
+
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            <div ref={deleteAccountRef} popover='' id='deleteAccount'>
+              <form action="" className='deskForm'>
               <p>Seguro que quieres cerrar tu cuenta? Esto borrará todos tus datos</p>
               <p>Esta operación no se puede deshacer</p>
               <div className='button_group'>
-                <button id="confirm" onClick={handleDeleteAccount}>Confirmar</button>
-                <button id="cancel" onClick={() => setVisible(false)}>Cancelar</button>
+                <button type="button" id="confirm" onClick={handleDeleteAccount}>Confirmar</button>
+                {/* eslint-disable-next-line react/no-unknown-property */}
+                <button type="button" id="cancel" popovertarget="deleteAccount" popovertargetaction="hide">Cancelar</button>
               </div>
+              </form>
             </div>
-            )
-          : null
-      }
+
       {
         reauthVisible && <ConfirmPasswordForm handleReauth={handleReauth} setReauthVisible={setReauthVisible}/>
       }

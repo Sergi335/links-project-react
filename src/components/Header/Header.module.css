@@ -303,7 +303,7 @@
     margin-left: auto;
     display: flex;
     gap: 8px;
-    padding-right: 28px;
+    padding-right: 65px;
 
     &>p {
         background-color: rgb(47, 5, 83);

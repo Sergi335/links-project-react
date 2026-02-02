@@ -1,6 +1,6 @@
 .searchbox {
     background-color: var(--color-primary);
-    top: -75%;
+    top: 25%;
     flex-direction: column;
     width: 85%;
     padding: 10px;
@@ -311,6 +311,7 @@
     } */
     .searchbox {
         width: 60ch;
+        margin: 0 auto;
     }
 
     .searchButton {
