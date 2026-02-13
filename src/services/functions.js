@@ -1,5 +1,6 @@
 import { apiFetch } from './api'
 import { constants } from './constants'
+import { useSessionStore } from '../store/session'
 export function setCookie (name, value, days, domain) {
   let expires = ''
   if (days) {
@@ -188,6 +189,12 @@ export function handleResponseErrors (response) {
   console.log(response.message)
   if (response.success !== true) {
     console.log(response)
+    if (response.error === 'No hay cookie de sesión') {
+      console.log('No hay cookie de sesión')
+      useSessionStore.getState().setUser(null)
+      useSessionStore.getState().setCsfrtoken('')
+      window.location.href = '/'
+    }
     return { hasError: true, message: response.message || 'Error al efectuar la operación', error: response.error || '' }
   }
   return { hasError: false, message: '' }

@@ -13,6 +13,7 @@
     border-radius: 5px;
     box-shadow: 0px 10px 12px var(--firstShadow);
     overflow-y: auto;
+    z-index: 2;
 }
 
 .menuMoveTo p:first-child {

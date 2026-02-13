@@ -156,6 +156,7 @@
     width: fit-content;
     margin-bottom: 15px;
 }
+
 .closeAccount {
     display: flex;
     flex-direction: column;
@@ -166,6 +167,7 @@
     width: fit-content;
     margin-bottom: 15px;
 }
+
 .importSection h3 {
     margin: 0 0 5px 0;
 }
@@ -227,6 +229,7 @@
     align-items: center;
     flex-direction: column;
     width: 225px;
+    height: 225px;
     /* padding: 15px; */
     /* border: 1px solid var(--firstBorderColor);
     border-radius: 5px;
@@ -352,7 +355,7 @@ h3 {
     min-height: 365px;
     border: var(--firstBorder);
     padding: 32px;
-    justify-content: space-between; 
+    justify-content: space-between;
 
     & button {
         width: fit-content;
@@ -494,10 +497,12 @@ tr:nth-child(odd) {
     justify-content: space-between;
     width: fit-content;
 }
+
 .securityWrapper {
     display: flex;
     justify-content: space-around;
 }
+
 .flexForm {
     display: flex;
     flex-direction: column;
@@ -863,6 +868,7 @@ tr:nth-child(odd) {
         flex-wrap: nowrap;
     }
 }
+
 /* ------------ SUBSCRIPTION SECTION ------------ */
 
 .subscriptionSection {
