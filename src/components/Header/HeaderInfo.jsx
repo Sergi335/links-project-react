@@ -4,7 +4,7 @@ import { CloseMenuIcon, MenuIcon } from '../Icons/icons'
 import styles from './Header.module.css'
 // import LogOut from './LogOut'
 import { useState } from 'react'
-import SearchButton from './SearchButton'
+// import SearchButton from './SearchButton'
 import ThemeSwitcher from './ThemeSwitcher'
 import UserInfo from './UserInfo'
 
@@ -23,7 +23,7 @@ export default function HeaderInfo () {
           <span>ZenMarks</span>
         </div>
       </Link>
-      <SearchButton />
+      {/* <SearchButton /> */}
       {/* <Link to={'/readinglist'} className={`${styles.header_info_link} ${styles.divider_right} ${styles.divider_left} ${styles.flex_center}`}>Lista de Lectura</Link> */}
       <ThemeSwitcher />
       <UserInfo />

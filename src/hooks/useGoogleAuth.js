@@ -50,6 +50,7 @@ export default function useGoogleAuth () {
         }
       })
       .catch((error) => {
+        setLoginLoading(false)
         toast.error('Error al iniciar sesión, servidor no disponible en estos momentos', { toastId: 'login-error' })
         console.error('Error in postIdTokenToSessionLogin:', error)
       }) // Control de errores

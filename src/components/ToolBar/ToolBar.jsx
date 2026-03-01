@@ -3,29 +3,31 @@ import { useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createColumn } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
-import { useFormsStore } from '../../store/forms'
+// import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { usePreferencesStore } from '../../store/preferences'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
-import { AddColumnIcon, ExpandHeightIcon, HidePanels, PinPanelIcon, SettingsWheelIcon } from '../Icons/icons'
+import { AddColumnIcon, ExpandHeightIcon, HidePanels, PinPanelIcon } from '../Icons/icons'
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
-  const { desktopName, slug } = useParams()
+  const { desktopName, slug, id } = useParams()
+  console.log('🚀 ~ ToolBar ~ desktopName, slug, id:', desktopName, slug, id)
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  console.log('🚀 ~ ToolBar ~ globalColumns:', globalColumns)
+  // console.log('🚀 ~ ToolBar ~ globalColumns:', globalColumns)
   const actualDesktop = globalColumns?.find(column => column.slug === desktopName && column.level === 0)
   const desktopColumns = globalColumns?.filter(column => column.parentId === actualDesktop?._id).toSorted((a, b) => a.orden - b.orden)
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
-  const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
+  // const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
+  // const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   const globalOpenColumns = usePreferencesStore(state => state.globalOpenColumns)
   const setGlobalOpenColumns = usePreferencesStore(state => state.setGlobalOpenColumns)
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   const desktop = topLevelCategoriesStore.find(desk => desk.slug === desktopName)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  const triggerSidebarCollapse = useGlobalStore(state => state.triggerSidebarCollapse)
+  // const triggerSidebarCollapse = useGlobalStore(state => state.triggerSidebarCollapse)
   const location = useLocation()
   const isDesktopLocation = location.pathname !== '/app/profile' && location.pathname !== '/app/readinglist'
+  const isSingleColumn = slug !== undefined
   const [newColumnId, setNewColumnId] = useState(null)
 
   const getParentId = () => {
@@ -115,18 +117,24 @@ export default function ToolBar () {
                 <button className={styles.sideButtons} onClick={handleHideColumns}>
                   <HidePanels className={styles.uiIcon} id={'hidePanels'} />
                 </button>
-                <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
+                {/* <button className={styles.sideButtons} onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}>
                   <SettingsWheelIcon className={styles.uiIcon} id={'editDesk'} />
-                </button>
-                <button className={styles.sideButtons} onClick={handleAddColumn}>
-                  <AddColumnIcon className={styles.uiIcon} id={'addCol'} />
-                </button>
-                <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
-                  <ExpandHeightIcon className={styles.uiIcon} />
-                </button>
-                <button className={styles.sideButtons} onClick={triggerSidebarCollapse} title="Colapsar categorías">
+                </button> */}
+                {
+                  !isSingleColumn && (
+                    <>
+                      <button className={styles.sideButtons} onClick={handleAddColumn}>
+                        <AddColumnIcon className={styles.uiIcon} id={'addCol'} />
+                      </button>
+                      <button className={styles.sideButtons} onClick={handleExpandAllColumns}>
+                        <ExpandHeightIcon className={styles.uiIcon} />
+                      </button>
+                    </>
+                  )
+                }
+                {/* <button className={styles.sideButtons} onClick={triggerSidebarCollapse} title="Colapsar categorías">
                   <ExpandHeightIcon className={'uiIcon rotate180'} />
-                </button>
+                </button> */}
               </>
             )
           }

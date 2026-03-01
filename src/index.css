@@ -68,6 +68,7 @@ html.dark {
   --text-color-inverse: var(--color-zinc-100);
   --btn-bg-color: hsl(220 18% 27% / 1);
   --column-background: hsl(220deg 20% 97% / 38%);
+  --logo-background: #e7d3ff;
 
   --placeholderImg: url(/img/placeholderImgLight.png);
   --placeholderVid: url(/img/placeholderVidLight.png);
@@ -114,6 +115,7 @@ html.dark {
   --text-color-inverse: var(--color-neutral-900);
   --btn-bg-color: var(--color-slate-100);
   --column-background: hsl(220deg 18% 10% / 44%);
+  --logo-background: #381e57;
 
   --placeholderImg: url('/img/placeholderImg.png');
   --placeholderVid: url('/img/placeholderVid.png');
@@ -644,10 +646,6 @@ favopt1 {
   /* .pinned {
     width: var(--sidebar-desktop-width) !important;
   } */
-
-  #sidebar {
-    transition: width .3s ease-in-out;
-  }
 
   /* #sidebar:hover {
     width: var(--sidebar-desktop-width) !important;

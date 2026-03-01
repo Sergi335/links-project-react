@@ -16,21 +16,21 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
   const startXRef = useRef(0)
   const startWidthRef = useRef(0)
   const savedWidthRef = useRef(getSavedWidth())
+  const widthRef = useRef(getSavedWidth())
+  const rafRef = useRef(null)
+  const pendingWidthRef = useRef(null)
 
-  // Guardar en localStorage cuando cambia el width (solo si está pinned)
-  useEffect(() => {
-    if (isPinned && width !== minWidth) {
-      localStorage.setItem(storageKey, width.toString())
-      savedWidthRef.current = width
-    }
-  }, [width, isPinned, minWidth, storageKey])
+  const setWidthValue = useCallback((nextWidth) => {
+    widthRef.current = nextWidth
+    setWidth(nextWidth)
+  }, [])
 
   // Observer para detectar cambios en la clase "pinned"
   useEffect(() => {
     const element = elementRef.current
     if (!element) return
 
-    // Función para verificar si tiene la clase pinned
+    // Funcion para verificar si tiene la clase pinned
     const checkPinnedClass = () => {
       const hasPinned = element.classList.contains('pinned')
       setIsPinned(hasPinned)
@@ -39,18 +39,19 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
         // Restaurar el ancho guardado
         const savedWidth = localStorage.getItem(storageKey)
         if (savedWidth) {
-          setWidth(parseInt(savedWidth, 10))
+          setWidthValue(parseInt(savedWidth, 10))
         } else {
-          setWidth(savedWidthRef.current)
+          setWidthValue(savedWidthRef.current)
         }
       } else {
         // Guardar el ancho actual antes de minimizar
-        if (width !== minWidth) {
-          localStorage.setItem(storageKey, width.toString())
-          savedWidthRef.current = width
+        if (widthRef.current !== minWidth) {
+          localStorage.setItem(storageKey, widthRef.current.toString())
+          savedWidthRef.current = widthRef.current
         }
-        // Adoptar la anchura mínima
-        setWidth(minWidth)
+
+        // Adoptar la anchura minima
+        setWidthValue(minWidth)
       }
     }
 
@@ -72,34 +73,34 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
     })
 
     return () => observer.disconnect()
-  }, [minWidth, storageKey])
+  }, [minWidth, storageKey, setWidthValue])
 
-  // Handlers para hover - expandir cuando no está pinned
+  // Handlers para hover - expandir cuando no esta pinned
   const handleMouseEnter = useCallback(() => {
     if (!isPinned) {
       setIsHovered(true)
       const savedWidth = localStorage.getItem(storageKey)
       if (savedWidth) {
-        setWidth(parseInt(savedWidth, 10))
+        setWidthValue(parseInt(savedWidth, 10))
       } else {
-        setWidth(savedWidthRef.current)
+        setWidthValue(savedWidthRef.current)
       }
     }
-  }, [isPinned, storageKey])
+  }, [isPinned, storageKey, setWidthValue])
 
   const handleMouseLeave = useCallback(() => {
     if (!isPinned) {
       setIsHovered(false)
-      setWidth(minWidth)
+      setWidthValue(minWidth)
     }
-  }, [isPinned, minWidth])
+  }, [isPinned, minWidth, setWidthValue])
 
   const handleMouseDown = useCallback((e) => {
     e.preventDefault()
     setIsResizing(true)
     startXRef.current = e.clientX
-    startWidthRef.current = width
-  }, [width])
+    startWidthRef.current = widthRef.current
+  }, [])
 
   const handleMouseMove = useCallback((e) => {
     if (!isResizing) return
@@ -107,21 +108,49 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
     const diff = e.clientX - startXRef.current
     const newWidth = startWidthRef.current + diff
 
-    // Aplicar límites mínimo y máximo
+    // Aplicar limites minimo y maximo
     const constrainedWidth = Math.max(minWidth, Math.min(maxWidth, newWidth))
-    setWidth(constrainedWidth)
-  }, [isResizing, minWidth, maxWidth])
+
+    if (constrainedWidth === widthRef.current) return
+
+    pendingWidthRef.current = constrainedWidth
+
+    if (rafRef.current !== null) return
+
+    rafRef.current = window.requestAnimationFrame(() => {
+      rafRef.current = null
+      const nextWidth = pendingWidthRef.current
+      if (nextWidth == null || nextWidth === widthRef.current) return
+      setWidthValue(nextWidth)
+    })
+  }, [isResizing, minWidth, maxWidth, setWidthValue])
 
   const handleMouseUp = useCallback(() => {
+    if (rafRef.current !== null) {
+      window.cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+    }
+
+    if (pendingWidthRef.current != null && pendingWidthRef.current !== widthRef.current) {
+      setWidthValue(pendingWidthRef.current)
+    }
+
+    pendingWidthRef.current = null
+
+    if (isPinned && widthRef.current !== minWidth) {
+      localStorage.setItem(storageKey, widthRef.current.toString())
+      savedWidthRef.current = widthRef.current
+    }
+
     setIsResizing(false)
-  }, [])
+  }, [isPinned, minWidth, storageKey, setWidthValue])
 
   useEffect(() => {
     if (isResizing) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
 
-      // Prevenir selección de texto mientras se redimensiona
+      // Prevenir seleccion de texto mientras se redimensiona
       document.body.style.userSelect = 'none'
       document.body.style.cursor = 'ew-resize'
 
@@ -134,6 +163,14 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
     }
   }, [isResizing, handleMouseMove, handleMouseUp])
 
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [])
+
   return {
     width,
     elementRef,
@@ -143,7 +180,7 @@ const useResizable = (initialWidth = 300, minWidth = 100, maxWidth = 800, storag
     isResizing,
     isHovered,
     isPinned,
-    setWidth
+    setWidth: setWidthValue
   }
 }
 
