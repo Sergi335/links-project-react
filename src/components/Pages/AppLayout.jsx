@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useParams } from 'react-router-dom'
 import useDbQueries from '../../hooks/useDbQueries'
+import { useTitle } from '../../hooks/useTitle'
 import { useFormsStore } from '../../store/forms'
+import CustomizeDesktopPanel from '../CustomizeDesktopPanel'
+import FormsContainer from '../FormsContainer'
 import Bookmarks from '../Header/Bookmarks'
 import HeaderInfo from '../Header/HeaderInfo'
 import ScrollToTop from '../ScrollToTop'
 import SideBar from '../SideBar/SideBar'
 import ToolBar from '../ToolBar/ToolBar'
-import CustomizeDesktopPanel from '../CustomizeDesktopPanel'
-import FormsContainer from '../FormsContainer'
 
 export default function AppLayout () {
-  const { desktopName } = useParams()
+  const { desktopName, slug } = useParams()
   const location = useLocation()
+  useTitle({ slug, desktopName })
   useDbQueries()
   const setActualDesktop = useFormsStore(state => state.setActualDesktop)
   const [isProfilePage, setIsProfilePage] = useState(false)

@@ -216,6 +216,7 @@ export function UserSubscription ({ user }) {
     const fetchSubscription = async () => {
       try {
         const response = await getSubscriptionStatus()
+        console.log('Subscription response:', response)
         if (!response.hasError) {
           setSubscription(response)
         }
@@ -293,6 +294,7 @@ export function UserSubscription ({ user }) {
                 <div className={styles.limitsInfo}>
                   <p><strong>Almacenamiento:</strong> {`${(subscription.limits.storageMB - subscription.remainingQuota).toFixed(2)} MB usados de ${subscription.limits.storageMB} MB`}</p>
                   <p><strong>Llamadas IA:</strong> {subscription.limits.llmCallsPerMonth === -1 ? 'Ilimitadas' : `${subscription.llmCallsThisMonth} de ${subscription.limits.llmCallsPerMonth}`}</p>
+                  <p><strong>Última renovación:</strong> {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString() : ''}</p>
                 </div>
               )}
             </div>
@@ -1108,6 +1110,7 @@ export default function ProfilePage () {
       <section className={styles.content}>
         <div ref={infoRef} className={styles.tabcontent} id="info">
           <UserInfo user={user} setUser={setUser}/>
+          <UserSubscription user={user}/>
         </div>
         <div ref={statsRef} className={`${styles.statistics} ${styles.tabcontent}`} id="stats">
           <UserStats user={user}/>
@@ -1116,7 +1119,6 @@ export default function ProfilePage () {
           <UserSecurity user={user} setUser={setUser}/>
         </div>
         <div ref={prefRef} className={styles.tabcontent} id="preferences">
-          <UserSubscription user={user}/>
           <UserPreferences user={user} setUser={setUser}/>
         </div>
       </section>

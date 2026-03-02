@@ -233,6 +233,8 @@ export default function Columna ({ data, children, childCount, context, getFirst
               // Determinar si estamos en modo "cargando en header"
               const isHeaderLoading = linkLoader && columna._id === columnLoaderTarget?.id && childCount >= 7 && !localOpenColumn
 
+              // const isBodyLoading = (linkLoader && columna._id === columnLoaderTarget?.id && childCount < 7) || (linkLoader && columna._id === columnLoaderTarget?.id && localOpenColumn)
+
               if (editMode) {
                 return <input type='text' className={styles.editInput} defaultValue={columna.name} onBlur={handleHeaderBlur} onKeyDown={handleHeaderBlur} autoFocus/>
               }

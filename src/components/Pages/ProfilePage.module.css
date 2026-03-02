@@ -193,9 +193,10 @@
 .info {
     /* padding: 25px; */
     /* background-color: var(--color-medium); */
-    height: -webkit-fill-available;
+    /* height: -webkit-fill-available; */
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+    margin-bottom: 20px;
 }
 
 .wrapper {

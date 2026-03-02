@@ -16,10 +16,10 @@
     border-radius: 7px;
     width: 80%;
     height: 5px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     animation: progressBar 1s ease-in-out;
-    animation-fill-mode:both; 
-    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+    /* animation-iteration-count: infinite; */
 }
 
 .progress::-webkit-progress-bar {

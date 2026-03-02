@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom'
 import { useGlobalData } from '../../hooks/useGlobalData'
-import { useTitle } from '../../hooks/useTitle'
+// import { useTitle } from '../../hooks/useTitle'
 import { kebabToTitleCase } from '../../services/functions'
 import NameLoader from '../NameLoader'
 import styles from './Toolbar.module.css'
@@ -27,7 +27,7 @@ export default function DesktopNameDisplay ({ numberOfLinks, numberOfColumns, ca
   } else if (location.pathname === '/profile') {
     desktopDisplayName = 'Profile'
   }
-  useTitle({ title: desktopDisplayName })
+  // useTitle({ title: desktopDisplayName })
 
   return (
             <>

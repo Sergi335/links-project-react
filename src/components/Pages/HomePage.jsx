@@ -2,9 +2,10 @@ import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTitle } from '../../hooks/useTitle'
+import { Sparkles, YouTube } from '../Icons/icons'
 import styles from './HomePage.module.css'
 import { PricingTable } from './PricingPage'
-import { YouTube, Sparkles } from '../Icons/icons'
 
 export function HomeNav () {
   return (
@@ -48,6 +49,7 @@ export function HomeFooter () {
 }
 
 export default function HomePage () {
+  useTitle({ title: 'ZenMarks - Home' })
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
       gallery: '#my-gallery',

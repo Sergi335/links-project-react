@@ -173,8 +173,8 @@ const CustomLink = ({ data, className }) => {
             <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
             <a
               ref={linkRef}
-              href={link.url}
-              target='_blank'
+              href={link.url ? link.url : '#'}
+              target={link.url ? '_blank' : '_self'}
               rel='noreferrer'
               title={link.name}
             >
