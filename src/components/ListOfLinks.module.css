@@ -22,7 +22,7 @@
 
 .subcategories {
     padding: 5px 10px;
-    background-color: var(--inputBackgroundColor);
+    background-color: var(--color-primary);
     border-radius: 5px;
     width: fit-content;
     border: 1px solid var(--secondBorderColor);

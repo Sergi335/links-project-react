@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { usePasteLink } from '../hooks/usePasteLink'
-import { updateCategory } from '../services/dbQueries'
+import { createColumn, updateCategory } from '../services/dbQueries'
 import { handleResponseErrors } from '../services/functions'
 // import { useFormsStore } from '../store/forms'
 import { useGlobalStore } from '../store/global'
@@ -11,6 +11,7 @@ import styles from './ContextualColMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
 export default function ContextualColMenu ({ visible, points, setPoints, params, desktops }) {
+  console.log('🚀 ~ ContextualColMenu ~ params:', params)
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
@@ -23,6 +24,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   const subMenuRef = useRef(null)
   const [subMenuSide, setSubMenuSide] = useState('')
   const [subMenuTop, setSubMenuTop] = useState('')
+  // recoger de params
 
   const handleMoveCol = async (desk) => {
     try {
@@ -64,6 +66,18 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
       setGlobalColumns(globalColumns)
     }
   }
+  // Order hay que buscar en las subcategorías de la categoría destino, el número de subcategorías para asignar el último orden
+  const handleAddColumn = async () => {
+    const subcategories = globalColumns.filter(col => col.parentId === params._id)
+    const response = await createColumn({ name: 'New Column', parentId: params?._id, order: subcategories.length, level: 2, parentSlug: params?.slug })
+    const { hasError, message } = handleResponseErrors(response)
+    if (hasError) {
+      toast.error(message)
+      return
+    }
+    const { data } = response
+    setGlobalColumns((() => { return [...globalColumns, ...data] })())
+  }
   useEffect(() => {
     const menu = menuRef.current
     const submenu = subMenuRef.current
@@ -93,7 +107,8 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
             <p><strong>Opciones Columna</strong></p>
             <p>{params?.name}</p>
             {/* eslint-disable-next-line react/no-unknown-property */}
-            <button popovertarget='add-link-form' popovertargetaction='show'>Nuevo</button>
+            <button popovertarget='add-link-form' popovertargetaction='show'>Nuevo Link</button>
+            <button onClick={handleAddColumn}>Nueva Categoría</button>
             <span onClick={() => { pasteLink() }}>Pegar</span>
             {/* <span>Renombrar</span> */}
             <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>

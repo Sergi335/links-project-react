@@ -133,7 +133,7 @@
 
 .chatInputForm {
     padding-top: 1rem;
-    border-top: 1px solid var(--color-medium);
+    border-top: 1px solid var(--firstBorderColor);
     width: 100%;
     display: flex;
     gap: 8px;
@@ -141,7 +141,7 @@
     &>input[type="text"] {
         flex: 1;
         padding: 0.5rem;
-        border: 1px solid var(--color-medium);
+        border: 1px solid var(--firstBorderColor);
         border-radius: 4px;
         background-color: var(--color-primary);
         color: var(--text-color-primary);

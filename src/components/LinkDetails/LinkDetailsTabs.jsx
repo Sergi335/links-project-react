@@ -26,8 +26,8 @@ const sectionsByType = {
 }
 
 const allSections = [
-  { id: 'images', name: 'Gallery' },
   { id: 'notes', name: 'Notes' },
+  { id: 'images', name: 'Gallery' },
   { id: 'article', name: 'Article' },
   { id: 'summary', name: 'Summary' }
 ]

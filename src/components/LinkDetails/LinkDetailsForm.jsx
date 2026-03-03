@@ -147,15 +147,6 @@ export default function LinkDetailsForm ({ data, links, setLinks }) {
                 className={styles.typeSelect}
                 value={data?.type || 'general'}
                 onChange={handleChangeType}
-                style={{
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  border: '1px solid var(--firstBorderColor)',
-                  backgroundColor: 'var(--secondColor)',
-                  color: 'var(--text-primary)',
-                  cursor: 'pointer',
-                  width: 'fit-content'
-                }}
               >
                 <option value="general">General</option>
                 <option value="video">Video</option>
