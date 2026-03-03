@@ -21,7 +21,7 @@ const sectionsByType = {
   },
   general: {
     sections: ['images', 'notes'],
-    defaultSection: 'images'
+    defaultSection: 'notes'
   }
 }
 
@@ -72,16 +72,16 @@ export default function LinkDetailsTabs ({ data }) {
             </div>
             <div className={styles.link_details_content}>
                 {
-                    activeSection === 'images' && (
-                        <div>
-                            <LinkDetailsGallery data={data}/>
+                    activeSection === 'notes' && (
+                        <div className={styles.link_details_tabs_notes_wrapper}>
+                            <Editor key={data?._id || 'no-link'} data={data} />
                         </div>
                     )
                 }
                 {
-                    activeSection === 'notes' && (
-                        <div className={styles.link_details_tabs_notes_wrapper}>
-                            <Editor data={data} />
+                    activeSection === 'images' && (
+                        <div>
+                            <LinkDetailsGallery data={data}/>
                         </div>
                     )
                 }

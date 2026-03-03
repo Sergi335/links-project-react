@@ -215,20 +215,22 @@ export default function LinkDetailsSummary ({ data }) {
 
   return (
     <div className={styles.summaryContainer}>
-      <div className={styles.scrollableContent}>
+      <div className={styles.scrollableContent} style={summary ? { justifyContent: 'start' } : {}}>
         {/* Sección Resumen */}
         <div className={styles.summaryBlock}>
           <div className={styles.summaryHeader}>
-            <h3>Resumen del Video</h3>
             {summary && (
-              <button
-                className={styles.deleteButton}
-                onClick={handleDeleteSummary}
-                disabled={loading}
-                title="Borrar resumen"
-              >
-                Borrar
-              </button>
+              <>
+                <h3>Resumen del Video</h3>
+                <button
+                  className={styles.deleteButton}
+                  onClick={handleDeleteSummary}
+                  disabled={loading}
+                  title="Borrar resumen"
+                >
+                  Borrar
+                </button>
+              </>
             )}
           </div>
           {summary
@@ -239,7 +241,7 @@ export default function LinkDetailsSummary ({ data }) {
               )
             : (
             <div className={styles.emptyState}>
-              <p>No hay resumen disponible para este video.</p>
+              {/* <p>No hay resumen disponible para este video.</p> */}
               <button
                 className={styles.generateButton}
                 onClick={handleGenerateSummary}
@@ -255,7 +257,7 @@ export default function LinkDetailsSummary ({ data }) {
         {/* Sección Chat */}
         <div className={styles.chatBlock}>
           <div className={styles.summaryHeader}>
-            <h3>Chat con el Video</h3>
+            {summary && <h3>Chat con el Video</h3>}
             {localChatHistory.length > 0 && (
               <button
                 className={styles.deleteButton}

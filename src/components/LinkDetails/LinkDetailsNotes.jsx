@@ -79,32 +79,37 @@ const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight]
 export default function Editor ({ data }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
-  const [value, setValue] = useState(data.notes || {})
+  const linkId = data?._id
+  const notesValue = useMemo(() => data?.notes || {}, [data?.notes])
+  const [value, setValue] = useState(notesValue)
+  const isReady = Boolean(data && linkId)
 
   useEffect(() => {
     console.log('ha cambiado')
     console.log('🚀 ~ Editor ~ value:', value)
-    console.log('🚀 ~ Editor ~ value:', data.notes ? Object.keys(data.notes) : [])
+    console.log('🚀 ~ Editor ~ value:', data?.notes ? Object.keys(data.notes) : [])
 
-    setValue(data.notes || {})
-  }, [data._id])
+    setValue(notesValue)
+  }, [linkId, notesValue])
 
-  const editor = useMemo(() => createYooptaEditor(), [data._id])
+  const editor = useMemo(() => createYooptaEditor(), [linkId])
 
   const onChange = (value) => {
     setValue(value)
   }
 
   const handleSaveNotes = async () => {
+    if (!linkId) return
+
     const previousState = [...globalLinks]
     const optimisticState = [...globalLinks]
-    const elementIndex = optimisticState.findIndex(element => element._id === data._id)
+    const elementIndex = optimisticState.findIndex(element => element._id === linkId)
     if (elementIndex !== -1) {
       const currentLink = optimisticState[elementIndex]
       optimisticState[elementIndex] = { ...currentLink, notes: value }
       setGlobalLinks(optimisticState)
     }
-    const response = await updateLink({ items: [{ id: data._id, notes: value }] })
+    const response = await updateLink({ items: [{ id: linkId, notes: value }] })
     const { hasError, message } = handleResponseErrors(response)
 
     if (hasError) {
@@ -116,14 +121,16 @@ export default function Editor ({ data }) {
     }
   }
 
+  if (!isReady) return null
+
   return (
     <>
       <div className={styles.editor_container}>
         <YooptaEditor
-          key={data._id}
+          key={linkId}
           editor={editor}
           placeholder="Type text.."
-          value={data.notes || {}}
+          value={value}
           onChange={onChange}
           // here we go
           plugins={plugins}

@@ -9,10 +9,10 @@ export default function InternalError () {
         <p>
           Oops something went wrong, please try again later.
         </p>
-      </div>
       <Link to={-1}>
         Go Back
       </Link>
+      </div>
     </div>
   )
 }

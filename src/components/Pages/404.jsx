@@ -9,10 +9,10 @@ export default function NotFound () {
         <p>
           Sorry, we couldn’t find the page you’re looking for.
         </p>
-      </div>
       <Link to={-1}>
         Go Back
       </Link>
+      </div>
     </div>
   )
 }
