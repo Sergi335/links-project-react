@@ -100,7 +100,7 @@ export default function Search () {
 
   return (
         // eslint-disable-next-line react/no-unknown-property
-        <section popover="" ref={boxRef} className={styles.searchbox}>
+        <section id='searchbox' popover="" ref={boxRef} className={styles.searchbox}>
           <form id='searchForm' className={styles.searchForm} onSubmit={handleSubmit}>
               <input ref={inputRef}
                 className={sortedLinks?.length > 0 ? `${styles.active} ${styles.searchInput}` : `${styles.searchInput}`}

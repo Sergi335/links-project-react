@@ -66,7 +66,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
       setGlobalColumns(globalColumns)
     }
   }
-  // Order hay que buscar en las subcategorías de la categoría destino, el número de subcategorías para asignar el último orden
+  // El nivel no es siempre 2 hay que calcularlo dependiendo del nivel de la categoria a la que se añada
   const handleAddColumn = async () => {
     const subcategories = globalColumns.filter(col => col.parentId === params._id)
     const response = await createColumn({ name: 'New Column', parentId: params?._id, order: subcategories.length, level: 2, parentSlug: params?.slug })

@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useFormsStore } from '../../store/forms'
 import { useGlobalStore } from '../../store/global'
 import { useLinksStore } from '../../store/links'
 import { usePreferencesStore } from '../../store/preferences'
 import Columns from '../Columns'
 import ColumnsLoader from '../ColumnsLoader'
-import CustomizeDesktopPanel from '../CustomizeDesktopPanel'
 import FaviconSelector from '../FaviconSelector'
-import FormsContainer from '../FormsContainer'
 import LinkDetailsColumn from '../LinkDetails/LinkDetailsColumn'
 import styles from './SingleColumnPage.module.css'
 export default function SingleColumnPage () {
@@ -23,7 +20,6 @@ export default function SingleColumnPage () {
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   // const styleOfColumns = '415px 1fr'
   // const numberOfColumns = usePreferencesStore(state => state.numberOfColumns)
-  const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)
   const numberOfLoaders = Array(1).fill(null)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
   const globalLoading = useGlobalStore(state => state.globalLoading)
@@ -89,8 +85,6 @@ export default function SingleColumnPage () {
         }
         <LinkDetailsColumn data={firstColumnLink} links={navigationLinks} actualDesktop={desktopName} slug={slug} />
       </div>
-      <CustomizeDesktopPanel customizePanelVisible={customizePanelVisible} />
-      <FormsContainer />
       <FaviconSelector />
     </main>
   )
