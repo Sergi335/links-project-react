@@ -74,7 +74,7 @@ export default function SingleColumn ({ data, children, childCount }) {
   }
   const handleContextMenu = useCallback((event) => {
     event.preventDefault()
-    setPoints({ x: event.pageX, y: event.pageY })
+    setPoints({ x: event.clientX, y: event.clientY })
     setColumnContextMenuVisible(true)
     setActiveColumn(columna)
   }, [columna, setPoints, setColumnContextMenuVisible, setActiveColumn])

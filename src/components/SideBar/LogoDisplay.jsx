@@ -28,32 +28,34 @@ export default function LogoDisplay ({ customStyle }) {
           <span>ZenMarks</span>
         </div>
       </Link>
-          <button
+          <div className={styles.buttons_container}>
+            <button
             // eslint-disable-next-line react/no-unknown-property
              popovertarget='add-desktop-form'
              className={styles.collapse_btn}
              onClick={handleShowAddDesktop}
              title="Añadir escritorio"
-          ><AddDesktopIcon className={styles.collapse_icon} />
-          </button>
-          <button
-            // eslint-disable-next-line react/no-unknown-property
-            popovertarget='delete-desktop-confirm-form'
-            className={styles.collapse_btn}
-            onClick={handleShowDeleteDesktop}
-            title="Eliminar escritorio"
-           >
-            <TrashIcon className={styles.collapse_icon} />
-          </button>
-          <button className={styles.collapse_btn}
-            onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}
-            title="Personalizar panel"
-          >
-            <SettingsWheelIcon className={styles.collapse_icon} id={'editDesk'} />
-          </button>
-          <button className={styles.collapse_btn} onClick={triggerSidebarCollapse} title="Colapsar categorías">
-            <ExpandHeightIcon className={`${styles.collapse_icon} rotate180`} />
-          </button>
+            ><AddDesktopIcon className={styles.collapse_icon} />
+            </button>
+            <button
+              // eslint-disable-next-line react/no-unknown-property
+              popovertarget='delete-desktop-confirm-form'
+              className={styles.collapse_btn}
+              onClick={handleShowDeleteDesktop}
+              title="Eliminar escritorio"
+            >
+              <TrashIcon className={styles.collapse_icon} />
+            </button>
+            <button className={styles.collapse_btn}
+              onClick={() => { setCustomizePanelVisible(!customizePanelVisible) }}
+              title="Personalizar panel"
+            >
+              <SettingsWheelIcon className={styles.collapse_icon} id={'editDesk'} />
+            </button>
+            <button className={styles.collapse_btn} onClick={triggerSidebarCollapse} title="Colapsar categorías">
+              <ExpandHeightIcon className={`${styles.collapse_icon} rotate180`} />
+            </button>
+          </div>
     </div>
   )
 }

@@ -196,6 +196,7 @@
         animation: none;
         align-items: center;
         display: flex;
+        max-width: fit-content;
     }
 
     /* .deskTitle {

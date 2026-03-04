@@ -44,7 +44,7 @@ const CustomLink = ({ data, className }) => {
 
   const handleContextMenu = (e) => {
     e.preventDefault()
-    setPoints({ x: e.pageX, y: e.pageY })
+    setPoints({ x: e.clientX, y: e.clientY })
     setContextMenuVisible(true)
     setActiveLink(link)
     setActiveElement(linkRef.current)

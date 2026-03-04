@@ -529,13 +529,13 @@
 }
 
 .typeSelect {
-  border-radius: 4px;
+  border-radius: 3px;
   border: 1px solid var(--firstBorderColor);
   background-color: var(--btn-bg-color);
   color: var(--text-color-inverse);
   cursor: pointer;
   width: fit-content;
-  border-inline: 10px solid;
+  border-inline: 3px solid;
   border-block: 5px solid;
   border-inline-color: var(--btn-bg-color);
   border-block-color: var(--btn-bg-color);
@@ -571,7 +571,7 @@
   position: absolute;
   /* right: 70px; */
   padding: 8px;
-  max-width: 180px;
+  max-width: 250px;
   border: var(--firstBorder);
   z-index: 10;
 }
@@ -591,7 +591,7 @@
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   width: 100%;
-  max-height: 125px;
+  max-height: 180px;
   /* background-color: var(--inputBackgroundColor); */
 }
 

@@ -220,17 +220,16 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
     const submenu = subMenuRef.current
     const newPoints = { x: points.x, y: points.y }
     // //console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
-    if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
+    if (points.x + menu.offsetWidth > window.innerWidth) {
       setSubMenuSide('left')
       newPoints.x = window.innerWidth - menu.offsetWidth
     } else {
       setSubMenuSide('right')
     }
-    if (points.y + menu.offsetHeight > document.body.scrollHeight) {
-      newPoints.y = document.body.scrollHeight - menu.offsetHeight
+    if (points.y + menu.offsetHeight > window.innerHeight) {
+      newPoints.y = window.innerHeight - menu.offsetHeight
     }
-    // aqui hay que tener en cuenta la cantidad de scroll que haya, asi va bien cuando se ha hecho scroll total
-    if (points.y + submenu.offsetHeight > document.body.scrollHeight || points.y + submenu.offsetHeight > window.innerHeight) {
+    if (points.y + submenu.offsetHeight > window.innerHeight) {
       setSubMenuTop(`-${submenu.offsetHeight - menu.offsetHeight + 13}px`)
     } else {
       setSubMenuTop('88px')

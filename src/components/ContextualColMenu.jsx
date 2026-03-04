@@ -69,7 +69,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   // El nivel no es siempre 2 hay que calcularlo dependiendo del nivel de la categoria a la que se añada
   const handleAddColumn = async () => {
     const subcategories = globalColumns.filter(col => col.parentId === params._id)
-    const response = await createColumn({ name: 'New Column', parentId: params?._id, order: subcategories.length, level: 2, parentSlug: params?.slug })
+    const response = await createColumn({ name: 'New Column', parentId: params?._id, order: subcategories.length, level: params?.level + 1, parentSlug: params?.slug })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)
@@ -83,16 +83,16 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
     const submenu = subMenuRef.current
     const newPoints = { x: points.x, y: points.y }
     // //console.log({ pointsX: points.x, menuWidth: menu.offsetWidth, windowWidth: window.innerWidth, submenuHeight: submenu.offsetHeight, windowHeight: window.innerHeight })
-    if (points.x + menu.offsetWidth + submenu.offsetWidth > window.innerWidth) {
+    if (points.x + menu.offsetWidth > window.innerWidth) {
       setSubMenuSide('left')
       newPoints.x = window.innerWidth - menu.offsetWidth
     } else {
       setSubMenuSide('right')
     }
-    if (points.y + menu.offsetHeight > document.body.scrollHeight) {
-      newPoints.y = document.body.scrollHeight - menu.offsetHeight
+    if (points.y + menu.offsetHeight > window.innerHeight) {
+      newPoints.y = window.innerHeight - menu.offsetHeight
     }
-    if (points.y + submenu.offsetHeight > document.body.scrollHeight || points.y + submenu.offsetHeight > window.innerHeight) {
+    if (points.y + submenu.offsetHeight > window.innerHeight) {
       setSubMenuTop(`-${submenu.offsetHeight - menu.offsetHeight + 13}px`)
     } else {
       setSubMenuTop('94px')
