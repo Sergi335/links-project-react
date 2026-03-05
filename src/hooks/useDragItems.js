@@ -126,7 +126,8 @@ export const useDragItems = ({ desktopId }) => {
 
   function handleDragOver (event) {
     const { active, over } = event
-
+    console.log('🚀 ~ handleDragOver ~ active:', active)
+    console.log('🚀 ~ handleDragOver ~ over:', over)
     if (!over) {
       // console.log('no over')
       return
@@ -143,7 +144,7 @@ export const useDragItems = ({ desktopId }) => {
     const isActiveLink = active.data.current?.type === 'link'
     const isOverALink = over.data.current?.type === 'link'
 
-    if (!isActiveLink) return
+    // if (!isActiveLink) return
 
     if (isActiveLink && isOverALink) {
       if (active.id !== over.id) {
@@ -171,6 +172,7 @@ export const useDragItems = ({ desktopId }) => {
     }
 
     const isOverAColumn = over.data.current?.type === 'Column'
+    const isActiveColumn = active.data.current?.type === 'Column'
 
     if (activeLink && isOverAColumn) {
       const oldIndex = currentLinksState.findIndex((t) => t._id === active.id)
@@ -190,6 +192,12 @@ export const useDragItems = ({ desktopId }) => {
       // 🚀 Actualizar ambos estados
       setCurrentLinksState(newState)
       setGlobalLinks(newState)
+    }
+
+    if (isOverAColumn && isActiveColumn) {
+      console.log('over column')
+    } else {
+      console.log('over other')
     }
   }
 

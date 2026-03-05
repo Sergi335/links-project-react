@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, MouseSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragOverlay, MouseSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
@@ -103,7 +103,7 @@ export default function Columns ({
 
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onDragOver={handleDragOver}
