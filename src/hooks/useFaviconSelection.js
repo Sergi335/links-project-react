@@ -47,6 +47,11 @@ export default function useFaviconSelection ({ data, deleteButtonRef, saveButton
     })
       .then(res => res.json())
       .then(data => {
+        const { hasError, message } = handleResponseErrors(data)
+        if (hasError) {
+          toast(message)
+          return
+        }
         setIcons(data.data)
       })
   }, [])

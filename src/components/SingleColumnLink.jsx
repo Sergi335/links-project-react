@@ -175,7 +175,11 @@ const SingleColumnLink = ({ data, className }) => {
         {
           linkSelectMode && <input type='checkbox' onChange={handleSelectChange} />
         }
-        <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} />
+        <img src={iconUrl} alt={`favicon of ${link.name}`} onClick={handleShowFaviconChanger} onError={
+          (e) => {
+            e.currentTarget.src = '/img/opcion1.svg'
+          }
+        } />
         <a
           ref={linkRef}
           href={link.url}

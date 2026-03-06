@@ -137,6 +137,10 @@
     display: flex;
     gap: 15px;
     margin-bottom: 50px;
+
+    & button {
+        flex: 1;
+    }
 }
 
 .preferences {
@@ -155,6 +159,7 @@
     justify-content: space-between;
     width: fit-content;
     margin-bottom: 15px;
+    border-radius: var(--border-radius);
 }
 
 .closeAccount {
@@ -166,6 +171,7 @@
     justify-content: space-between;
     width: fit-content;
     margin-bottom: 15px;
+    border-radius: var(--border-radius);
 }
 
 .importSection h3 {
@@ -249,7 +255,7 @@
 }
 
 .upFile {
-    width: 173px;
+    /* width: 173px; */
     position: relative;
     font-size: 13px;
     margin-top: 15px;
@@ -286,6 +292,7 @@
     align-items: flex-start;
     gap: 16px;
     display: flex;
+    font-size: 14px;
 }
 
 .otherInfo form label {
@@ -353,14 +360,16 @@ h3 {
 .groupControl {
     display: flex;
     flex-direction: column;
-    min-height: 365px;
+    /* min-height: 365px; */
     border: var(--firstBorder);
     padding: 32px;
     justify-content: space-between;
+    border-radius: var(--border-radius);
 
     & button {
         width: fit-content;
         gap: 5px;
+        margin: 0 auto;
     }
 }
 
@@ -369,7 +378,8 @@ table {
     border-collapse: collapse;
     width: 45%;
     border-radius: var(--border-radius);
-    margin: 0 0px 16px 0;
+    margin: 0 auto;
+    margin-bottom: 14px;
 }
 
 td,
@@ -470,6 +480,7 @@ tr:nth-child(odd) {
     justify-content: space-between;
     width: fit-content;
     margin-bottom: 15px;
+    border-radius: var(--border-radius);
 }
 
 .changePasswordDialog {
@@ -497,6 +508,7 @@ tr:nth-child(odd) {
     padding: 32px;
     justify-content: space-between;
     width: fit-content;
+    border-radius: var(--border-radius);
 }
 
 .securityWrapper {
@@ -881,6 +893,7 @@ tr:nth-child(odd) {
     justify-content: space-between;
     width: fit-content;
     margin-bottom: 15px;
+    border-radius: var(--border-radius);
 }
 
 .subscriptionInfo {

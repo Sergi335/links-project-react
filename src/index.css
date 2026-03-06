@@ -197,7 +197,7 @@ body {
   .grid.profile-page {
     grid-template-areas: "header header header"
       "toolbar main main";
-    grid-template-columns: 55px 1fr 260px;
+    grid-template-columns: 38px 1fr 260px;
     grid-template-rows: 60px 1fr;
   }
 
