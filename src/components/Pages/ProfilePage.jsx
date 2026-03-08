@@ -152,7 +152,7 @@ export function UserPreferences ({ user, setUser }) {
 
   return (
     <>
-    <h3>Preferencias</h3>
+    {/* <h3>Preferencias</h3> */}
     <div className={`${styles.preferences}`} id="preferences">
       <div className={styles.importSection}>
         <h3>Importar Marcadores de Chrome</h3>

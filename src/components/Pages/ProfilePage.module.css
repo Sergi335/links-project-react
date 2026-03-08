@@ -145,7 +145,7 @@
 
 .preferences {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-around;
     align-items: start;
     gap: 100px;
 }
@@ -866,7 +866,7 @@ tr:nth-child(odd) {
         flex-direction: row;
         gap: 50px;
         align-items: center;
-        padding: 0;
+        padding: 0 60px 0 0;
     }
 
     /* .profileImage {

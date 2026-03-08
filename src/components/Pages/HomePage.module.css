@@ -84,7 +84,7 @@
 }
 
 .card:nth-of-type(1) {
-    background-color: hsl(220deg 18.14% 17.45%);
+    background-color: hsl(220deg 100% 11.1%);
     position: relative;
     overflow: hidden;
 
@@ -113,7 +113,7 @@
 }
 
 .card:nth-of-type(2) {
-    background-color: hsl(220deg 27.21% 33.54%);
+    background-color: hsl(220deg 69.5% 25.64%);
     position: relative;
     overflow: hidden;
 
@@ -142,7 +142,7 @@
 }
 
 .card:nth-of-type(3) {
-    background-color: hsl(0deg 27.21% 33.54%);
+    background-color: hsl(0deg 64.69% 25.91%);
     position: relative;
     overflow: hidden;
 
@@ -171,7 +171,7 @@
 }
 
 .card:nth-of-type(4) {
-    background-color: hsl(151.62deg 27.21% 33.54%);
+    background-color: hsl(151.62deg 67.66% 26.39%);
     position: relative;
     overflow: hidden;
 
@@ -242,7 +242,7 @@
 }
 
 .card:nth-of-type(5) {
-    background-color: hsl(187.62deg 27.21% 33.54%);
+    background-color: hsl(187.62deg 64.1% 28.4%);
     position: relative;
     overflow: hidden;
 
@@ -351,8 +351,14 @@
 
 .heroSection p {
     text-align: center;
-    max-width: 50ch;
+    max-width: 55ch;
     color: var(--text-color-secondary);
+    margin-top: 40px;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-wrap-style: pretty;
 }
 
 .background {
@@ -374,7 +380,7 @@
     align-items: center;
     gap: 50px;
     flex-wrap: wrap;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .heroSection img {
@@ -666,6 +672,21 @@
 .navLogin a:hover {
     background-color: transparent;
     color: var(--homePageAccentColor);
+}
+
+.browserIcons {
+    display: flex;
+    gap: 20px;
+    margin: 20px;
+}
+
+.browserIconsTitle {
+    margin-top: 40px;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 @media (max-width: 1325px) {

@@ -3,7 +3,7 @@ import 'photoswipe/style.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
-import { Sparkles, YouTube } from '../Icons/icons'
+import { BraveBrowser, Chrome, Edge, Opera, Sparkles, YouTube } from '../Icons/icons'
 import styles from './HomePage.module.css'
 import { PricingTable } from './PricingPage'
 
@@ -77,9 +77,16 @@ export default function HomePage () {
         <div className={styles.heroSection}>
           <h1>Tu Mundo Digital <span>Organizado.</span></h1>
           <p>Organiza tu mundo digital con ZenMarks, el gestor de marcadores para productividad y ocio.</p>
+          <p className={styles.browserIconsTitle}>Works with all major browsers</p>
+          <div className={styles.browserIcons}>
+            <Chrome width={32} height={32} />
+            <Edge width={32} height={32} />
+            <BraveBrowser width={32} height={32} />
+            <Opera width={32} height={32} />
+          </div>
           <div className={styles.actionLinks}>
             <Link className={styles.start} to={'/login'}>Get Started</Link>
-            <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link>
+            {/* <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link> */}
           </div>
           <img src="img/heroimage4.png" />
         </div>

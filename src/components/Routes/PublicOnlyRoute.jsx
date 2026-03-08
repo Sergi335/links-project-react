@@ -9,11 +9,23 @@ export const PublicOnlyRoute = ({ children }) => {
   const basePath = import.meta.env.VITE_BASE_PATH
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
   // //console.log('🚀 ~ PublicOnlyRoute ~ topLevelCategoriesStore:', topLevelCategoriesStore)
-  const firstDesktop = localStorage.getItem('firstDesktop') === null
-    ? topLevelCategoriesStore[0]?.slug
-    : ''
+  const savedFirstDesktop = localStorage.getItem('firstDesktop')
+  let firstDesktopFromStorage = ''
+
+  if (savedFirstDesktop) {
+    try {
+      firstDesktopFromStorage = JSON.parse(savedFirstDesktop) || ''
+    } catch {
+      firstDesktopFromStorage = savedFirstDesktop
+    }
+  }
+
+  const firstDesktop = firstDesktopFromStorage || topLevelCategoriesStore[0]?.slug || ''
+  const targetPath = firstDesktop
+    ? `${rootPath}${basePath}/${firstDesktop}`
+    : `${rootPath}${basePath}`
 
   return user === null
     ? children
-    : <Navigate to={`${rootPath}${basePath}/${firstDesktop}`} replace={true} />
+    : <Navigate to={targetPath} replace={true} />
 }
