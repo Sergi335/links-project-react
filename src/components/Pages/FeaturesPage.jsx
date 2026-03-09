@@ -1,37 +1,42 @@
-import { HomeNav, HomeFooter } from './HomePage'
 import styles from './FeaturesPage.module.css'
+import { HomeFooter, HomeNav } from './HomePage'
 
 export default function FeaturesPage () {
   const features = [
     {
       id: 1,
-      title: 'Organize Everything in One Place',
-      text: 'Stop switching between apps. Keep all your links, articles, videos, and resources in a single, organized space. Categorize with ease and find what you need instantly.',
-      placeholder: 'All-in-one Dashboard'
+      title: 'Image Galleries',
+      text: 'Create visual collections for your saved images. Organize them by themes, projects, or inspiration boards and browse everything in a clean gallery view.',
+      placeholder: 'All-in-one Dashboard',
+      image: 'img/img8.png'
     },
     {
       id: 2,
       title: 'AI-Powered Summaries',
       text: "Don't have time to watch the whole video? Let our advanced AI generate concise summaries of YouTube videos, so you can grasp the key points in seconds.",
-      placeholder: 'AI Summary Demo'
+      placeholder: 'AI Summary Demo',
+      image: 'img/img5.png'
     },
     {
       id: 3,
-      title: 'Smart Search Capabilities',
-      text: 'Rediscover your content with powerful search. Filter by tags, dates, or even content within your saved links. Never lose a valuable resource again.',
-      placeholder: 'Smart Search UI'
+      title: 'Notes',
+      text: 'Write quick notes while you browse and keep your ideas connected to each saved link. Capture key points, reminders, and thoughts in one place.',
+      placeholder: 'Smart Search UI',
+      image: 'img/img3.png'
     },
     {
       id: 4,
-      title: 'Visual Link Previews',
-      text: 'Say goodbye to text-only lists. Visualize your bookmarks with rich cards that automatically pull images and metadata from the websites you save.',
-      placeholder: 'Rich Cards Preview'
+      title: 'Read Articles',
+      text: 'Save articles to read later in a distraction-free format. Focus on the content, highlight what matters, and return to your reading list anytime.',
+      placeholder: 'Rich Cards Preview',
+      image: 'img/img4.png'
     },
     {
       id: 5,
-      title: 'Secure & Private',
-      text: 'Your data is yours. We prioritize your privacy and security with end-to-end encryption for sensitive data and strict no-tracking policies.',
-      placeholder: 'Security Shield'
+      title: 'Watch Videos',
+      text: 'Keep your video resources organized and ready to play whenever you need them. Build playlists for learning, work, or entertainment without losing track.',
+      placeholder: 'Security Shield',
+      image: 'img/img6.png'
     }
   ]
 
@@ -49,9 +54,10 @@ export default function FeaturesPage () {
               <p>{feature.text}</p>
             </div>
             <div className={styles.imageContent}>
-              <div className={styles.placeholderImage}>
+              {/* <div className={styles.placeholderImage}>
                 {feature.placeholder} (Image Placeholder)
-              </div>
+              </div> */}
+              <img src={feature.image} alt={feature.title} />
               {/* Users can replace the div above with <img src="..." alt="..." className={styles.placeholderImage} /> */}
             </div>
           </section>

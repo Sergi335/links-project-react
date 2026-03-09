@@ -49,8 +49,8 @@
 .logo_container {
     min-height: 60px;
     align-items: center;
-    border-bottom: var(--firstBorder);
-    border-left: var(--firstBorder);
+    /* border-bottom: var(--firstBorder);
+    border-left: var(--firstBorder); */
     display: none;
     flex-wrap: wrap;
     padding: 8px;
@@ -71,6 +71,7 @@
             font-family: K2d;
             font-weight: 700;
             font-size: 18px;
+            color: var(--over_accent_text);
         }
 
         & svg {
@@ -94,12 +95,13 @@
 
         &:hover {
             opacity: 1;
-            background-color: var(--color-secondary);
+            /* background-color: var(--color-secondary); */
         }
 
         .collapse_icon {
             width: 16px;
             height: 16px;
+            stroke: var(--over_accent_text);
             /*  transform: rotate(90deg); */
         }
     }

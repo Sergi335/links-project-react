@@ -10,7 +10,6 @@ import { useGlobalStore } from '../store/global'
 import { usePreferencesStore } from '../store/preferences'
 import { useTopLevelCategoriesStore } from '../store/useTopLevelCategoriesStore'
 import styles from './CustomizeDesktopPanel.module.css'
-import { AddDesktopIcon, TrashIcon } from './Icons/icons'
 
 export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
@@ -28,10 +27,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
-  const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
-  const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
+  // const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
+  // const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
+  // const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
+  // const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
   // const globalLoading = useGlobalStore(state => state.globalLoading)
   // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
   // console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
@@ -227,6 +226,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     newGlobalState[globalDeskIndex].hidden = true
     setTopLevelCategoriesStore(newTopLevelState)
     setGlobalColumns(newGlobalState)
+    select.selectedIndex = 0
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
@@ -250,15 +250,15 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
     // setHiddenDesktops(newHiddenState)
   }
-  const handleShowAddDesktop = (e) => {
-    // e.preventDefault()
-    e.stopPropagation() // 1. Evita que el click se propague a hooks de cierre u otros listeners
-    setAddDeskFormVisible(!addDeskFormVisible)
-  }
-  const handleShowDeleteDesktop = (e) => {
-    e.stopPropagation()
-    setDeleteConfFormVisible(!deleteConfFormVisible)
-  }
+  // const handleShowAddDesktop = (e) => {
+  //   // e.preventDefault()
+  //   e.stopPropagation() // 1. Evita que el click se propague a hooks de cierre u otros listeners
+  //   setAddDeskFormVisible(!addDeskFormVisible)
+  // }
+  // const handleShowDeleteDesktop = (e) => {
+  //   e.stopPropagation()
+  //   setDeleteConfFormVisible(!deleteConfFormVisible)
+  // }
   // Useeffect para aplicar las opciones marcadas en el panel de personalización
   useEffect(() => {
     // const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
@@ -327,8 +327,8 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       </div>
                       <div className={styles.rowGroup}>
                       <h3 style={{ borderBottom: '0' }}>Número de Columnas</h3>
-                          <label htmlFor="" style={{ marginBottom: '6px', width: '100%' }}><strong>{numberOfColumns}</strong></label>
-                          <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} />
+                          <label htmlFor="" style={{ marginBottom: '21px', width: '100%' }}><strong>{numberOfColumns}</strong>
+                          <input className={styles.range} type="range" list="steplist" min={1} max={5} value={numberOfColumns} onChange={handleNumberColumnsChange} /></label>
                           <datalist id="steplist">
                             <option>1</option>
                             <option>2</option>
@@ -338,7 +338,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           </datalist>
                       </div>
                       </div>
-                    <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
+                    {/* <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                       <div className={styles.rowGroup}>
                         <h3 style={{ margin: '0 auto' }}>Añadir Nuevo Escritorio</h3>
                         <button
@@ -363,13 +363,14 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           <TrashIcon className={styles.collapse_icon} />
                         </button>
                         </div>
-                    </div>
+                    </div> */}
 
                       <h3>Ocultar Escritorios</h3>
                       <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                          <div className={styles.rowGroup}>
-                         <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label>
+                         {/* <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label> */}
                           <select name="" id="" onChange={handleHideDesktops}>
+                            <option value='seleccionar' disabled selected>Seleccionar</option>
                           {
                               topLevelCategoriesStore?.map(desktop => {
                                 if (!desktop.hidden) {

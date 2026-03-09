@@ -88,7 +88,7 @@ export default function LinkDetailsGallery ({ data }) {
               const { hasError, message } = handleResponseErrors(response)
 
               if (hasError) {
-                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
+                toast.update(pasteLoading, { render: message, type: 'error', isLoading: false, autoClose: 1500 })
               } else {
                 const newState = [...images]
                 newState.push({ url: response.data.signedUrl, key: null })

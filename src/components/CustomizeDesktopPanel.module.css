@@ -103,7 +103,7 @@
 }
 
 .removeBackground {
-  background: var(--color-secondary);
+  background: var(--color-primary);
   width: 112px;
   cursor: pointer;
   border-radius: var(--button-radius);
@@ -128,10 +128,12 @@
   gap: 5px;
   width: 45%;
   flex-grow: 1;
+  justify-content: space-between;
 
   & input[type="text"] {
     background-color: var(--inputBackgroundColor);
     position: relative;
+    border-radius: var(--border-radius);
   }
 }
 
@@ -147,7 +149,7 @@
   border: none;
   padding: 1px 11px;
   background: none;
-  /* width: 100%; */
+  width: 90%;
   /* background-color: var(--color-secondary); */
   border-radius: var(--button-radius);
   height: 36px;
@@ -234,7 +236,7 @@
   border-radius: 5px;
   color: var(--text-color-primary);
   padding: 0 11px;
-  border: 5px solid var(--firstBorderColor);
+  border: 5px solid var(--inputBackgroundColor);
 }
 
 /* input[type=range]:after {

@@ -154,7 +154,7 @@ export default function Bookmarks () {
       >
         <SortableContext items={bookmarksId} strategy={horizontalListSortingStrategy}>
           {
-            globalLoading && <><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /></>
+            books.length === 0 && globalLoading && <><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /><BookmarkLoader /></>
           }
           {
             books?.length > 0 &&

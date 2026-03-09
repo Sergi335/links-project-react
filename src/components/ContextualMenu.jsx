@@ -243,7 +243,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       {/* <span onClick={handleExtractArticle}>Leer Artículo</span> */}
       {/* eslint-disable-next-line react/no-unknown-property */}
       <button onClick={handleEditClick} popovertarget="edit-link-form" popovertargetaction="show">Editar</button>
-      <span onClick={handleAddToFavorites}>Favoritos</span>
+      <span onClick={handleAddToFavorites}>{params?.bookmark === true ? 'Quitar Favorito' : 'Favorito'}</span>
       <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
           <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>

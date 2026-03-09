@@ -64,7 +64,7 @@ export const constants = {
       color: 'hsl(0, 0%, 73%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultLight.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
+        document.documentElement.style.setProperty('--over_accent_text', '#ffffff')
         window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.defaultLight.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('defaultLight'))
@@ -74,7 +74,7 @@ export const constants = {
       color: 'hsl(60, 100%, 50%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.yellow.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#4e4e4e')
+        document.documentElement.style.setProperty('--over_accent_text', '#4e4e4e')
         window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.yellow.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#4e4e4e'))
         window.localStorage.setItem('accentColorName', JSON.stringify('yellow'))
@@ -84,27 +84,47 @@ export const constants = {
       color: 'hsl(218.54deg 79.19% 66.08%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.blue.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
+        document.documentElement.style.setProperty('--over_accent_text', '#ffffff')
         window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.blue.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
         window.localStorage.setItem('accentColorName', JSON.stringify('blue'))
       }
     },
     green: {
-      color: 'hsl(150deg 6.38% 44.55%)',
+      color: 'hsl(150deg 20.41% 38.7%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.green.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#1a1a1a')
+        document.documentElement.style.setProperty('--over_accent_text', '#ffffff')
         window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.green.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
         window.localStorage.setItem('accentColorName', JSON.stringify('green'))
       }
     },
+    violet: {
+      color: '#381e57',
+      applyStyles: (element) => {
+        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.violet.color)
+        document.documentElement.style.setProperty('--over_accent_text', '#ffffff')
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.violet.color})`)
+        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
+        window.localStorage.setItem('accentColorName', JSON.stringify('violet'))
+      }
+    },
+    lightBlue: {
+      color: '#e7d3ff',
+      applyStyles: (element) => {
+        document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.lightBlue.color)
+        document.documentElement.style.setProperty('--over_accent_text', '#656565')
+        window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.lightBlue.color})`)
+        window.localStorage.setItem('buttonTextColor', JSON.stringify('#1a1a1a'))
+        window.localStorage.setItem('accentColorName', JSON.stringify('lightBlue'))
+      }
+    },
     defaultDark: {
-      color: 'hsl(0, 38%, 60%)',
+      color: 'hsl(0deg 49.61% 50.29%)',
       applyStyles: (element) => {
         document.documentElement.style.setProperty('--accentColor', constants.ACCENT_COLORS.defaultDark.color)
-        document.documentElement.style.setProperty('--buttonTextColor', '#ffffff')
+        document.documentElement.style.setProperty('--over_accent_text', '#ffffff')
         window.localStorage.setItem('accentColor', `JSON.stringify(${constants.ACCENT_COLORS.defaultDark.color})`)
         window.localStorage.setItem('buttonTextColor', JSON.stringify('#ffffff'))
         window.localStorage.setItem('accentColorName', JSON.stringify('defaultDark'))

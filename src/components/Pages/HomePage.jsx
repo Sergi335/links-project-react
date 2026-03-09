@@ -1,6 +1,7 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
 import { useEffect } from 'react'
+import Masonry from 'react-layout-masonry'
 import { Link } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
 import { BraveBrowser, Chrome, Edge, Opera, Sparkles, YouTube } from '../Icons/icons'
@@ -88,7 +89,7 @@ export default function HomePage () {
             <Link className={styles.start} to={'/login'}>Get Started</Link>
             {/* <Link className={`${styles.start} ${styles.try}`} to={'/login'}>Try Out</Link> */}
           </div>
-          <img src="img/heroimage4.png" />
+          <img src="img/heroImage.png" />
         </div>
       </header>
       <main className={styles.main}>
@@ -133,7 +134,7 @@ export default function HomePage () {
           </div>
         </section>
         <section className={styles.section}>
-          <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'row', gap: '50px' }}>
+          <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '50px' }}>
             <div className={styles.textColumn}>
               <h2>Potentes Funciones a tu Alcance</h2>
               <p>Resume y chatea con videos de Youtube, guarda enlaces con un simple copiar y pegar, añade descripciones detalladas, imágenes, notas...</p>
@@ -141,11 +142,23 @@ export default function HomePage () {
                 <YouTube />
                 <Sparkles />
               </div>
-              <p><strong>Zenmarks</strong> ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces.</p>
-              <p>Reordénarlos con facilidad, reproducir vídeos directamente desde la aplicación y más.</p>
+              <p><strong>Zenmarks</strong> ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces.
+              Reordénarlos con facilidad, reproducir vídeos directamente desde la aplicación y más.</p>
             </div>
             <div className={styles.mediaColumn} id='my-gallery'>
-              <a href="img/airesume.webp" data-pswp-width="960" data-pswp-height="601" target='_blank' ><img src="img/airesume.webp" width='960' height='601' alt="" /></a>
+              <Masonry
+                id='gallery'
+                columns={{ 640: 1, 768: 1, 1024: 2, 1280: 2 }}
+                gap={8}
+              >
+                <a href="img/img8.png" data-pswp-width="1082" data-pswp-height="608" target='_blank' ><img src="img/img8.png" width='1082' height='608' alt="zenmarks interfaz" /></a>
+                <a href="img/img9.png" data-pswp-width="1176" data-pswp-height="758" target='_blank' ><img src="img/img9.png" width='1176' height='758' alt="zenmarks interfaz" /></a>
+                <a href="img/img3.png" data-pswp-width="984" data-pswp-height="486" target='_blank' ><img src="img/img3.png" width='984' height='486' alt="zenmarks interfaz" /></a>
+                <a href="img/img4.png" data-pswp-width="1217" data-pswp-height="722" target='_blank' ><img src="img/img4.png" width='1217' height='722' alt="zenmarks interfaz" /></a>
+                <a href="img/img5.png" data-pswp-width="1194" data-pswp-height="565" target='_blank' ><img src="img/img5.png" width='1194' height='565' alt="zenmarks interfaz" /></a>
+                <a href="img/img6.png" data-pswp-width="1214" data-pswp-height="947" target='_blank' ><img src="img/img6.png" width='1214' height='947' alt="zenmarks interfaz" /></a>
+
+              </Masonry>
             </div>
           </div>
         </section>
