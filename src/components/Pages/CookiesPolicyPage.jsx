@@ -13,7 +13,8 @@ export default function CookiesPolicy () {
       minHeight: '100vh',
       margin: '0 auto',
       alignItems: 'center',
-      width: '100%'
+      width: '100%',
+      justifyContent: 'space-between'
     }}>
       <HomeNav />
       <main className={styles.container}>

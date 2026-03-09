@@ -514,6 +514,11 @@
     grid-column-start: 3;
     grid-row-start: 7;
 } */
+.mediaColumn {
+    background-color: var(--firstBorderColor);
+    border: 7px solid var(--firstBorderColor);
+    border-radius: 5px;
+}
 
 .strong {
     color: var(--homePageAccentColor);
@@ -526,10 +531,10 @@
 .mediaColumn img {
     max-width: 100%;
     height: auto;
-    border-radius: 5px;
-    border: var(--firstBorder);
-    aspect-ratio: 16/9;
-    object-fit: cover;
+    /* border-radius: 5px;
+    border: var(--firstBorder); */
+    /* aspect-ratio: 16/9;
+    object-fit: cover; */
 }
 
 .footer {

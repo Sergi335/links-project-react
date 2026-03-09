@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import Masonry from 'react-layout-masonry'
 import { Link } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
-import { BraveBrowser, Chrome, Edge, Opera, Sparkles, YouTube } from '../Icons/icons'
+import { BraveBrowser, Chrome, Edge, Opera } from '../Icons/icons'
 import styles from './HomePage.module.css'
 import { PricingTable } from './PricingPage'
 
@@ -147,12 +147,11 @@ export default function HomePage () {
           <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '50px' }}>
             <div className={styles.textColumn}>
               <h2>{t('section.title')}</h2>
-              <p>{t('section.text1')}</p>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
+              <p>{t('section.text1')}<strong>{t('section.text2a')}</strong> {t('section.text2b')}</p>
+              {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
                 <YouTube />
                 <Sparkles />
-              </div>
-              <p><strong>{t('section.text2a')}</strong> {t('section.text2b')}</p>
+              </div> */}
             </div>
             <div className={styles.mediaColumn} id="my-gallery">
               <Masonry
@@ -160,12 +159,12 @@ export default function HomePage () {
                 columns={{ 640: 1, 768: 1, 1024: 2, 1280: 2 }}
                 gap={8}
               >
-                <a href="img/img8.png" data-pswp-width="1082" data-pswp-height="608" target="_blank" rel="noreferrer"><img src="img/img8.png" width="1082" height="608" alt="zenmarks interface" /></a>
-                <a href="img/img9.png" data-pswp-width="1176" data-pswp-height="758" target="_blank" rel="noreferrer"><img src="img/img9.png" width="1176" height="758" alt="zenmarks interface" /></a>
-                <a href="img/img3.png" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img3.png" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img4.png" data-pswp-width="1217" data-pswp-height="722" target="_blank" rel="noreferrer"><img src="img/img4.png" width="1217" height="722" alt="zenmarks interface" /></a>
-                <a href="img/img5.png" data-pswp-width="1194" data-pswp-height="565" target="_blank" rel="noreferrer"><img src="img/img5.png" width="1194" height="565" alt="zenmarks interface" /></a>
-                <a href="img/img6.png" data-pswp-width="1214" data-pswp-height="947" target="_blank" rel="noreferrer"><img src="img/img6.png" width="1214" height="947" alt="zenmarks interface" /></a>
+                <a href="img/img8.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img8.webp" width="984" height="486" alt="zenmarks interface" /></a>
+                <a href="img/img9.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img9.webp" width="984" height="486" alt="zenmarks interface" /></a>
+                <a href="img/img3.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img3.webp" width="984" height="486" alt="zenmarks interface" /></a>
+                <a href="img/img4.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img4.webp" width="984" height="486" alt="zenmarks interface" /></a>
+                <a href="img/img5.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img5.webp" width="984" height="486" alt="zenmarks interface" /></a>
+                <a href="img/img6.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img6.webp" width="984" height="486" alt="zenmarks interface" /></a>
               </Masonry>
             </div>
           </div>

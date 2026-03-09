@@ -1,11 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import styles from './FeaturesPage.module.css'
 import { HomeFooter, HomeNav } from './HomePage'
-import { useTranslation } from 'react-i18next'
 
 export default function FeaturesPage () {
   const { t } = useTranslation('features')
   const features = t('items', { returnObjects: true })
-  const featureImages = ['img/img8.png', 'img/img5.png', 'img/img3.png', 'img/img4.png', 'img/img6.png']
+  const featureImages = ['img/img8.webp', 'img/img5.webp', 'img/img3.webp', 'img/img4.webp', 'img/img6.webp']
 
   return (
     <div className={styles.pageContainer}>
