@@ -16,5 +16,9 @@
   "actions": {
     "goBack": "Go Back",
     "back": "Back"
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "Search"
   }
 }

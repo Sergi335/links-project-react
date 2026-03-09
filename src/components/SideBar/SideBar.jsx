@@ -1,8 +1,8 @@
 import styles2 from '../Header/Header.module.css'
-import SearchButton from '../Header/SearchButton'
 import LogoDisplay from './LogoDisplay'
 import MultiLevelDragDrop from './newSideBarNav'
 import { ResizableContainer } from './ResizableContainer'
+import SearchButton from './SearchButton'
 import styles from './SideBar.module.css'
 
 export default function SideBar () {
