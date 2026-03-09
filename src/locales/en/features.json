@@ -1,0 +1,29 @@
+﻿{
+  "items": [
+    {
+      "id": 1,
+      "title": "Image Galleries",
+      "text": "Create visual collections for your saved images. Organize them by themes, projects, or inspiration boards and browse everything in a clean gallery view."
+    },
+    {
+      "id": 2,
+      "title": "AI-Powered Summaries",
+      "text": "Don't have time to watch the whole video? Let our advanced AI generate concise summaries of YouTube videos, so you can grasp the key points in seconds."
+    },
+    {
+      "id": 3,
+      "title": "Notes",
+      "text": "Write quick notes while you browse and keep your ideas connected to each saved link. Capture key points, reminders, and thoughts in one place."
+    },
+    {
+      "id": 4,
+      "title": "Read Articles",
+      "text": "Save articles to read later in a distraction-free format. Focus on the content, highlight what matters, and return to your reading list anytime."
+    },
+    {
+      "id": 5,
+      "title": "Watch Videos",
+      "text": "Keep your video resources organized and ready to play whenever you need them. Build playlists for learning, work, or entertainment without losing track."
+    }
+  ]
+}

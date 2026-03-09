@@ -1,0 +1,49 @@
+{
+  "hero": {
+    "titlePrefix": "Your Digital World",
+    "titleHighlight": "Organized.",
+    "subtitle": "Organize your digital world with ZenMarks, the bookmark manager for productivity and leisure.",
+    "worksWith": "Works with all major browsers",
+    "getStarted": "Get Started"
+  },
+  "cards": {
+    "titlePrefix": "Features built for",
+    "titleHighlight": "power users",
+    "subtitle": "Everything you need to curate, consume, and understand content faster.",
+    "chromeCtaPrefix": "Available on",
+    "chromeCtaStore": "Chrome Store",
+    "items": [
+      {
+        "title": "Import your links",
+        "description": "Bring your favorite Chrome links with one click.",
+        "detail": "Move your bookmarks in seconds and keep your workflow in one place."
+      },
+      {
+        "title": "Never forget anything",
+        "description": "Add notes, descriptions, images, lists and tasks.",
+        "detail": "Capture context for every saved link so you always remember why it mattered."
+      },
+      {
+        "title": "All your videos",
+        "description": "Watch and summarize YouTube videos with AI.",
+        "detail": "Save learning resources and quickly extract key points."
+      },
+      {
+        "title": "Add new links",
+        "description": "Save new links with the Chrome extension.",
+        "detail": "Clip pages instantly and keep your library up to date."
+      },
+      {
+        "title": "Organize your way",
+        "description": "Arrange your links in the way that works best for you.",
+        "detail": "Use categories, columns and custom order to build your own system."
+      }
+    ]
+  },
+  "section": {
+    "title": "Powerful Features Within Reach",
+    "text1": "Summarize and chat with YouTube videos, save links with copy and paste, and add detailed descriptions, images and notes.",
+    "text2a": "ZenMarks",
+    "text2b": "gives you a complete toolkit to extract and synthesize information from your links. Reorder everything easily, play videos directly in the app, and more."
+  }
+}

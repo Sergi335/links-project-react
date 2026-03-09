@@ -1,0 +1,9 @@
+{
+  "title": "Payment completed successfully",
+  "verifying": "Verifying your subscription...",
+  "activeMessage": "Your subscription to the {{plan}} plan is active.",
+  "defaultPlan": "Pro",
+  "submessage": "You now have access to all premium features.",
+  "goDashboard": "Go to Dashboard",
+  "viewSubscription": "View my subscription"
+}

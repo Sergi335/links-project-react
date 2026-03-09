@@ -1,0 +1,7 @@
+{
+  "button": "Recover",
+  "description": "Enter the email address you used when registering and we will send you instructions to change your password.",
+  "success": "Done. We sent an email with instructions to reset your password. Check your inbox or spam folder.",
+  "userNotFound": "We could not find any user with email {{email}}",
+  "genericError": "An error occurred. Please try again later."
+}

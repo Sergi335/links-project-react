@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Galerias de imagenes",
+      "text": "Crea colecciones visuales para tus imagenes guardadas. Organizalas por temas, proyectos o tableros de inspiracion y recorrelas en una vista limpia de galeria."
+    },
+    {
+      "id": 2,
+      "title": "Resumenes con IA",
+      "text": "No tienes tiempo para ver todo el video? Deja que nuestra IA genere resumenes breves de videos de YouTube para captar los puntos clave en segundos."
+    },
+    {
+      "id": 3,
+      "title": "Notas",
+      "text": "Escribe notas rapidas mientras navegas y manten tus ideas conectadas a cada enlace guardado. Guarda puntos clave, recordatorios y pensamientos en un solo lugar."
+    },
+    {
+      "id": 4,
+      "title": "Leer articulos",
+      "text": "Guarda articulos para leer mas tarde en un formato sin distracciones. Concentrate en el contenido, resalta lo importante y vuelve a tu lista cuando quieras."
+    },
+    {
+      "id": 5,
+      "title": "Ver videos",
+      "text": "Manten tus recursos en video organizados y listos para reproducir cuando los necesites. Crea listas para aprender, trabajar o entretenerte sin perder el control."
+    }
+  ]
+}

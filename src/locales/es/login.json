@@ -1,0 +1,19 @@
+{
+  "email": "email",
+  "password": "password",
+  "nick": "nick",
+  "buttons": {
+    "login": "Iniciar sesion",
+    "register": "Registrarse"
+  },
+  "forgotPassword": "olvidaste la contrasena?",
+  "switch": {
+    "noAccount": "No tienes una cuenta?",
+    "hasAccount": "Ya tienes una cuenta?",
+    "toRegister": "Registrate",
+    "toLogin": "Inicia sesion"
+  },
+  "or": "O",
+  "continueGoogle": "Continua con Google",
+  "back": "Volver"
+}

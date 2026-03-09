@@ -1,0 +1,293 @@
+{
+  "cookies": {
+    "title": "Cookie Policy",
+    "sections": [
+      {
+        "title": "1. What are cookies?",
+        "paragraphs": [
+          "Cookies are small text files stored on the user's device when visiting a website. They help ensure proper site operation and improve user experience."
+        ]
+      },
+      {
+        "title": "2. Types of cookies used",
+        "paragraphs": [
+          "This website uses the following types of cookies:"
+        ],
+        "list": [
+          "Technical cookies: required for basic service operation and user authentication.",
+          "Analytics cookies (optional): allow platform usage analysis to improve the service."
+        ]
+      },
+      {
+        "title": "3. Third-party cookies",
+        "paragraphs": [
+          "If analytics tools are enabled (for example, Google Analytics), they may install cookies managed by third parties."
+        ]
+      },
+      {
+        "title": "4. Consent management",
+        "paragraphs": [
+          "Users can accept, reject, or configure non-essential cookies through the cookie banner available on the platform."
+        ]
+      },
+      {
+        "title": "5. How to disable cookies",
+        "paragraphs": [
+          "Users can configure their browser to block or delete installed cookies. Disabling technical cookies may affect proper service operation."
+        ]
+      },
+      {
+        "title": "6. Updates",
+        "paragraphs": [
+          "This policy may be updated to adapt to legal or technical changes. The current version will always be available on this page."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "sections": [
+      {
+        "title": "1. Data controller",
+        "paragraphs": [
+          "Owner: YOUR NAME OR COMPANY",
+          "Tax ID: YOUR TAX ID",
+          "Address: YOUR ADDRESS",
+          "Email: contact@yourdomain.com"
+        ]
+      },
+      {
+        "title": "2. Personal data we collect",
+        "paragraphs": [
+          "We collect the following personal data when users use the service:"
+        ],
+        "list": [
+          "First and last name (if provided)",
+          "Email address",
+          "Access and authentication data",
+          "Billing and payment data",
+          "IP address and basic technical data"
+        ]
+      },
+      {
+        "title": "3. Purpose of processing",
+        "paragraphs": [
+          "Personal data is used for the following purposes:"
+        ],
+        "list": [
+          "Manage registration and user account",
+          "Provide the contracted service",
+          "Manage payments and billing",
+          "Service-related communications",
+          "Improve the platform and operation"
+        ]
+      },
+      {
+        "title": "4. Legal basis",
+        "paragraphs": [
+          "Data processing is based on:"
+        ],
+        "list": [
+          "Contract performance (service provision)",
+          "User consent, when required",
+          "Compliance with legal obligations"
+        ]
+      },
+      {
+        "title": "5. Data retention",
+        "paragraphs": [
+          "Data will be stored while a contractual relationship exists or while necessary to comply with legal obligations."
+        ]
+      },
+      {
+        "title": "6. Data recipients",
+        "paragraphs": [
+          "Data may be shared with providers needed to deliver the service, such as:"
+        ],
+        "list": [
+          "Hosting and storage providers",
+          "Payment platforms (for example, Stripe)",
+          "Email service providers"
+        ]
+      },
+      {
+        "title": "7. International transfers",
+        "paragraphs": [
+          "If international data transfers are made, they will be carried out with appropriate safeguards according to GDPR."
+        ]
+      },
+      {
+        "title": "8. User rights",
+        "paragraphs": [
+          "Users may exercise the following rights:"
+        ],
+        "list": [
+          "Access to personal data",
+          "Rectification of inaccurate data",
+          "Deletion of personal data",
+          "Restriction or objection to processing",
+          "Data portability"
+        ]
+      },
+      {
+        "title": "9. Data security",
+        "paragraphs": [
+          "Appropriate technical and organizational measures are applied to ensure the security and confidentiality of personal data."
+        ]
+      },
+      {
+        "title": "10. Cookies usage",
+        "paragraphs": [
+          "Currently, no non-essential cookies are used. If analytics or other cookies are added, users will be informed through the corresponding cookie policy."
+        ]
+      },
+      {
+        "title": "11. Policy changes",
+        "paragraphs": [
+          "This privacy policy may be updated to adapt to legal or technical changes. The current version will always be available on this page."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Use and Contracting Conditions",
+    "sections": [
+      {
+        "title": "1. Provider identification",
+        "paragraphs": [
+          "Owner: YOUR NAME OR COMPANY",
+          "Tax ID: YOUR TAX ID",
+          "Address: YOUR ADDRESS",
+          "Contact email: contact@yourdomain.com"
+        ]
+      },
+      {
+        "title": "2. Purpose",
+        "paragraphs": [
+          "This document regulates access, use, and contracting of the SaaS service offered through this platform, aimed at end users (B2C)."
+        ]
+      },
+      {
+        "title": "3. User registration",
+        "paragraphs": [
+          "Using the service requires creating an account with truthful and updated information. Users are responsible for keeping credentials confidential."
+        ]
+      },
+      {
+        "title": "4. Allowed and prohibited use",
+        "list": [
+          "Use the service according to law and these terms",
+          "Do not engage in fraudulent, abusive, or unlawful use",
+          "Do not attempt unauthorized access to systems or data",
+          "Do not resell the service without express authorization"
+        ]
+      },
+      {
+        "title": "5. Plans, pricing, and taxes",
+        "paragraphs": [
+          "Full access to the service may require one of the available paid plans. Prices are shown in euros and include applicable taxes unless stated otherwise."
+        ]
+      },
+      {
+        "title": "6. Payment method",
+        "paragraphs": [
+          "Payment is made in advance by bank card or other methods available through the payment platform in use (for example, Stripe)."
+        ]
+      },
+      {
+        "title": "7. Renewal and cancellation",
+        "paragraphs": [
+          "Subscriptions renew automatically based on selected frequency (monthly or yearly). Users may cancel renewal at any time from their account while keeping access until the end of the paid period."
+        ]
+      },
+      {
+        "title": "8. Withdrawal right",
+        "paragraphs": [
+          "According to current regulations, users acknowledge and accept that, as this is a digital service provided immediately, the withdrawal right is lost once service has started."
+        ]
+      },
+      {
+        "title": "9. Service suspension or termination",
+        "paragraphs": [
+          "The provider reserves the right to suspend or cancel accounts that breach these terms, without refund rights in case of misuse."
+        ]
+      },
+      {
+        "title": "10. Liability",
+        "paragraphs": [
+          "The service is provided as is. Continuous availability or total absence of errors is not guaranteed, although reasonable measures are taken for proper operation."
+        ]
+      },
+      {
+        "title": "11. Intellectual property",
+        "paragraphs": [
+          "All content, code, and service elements belong to the provider or licensed third parties. Reproduction without authorization is prohibited."
+        ]
+      },
+      {
+        "title": "12. Applicable law",
+        "paragraphs": [
+          "These conditions are governed by Spanish law. For any dispute, parties submit to the courts corresponding to the consumer's domicile."
+        ]
+      }
+    ]
+  },
+  "legalNotice": {
+    "title": "Legal Notice",
+    "intro": "In compliance with Law 34/2002, of July 11, on Information Society Services and Electronic Commerce (LSSI-CE), users are informed of the following details:",
+    "sections": [
+      {
+        "title": "1. Identification data",
+        "list": [
+          "Website owner: [FULL NAME / COMPANY NAME]",
+          "Tax ID: [TAX ID]",
+          "Registered address: [FULL ADDRESS]",
+          "Email: [CONTACT EMAIL]",
+          "Activity: Provision of digital services through a SaaS platform",
+          "Trade name: [SAAS NAME]"
+        ]
+      },
+      {
+        "title": "2. Purpose",
+        "paragraphs": [
+          "This Legal Notice regulates access, navigation, and use of the website [WEBSITE URL], as well as responsibilities arising from use of its content and services.",
+          "Access and use of the website grants user status and implies full acceptance of this Legal Notice."
+        ]
+      },
+      {
+        "title": "3. Terms of use",
+        "paragraphs": [
+          "Users agree to use the website according to law, good faith, public order, and this Legal Notice.",
+          "Use of the website for unlawful purposes or purposes that may harm its normal operation is prohibited.",
+          "The owner reserves the right to modify or suspend the website without prior notice."
+        ]
+      },
+      {
+        "title": "4. Intellectual and industrial property",
+        "paragraphs": [
+          "All website content (texts, images, logos, software, design, and source code) is owned by the website owner or used under proper rights.",
+          "Reproduction, distribution, or modification of such content without express authorization is prohibited."
+        ]
+      },
+      {
+        "title": "5. Liability",
+        "paragraphs": [
+          "The owner is not responsible for damages arising from misuse of the website or possible service interruptions due to technical causes.",
+          "The owner is also not responsible for content of external links that may be included on the website."
+        ]
+      },
+      {
+        "title": "6. Data protection",
+        "paragraphs": [
+          "Processing of personal data is governed by the Privacy Policy available on this website."
+        ]
+      },
+      {
+        "title": "7. Applicable law and jurisdiction",
+        "paragraphs": [
+          "This Legal Notice is governed by Spanish law. For resolution of any dispute, parties submit to the courts that correspond under current regulations."
+        ]
+      }
+    ]
+  }
+}

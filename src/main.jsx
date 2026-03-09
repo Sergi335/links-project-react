@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './colors.css'
+import './i18n'
 import './index.css'
 import './yoopta.css'
 

@@ -1,44 +1,11 @@
 import styles from './FeaturesPage.module.css'
 import { HomeFooter, HomeNav } from './HomePage'
+import { useTranslation } from 'react-i18next'
 
 export default function FeaturesPage () {
-  const features = [
-    {
-      id: 1,
-      title: 'Image Galleries',
-      text: 'Create visual collections for your saved images. Organize them by themes, projects, or inspiration boards and browse everything in a clean gallery view.',
-      placeholder: 'All-in-one Dashboard',
-      image: 'img/img8.png'
-    },
-    {
-      id: 2,
-      title: 'AI-Powered Summaries',
-      text: "Don't have time to watch the whole video? Let our advanced AI generate concise summaries of YouTube videos, so you can grasp the key points in seconds.",
-      placeholder: 'AI Summary Demo',
-      image: 'img/img5.png'
-    },
-    {
-      id: 3,
-      title: 'Notes',
-      text: 'Write quick notes while you browse and keep your ideas connected to each saved link. Capture key points, reminders, and thoughts in one place.',
-      placeholder: 'Smart Search UI',
-      image: 'img/img3.png'
-    },
-    {
-      id: 4,
-      title: 'Read Articles',
-      text: 'Save articles to read later in a distraction-free format. Focus on the content, highlight what matters, and return to your reading list anytime.',
-      placeholder: 'Rich Cards Preview',
-      image: 'img/img4.png'
-    },
-    {
-      id: 5,
-      title: 'Watch Videos',
-      text: 'Keep your video resources organized and ready to play whenever you need them. Build playlists for learning, work, or entertainment without losing track.',
-      placeholder: 'Security Shield',
-      image: 'img/img6.png'
-    }
-  ]
+  const { t } = useTranslation('features')
+  const features = t('items', { returnObjects: true })
+  const featureImages = ['img/img8.png', 'img/img5.png', 'img/img3.png', 'img/img4.png', 'img/img6.png']
 
   return (
     <div className={styles.pageContainer}>
@@ -57,7 +24,7 @@ export default function FeaturesPage () {
               {/* <div className={styles.placeholderImage}>
                 {feature.placeholder} (Image Placeholder)
               </div> */}
-              <img src={feature.image} alt={feature.title} />
+              <img src={featureImages[feature.id - 1]} alt={feature.title} />
               {/* Users can replace the div above with <img src="..." alt="..." className={styles.placeholderImage} /> */}
             </div>
           </section>

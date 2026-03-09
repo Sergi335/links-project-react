@@ -1,0 +1,20 @@
+{
+  "brand": "ZenMarks",
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "about": "About",
+    "login": "Login"
+  },
+  "footer": {
+    "legal": "Legal Notice",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "cookies": "Cookies",
+    "copy": "© {{year}} ZenMarks. All rights reserved."
+  },
+  "actions": {
+    "goBack": "Go Back",
+    "back": "Back"
+  }
+}

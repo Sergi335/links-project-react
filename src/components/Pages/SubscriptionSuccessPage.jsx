@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { getSubscriptionStatus } from '../../services/dbQueries'
 import { useSessionStore } from '../../store/session'
 import styles from './SubscriptionSuccessPage.module.css'
 
 export default function SubscriptionSuccessPage () {
+  const { t } = useTranslation('subscription')
   const navigate = useNavigate()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
@@ -16,13 +18,11 @@ export default function SubscriptionSuccessPage () {
   useEffect(() => {
     const checkSubscription = async () => {
       try {
-        // Esperar un momento para que el webhook procese el pago
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         const response = await getSubscriptionStatus()
         if (!response.hasError) {
           setSubscription(response)
-          // Actualizar el usuario en el store si hay cambios
           if (user && response.plan) {
             setUser({
               ...user,
@@ -34,7 +34,7 @@ export default function SubscriptionSuccessPage () {
           }
         }
       } catch (error) {
-        console.error('Error verificando suscripción:', error)
+        console.error('Error checking subscription:', error)
       } finally {
         setIsLoading(false)
       }
@@ -60,33 +60,33 @@ export default function SubscriptionSuccessPage () {
           </svg>
         </div>
 
-        <h1 className={styles.title}>¡Pago realizado con éxito!</h1>
+        <h1 className={styles.title}>{t('title')}</h1>
 
         {isLoading
           ? (
-          <div className={styles.loading}>
-            <p>Verificando tu suscripción...</p>
-            <div className={styles.spinner}></div>
-          </div>
+            <div className={styles.loading}>
+              <p>{t('verifying')}</p>
+              <div className={styles.spinner}></div>
+            </div>
             )
           : (
-          <>
-            <p className={styles.message}>
-              Tu suscripción al plan <strong>{subscription?.plan || 'Pro'}</strong> está activa.
-            </p>
-            <p className={styles.submessage}>
-              Ahora tienes acceso a todas las funcionalidades premium.
-            </p>
+            <>
+              <p className={styles.message}>
+                {t('activeMessage', { plan: subscription?.plan || t('defaultPlan') })}
+              </p>
+              <p className={styles.submessage}>
+                {t('submessage')}
+              </p>
 
-            <div className={styles.buttonGroup}>
-              <button className={styles.primaryBtn} onClick={handleGoToDashboard}>
-                Ir al Dashboard
-              </button>
-              <button className={styles.secondaryBtn} onClick={handleGoToProfile}>
-                Ver mi suscripción
-              </button>
-            </div>
-          </>
+              <div className={styles.buttonGroup}>
+                <button className={styles.primaryBtn} onClick={handleGoToDashboard}>
+                  {t('goDashboard')}
+                </button>
+                <button className={styles.secondaryBtn} onClick={handleGoToProfile}>
+                  {t('viewSubscription')}
+                </button>
+              </div>
+            </>
             )}
       </div>
     </div>

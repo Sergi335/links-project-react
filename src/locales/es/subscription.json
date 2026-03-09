@@ -1,0 +1,9 @@
+{
+  "title": "Pago realizado con exito",
+  "verifying": "Verificando tu suscripcion...",
+  "activeMessage": "Tu suscripcion al plan {{plan}} esta activa.",
+  "defaultPlan": "Pro",
+  "submessage": "Ahora tienes acceso a todas las funcionalidades premium.",
+  "goDashboard": "Ir al Dashboard",
+  "viewSubscription": "Ver mi suscripcion"
+}

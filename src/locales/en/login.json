@@ -1,0 +1,19 @@
+{
+  "email": "email",
+  "password": "password",
+  "nick": "nickname",
+  "buttons": {
+    "login": "Log In",
+    "register": "Sign Up"
+  },
+  "forgotPassword": "forgot your password?",
+  "switch": {
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "toRegister": "Sign up",
+    "toLogin": "Log in"
+  },
+  "or": "OR",
+  "continueGoogle": "Continue with Google",
+  "back": "Back"
+}

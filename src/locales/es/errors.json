@@ -1,0 +1,8 @@
+{
+  "404": {
+    "message": "Lo sentimos, no hemos encontrado la pagina que buscas."
+  },
+  "500": {
+    "message": "Ups, algo ha salido mal. Por favor, intentalo mas tarde."
+  }
+}

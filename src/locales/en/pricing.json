@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "Choose your plan",
+    "subtitle": "Select the plan that best fits your needs"
+  },
+  "badgePopular": "Most popular",
+  "buttons": {
+    "processing": "Processing...",
+    "subscribe": "Subscribe",
+    "startFree": "Start free"
+  },
+  "toast": {
+    "loginToSubscribe": "Log in to subscribe",
+    "paymentError": "Error processing payment"
+  },
+  "footer": {
+    "questions": "Questions?",
+    "contact": "Contact us",
+    "disclaimer": "Payments are securely processed by Stripe. You can cancel at any time."
+  },
+  "plans": {
+    "free": {
+      "title": "Free",
+      "description": "For personal use",
+      "period": "/month",
+      "features": [
+        "50MB storage",
+        "5 AI calls per month",
+        "Basic support"
+      ]
+    },
+    "pro": {
+      "title": "Pro",
+      "description": "For advanced users",
+      "period": "/month",
+      "features": [
+        "5GB storage",
+        "50 AI calls per month",
+        "Priority support",
+        "Data export"
+      ]
+    },
+    "enterprise": {
+      "title": "Enterprise",
+      "description": "For teams and companies",
+      "period": "/month",
+      "features": [
+        "50GB storage",
+        "Unlimited AI calls",
+        "24/7 dedicated support",
+        "Custom API",
+        "Assisted onboarding"
+      ]
+    }
+  }
+}
