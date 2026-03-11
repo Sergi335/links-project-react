@@ -22,6 +22,8 @@ export default function LinkDetailsHeader ({ data, context }) {
     }
     checkUrlStatus(data?.url)
   }, [data])
+
+  console.log('🚀 ~ LinkDetailsHeader ~ data:', data)
   return (
       <header className={styles.header}>
         {/* <h3>Detalles del Link</h3> */}

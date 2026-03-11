@@ -1,7 +1,7 @@
 {
   "button": "Recuperar",
-  "description": "Introduce la direccion de email con la que te registraste y te enviaremos instrucciones para cambiar tu contrasena.",
-  "success": "Perfecto, te hemos enviado un correo con instrucciones para cambiar tu contrasena. Revisa tu bandeja de entrada o la carpeta de spam.",
-  "userNotFound": "No hemos encontrado ningun usuario con el email {{email}}",
-  "genericError": "Ha ocurrido un error. Por favor, vuelve a intentarlo mas tarde."
+  "description": "Introduce la dirección de email con la que te registraste y te enviaremos instrucciones para cambiar tu contraseña.",
+  "success": "Perfecto, te hemos enviado un correo con instrucciones para cambiar tu contraseña. Revisa tu bandeja de entrada o la carpeta de spam.",
+  "userNotFound": "No hemos encontrado ningún usuario con el email {{email}}",
+  "genericError": "Ha ocurrido un error. Por favor, vuelve a intentarlo más tarde."
 }

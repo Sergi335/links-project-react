@@ -1,7 +1,7 @@
 {
   "hero": {
     "titlePrefix": "Tu Mundo Digital",
-    "titleHighlight": "Organizado.",
+    "titleHighlight": "Organizado",
     "subtitle": "Organiza tu mundo digital con ZenMarks, el gestor de marcadores para productividad y ocio.",
     "worksWith": "Compatible con los principales navegadores",
     "getStarted": "Comenzar"
@@ -9,41 +9,41 @@
   "cards": {
     "titlePrefix": "Funciones creadas para",
     "titleHighlight": "usuarios avanzados",
-    "subtitle": "Todo lo que necesitas para guardar, consumir y comprender contenido mas rapido.",
+    "subtitle": "Todo lo que necesitas para guardar, consumir y comprender contenido más rápido.",
     "chromeCtaPrefix": "Disponible en",
     "chromeCtaStore": "Chrome Store",
     "items": [
       {
         "title": "Importa tus enlaces",
         "description": "Trae tus enlaces favoritos de Chrome con un clic.",
-        "detail": "Mueve tus marcadores en segundos y manten tu flujo de trabajo en un solo lugar."
+        "detail": "Mueve tus marcadores en segundos y mantén tu flujo de trabajo en un solo lugar."
       },
       {
         "title": "No olvides nada",
-        "description": "Anade notas, descripciones, imagenes, listas y tareas.",
-        "detail": "Guarda contexto en cada enlace para recordar siempre por que era importante."
+        "description": "Añade notas, descripciones, imágenes, listas y tareas.",
+        "detail": "Guarda contexto en cada enlace para recordar siempre por qué era importante."
       },
       {
-        "title": "Todos tus videos",
-        "description": "Visualiza y resume videos de YouTube con IA.",
-        "detail": "Guarda recursos de aprendizaje y extrae sus puntos clave rapidamente."
+        "title": "Todos tus vídeos",
+        "description": "Visualiza y resume vídeos de YouTube con IA.",
+        "detail": "Guarda recursos de aprendizaje y extrae sus puntos clave rápidamente."
       },
       {
-        "title": "Anade nuevos enlaces",
-        "description": "Guarda nuevos enlaces con la extension de Chrome.",
-        "detail": "Recorta paginas al instante y manten tu biblioteca siempre actualizada."
+        "title": "Añade nuevos enlaces",
+        "description": "Guarda nuevos enlaces con la extensión de Chrome.",
+        "detail": "Recorta páginas al instante y mantén tu biblioteca siempre actualizada."
       },
       {
         "title": "Organiza a tu modo",
         "description": "Organiza tus enlaces de la manera que prefieras.",
-        "detail": "Usa categorias, columnas y orden personalizado para crear tu propio sistema."
+        "detail": "Usa categorías, columnas y orden personalizado para crear tu propio sistema."
       }
     ]
   },
   "section": {
     "title": "Funciones potentes a tu alcance",
-    "text1": "Resume y chatea con videos de YouTube, guarda enlaces con copiar y pegar, y anade descripciones detalladas, imagenes y notas.",
+    "text1": "Resume y chatea con vídeos de YouTube, guarda enlaces con copiar y pegar, y añade descripciones detalladas, imágenes y notas.",
     "text2a": " ZenMarks",
-    "text2b": "te ofrece un conjunto completo de herramientas para extraer y sintetizar la informacion de tus enlaces. Reordena todo con facilidad, reproduce videos desde la app y mucho mas."
+    "text2b": "te ofrece un conjunto completo de herramientas para extraer y sintetizar la información de tus enlaces. Reordena todo con facilidad, reproduce vídeos desde la app y mucho más."
   }
 }

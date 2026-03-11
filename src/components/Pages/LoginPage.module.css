@@ -5,9 +5,8 @@
     justify-content: center;
     height: 82vh;
     width: 38%;
-    border-radius: var(--border-radius);
-    background-color: var(--columnBgColor);
-    border: var(--firstBorder);
+    /* border-radius: var(--border-radius);
+    border: var(--firstBorder); */
     gap: 25px;
 
     & p {
@@ -25,6 +24,7 @@
     gap: 12px;
     color: var(--text-color-secondary);
     border-radius: var(--border-radius);
+    width: 53%;
 }
 
 p.recoveryText {
@@ -48,8 +48,9 @@ p.recoveryText {
 .loginButton {
     border: var(--firstBorder);
     background-color: var(--inverseColor);
-    color: var(--mainColor);
+    color: var(--text-color-inverse);
     font-weight: bold;
+    width: -webkit-fill-available;
 }
 
 .loginForm,
@@ -59,7 +60,7 @@ p.recoveryText {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    width: 100%;
+    width: 53%;
     /* margin-bottom: 25px; */
 }
 
@@ -69,30 +70,34 @@ p.recoveryText {
 .loginForm input[type="password"],
 .registerForm input[type="password"],
 .registerForm input[type="email"] {
-    width: 40%;
+    border-radius: var(--border-radius);
+    width: -webkit-fill-available;
 }
 
 .logSwitch {
     cursor: pointer;
     font-size: 1em;
-    color: coral;
+    color: var(--homePageAccentColor);
     font-weight: bold;
     display: block;
     text-align: center;
+    opacity: 0.8;
 }
 
 .logSwitch:hover {
-    color: var(--accentColor);
+    opacity: 1;
 }
 
 .start {
     font-size: 1.3rem;
-    color: coral;
+    color: var(--homePageAccentColor);
     font-weight: bold;
+    flex-grow: 0;
+    opacity: 0.8;
 }
 
 .start:hover {
-    color: var(--accentColor);
+    opacity: 1;
 }
 
 .logo {
@@ -102,12 +107,12 @@ p.recoveryText {
     display: flex;
 
     & h2 {
-        font-size: 96px;
+        font-size: 40px;
         margin-top: 0;
     }
 }
 
-.logo::after {
+/* .logo::after {
     content: 'Beta';
     position: relative;
     color: coral;
@@ -116,7 +121,7 @@ p.recoveryText {
     font-style: italic;
     top: 17px;
     height: fit-content;
-}
+} */
 
 .logo svg {
     width: 84px;

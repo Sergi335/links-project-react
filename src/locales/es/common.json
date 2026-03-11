@@ -4,18 +4,18 @@
     "features": "Funciones",
     "pricing": "Precios",
     "about": "Sobre nosotros",
-    "login": "Iniciar sesion"
+    "login": "Iniciar sesión"
   },
   "footer": {
     "legal": "Aviso Legal",
-    "privacy": "Politica de Privacidad",
-    "terms": "Terminos de Uso",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Uso",
     "cookies": "Cookies",
     "copy": "© {{year}} ZenMarks. Todos los derechos reservados."
   },
   "actions": {
     "goBack": "Volver",
-    "back": "Atras",
+    "back": "Atrás",
     "edit": "Editar",
     "delete": "Borrar",
     "favorite": "Favorito",
@@ -34,7 +34,7 @@
   },
   "columns": {
     "newLink": "Nuevo Link",
-    "newCategory": "Nueva Categoria",
+    "newCategory": "Nueva Categoría",
     "paste": "Pegar"
   },
   "search": {

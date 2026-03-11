@@ -1,8 +1,8 @@
 {
   "pageTitle": "{{name}} - Perfil",
   "tabs": {
-    "info": "Informacion",
-    "stats": "Estadisticas",
+    "info": "Información",
+    "stats": "Estadísticas",
     "security": "Seguridad",
     "preferences": "Preferencias"
   },
@@ -20,10 +20,10 @@
   },
   "header": {
     "title": "Perfil de usuario",
-    "fallbackAbout": "Mi frase motivante aqui"
+    "fallbackAbout": "Mi frase motivante aquí"
   },
   "reauthForm": {
-    "currentPassword": "Introduzca su contrasena actual"
+    "currentPassword": "Introduzca su contraseña actual"
   },
   "preferences": {
     "import": {
@@ -34,12 +34,12 @@
     "deleteAccount": {
       "title": "Cierra tu Cuenta",
       "button": "Cerrar Cuenta",
-      "confirmText": "Seguro que quieres cerrar tu cuenta? Esto borrara todos tus datos",
-      "warning": "Esta operacion no se puede deshacer"
+      "confirmText": "¿Seguro que quieres cerrar tu cuenta? Esto borrará todos tus datos",
+      "warning": "Esta operación no se puede deshacer"
     }
   },
   "subscription": {
-    "title": "Tu Suscripcion",
+    "title": "Tu Suscripción",
     "planCurrent": "Plan actual:",
     "statusLabel": "Estado:",
     "storage": "Almacenamiento:",
@@ -47,9 +47,9 @@
     "aiCalls": "Llamadas IA:",
     "aiCallsUnlimited": "Ilimitadas",
     "aiCallsUsage": "{{used}} de {{total}}",
-    "lastRenewal": "Ultima renovacion:",
+    "lastRenewal": "Última renovación:",
     "upgrade": "Mejorar plan",
-    "manage": "Gestionar suscripcion",
+    "manage": "Gestionar suscripción",
     "opening": "Abriendo...",
     "status": {
       "active": "Activa",
@@ -61,23 +61,23 @@
   },
   "security": {
     "changePassword": {
-      "title": "Cambiar contrasena",
+      "title": "Cambiar contraseña",
       "button": "Cambiar",
-      "confirmCurrent": "Primero, confirme su contrasena actual",
-      "newPasswordPrompt": "Ahora, ingrese su nueva contrasena",
-      "newPasswordPlaceholder": "Nueva contrasena",
-      "confirmNewPasswordPlaceholder": "Confirmar nueva contrasena",
-      "submit": "Cambiar Contrasena"
+      "confirmCurrent": "Primero, confirme su contraseña actual",
+      "newPasswordPrompt": "Ahora, ingrese su nueva contraseña",
+      "newPasswordPlaceholder": "Nueva contraseña",
+      "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
+      "submit": "Cambiar contraseña"
     },
     "backup": {
       "title": "Copia de seguridad de tus datos",
       "create": "Crear Copia",
       "restore": "Restaurar Copia",
-      "confirmTitle": "Seguro que quieres restaurar esta copia de seguridad?",
-      "confirmWarning": "Todos tus datos actuales seran borrados.",
-      "confirmImportant": "Importante!",
-      "confirmImportantText": "Los archivos de imagenes no seran restaurados.",
-      "confirmYes": "Si, restaurar",
+      "confirmTitle": "¿Seguro que quieres restaurar esta copia de seguridad?",
+      "confirmWarning": "Todos tus datos actuales serán borrados.",
+      "confirmImportant": "¡Importante!",
+      "confirmImportantText": "Los archivos de imágenes no serán restaurados.",
+      "confirmYes": "Sí, restaurar",
       "confirmNo": "No, cancelar"
     }
   },
@@ -86,20 +86,20 @@
     "panels": "Paneles",
     "links": "Links",
     "findDuplicates": "Encontrar Duplicados",
-    "findBrokenLinks": "Encontrar Links Caidos",
+    "findBrokenLinks": "Encontrar Links Caídos",
     "duplicatesCount": "Duplicados:",
-    "brokenLinksCount": "Links Caidos:",
+    "brokenLinksCount": "Links Caídos:",
     "panel": "Panel:",
     "url": "url:"
   },
   "userInfo": {
     "uploadProfileImage": "Sube tu imagen de perfil",
-    "recommendedSize": "Tamano recomendado 125x125",
-    "maxSize": "Max. 2MB",
+    "recommendedSize": "Tamaño recomendado 125x125",
+    "maxSize": "Máx. 2MB",
     "uploadImage": "Subir Imagen",
     "fullName": "Nombre Completo",
     "website": "Sitio Web",
-    "aboutMe": "Sobre mi",
+    "aboutMe": "Sobre mí",
     "memberSince": "Miembro desde:",
     "fallbackUser": "User",
     "fallbackWebsite": "www.mywebsite.com",
@@ -107,36 +107,36 @@
   },
   "toasts": {
     "deleteLoading": "Eliminando cuenta ...",
-    "wrongPassword": "Contrasena incorrecta",
-    "requestErrorRetryLater": "Error en la peticion vuelve a intentarlo mas tarde",
-    "deleteSuccess": "Cuenta borrada con exito",
+    "wrongPassword": "Contraseña incorrecta",
+    "requestErrorRetryLater": "Error en la petición, vuelve a intentarlo más tarde",
+    "deleteSuccess": "Cuenta borrada con éxito",
     "reauthRequiredDelete": "Necesitas reautenticarte para eliminar tu cuenta",
     "reauthGoogleError": "Error al reautenticar con Google",
-    "invalidHtml": "Por favor selecciona un archivo HTML valido",
+    "invalidHtml": "Por favor selecciona un archivo HTML válido",
     "importLoading": "Importando marcadores...",
-    "importSuccess": "Marcadores importados con exito: {{count}} enlaces",
+    "importSuccess": "Marcadores importados con éxito: {{count}} enlaces",
     "importError": "Error al importar marcadores",
-    "billingPortalError": "Error al abrir el portal de facturacion",
-    "enterCurrentPassword": "Por favor ingrese su contrasena actual",
-    "passwordVerified": "Contrasena verificada correctamente",
-    "passwordVerifyError": "Error al verificar la contrasena",
+    "billingPortalError": "Error al abrir el portal de facturación",
+    "enterCurrentPassword": "Por favor ingrese su contraseña actual",
+    "passwordVerified": "Contraseña verificada correctamente",
+    "passwordVerifyError": "Error al verificar la contraseña",
     "completeAllFields": "Por favor complete todos los campos",
-    "passwordMinLength": "La contrasena debe tener al menos 6 caracteres",
-    "passwordMismatch": "Las contrasenas no coinciden",
-    "authErrorRetry": "Error de autenticacion. Por favor intente nuevamente.",
-    "passwordChanged": "Contrasena cambiada con exito",
-    "sessionExpired": "Sesion expirada, por favor vuelva a intentarlo",
-    "changePasswordError": "Error al cambiar la contrasena",
-    "backupCreated": "Copia creada con exito",
+    "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "authErrorRetry": "Error de autenticación. Por favor, intente nuevamente.",
+    "passwordChanged": "Contraseña cambiada con éxito",
+    "sessionExpired": "Sesión expirada, por favor vuelva a intentarlo",
+    "changePasswordError": "Error al cambiar la contraseña",
+    "backupCreated": "Copia creada con éxito",
     "restoringBackup": "Restaurando copia de seguridad...",
-    "backupRestored": "Copia restaurada con exito",
+    "backupRestored": "Copia restaurada con éxito",
     "backupRestoreError": "Error al restaurar la copia",
-    "operationCanceled": "Operacion cancelada",
+    "operationCanceled": "Operación cancelada",
     "checkingLink": "Comprobando {{name}} ...",
-    "noBrokenLinks": "No se encontraron links caidos",
+    "noBrokenLinks": "No se encontraron links caídos",
     "noDuplicates": "No se encontraron duplicados",
-    "infoUpdated": "Informacion actualizada con exito",
-    "imageTooLarge": "Imagen demasiado grande, max. 2MB",
-    "imageChanged": "Imagen cambiada con exito"
+    "infoUpdated": "Información actualizada con éxito",
+    "imageTooLarge": "Imagen demasiado grande, máx. 2MB",
+    "imageChanged": "Imagen cambiada con éxito"
   }
 }

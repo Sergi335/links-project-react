@@ -1,11 +1,11 @@
 {
   "cookies": {
-    "title": "Politica de Cookies",
+    "title": "Política de Cookies",
     "sections": [
       {
-        "title": "1. Que son las cookies?",
+        "title": "1. ¿Qué son las cookies?",
         "paragraphs": [
-          "Las cookies son pequenos archivos de texto que se almacenan en el dispositivo del usuario al visitar una pagina web. Sirven para garantizar el correcto funcionamiento del sitio y mejorar la experiencia del usuario."
+          "Las cookies son pequeños archivos de texto que se almacenan en el dispositivo del usuario al visitar una página web. Sirven para garantizar el correcto funcionamiento del sitio y mejorar la experiencia del usuario."
         ]
       },
       {
@@ -14,45 +14,45 @@
           "Este sitio web utiliza los siguientes tipos de cookies:"
         ],
         "list": [
-          "Cookies tecnicas: necesarias para el funcionamiento basico del servicio y la autenticacion de usuarios.",
-          "Cookies de analisis (opcionales): permiten analizar el uso de la plataforma para mejorar el servicio."
+          "Cookies técnicas: necesarias para el funcionamiento básico del servicio y la autenticación de usuarios.",
+          "Cookies de análisis (opcionales): permiten analizar el uso de la plataforma para mejorar el servicio."
         ]
       },
       {
         "title": "3. Cookies de terceros",
         "paragraphs": [
-          "En caso de activarse herramientas de analisis (por ejemplo, Google Analytics), estas pueden instalar cookies gestionadas por terceros."
+          "En caso de activarse herramientas de análisis (por ejemplo, Google Analytics), estas pueden instalar cookies gestionadas por terceros."
         ]
       },
       {
-        "title": "4. Gestion del consentimiento",
+        "title": "4. Gestión del consentimiento",
         "paragraphs": [
           "El usuario puede aceptar, rechazar o configurar el uso de cookies no esenciales mediante el banner de cookies disponible en la plataforma."
         ]
       },
       {
-        "title": "5. Como desactivar las cookies",
+        "title": "5. Cómo desactivar las cookies",
         "paragraphs": [
-          "El usuario puede configurar su navegador para bloquear o eliminar las cookies instaladas. La desactivacion de cookies tecnicas puede afectar al correcto funcionamiento del servicio."
+          "El usuario puede configurar su navegador para bloquear o eliminar las cookies instaladas. La desactivación de cookies técnicas puede afectar al correcto funcionamiento del servicio."
         ]
       },
       {
         "title": "6. Actualizaciones",
         "paragraphs": [
-          "Esta politica puede actualizarse para adaptarse a cambios legales o tecnicos. La version vigente estara siempre disponible en esta pagina."
+          "Esta política puede actualizarse para adaptarse a cambios legales o técnicos. La versión vigente estará siempre disponible en esta página."
         ]
       }
     ]
   },
   "privacy": {
-    "title": "Politica de Privacidad",
+    "title": "Política de Privacidad",
     "sections": [
       {
         "title": "1. Responsable del tratamiento",
         "paragraphs": [
           "Titular: TU NOMBRE O EMPRESA",
           "NIF/CIF: TU NIF",
-          "Domicilio: TU DIRECCION",
+          "Domicilio: TU DIRECCIÓN",
           "Email: contacto@tudominio.com"
         ]
       },
@@ -63,10 +63,10 @@
         ],
         "list": [
           "Nombre y apellidos (si se proporcionan)",
-          "Direccion de correo electronico",
-          "Datos de acceso y autenticacion",
-          "Datos de facturacion y pago",
-          "Direccion IP y datos tecnicos basicos"
+          "Dirección de correo electrónico",
+          "Datos de acceso y autenticación",
+          "Datos de facturación y pago",
+          "Dirección IP y datos técnicos básicos"
         ]
       },
       {
@@ -77,7 +77,7 @@
         "list": [
           "Gestionar el registro y la cuenta de usuario",
           "Prestar el servicio contratado",
-          "Gestionar pagos y facturacion",
+          "Gestionar pagos y facturación",
           "Comunicaciones relacionadas con el servicio",
           "Mejorar la plataforma y su funcionamiento"
         ]
@@ -88,32 +88,32 @@
           "El tratamiento de los datos se basa en:"
         ],
         "list": [
-          "La ejecucion de un contrato (prestacion del servicio)",
+          "La ejecución de un contrato (prestación del servicio)",
           "El consentimiento del usuario, cuando sea requerido",
           "El cumplimiento de obligaciones legales"
         ]
       },
       {
-        "title": "5. Conservacion de los datos",
+        "title": "5. Conservación de los datos",
         "paragraphs": [
-          "Los datos se conservaran mientras exista una relacion contractual o mientras sea necesario para cumplir con obligaciones legales."
+          "Los datos se conservarán mientras exista una relación contractual o mientras sea necesario para cumplir con obligaciones legales."
         ]
       },
       {
         "title": "6. Destinatarios de los datos",
         "paragraphs": [
-          "Los datos podran ser comunicados a proveedores necesarios para la prestacion del servicio, tales como:"
+          "Los datos podrán ser comunicados a proveedores necesarios para la prestación del servicio, tales como:"
         ],
         "list": [
           "Proveedores de hosting y almacenamiento",
           "Plataformas de pago (por ejemplo, Stripe)",
-          "Servicios de correo electronico"
+          "Servicios de correo electrónico"
         ]
       },
       {
         "title": "7. Transferencias internacionales",
         "paragraphs": [
-          "En caso de que se realicen transferencias internacionales de datos, estas se llevaran a cabo con las garantias adecuadas conforme al RGPD."
+          "En caso de que se realicen transferencias internacionales de datos, estas se llevarán a cabo con las garantías adecuadas conforme al RGPD."
         ]
       },
       {
@@ -123,81 +123,81 @@
         ],
         "list": [
           "Acceso a sus datos personales",
-          "Rectificacion de datos inexactos",
-          "Supresion de sus datos",
-          "Limitacion u oposicion al tratamiento",
+          "Rectificación de datos inexactos",
+          "Supresión de sus datos",
+          "Limitación u oposición al tratamiento",
           "Portabilidad de los datos"
         ]
       },
       {
         "title": "9. Seguridad de los datos",
         "paragraphs": [
-          "Se aplican medidas tecnicas y organizativas adecuadas para garantizar la seguridad y confidencialidad de los datos personales."
+          "Se aplican medidas técnicas y organizativas adecuadas para garantizar la seguridad y confidencialidad de los datos personales."
         ]
       },
       {
         "title": "10. Uso de cookies",
         "paragraphs": [
-          "Actualmente no se utilizan cookies no esenciales. En caso de que se incorporen herramientas de analisis u otras cookies, se informara al usuario mediante la correspondiente politica de cookies."
+          "Actualmente no se utilizan cookies no esenciales. En caso de que se incorporen herramientas de análisis u otras cookies, se informará al usuario mediante la correspondiente política de cookies."
         ]
       },
       {
-        "title": "11. Cambios en esta politica",
+        "title": "11. Cambios en esta política",
         "paragraphs": [
-          "Esta politica de privacidad puede actualizarse para adaptarse a cambios legales o tecnicos. La version vigente estara siempre disponible en esta pagina."
+          "Esta política de privacidad puede actualizarse para adaptarse a cambios legales o técnicos. La versión vigente estará siempre disponible en esta página."
         ]
       }
     ]
   },
   "terms": {
-    "title": "Terminos de Uso y Condiciones de Contratacion",
+    "title": "Términos de Uso y Condiciones de Contratación",
     "sections": [
       {
-        "title": "1. Identificacion del prestador",
+        "title": "1. Identificación del prestador",
         "paragraphs": [
           "Titular: TU NOMBRE O EMPRESA",
           "NIF/CIF: TU NIF",
-          "Domicilio: TU DIRECCION",
+          "Domicilio: TU DIRECCIÓN",
           "Email de contacto: contacto@tudominio.com"
         ]
       },
       {
         "title": "2. Objeto",
         "paragraphs": [
-          "El presente documento regula el acceso, uso y contratacion del servicio SaaS ofrecido a traves de esta plataforma, dirigido a usuarios finales (B2C)."
+          "El presente documento regula el acceso, uso y contratación del servicio SaaS ofrecido a través de esta plataforma, dirigido a usuarios finales (B2C)."
         ]
       },
       {
         "title": "3. Registro de usuarios",
         "paragraphs": [
-          "Para utilizar el servicio es necesario crear una cuenta proporcionando informacion veraz y actualizada. El usuario es responsable de mantener la confidencialidad de sus credenciales."
+          "Para utilizar el servicio es necesario crear una cuenta proporcionando información veraz y actualizada. El usuario es responsable de mantener la confidencialidad de sus credenciales."
         ]
       },
       {
         "title": "4. Uso permitido y prohibido",
         "list": [
-          "Usar el servicio conforme a la ley y a estos terminos",
-          "No realizar usos fraudulentos, abusivos o ilicitos",
+          "Usar el servicio conforme a la ley y a estos términos",
+          "No realizar usos fraudulentos, abusivos o ilícitos",
           "No intentar acceder a sistemas o datos no autorizados",
-          "No revender el servicio sin autorizacion expresa"
+          "No revender el servicio sin autorización expresa"
         ]
       },
       {
         "title": "5. Planes, precios e impuestos",
         "paragraphs": [
-          "El acceso completo al servicio puede requerir la contratacion de uno de los planes de pago disponibles. Los precios se muestran en euros e incluyen los impuestos aplicables, salvo que se indique lo contrario."
+          "El acceso completo al servicio puede requerir la contratación de uno de los planes de pago disponibles. Los precios se muestran en euros e incluyen los impuestos aplicables, salvo que se indique lo contrario."
         ]
       },
       {
         "title": "6. Forma de pago",
         "paragraphs": [
-          "El pago se realiza de forma anticipada mediante tarjeta bancaria u otros metodos disponibles a traves de la plataforma de pago utilizada (por ejemplo, Stripe)."
+          "El pago se realiza de forma anticipada mediante tarjeta bancaria u otros métodos disponibles a través de la plataforma de pago utilizada (por ejemplo, Stripe)."
         ]
       },
       {
-        "title": "7. Renovacion y cancelacion",
+        "title": "7. Renovación y cancelación",
         "paragraphs": [
-          "Las suscripciones se renuevan automaticamente segun la periodicidad seleccionada (mensual o anual). El usuario puede cancelar la renovacion en cualquier momento desde su cuenta, manteniendo el acceso hasta el final del periodo contratado."
+          "Las suscripciones se renuevan automáticamente según la periodicidad seleccionada (mensual o anual). El usuario puede cancelar la renovación en cualquier momento desde su cuenta, manteniendo el acceso hasta el final del periodo contratado."
         ]
       },
       {
@@ -207,85 +207,85 @@
         ]
       },
       {
-        "title": "9. Suspension o baja del servicio",
+        "title": "9. Suspensión o baja del servicio",
         "paragraphs": [
-          "El prestador se reserva el derecho a suspender o cancelar cuentas que incumplan estos terminos, sin derecho a reembolso en caso de uso indebido."
+          "El prestador se reserva el derecho a suspender o cancelar cuentas que incumplan estos términos, sin derecho a reembolso en caso de uso indebido."
         ]
       },
       {
         "title": "10. Responsabilidad",
         "paragraphs": [
-          "El servicio se ofrece tal cual. No se garantiza la disponibilidad ininterrumpida ni la ausencia total de errores, aunque se adoptaran medidas razonables para su correcto funcionamiento."
+          "El servicio se ofrece tal cual. No se garantiza la disponibilidad ininterrumpida ni la ausencia total de errores, aunque se adoptarán medidas razonables para su correcto funcionamiento."
         ]
       },
       {
         "title": "11. Propiedad intelectual",
         "paragraphs": [
-          "Todos los contenidos, codigo y elementos del servicio son titularidad del prestador o de terceros licenciantes, quedando prohibida su reproduccion sin autorizacion."
+          "Todos los contenidos, código y elementos del servicio son titularidad del prestador o de terceros licenciantes, quedando prohibida su reproducción sin autorización."
         ]
       },
       {
-        "title": "12. Legislacion aplicable",
+        "title": "12. Legislación aplicable",
         "paragraphs": [
-          "Estas condiciones se rigen por la legislacion espanola. Para cualquier conflicto, las partes se someten a los juzgados y tribunales del domicilio del consumidor."
+          "Estas condiciones se rigen por la legislación española. Para cualquier conflicto, las partes se someten a los juzgados y tribunales del domicilio del consumidor."
         ]
       }
     ]
   },
   "legalNotice": {
     "title": "Aviso Legal",
-    "intro": "En cumplimiento de lo dispuesto en la Ley 34/2002, de 11 de julio, de servicios de la sociedad de la informacion y de comercio electronico (LSSI-CE), se informa a los usuarios de los siguientes datos:",
+    "intro": "En cumplimiento de lo dispuesto en la Ley 34/2002, de 11 de julio, de servicios de la sociedad de la información y de comercio electrónico (LSSI-CE), se informa a los usuarios de los siguientes datos:",
     "sections": [
       {
         "title": "1. Datos identificativos",
         "list": [
-          "Titular del sitio web: [NOMBRE Y APELLIDOS / RAZON SOCIAL]",
+          "Titular del sitio web: [NOMBRE Y APELLIDOS / RAZÓN SOCIAL]",
           "NIF/CIF: [NIF / CIF]",
-          "Domicilio social: [DIRECCION COMPLETA]",
-          "Correo electronico: [EMAIL DE CONTACTO]",
-          "Actividad: Prestacion de servicios digitales mediante plataforma SaaS",
+          "Domicilio social: [DIRECCIÓN COMPLETA]",
+          "Correo electrónico: [EMAIL DE CONTACTO]",
+          "Actividad: Prestación de servicios digitales mediante plataforma SaaS",
           "Nombre comercial: [NOMBRE DEL SAAS]"
         ]
       },
       {
         "title": "2. Objeto",
         "paragraphs": [
-          "El presente Aviso Legal regula el acceso, navegacion y uso del sitio web [URL DEL SITIO WEB], asi como las responsabilidades derivadas de la utilizacion de sus contenidos y servicios.",
-          "El acceso y uso del sitio web atribuye la condicion de usuario e implica la aceptacion plena y sin reservas del presente Aviso Legal."
+          "El presente Aviso Legal regula el acceso, navegación y uso del sitio web [URL DEL SITIO WEB], así como las responsabilidades derivadas de la utilización de sus contenidos y servicios.",
+          "El acceso y uso del sitio web atribuye la condición de usuario e implica la aceptación plena y sin reservas del presente Aviso Legal."
         ]
       },
       {
         "title": "3. Condiciones de uso",
         "paragraphs": [
-          "El usuario se compromete a utilizar el sitio web de conformidad con la ley, la buena fe, el orden publico y el presente Aviso Legal.",
-          "Queda prohibido el uso del sitio web con fines ilicitos o que puedan causar perjuicio al normal funcionamiento del mismo.",
+          "El usuario se compromete a utilizar el sitio web de conformidad con la ley, la buena fe, el orden público y el presente Aviso Legal.",
+          "Queda prohibido el uso del sitio web con fines ilícitos o que puedan causar perjuicio al normal funcionamiento del mismo.",
           "El titular se reserva el derecho a modificar o suspender el sitio web sin previo aviso."
         ]
       },
       {
         "title": "4. Propiedad intelectual e industrial",
         "paragraphs": [
-          "Todos los contenidos del sitio web (textos, imagenes, logotipos, software, diseno y codigo fuente) son titularidad del propietario del sitio o dispone de los derechos necesarios para su uso.",
-          "Queda prohibida la reproduccion, distribucion o modificacion de dichos contenidos sin autorizacion expresa."
+          "Todos los contenidos del sitio web (textos, imágenes, logotipos, software, diseño y código fuente) son titularidad del propietario del sitio o dispone de los derechos necesarios para su uso.",
+          "Queda prohibida la reproducción, distribución o modificación de dichos contenidos sin autorización expresa."
         ]
       },
       {
         "title": "5. Responsabilidad",
         "paragraphs": [
-          "El titular no se hace responsable de los danos derivados del uso indebido del sitio web ni de posibles interrupciones del servicio por causas tecnicas.",
+          "El titular no se hace responsable de los daños derivados del uso indebido del sitio web ni de posibles interrupciones del servicio por causas técnicas.",
           "Tampoco se responsabiliza del contenido de enlaces externos que puedan incluirse en el sitio web."
         ]
       },
       {
-        "title": "6. Proteccion de datos",
+        "title": "6. Protección de datos",
         "paragraphs": [
-          "El tratamiento de los datos personales se regira por lo dispuesto en la Politica de Privacidad disponible en este sitio web."
+          "El tratamiento de los datos personales se regirá por lo dispuesto en la Política de Privacidad disponible en este sitio web."
         ]
       },
       {
-        "title": "7. Legislacion aplicable y jurisdiccion",
+        "title": "7. Legislación aplicable y jurisdicción",
         "paragraphs": [
-          "El presente Aviso Legal se rige por la legislacion espanola. Para la resolucion de cualquier controversia, las partes se someteran a los juzgados y tribunales que correspondan conforme a la normativa vigente."
+          "El presente Aviso Legal se rige por la legislación española. Para la resolución de cualquier controversia, las partes se someterán a los juzgados y tribunales que correspondan conforme a la normativa vigente."
         ]
       }
     ]

@@ -3,17 +3,17 @@
   "password": "password",
   "nick": "nick",
   "buttons": {
-    "login": "Iniciar sesion",
+    "login": "Iniciar sesión",
     "register": "Registrarse"
   },
-  "forgotPassword": "olvidaste la contrasena?",
+  "forgotPassword": "¿Olvidaste la contraseña?",
   "switch": {
-    "noAccount": "No tienes una cuenta?",
-    "hasAccount": "Ya tienes una cuenta?",
-    "toRegister": "Registrate",
-    "toLogin": "Inicia sesion"
+    "noAccount": "¿No tienes una cuenta?",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "toRegister": "Regístrate",
+    "toLogin": "Inicia sesión"
   },
   "or": "O",
-  "continueGoogle": "Continua con Google",
+  "continueGoogle": "Continúa con Google",
   "back": "Volver"
 }

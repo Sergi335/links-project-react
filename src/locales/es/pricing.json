@@ -3,19 +3,19 @@
     "title": "Elige tu plan",
     "subtitle": "Selecciona el plan que mejor se adapte a tus necesidades"
   },
-  "badgePopular": "Mas popular",
+  "badgePopular": "Más popular",
   "buttons": {
     "processing": "Procesando...",
     "subscribe": "Suscribirse",
     "startFree": "Comenzar gratis"
   },
   "toast": {
-    "loginToSubscribe": "Inicia sesion para suscribirte",
+    "loginToSubscribe": "Inicia sesión para suscribirte",
     "paymentError": "Error al procesar el pago"
   },
   "footer": {
-    "questions": "Tienes preguntas?",
-    "contact": "Contactanos",
+    "questions": "¿Tienes preguntas?",
+    "contact": "Contáctanos",
     "disclaimer": "Los pagos son procesados de forma segura por Stripe. Puedes cancelar en cualquier momento."
   },
   "plans": {
@@ -26,7 +26,7 @@
       "features": [
         "50MB de almacenamiento",
         "5 llamadas IA al mes",
-        "Soporte basico"
+        "Soporte básico"
       ]
     },
     "pro": {
@@ -37,7 +37,7 @@
         "5GB de almacenamiento",
         "50 llamadas IA al mes",
         "Soporte prioritario",
-        "Exportacion de datos"
+        "Exportación de datos"
       ]
     },
     "enterprise": {

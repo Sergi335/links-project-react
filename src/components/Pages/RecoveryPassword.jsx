@@ -27,7 +27,7 @@ export default function RecoveryPassword () {
     <main className={styles.loginMain}>
       <div className={styles.loginWrapper}>
         <div className={styles.logo}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 19V5m6 14V5M6 19V5"/></svg>
+          {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 19V5m6 14V5M6 19V5"/></svg> */}
           <h2 className={styles.logoText}>{t('common:brand')}</h2>
         </div>
         <form action="" className={styles.loginForm} onSubmit={handleRecoveryPass}>
