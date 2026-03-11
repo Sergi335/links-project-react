@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { updateLink } from '../services/dbQueries'
@@ -9,6 +10,7 @@ import styles from './ContextualMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
 export default function ContextLinkMenu ({ visible, setVisible, points, setPoints, params, setMoveFormVisible }) {
+  const { t } = useTranslation('common')
   const { desktopName, slug } = useParams()
   const [desktopColumns, setDesktopColumns] = useState([])
   const [realColumn, setRealColumn] = useState({})
@@ -132,7 +134,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       // Rollback en caso de error de red
       setGlobalLinks(previousLinks)
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.order - b.order))))
-      toast('Error al mover enlaces')
+      toast(t('toast.moveLinksError'))
     }
 
     setVisible(false)
@@ -182,7 +184,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
       // Rollback en caso de error de red u otros errores
       setGlobalLinks(previousLinks)
       activeLocalStorage ?? localStorage.setItem(`${desktopName}links`, JSON.stringify(previousLinks.toSorted((a, b) => (a.orden - b.orden))))
-      toast('Error al actualizar favoritos')
+      toast(t('toast.updateFavoritesError'))
     }
   }
   // const handleExtractArticle = () => {
@@ -238,15 +240,15 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
   }, [params]) // se puede meter params en un useRef
   return (
     <div ref={menuRef} id='contextLinkMenu' className={visible ? styles.flex : styles.hidden} style={{ left: points.x, top: points.y }}>
-      <p><strong>Opciones Enlace</strong></p>
+      <p><strong>{t('contextMenu.linkOptions')}</strong></p>
       <p>{params?.name}</p>
       {/* <span onClick={handleExtractArticle}>Leer Artículo</span> */}
       {/* eslint-disable-next-line react/no-unknown-property */}
-      <button onClick={handleEditClick} popovertarget="edit-link-form" popovertargetaction="show">Editar</button>
-      <span onClick={handleAddToFavorites}>{params?.bookmark === true ? 'Quitar Favorito' : 'Favorito'}</span>
-      <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
+      <button onClick={handleEditClick} popovertarget="edit-link-form" popovertargetaction="show">{t('actions.edit')}</button>
+      <span onClick={handleAddToFavorites}>{params?.bookmark === true ? t('actions.removeFavorite') : t('actions.favorite')}</span>
+      <span className={styles.moveTo}>{t('actions.moveTo')}<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
         <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-95%', top: subMenuTop }}>
-          <li onClick={handleMoveFormClick}><span>Mover a otro escritorio</span></li>
+          <li onClick={handleMoveFormClick}><span>{t('actions.moveToOtherDesktop')}</span></li>
           {
             realColumn._id && realColumn._id !== sourceCategoryId
               ? <li key={realColumn._id} onClick={handleMoveClick}><span id={realColumn._id}>{realColumn.name}</span></li>
@@ -260,7 +262,7 @@ export default function ContextLinkMenu ({ visible, setVisible, points, setPoint
         </ul>
       </span>
       {/* eslint-disable-next-line react/no-unknown-property */}
-      <button onClick={handleDeleteClick} popovertarget="delete-link-form" popovertargetaction="show">Borrar</button>
+      <button onClick={handleDeleteClick} popovertarget="delete-link-form" popovertargetaction="show">{t('actions.delete')}</button>
     </div>
   )
 }

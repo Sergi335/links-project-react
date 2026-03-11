@@ -8,6 +8,7 @@ import enHome from './locales/en/home.json'
 import enLegal from './locales/en/legal.json'
 import enLogin from './locales/en/login.json'
 import enPricing from './locales/en/pricing.json'
+import enProfile from './locales/en/profile.json'
 import enRecovery from './locales/en/recovery.json'
 import enSubscription from './locales/en/subscription.json'
 import esCommon from './locales/es/common.json'
@@ -17,6 +18,7 @@ import esHome from './locales/es/home.json'
 import esLegal from './locales/es/legal.json'
 import esLogin from './locales/es/login.json'
 import esPricing from './locales/es/pricing.json'
+import esProfile from './locales/es/profile.json'
 import esRecovery from './locales/es/recovery.json'
 import esSubscription from './locales/es/subscription.json'
 
@@ -33,6 +35,7 @@ i18n
         legal: enLegal,
         login: enLogin,
         pricing: enPricing,
+        profile: enProfile,
         recovery: enRecovery,
         subscription: enSubscription
       },
@@ -44,6 +47,7 @@ i18n
         legal: esLegal,
         login: esLogin,
         pricing: esPricing,
+        profile: esProfile,
         recovery: esRecovery,
         subscription: esSubscription
       }
@@ -51,7 +55,7 @@ i18n
     fallbackLng: 'en',
     supportedLngs: ['en', 'es'],
     load: 'languageOnly',
-    ns: ['common', 'errors', 'features', 'home', 'legal', 'login', 'pricing', 'recovery', 'subscription'],
+    ns: ['common', 'errors', 'features', 'home', 'legal', 'login', 'pricing', 'profile', 'recovery', 'subscription'],
     defaultNS: 'common',
     detection: {
       order: ['navigator'],

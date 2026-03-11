@@ -1,0 +1,142 @@
+{
+  "pageTitle": "{{name}} - Perfil",
+  "tabs": {
+    "info": "Informacion",
+    "stats": "Estadisticas",
+    "security": "Seguridad",
+    "preferences": "Preferencias"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "send": "Enviar",
+    "next": "Siguiente",
+    "uploadFile": "Subir Archivo",
+    "search": "Buscar",
+    "download": "Descargar",
+    "loading": "Cargando...",
+    "unknown": "Desconocido"
+  },
+  "header": {
+    "title": "Perfil de usuario",
+    "fallbackAbout": "Mi frase motivante aqui"
+  },
+  "reauthForm": {
+    "currentPassword": "Introduzca su contrasena actual"
+  },
+  "preferences": {
+    "import": {
+      "title": "Importar Marcadores de Chrome",
+      "description": "Sube tu archivo de marcadores exportado desde Chrome",
+      "uploadHtml": "Subir Archivo HTML"
+    },
+    "deleteAccount": {
+      "title": "Cierra tu Cuenta",
+      "button": "Cerrar Cuenta",
+      "confirmText": "Seguro que quieres cerrar tu cuenta? Esto borrara todos tus datos",
+      "warning": "Esta operacion no se puede deshacer"
+    }
+  },
+  "subscription": {
+    "title": "Tu Suscripcion",
+    "planCurrent": "Plan actual:",
+    "statusLabel": "Estado:",
+    "storage": "Almacenamiento:",
+    "storageUsage": "{{used}} MB usados de {{total}} MB",
+    "aiCalls": "Llamadas IA:",
+    "aiCallsUnlimited": "Ilimitadas",
+    "aiCallsUsage": "{{used}} de {{total}}",
+    "lastRenewal": "Ultima renovacion:",
+    "upgrade": "Mejorar plan",
+    "manage": "Gestionar suscripcion",
+    "opening": "Abriendo...",
+    "status": {
+      "active": "Activa",
+      "canceled": "Cancelada",
+      "past_due": "Pago pendiente",
+      "trialing": "En prueba",
+      "default": "Activa"
+    }
+  },
+  "security": {
+    "changePassword": {
+      "title": "Cambiar contrasena",
+      "button": "Cambiar",
+      "confirmCurrent": "Primero, confirme su contrasena actual",
+      "newPasswordPrompt": "Ahora, ingrese su nueva contrasena",
+      "newPasswordPlaceholder": "Nueva contrasena",
+      "confirmNewPasswordPlaceholder": "Confirmar nueva contrasena",
+      "submit": "Cambiar Contrasena"
+    },
+    "backup": {
+      "title": "Copia de seguridad de tus datos",
+      "create": "Crear Copia",
+      "restore": "Restaurar Copia",
+      "confirmTitle": "Seguro que quieres restaurar esta copia de seguridad?",
+      "confirmWarning": "Todos tus datos actuales seran borrados.",
+      "confirmImportant": "Importante!",
+      "confirmImportantText": "Los archivos de imagenes no seran restaurados.",
+      "confirmYes": "Si, restaurar",
+      "confirmNo": "No, cancelar"
+    }
+  },
+  "stats": {
+    "desktops": "Escritorios",
+    "panels": "Paneles",
+    "links": "Links",
+    "findDuplicates": "Encontrar Duplicados",
+    "findBrokenLinks": "Encontrar Links Caidos",
+    "duplicatesCount": "Duplicados:",
+    "brokenLinksCount": "Links Caidos:",
+    "panel": "Panel:",
+    "url": "url:"
+  },
+  "userInfo": {
+    "uploadProfileImage": "Sube tu imagen de perfil",
+    "recommendedSize": "Tamano recomendado 125x125",
+    "maxSize": "Max. 2MB",
+    "uploadImage": "Subir Imagen",
+    "fullName": "Nombre Completo",
+    "website": "Sitio Web",
+    "aboutMe": "Sobre mi",
+    "memberSince": "Miembro desde:",
+    "fallbackUser": "User",
+    "fallbackWebsite": "www.mywebsite.com",
+    "fallbackAbout": "Some nice things about me ..."
+  },
+  "toasts": {
+    "deleteLoading": "Eliminando cuenta ...",
+    "wrongPassword": "Contrasena incorrecta",
+    "requestErrorRetryLater": "Error en la peticion vuelve a intentarlo mas tarde",
+    "deleteSuccess": "Cuenta borrada con exito",
+    "reauthRequiredDelete": "Necesitas reautenticarte para eliminar tu cuenta",
+    "reauthGoogleError": "Error al reautenticar con Google",
+    "invalidHtml": "Por favor selecciona un archivo HTML valido",
+    "importLoading": "Importando marcadores...",
+    "importSuccess": "Marcadores importados con exito: {{count}} enlaces",
+    "importError": "Error al importar marcadores",
+    "billingPortalError": "Error al abrir el portal de facturacion",
+    "enterCurrentPassword": "Por favor ingrese su contrasena actual",
+    "passwordVerified": "Contrasena verificada correctamente",
+    "passwordVerifyError": "Error al verificar la contrasena",
+    "completeAllFields": "Por favor complete todos los campos",
+    "passwordMinLength": "La contrasena debe tener al menos 6 caracteres",
+    "passwordMismatch": "Las contrasenas no coinciden",
+    "authErrorRetry": "Error de autenticacion. Por favor intente nuevamente.",
+    "passwordChanged": "Contrasena cambiada con exito",
+    "sessionExpired": "Sesion expirada, por favor vuelva a intentarlo",
+    "changePasswordError": "Error al cambiar la contrasena",
+    "backupCreated": "Copia creada con exito",
+    "restoringBackup": "Restaurando copia de seguridad...",
+    "backupRestored": "Copia restaurada con exito",
+    "backupRestoreError": "Error al restaurar la copia",
+    "operationCanceled": "Operacion cancelada",
+    "checkingLink": "Comprobando {{name}} ...",
+    "noBrokenLinks": "No se encontraron links caidos",
+    "noDuplicates": "No se encontraron duplicados",
+    "infoUpdated": "Informacion actualizada con exito",
+    "imageTooLarge": "Imagen demasiado grande, max. 2MB",
+    "imageChanged": "Imagen cambiada con exito"
+  }
+}

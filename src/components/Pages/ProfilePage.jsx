@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import useGoogleAuth from '../../hooks/useGoogleAuth'
@@ -14,18 +15,20 @@ import { AddImageIcon, BrokenLinksIcon, CloseIcon, DuplicatesIcon, EditIcon, Eye
 import styles from './ProfilePage.module.css'
 
 export function ConfirmPasswordForm ({ handleReauth, setReauthVisible }) {
+  const { t } = useTranslation('profile')
   return (
         <form onSubmit={handleReauth} className={`${styles.changePasswordDialog} deskForm`}>
-          <p>Introduzca su contraseña actual</p>
+          <p>{t('reauthForm.currentPassword')}</p>
           <input type="text" id="currentPassword" name='currentPassword' className={styles.textSecurity}/>
           <div className={styles.flexButtons}>
-            <button id="changePasswordSubmit" type='submit'>Enviar</button>
-            <button id="changePasswordCancel" onClick={() => setReauthVisible(false)}>Cancelar</button>
+            <button id="changePasswordSubmit" type='submit'>{t('common.send')}</button>
+            <button id="changePasswordCancel" onClick={() => setReauthVisible(false)}>{t('common.cancel')}</button>
           </div>
         </form>
   )
 }
 export function UserPreferences ({ user, setUser }) {
+  const { t } = useTranslation('profile')
   console.log(user)
   // const [visible, setVisible] = useState(false)
   const deleteAccountRef = useRef(null)
@@ -35,26 +38,26 @@ export function UserPreferences ({ user, setUser }) {
 
   const handleReauth = async (e) => {
     e.preventDefault()
-    const deleteLoading = toast.loading('Eliminando cuenta ...')
+    const deleteLoading = toast.loading(t('toasts.deleteLoading'))
     const form = e.currentTarget
     const password = form.currentPassword.value
     const reAuthResponse = await handleReauthenticate(password)
 
     const { hasError, message } = handleResponseErrors(reAuthResponse)
     if (hasError) {
-      toast.update(deleteLoading, { render: message.code === 'auth/wrong-password' ? 'Contraseña Incorrecta' : 'Error en la petición vuelve a intentarlo más tarde', type: 'error', isLoading: false, autoClose: 3000 })
+      toast.update(deleteLoading, { render: message.code === 'auth/wrong-password' ? t('toasts.wrongPassword') : t('toasts.requestErrorRetryLater'), type: 'error', isLoading: false, autoClose: 3000 })
       return
     }
     setReauthVisible(false)
     await handleDeleteUser()
     setTimeout(() => {
-      toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+      toast.update(deleteLoading, { render: t('toasts.deleteSuccess'), type: 'success', isLoading: false, autoClose: 3000 })
       setUser(null)
     }, 2000)
   }
   const handleDeleteAccount = async (e) => {
     e.preventDefault()
-    const deleteLoading = toast.loading('Eliminando cuenta ...')
+    const deleteLoading = toast.loading(t('toasts.deleteLoading'))
     const response = await deleteAccount({ email: user.email })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
@@ -67,29 +70,29 @@ export function UserPreferences ({ user, setUser }) {
       if (user.signMethod === 'google') {
         // setVisible(false)
         deleteAccountRef.current.hidePopover()
-        toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
+        toast.update(deleteLoading, { render: t('toasts.reauthRequiredDelete'), type: 'error', isLoading: false, autoClose: 3000 })
         const response = await handleReauthenticateWithGoogle()
         const { hasError, message } = handleResponseErrors(response)
         if (hasError) {
           console.log(message)
-          toast.update(deleteLoading, { render: 'error reauth google', type: 'error', isLoading: false, autoClose: 3000 })
+          toast.update(deleteLoading, { render: t('toasts.reauthGoogleError'), type: 'error', isLoading: false, autoClose: 3000 })
           return
         }
         await handleDeleteUser()
         setTimeout(() => {
-          toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+          toast.update(deleteLoading, { render: t('toasts.deleteSuccess'), type: 'success', isLoading: false, autoClose: 3000 })
           setUser(null)
         }, 2000)
         return
       }
       // setVisible(false)
       deleteAccountRef.current.hidePopover()
-      toast.update(deleteLoading, { render: 'Necesitas reautenticarte para eliminar tu cuenta', type: 'error', isLoading: false, autoClose: 3000 })
+      toast.update(deleteLoading, { render: t('toasts.reauthRequiredDelete'), type: 'error', isLoading: false, autoClose: 3000 })
       setReauthVisible(true)
       return
     }
     setTimeout(() => {
-      toast.update(deleteLoading, { render: 'Cuenta borrada con éxito', type: 'success', isLoading: false, autoClose: 3000 })
+      toast.update(deleteLoading, { render: t('toasts.deleteSuccess'), type: 'success', isLoading: false, autoClose: 3000 })
       setUser(null)
     }, 2000)
   }
@@ -99,7 +102,7 @@ export function UserPreferences ({ user, setUser }) {
     if (!file) return
 
     if (!file.name.endsWith('.html')) {
-      toast.error('Por favor selecciona un archivo HTML válido')
+      toast.error(t('toasts.invalidHtml'))
       return
     }
 
@@ -107,7 +110,7 @@ export function UserPreferences ({ user, setUser }) {
     formData.append('bookmarks', file)
 
     setBookmarksLoading(true)
-    const importToast = toast.loading('Importando marcadores...')
+    const importToast = toast.loading(t('toasts.importLoading'))
 
     try {
       const response = await fetch(`${constants.BASE_API_URL}/storage/import-bookmarks`, {
@@ -129,7 +132,7 @@ export function UserPreferences ({ user, setUser }) {
       }
 
       toast.update(importToast, {
-        render: `Marcadores importados con éxito: ${data.imported || 0} enlaces`,
+        render: t('toasts.importSuccess', { count: data.imported || 0 }),
         type: 'success',
         isLoading: false,
         autoClose: 3000
@@ -141,7 +144,7 @@ export function UserPreferences ({ user, setUser }) {
       }, 2000)
     } catch (error) {
       console.error('Error importing bookmarks:', error)
-      toast.update(importToast, { render: 'Error al importar marcadores', type: 'error', isLoading: false, autoClose: 3000 })
+      toast.update(importToast, { render: t('toasts.importError'), type: 'error', isLoading: false, autoClose: 3000 })
     } finally {
       setBookmarksLoading(false)
       // Limpiar el input file
@@ -152,16 +155,16 @@ export function UserPreferences ({ user, setUser }) {
 
   return (
     <>
-    {/* <h3>Preferencias</h3> */}
+    {/* <h3>{t('tabs.preferences')}</h3> */}
     <div className={`${styles.preferences}`} id="preferences">
       <div className={styles.importSection}>
-        <h3>Importar Marcadores de Chrome</h3>
-        <p>Sube tu archivo de marcadores exportado desde Chrome</p>
+        <h3>{t('preferences.import.title')}</h3>
+        <p>{t('preferences.import.description')}</p>
         <form onChange={handleUploadBookmarks}>
           <button className={styles.upFile} disabled={bookmarksLoading}>
             <label htmlFor="bookmarksFile">
               <UploadIcon />
-              Subir Archivo HTML
+              {t('preferences.import.uploadHtml')}
             </label>
             <input
               id="bookmarksFile"
@@ -176,22 +179,22 @@ export function UserPreferences ({ user, setUser }) {
         {bookmarksLoading && <span className={styles.loader}></span>}
       </div>
       <div className={styles.closeAccount}>
-      <h3>Cierra tu Cuenta</h3>
+      <h3>{t('preferences.deleteAccount.title')}</h3>
       {/* eslint-disable-next-line react/no-unknown-property */}
       <button id="closeAccount" popovertarget="deleteAccount">
-        Cerrar Cuenta
+        {t('preferences.deleteAccount.button')}
       </button>
       </div>
 
             {/* eslint-disable-next-line react/no-unknown-property */}
             <div ref={deleteAccountRef} popover='' id='deleteAccount'>
               <form action="" className='deskForm'>
-              <p>Seguro que quieres cerrar tu cuenta? Esto borrará todos tus datos</p>
-              <p>Esta operación no se puede deshacer</p>
+              <p>{t('preferences.deleteAccount.confirmText')}</p>
+              <p>{t('preferences.deleteAccount.warning')}</p>
               <div className='button_group'>
-                <button type="button" id="confirm" onClick={handleDeleteAccount}>Confirmar</button>
+                <button type="button" id="confirm" onClick={handleDeleteAccount}>{t('common.confirm')}</button>
                 {/* eslint-disable-next-line react/no-unknown-property */}
-                <button type="button" id="cancel" popovertarget="deleteAccount" popovertargetaction="hide">Cancelar</button>
+                <button type="button" id="cancel" popovertarget="deleteAccount" popovertargetaction="hide">{t('common.cancel')}</button>
               </div>
               </form>
             </div>
@@ -205,6 +208,7 @@ export function UserPreferences ({ user, setUser }) {
 }
 
 export function UserSubscription ({ user }) {
+  const { t, i18n } = useTranslation('profile')
   const navigate = useNavigate()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
@@ -241,7 +245,7 @@ export function UserSubscription ({ user }) {
       }
       window.location.href = response.url
     } catch (error) {
-      toast.error('Error al abrir el portal de facturación')
+      toast.error(t('toasts.billingPortalError'))
     } finally {
       setPortalLoading(false)
     }
@@ -261,40 +265,40 @@ export function UserSubscription ({ user }) {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'active': return 'Activa'
-      case 'canceled': return 'Cancelada'
-      case 'past_due': return 'Pago pendiente'
-      case 'trialing': return 'En prueba'
-      default: return status || 'Activa'
+      case 'active': return t('subscription.status.active')
+      case 'canceled': return t('subscription.status.canceled')
+      case 'past_due': return t('subscription.status.past_due')
+      case 'trialing': return t('subscription.status.trialing')
+      default: return status || t('subscription.status.default')
     }
   }
 
   return (
     <>
-      <h3>Tu Suscripción</h3>
+      <h3>{t('subscription.title')}</h3>
       <div className={styles.subscriptionSection}>
         {isLoading
           ? (
-          <p>Cargando...</p>
+          <p>{t('common.loading')}</p>
             )
           : (
           <>
             <div className={styles.subscriptionInfo}>
               <div className={styles.planRow}>
-                <span>Plan actual:</span>
+                <span>{t('subscription.planCurrent')}</span>
                 <span className={`${styles.planBadge} ${getPlanBadgeClass(subscription?.plan)}`}>
                   {subscription?.plan || 'FREE'}
                 </span>
               </div>
               <div className={styles.planRow}>
-                <span>Estado:</span>
+                <span>{t('subscription.statusLabel')}</span>
                 <span className={styles.statusText}>{getStatusText(subscription?.status)}</span>
               </div>
               {subscription?.limits && (
                 <div className={styles.limitsInfo}>
-                  <p><strong>Almacenamiento:</strong> {`${(subscription.limits.storageMB - subscription.remainingQuota).toFixed(2)} MB usados de ${subscription.limits.storageMB} MB`}</p>
-                  <p><strong>Llamadas IA:</strong> {subscription.limits.llmCallsPerMonth === -1 ? 'Ilimitadas' : `${subscription.llmCallsThisMonth} de ${subscription.limits.llmCallsPerMonth}`}</p>
-                  <p><strong>Última renovación:</strong> {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString() : ''}</p>
+                  <p><strong>{t('subscription.storage')}</strong> {t('subscription.storageUsage', { used: (subscription.limits.storageMB - subscription.remainingQuota).toFixed(2), total: subscription.limits.storageMB })}</p>
+                  <p><strong>{t('subscription.aiCalls')}</strong> {subscription.limits.llmCallsPerMonth === -1 ? t('subscription.aiCallsUnlimited') : t('subscription.aiCallsUsage', { used: subscription.llmCallsThisMonth, total: subscription.limits.llmCallsPerMonth })}</p>
+                  <p><strong>{t('subscription.lastRenewal')}</strong> {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString(i18n.language) : ''}</p>
                 </div>
               )}
             </div>
@@ -324,6 +328,7 @@ export function UserSubscription ({ user }) {
 }
 
 export function UserSecurity ({ user, setUser }) {
+  const { t } = useTranslation('profile')
   const [changePasswordStep, setChangePasswordStep] = useState(0) // 0: no visible, 1: current password, 2: new password
   const [backupLoading, setBackupLoading] = useState(false)
   const [confirmRestoreVisible, setConfirmRestoreVisible] = useState(false)
@@ -352,7 +357,7 @@ export function UserSecurity ({ user, setUser }) {
     const currentPassword = form.currentPassword.value
 
     if (!currentPassword) {
-      toast.error('Por favor ingrese su contraseña actual')
+      toast.error(t('toasts.enterCurrentPassword'))
       return
     }
 
@@ -361,12 +366,12 @@ export function UserSecurity ({ user, setUser }) {
     if (reAuthResponse.status === 'success') {
       setCurrentPasswordCache(currentPassword) // Guardar para reauth posterior
       setChangePasswordStep(2) // Pasar al formulario de nueva contraseña
-      toast.success('Contraseña verificada correctamente')
+      toast.success(t('toasts.passwordVerified'))
     } else {
       if (reAuthResponse.error.code === 'auth/wrong-password') {
-        toast.error('Contraseña incorrecta')
+        toast.error(t('toasts.wrongPassword'))
       } else {
-        toast.error('Error al verificar la contraseña')
+        toast.error(t('toasts.passwordVerifyError'))
       }
     }
   }
@@ -378,17 +383,17 @@ export function UserSecurity ({ user, setUser }) {
     const confirmPassword = form.confirmPassword.value
 
     if (!newPassword || !confirmPassword) {
-      toast.error('Por favor complete todos los campos')
+      toast.error(t('toasts.completeAllFields'))
       return
     }
 
     if (newPassword.length < 6) {
-      toast.error('La contraseña debe tener al menos 6 caracteres')
+      toast.error(t('toasts.passwordMinLength'))
       return
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error('Las contraseñas no coinciden')
+      toast.error(t('toasts.passwordMismatch'))
       return
     }
 
@@ -396,7 +401,7 @@ export function UserSecurity ({ user, setUser }) {
     const reAuthResponse = await handleReauthenticate(currentPasswordCache)
 
     if (reAuthResponse.status !== 'success') {
-      toast.error('Error de autenticación. Por favor intente nuevamente.')
+      toast.error(t('toasts.authErrorRetry'))
       setChangePasswordStep(1) // Volver al paso 1
       setCurrentPasswordCache('') // Limpiar caché
       return
@@ -405,7 +410,7 @@ export function UserSecurity ({ user, setUser }) {
     // Ahora sí cambiar la contraseña inmediatamente después del reauth
     const response = await handleChangeFirebasePassword(newPassword)
     if (response.status === 'success') {
-      toast.success('Contraseña cambiada con éxito')
+      toast.success(t('toasts.passwordChanged'))
       setChangePasswordStep(0)
       setCurrentPasswordCache('') // Limpiar caché de contraseña
       setShowCurrentPassword(false)
@@ -413,13 +418,13 @@ export function UserSecurity ({ user, setUser }) {
       setShowConfirmPassword(false)
     } else {
       if (response.error.code === 'auth/weak-password') {
-        toast.error('La contraseña debe tener al menos 6 caracteres')
+        toast.error(t('toasts.passwordMinLength'))
       } else if (response.error.code === 'auth/requires-recent-login') {
-        toast.error('Sesión expirada, por favor vuelva a intentarlo')
+        toast.error(t('toasts.sessionExpired'))
         setChangePasswordStep(1) // Volver a pedir contraseña actual
         setCurrentPasswordCache('') // Limpiar caché
       } else {
-        toast.error('Error al cambiar la contraseña')
+        toast.error(t('toasts.changePasswordError'))
       }
     }
   }
@@ -450,7 +455,7 @@ export function UserSecurity ({ user, setUser }) {
         const updateUserResponse = await editUserAditionalInfo({ email: user.email, fields: { lastBackupUrl: data.data.key } })
         // const { resultadoDb } = data
         setUser(updateUserResponse.data)
-        toast('Copia creada con éxito')
+        toast(t('toasts.backupCreated'))
         setBackupLoading(false)
       })
   }
@@ -475,7 +480,7 @@ export function UserSecurity ({ user, setUser }) {
     formData.append('backup', pendingFile)
 
     setConfirmRestoreVisible(false)
-    const restoreToast = toast.loading('Restaurando copia de seguridad...')
+    const restoreToast = toast.loading(t('toasts.restoringBackup'))
 
     fetch(`${constants.BASE_API_URL}/storage/restorebackup`, {
       method: 'POST',
@@ -493,7 +498,7 @@ export function UserSecurity ({ user, setUser }) {
           toast.update(restoreToast, { render: message, type: 'error', isLoading: false, autoClose: 3000 })
           return
         }
-        toast.update(restoreToast, { render: 'Copia restaurada con éxito', type: 'success', isLoading: false, autoClose: 2000 })
+        toast.update(restoreToast, { render: t('toasts.backupRestored'), type: 'success', isLoading: false, autoClose: 2000 })
         // Recargar la página para reflejar los cambios
         setTimeout(() => {
           window.location.reload()
@@ -501,7 +506,7 @@ export function UserSecurity ({ user, setUser }) {
       })
       .catch(error => {
         console.error('Error restoring backup:', error)
-        toast.update(restoreToast, { render: 'Error al restaurar la copia', type: 'error', isLoading: false, autoClose: 3000 })
+        toast.update(restoreToast, { render: t('toasts.backupRestoreError'), type: 'error', isLoading: false, autoClose: 3000 })
       })
       .finally(() => {
         setPendingFile(null)
@@ -522,15 +527,15 @@ export function UserSecurity ({ user, setUser }) {
     <div className={styles.securityWrapper}>
       {
         user.signMethod !== 'google' && (<div className={styles.password}>
-          <h3>Cambiar contraseña</h3>
+          <h3>{t('security.changePassword.title')}</h3>
           {/* eslint-disable-next-line react/no-unknown-property */}
-          <button id="changePassword" onClick={handleChangePassword} type="submit" popovertarget="currentPasswordPopover" popovertargetaction="show">Cambiar</button>
+          <button id="changePassword" onClick={handleChangePassword} type="submit" popovertarget="currentPasswordPopover" popovertargetaction="show">{t('security.changePassword.button')}</button>
           {
             changePasswordStep === 1 && (
               // eslint-disable-next-line react/no-unknown-property
               <div popover="" id="currentPasswordPopover" ref={popoverRef}>
                 <form onSubmit={handleCurrentPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
-                  <p>Primero, confirme su contraseña actual</p>
+                  <p>{t('security.changePassword.confirmCurrent')}</p>
                   <div className={styles.passwordInputWrapper}>
                     <input
                       type={showCurrentPassword ? 'text' : 'password'}
@@ -547,9 +552,9 @@ export function UserSecurity ({ user, setUser }) {
                     </button>
                   </div>
                   <div className={styles.flexButtons}>
-                    <button id="currentPasswordSubmit" type='submit'>Siguiente</button>
+                    <button id="currentPasswordSubmit" type='submit'>{t('common.next')}</button>
                     {/* eslint-disable-next-line react/no-unknown-property */}
-                    <button id="currentPasswordCancel" type="button" onClick={handleCancelChangePassword} popovertarget="currentPasswordPopover" popovertargetaction="hide">Cancelar</button>
+                    <button id="currentPasswordCancel" type="button" onClick={handleCancelChangePassword} popovertarget="currentPasswordPopover" popovertargetaction="hide">{t('common.cancel')}</button>
                   </div>
                 </form>
               </div>
@@ -560,13 +565,13 @@ export function UserSecurity ({ user, setUser }) {
               // eslint-disable-next-line react/no-unknown-property
               <div popover="" id="newPasswordPopover" ref={newPopoverRef}>
                 <form onSubmit={handleNewPasswordSubmit} className={`${styles.changePasswordDialog} deskForm`}>
-                  <p>Ahora, ingrese su nueva contraseña</p>
+                  <p>{t('security.changePassword.newPasswordPrompt')}</p>
                   <div className={styles.passwordInputWrapper}>
                     <input
                       type={showNewPassword ? 'text' : 'password'}
                       id="newPassword"
                       name='newPassword'
-                      placeholder="Nueva contraseña"
+                      placeholder={t('security.changePassword.newPasswordPlaceholder')}
                       autoComplete="new-password"
                     />
                     <button
@@ -582,7 +587,7 @@ export function UserSecurity ({ user, setUser }) {
                       type={showConfirmPassword ? 'text' : 'password'}
                       id="confirmPassword"
                       name='confirmPassword'
-                      placeholder="Confirmar nueva contraseña"
+                      placeholder={t('security.changePassword.confirmNewPasswordPlaceholder')}
                       autoComplete="new-password"
                     />
                     <button
@@ -594,8 +599,8 @@ export function UserSecurity ({ user, setUser }) {
                     </button>
                   </div>
                   <div className={styles.flexButtons}>
-                    <button id="newPasswordSubmit" type='submit'>Cambiar Contraseña</button>
-                    <button id="newPasswordCancel" type="button" onClick={handleCancelChangePassword}>Cancelar</button>
+                    <button id="newPasswordSubmit" type='submit'>{t('security.changePassword.submit')}</button>
+                    <button id="newPasswordCancel" type="button" onClick={handleCancelChangePassword}>{t('common.cancel')}</button>
                   </div>
                 </form>
               </div>
@@ -605,11 +610,11 @@ export function UserSecurity ({ user, setUser }) {
         </div>)
       }
       <div className={styles.backup}>
-        <h3>Copia de seguridad de tus datos</h3>
+        <h3>{t('security.backup.title')}</h3>
         <div className={styles.backupControls}>
-          <button id="backup" onClick={handleCreateBackup}>Crear Copia </button>
+          <button id="backup" onClick={handleCreateBackup}>{t('security.backup.create')}</button>
           {
-            user.lastBackupUrl && <button id="download" onClick={handleDownloadBackup}>Descargar</button>
+            user.lastBackupUrl && <button id="download" onClick={handleDownloadBackup}>{t('common.download')}</button>
           }
         </div>
         {
@@ -618,11 +623,11 @@ export function UserSecurity ({ user, setUser }) {
         <p id="errorMessage"> </p>
         <p id="successMessage"></p>
         <form onChange={handleUploadBackup}>
-          <p>Restaurar Copia</p>
+          <p>{t('security.backup.restore')}</p>
           <button className={styles.upFile}>
             <label htmlFor="upFile">
               <UploadIcon />
-              Subir Archivo
+              {t('common.uploadFile')}
             </label>
             <input id="upFile" className={styles.upFileInput} type="file" name="upFile"/>
           </button>
@@ -637,7 +642,7 @@ export function UserSecurity ({ user, setUser }) {
               <p style={{ color: '#ff6b6b', marginBottom: '1.5rem' }}><strong>¡Importante!</strong> Los archivos de imágenes no serán restaurados.</p>
               <div className='button_group'>
                 <button id="confirmRestore" onClick={handleConfirmRestore}>Sí, restaurar</button>
-                <button id="cancelRestore" onClick={handleCancelRestore}>No, cancelar</button>
+                <button id="cancelRestore" onClick={handleCancelRestore}>{t('security.backup.confirmNo')}</button>
               </div>
             </div>
           )
@@ -647,6 +652,7 @@ export function UserSecurity ({ user, setUser }) {
   )
 }
 export function PieChart ({ links, setLinks, getCategoryName }) {
+  const { t } = useTranslation('profile')
   const [brokenLinks, setBrokenLinks] = useState([])
   const [isChecking, setIsChecking] = useState(false)
   const chartRef = useRef()
@@ -659,7 +665,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
       abortControllerRef.current.abort()
       setIsChecking(false)
       setLinks([])
-      toast('Operación cancelada')
+      toast(t('toasts.operationCanceled'))
     }
   }
 
@@ -702,7 +708,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
             })
             const data = await response.json()
 
-            $currentLink.textContent = `Comprobando ${link.name} ...`
+            $currentLink.textContent = t('toasts.checkingLink', { name: link.name })
             count += porcentajePorPaso
             $ppc.dataset.percent = Math.round(count)
 
@@ -722,7 +728,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
         setIsChecking(false)
         if (!abortController.signal.aborted) {
           if (downLinks.length === 0) {
-            toast.success('No se encontraron links caídos')
+            toast.success(t('toasts.noBrokenLinks'))
           }
           setBrokenLinks(downLinks)
         }
@@ -768,7 +774,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
       <p id='currentLink' className={styles.currentLink}></p>
       {isChecking && (
         <button onClick={handleCancel} className={styles.cancelButton}>
-          Cancelar
+          {t('common.cancel')}
         </button>
       )}
       </>)
@@ -776,7 +782,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
       }
       {
         brokenLinks.length > 0 && (<div className={styles.resultsHeader}>
-                        <p id="counter"><span className={styles.bold}>Links Caídos:</span> {brokenLinks.length}</p>
+                        <p id="counter"><span className={styles.bold}>{t('stats.brokenLinksCount')}</span> {brokenLinks.length}</p>
                         <button onClick={() => setBrokenLinks([])}><CloseIcon/></button>
                         </div>)
       }
@@ -789,8 +795,8 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
                   <img src={link.link.imgUrl}/>{link.link.name}
                 </a>
                 {/* <p><span className={styles.bold}>Escritorio:</span> {link.link.escritorio}</p> */}
-                <p><span className={styles.bold}>Panel:</span> {getCategoryName(link.link.categoryId)}</p>
-                <p><span className={styles.bold}>url:</span> {link.link.url}</p>
+                <p><span className={styles.bold}>{t('stats.panel')}</span> {getCategoryName(link.link.categoryId)}</p>
+                <p><span className={styles.bold}>{t('stats.url')}</span> {link.link.url}</p>
               </div>
             )
           })
@@ -800,6 +806,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
   )
 }
 export function UserStats ({ user }) {
+  const { t } = useTranslation('profile')
   const [duplicates, setDuplicates] = useState([])
   const [links, setLinks] = useState([])
   const [duplicatesLoading, setDuplicatesLoading] = useState(false)
@@ -809,14 +816,14 @@ export function UserStats ({ user }) {
 
   const getCategoryName = (categoryId) => {
     const category = globalColumns.find(cat => cat._id === categoryId)
-    return category ? category.name : 'Desconocido'
+    return category ? category.name : t('common.unknown')
   }
   // TODO Errores
   const handleFindDuplicates = async (e) => {
     setDuplicatesLoading(true)
     const response = await findDuplicateLinks()
     if (response.data.length === 0) {
-      toast.success('No se encontraron duplicados')
+      toast.success(t('toasts.noDuplicates'))
     }
     setDuplicates(response.data)
     setDuplicatesLoading(false)
@@ -839,9 +846,9 @@ export function UserStats ({ user }) {
             <table>
               <tbody>
                 <tr>
-                  <th>Escritorios</th>
-                  <th>Paneles</th>
-                  <th>Links</th>
+                  <th>{t('stats.desktops')}</th>
+                  <th>{t('stats.panels')}</th>
+                  <th>{t('stats.links')}</th>
                 </tr>
                 <tr>
                   <td>{topLevelCategoriesStore.length}</td>
@@ -853,17 +860,17 @@ export function UserStats ({ user }) {
           </div>
           <div className={styles.statsControls}>
             <div className={styles.groupControl}>
-              <h3>Encontrar Duplicados</h3>
+              <h3>{t('stats.findDuplicates')}</h3>
               <button id="duplicates" onClick={handleFindDuplicates}>
                 <DuplicatesIcon />
-                Buscar
+                {t('common.search')}
               </button>
             </div>
             <div className={styles.groupControl}>
-              <h3>Encontrar Links Caidos</h3>
+              <h3>{t('stats.findBrokenLinks')}</h3>
               <button id="brokenLinks" onClick={handleFindBrokenLinks}>
                 <BrokenLinksIcon />
-                Buscar
+                {t('common.search')}
               </button>
             </div>
           </div>
@@ -871,7 +878,7 @@ export function UserStats ({ user }) {
             {
               duplicates.length > 0 && (
                 <div className={styles.resultsHeader}>
-                  <p id="counter"><span className={styles.bold}>Duplicados: </span>{duplicates.length}</p><button onClick={() => setDuplicates([])}><CloseIcon/></button>
+                  <p id="counter"><span className={styles.bold}>{t('stats.duplicatesCount')} </span>{duplicates.length}</p><button onClick={() => setDuplicates([])}><CloseIcon/></button>
                 </div>
               )
             }
@@ -892,8 +899,8 @@ export function UserStats ({ user }) {
                         <img src={duplicate.imgUrl}/>{duplicate.name}
                       </a>
                       {/* <p><span className={styles.bold}>Escritorio:</span> {duplicate.escritorio}</p> */}
-                      <p><span className={styles.bold}>Panel:</span> {getCategoryName(duplicate.categoryId)}</p>
-                      <p><span className={styles.bold}>url:</span> {duplicate.url}</p>
+                      <p><span className={styles.bold}>{t('stats.panel')}</span> {getCategoryName(duplicate.categoryId)}</p>
+                      <p><span className={styles.bold}>{t('stats.url')}</span> {duplicate.url}</p>
                     </div>
                   </>
                 )
@@ -906,6 +913,7 @@ export function UserStats ({ user }) {
   )
 }
 export function UserInfo ({ user, setUser }) {
+  const { t } = useTranslation('profile')
   const [fileToUpload, setFileToUpload] = useState()
   const [fileToUploadLoading, setFileToUploadLoading] = useState(false)
   const [editName, setEditName] = useState(false)
@@ -930,14 +938,14 @@ export function UserInfo ({ user, setUser }) {
       // console.log(response)
       const newUserState = { ...response.data }
       setUser(newUserState)
-      toast('Información actualizada con éxito')
+      toast(t('toasts.infoUpdated'))
     }
   }
   const handleUploadImageInputChange = async (e) => {
     const file = e.target.files[0]
     // console.log(file.size)
     if (file.size > 2e+6) {
-      toast.error('Imagen demasiado grande, max. 2MB')
+      toast.error(t('toasts.imageTooLarge'))
       return
     }
     const previewImage = document.getElementById('preview-image')
@@ -958,7 +966,7 @@ export function UserInfo ({ user, setUser }) {
       const newUserState = { ...user, profileImage: response.data.key }
       setUser(newUserState)
       setFileToUploadLoading(false)
-      toast('Imagen cambiada con éxito')
+      toast(t('toasts.imageChanged'))
     }
   }
   const handleCancelUploadImage = async (e) => {
@@ -996,23 +1004,23 @@ export function UserInfo ({ user, setUser }) {
             <UserAvatar imageKey={user?.profileImage} id="preview-image" className='uploadForm' />
           </div>
           <div className={styles.uploadImageTooltip}>
-            <p>Sube tu imagen de perfil</p>
-            <p>Tamaño recomendado 125x125</p>
-            <p>Max. 2MB</p>
+            <p>{t('userInfo.uploadProfileImage')}</p>
+            <p>{t('userInfo.recommendedSize')}</p>
+            <p>{t('userInfo.maxSize')}</p>
             {
               !fileToUploadLoading && (
                 <button className={styles.upFile}>
                   <label htmlFor="image-input">
                     <AddImageIcon />
-                    Subir Imagen
+                    {t('userInfo.uploadImage')}
                   </label>
                   <input className={styles.imageInput} type="file" accept="image/*" name="image-input" id='image-input' onChange={handleUploadImageInputChange}/>
                 </button>
               )
             }
             {
-              fileToUpload && !fileToUploadLoading && (<div><button className={styles.upFile} onClick={handleUploadImage}>Guardar</button>
-              <button className={styles.upFile} onClick={handleCancelUploadImage}>Cancelar</button></div>)
+              fileToUpload && !fileToUploadLoading && (<div><button className={styles.upFile} onClick={handleUploadImage}>{t('common.save')}</button>
+              <button className={styles.upFile} onClick={handleCancelUploadImage}>{t('common.cancel')}</button></div>)
             }
             {
               fileToUploadLoading && (<span className={styles.loader}></span>)
@@ -1026,25 +1034,25 @@ export function UserInfo ({ user, setUser }) {
               <div className={styles.rowGroup}>
                 {
                   editName
-                    ? <><label htmlFor="realName">Nombre Completo: </label><input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditName(false)}>Cancelar</button></>
-                    : <><p id='editName' onClick={handleEditInfo}><strong>Nombre Completo</strong>:&nbsp;&nbsp;{user.realName || 'User'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
+                    ? <><label htmlFor="realName">{t('userInfo.fullName')}: </label><input type="text" name="realName" defaultValue={user.realName || ''} placeholder='John Doe'/><button id="editOtherInfo" type="submit">{t('common.save')}</button><button id="cancelEditOtherInfo" onClick={() => setEditName(false)}>{t('common.cancel')}</button></>
+                    : <><p id='editName' onClick={handleEditInfo}><strong>{t('userInfo.fullName')}</strong>:&nbsp;&nbsp;{user.realName || t('userInfo.fallbackUser')}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
               </div>
               <div className={styles.rowGroup}>
                 {
                   editWebsite
-                    ? <><label htmlFor="website">Sitio Web: </label><input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditWebsite(false)}>Cancelar</button></>
-                    : <><p id='editWeb' onClick={handleEditInfo}><strong>Sitio Web</strong>:&nbsp;&nbsp;{user.website || 'www.mywebsite.com'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
+                    ? <><label htmlFor="website">{t('userInfo.website')}: </label><input type="text" name="website" defaultValue={user.website || ''} placeholder='www.mywebsite.com'/><button id="editOtherInfo" type="submit">{t('common.save')}</button><button id="cancelEditOtherInfo" onClick={() => setEditWebsite(false)}>{t('common.cancel')}</button></>
+                    : <><p id='editWeb' onClick={handleEditInfo}><strong>{t('userInfo.website')}</strong>:&nbsp;&nbsp;{user.website || t('userInfo.fallbackWebsite')}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
               </div>
               <div className={styles.rowGroup}>
                 {
                   editAboutMe
-                    ? <><label htmlFor="aboutMe">Sobre mí:</label><textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder='My favorite things to do'/><button id="editOtherInfo" type="submit">Guardar</button><button id="cancelEditOtherInfo" onClick={() => setEditAboutMe(false)}>Cancelar</button></>
-                    : <><p id='editAbout' onClick={handleEditInfo}><strong>Sobre mí</strong>:&nbsp;&nbsp;{user.aboutMe || 'Some nice things about me ...'}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
+                    ? <><label htmlFor="aboutMe">{t('userInfo.aboutMe')}:</label><textarea name="aboutMe" cols="30" rows="10" defaultValue={user.aboutMe || ''} placeholder={t('userInfo.fallbackAbout')}/><button id="editOtherInfo" type="submit">{t('common.save')}</button><button id="cancelEditOtherInfo" onClick={() => setEditAboutMe(false)}>{t('common.cancel')}</button></>
+                    : <><p id='editAbout' onClick={handleEditInfo}><strong>{t('userInfo.aboutMe')}</strong>:&nbsp;&nbsp;{user.aboutMe || t('userInfo.fallbackAbout')}</p><EditIcon className={`uiIcon ${styles.display}`}/></>
                 }
               </div>
-            <p className={styles.dateJoin}><strong>Miembro desde:&nbsp;&nbsp; </strong>{formatDate(user.createdAt)}</p>
+            <p className={styles.dateJoin}><strong>{t('userInfo.memberSince')}&nbsp;&nbsp; </strong>{formatDate(user.createdAt)}</p>
             </form>
           </div>
 
@@ -1053,15 +1061,17 @@ export function UserInfo ({ user, setUser }) {
   )
 }
 export function ProfileHeader ({ user }) {
+  const { t } = useTranslation('profile')
   return (
     <header className={styles.infoHeader}>
-      <h3>Perfil de usuario</h3>
-      <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : 'Mi frase motivante aquí'}</span></p>
+      <h3>{t('header.title')}</h3>
+      <p>{user.realName} <span className={styles.about}>{user.aboutMe ? user.aboutMe : t('header.fallbackAbout')}</span></p>
       <p>{user.email}</p>
     </header>
   )
 }
 export default function ProfilePage () {
+  const { t } = useTranslation('profile')
   const user = useSessionStore(state => state.user)
   console.log(user)
 
@@ -1070,7 +1080,7 @@ export default function ProfilePage () {
   const statsRef = useRef()
   const secRef = useRef()
   const prefRef = useRef()
-  useTitle({ title: `${user.realName} - Profile` })
+  useTitle({ title: t('pageTitle', { name: user.realName }) })
   useEffect(() => {
     openTab('info', 'infoTab')
   }, [])
@@ -1092,19 +1102,19 @@ export default function ProfilePage () {
       <section className={styles.buttons}>
         <button className={`${styles.tablinks} buttonlink`} id="infoTab" onClick={() => { openTab('info', 'infoTab') }}>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ color: '#3c9aed', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
-          Información
+          {t('tabs.info')}
         </button>
         <button className={`${styles.tablinks} buttonlink`} id="statsTab" onClick={() => { openTab('stats', 'statsTab') }}>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(48 179 82)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 3.2a9 9 0 1 0 10.8 10.8a1 1 0 0 0 -1 -1h-6.8a2 2 0 0 1 -2 -2v-7a.9 .9 0 0 0 -1 -.8" /><path d="M15 3.5a9 9 0 0 1 5.5 5.5h-4.5a1 1 0 0 1 -1 -1v-4.5" /></svg>
-          Estadísticas
+          {t('tabs.stats')}
         </button>
         <button className={`${styles.tablinks} buttonlink`} id="securityTab" onClick={() => { openTab('security', 'securityTab') }}>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(184 111 48)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" /><path d="M12 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 12l0 2.5" /></svg>
-          Seguridad
+          {t('tabs.security')}
         </button>
         <button className={`${styles.tablinks} buttonlink`} id="preferencesTab" onClick={() => { openTab('preferences', 'preferencesTab') }}>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(184 48 48)', paddingTop: '1px' }} className="uiIcon-button" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
-          Preferencias
+          {t('tabs.preferences')}
         </button>
       </section>
       <section className={styles.content}>

@@ -1,0 +1,142 @@
+{
+  "pageTitle": "{{name}} - Profile",
+  "tabs": {
+    "info": "Information",
+    "stats": "Statistics",
+    "security": "Security",
+    "preferences": "Preferences"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "send": "Send",
+    "next": "Next",
+    "uploadFile": "Upload File",
+    "search": "Search",
+    "download": "Download",
+    "loading": "Loading...",
+    "unknown": "Unknown"
+  },
+  "header": {
+    "title": "User profile",
+    "fallbackAbout": "My motivational phrase here"
+  },
+  "reauthForm": {
+    "currentPassword": "Enter your current password"
+  },
+  "preferences": {
+    "import": {
+      "title": "Import Chrome Bookmarks",
+      "description": "Upload your exported Chrome bookmarks file",
+      "uploadHtml": "Upload HTML File"
+    },
+    "deleteAccount": {
+      "title": "Close your Account",
+      "button": "Close Account",
+      "confirmText": "Are you sure you want to close your account? This will delete all your data",
+      "warning": "This action cannot be undone"
+    }
+  },
+  "subscription": {
+    "title": "Your Subscription",
+    "planCurrent": "Current plan:",
+    "statusLabel": "Status:",
+    "storage": "Storage:",
+    "storageUsage": "{{used}} MB used of {{total}} MB",
+    "aiCalls": "AI Calls:",
+    "aiCallsUnlimited": "Unlimited",
+    "aiCallsUsage": "{{used}} of {{total}}",
+    "lastRenewal": "Last renewal:",
+    "upgrade": "Upgrade plan",
+    "manage": "Manage subscription",
+    "opening": "Opening...",
+    "status": {
+      "active": "Active",
+      "canceled": "Canceled",
+      "past_due": "Past due",
+      "trialing": "Trialing",
+      "default": "Active"
+    }
+  },
+  "security": {
+    "changePassword": {
+      "title": "Change password",
+      "button": "Change",
+      "confirmCurrent": "First, confirm your current password",
+      "newPasswordPrompt": "Now, enter your new password",
+      "newPasswordPlaceholder": "New password",
+      "confirmNewPasswordPlaceholder": "Confirm new password",
+      "submit": "Change Password"
+    },
+    "backup": {
+      "title": "Back up your data",
+      "create": "Create Backup",
+      "restore": "Restore Backup",
+      "confirmTitle": "Are you sure you want to restore this backup?",
+      "confirmWarning": "All your current data will be deleted.",
+      "confirmImportant": "Important!",
+      "confirmImportantText": "Image files will not be restored.",
+      "confirmYes": "Yes, restore",
+      "confirmNo": "No, cancel"
+    }
+  },
+  "stats": {
+    "desktops": "Desktops",
+    "panels": "Panels",
+    "links": "Links",
+    "findDuplicates": "Find Duplicates",
+    "findBrokenLinks": "Find Broken Links",
+    "duplicatesCount": "Duplicates:",
+    "brokenLinksCount": "Broken Links:",
+    "panel": "Panel:",
+    "url": "url:"
+  },
+  "userInfo": {
+    "uploadProfileImage": "Upload your profile image",
+    "recommendedSize": "Recommended size 125x125",
+    "maxSize": "Max. 2MB",
+    "uploadImage": "Upload Image",
+    "fullName": "Full Name",
+    "website": "Website",
+    "aboutMe": "About me",
+    "memberSince": "Member since:",
+    "fallbackUser": "User",
+    "fallbackWebsite": "www.mywebsite.com",
+    "fallbackAbout": "Some nice things about me ..."
+  },
+  "toasts": {
+    "deleteLoading": "Deleting account ...",
+    "wrongPassword": "Incorrect password",
+    "requestErrorRetryLater": "Request error, please try again later",
+    "deleteSuccess": "Account deleted successfully",
+    "reauthRequiredDelete": "You need to reauthenticate to delete your account",
+    "reauthGoogleError": "Error reauthenticating with Google",
+    "invalidHtml": "Please select a valid HTML file",
+    "importLoading": "Importing bookmarks...",
+    "importSuccess": "Bookmarks imported successfully: {{count}} links",
+    "importError": "Error importing bookmarks",
+    "billingPortalError": "Error opening billing portal",
+    "enterCurrentPassword": "Please enter your current password",
+    "passwordVerified": "Password verified successfully",
+    "passwordVerifyError": "Error verifying password",
+    "completeAllFields": "Please complete all fields",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordMismatch": "Passwords do not match",
+    "authErrorRetry": "Authentication error. Please try again.",
+    "passwordChanged": "Password changed successfully",
+    "sessionExpired": "Session expired, please try again",
+    "changePasswordError": "Error changing password",
+    "backupCreated": "Backup created successfully",
+    "restoringBackup": "Restoring backup...",
+    "backupRestored": "Backup restored successfully",
+    "backupRestoreError": "Error restoring backup",
+    "operationCanceled": "Operation canceled",
+    "checkingLink": "Checking {{name}} ...",
+    "noBrokenLinks": "No broken links found",
+    "noDuplicates": "No duplicates found",
+    "infoUpdated": "Information updated successfully",
+    "imageTooLarge": "Image too large, max. 2MB",
+    "imageChanged": "Image changed successfully"
+  }
+}

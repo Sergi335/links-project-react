@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { usePasteLink } from '../hooks/usePasteLink'
@@ -11,6 +12,7 @@ import styles from './ContextualColMenu.module.css'
 import { ArrowDown } from './Icons/icons'
 
 export default function ContextualColMenu ({ visible, points, setPoints, params, desktops }) {
+  const { t } = useTranslation('common')
   console.log('🚀 ~ ContextualColMenu ~ params:', params)
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
@@ -59,7 +61,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
       if (hasError) {
         throw new Error(message)
       }
-      toast('Movido a ' + desk.name)
+      toast(t('toast.movedTo', { name: desk.name }))
     } catch (error) {
       toast(error.message)
       // Revertir los cambios en caso de error
@@ -69,7 +71,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
   // El nivel no es siempre 2 hay que calcularlo dependiendo del nivel de la categoria a la que se añada
   const handleAddColumn = async () => {
     const subcategories = globalColumns.filter(col => col.parentId === params._id)
-    const response = await createColumn({ name: 'New Column', parentId: params?._id, order: subcategories.length, level: params?.level + 1, parentSlug: params?.slug })
+    const response = await createColumn({ name: t('columns.newCategory'), parentId: params?._id, order: subcategories.length, level: params?.level + 1, parentSlug: params?.slug })
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
       toast.error(message)
@@ -104,14 +106,14 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
         <div ref={menuRef} className={
             visible ? styles.flex : styles.hidden
           } style={{ left: points.x, top: points.y }}>
-            <p><strong>Opciones Columna</strong></p>
+            <p><strong>{t('contextMenu.columnOptions')}</strong></p>
             <p>{params?.name}</p>
             {/* eslint-disable-next-line react/no-unknown-property */}
-            <button popovertarget='add-link-form' popovertargetaction='show'>Nuevo Link</button>
-            <button onClick={handleAddColumn}>Nueva Categoría</button>
-            <span onClick={() => { pasteLink() }}>Pegar</span>
+            <button popovertarget='add-link-form' popovertargetaction='show'>{t('columns.newLink')}</button>
+            <button onClick={handleAddColumn}>{t('columns.newCategory')}</button>
+            <span onClick={() => { pasteLink() }}>{t('columns.paste')}</span>
             {/* <span>Renombrar</span> */}
-            <span className={styles.moveTo}>Mover a<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
+            <span className={styles.moveTo}>{t('actions.moveTo')}<ArrowDown className={`${styles.rotate} uiIcon_small`}/>
               <ul ref={subMenuRef} className={styles.moveList} style={subMenuSide === 'right' ? { top: subMenuTop } : { left: '-67%', top: subMenuTop }}>
                 {
                   desktops.map(desk => desk.slug === desktopName // <---
@@ -123,7 +125,7 @@ export default function ContextualColMenu ({ visible, points, setPoints, params,
               </ul>
             </span>
             {/* eslint-disable-next-line react/no-unknown-property */}
-            <button popovertarget='delete-col-confirm-form' popovertargetaction='show'>Borrar</button>
+            <button popovertarget='delete-col-confirm-form' popovertargetaction='show'>{t('actions.delete')}</button>
         </div>
   )
 }

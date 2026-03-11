@@ -15,7 +15,27 @@
   },
   "actions": {
     "goBack": "Go Back",
-    "back": "Back"
+    "back": "Back",
+    "edit": "Edit",
+    "delete": "Delete",
+    "favorite": "Favorite",
+    "removeFavorite": "Remove Favorite",
+    "moveTo": "Move to",
+    "moveToOtherDesktop": "Move to another desktop"
+  },
+  "contextMenu": {
+    "linkOptions": "Link Options",
+    "columnOptions": "Column Options"
+  },
+  "toast": {
+    "moveLinksError": "Error moving links",
+    "updateFavoritesError": "Error updating favorites",
+    "movedTo": "Moved to {{name}}"
+  },
+  "columns": {
+    "newLink": "New Link",
+    "newCategory": "New Category",
+    "paste": "Paste"
   },
   "search": {
     "label": "Search",
