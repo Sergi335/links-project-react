@@ -19,6 +19,7 @@ export const PLANS = [
     period: '/mes',
     description: 'Para uso personal',
     features: [
+      'links ilimitados',
       '50MB de almacenamiento',
       '5 llamadas IA al mes',
       'Soporte básico'
@@ -33,6 +34,7 @@ export const PLANS = [
     period: '/mes',
     description: 'Para usuarios avanzados',
     features: [
+      'links ilimitados',
       '5GB de almacenamiento',
       '50 llamadas IA al mes',
       'Soporte prioritario',
@@ -48,6 +50,7 @@ export const PLANS = [
     period: '/mes',
     description: 'Para equipos y empresas',
     features: [
+      'links ilimitados',
       '50GB de almacenamiento',
       'Llamadas IA ilimitadas',
       'Soporte dedicado 24/7',

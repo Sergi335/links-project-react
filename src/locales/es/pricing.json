@@ -24,8 +24,9 @@
       "description": "Para uso personal",
       "period": "/mes",
       "features": [
-        "50MB de almacenamiento",
-        "5 llamadas IA al mes",
+        "links ilimitados",
+        "20 Categorías",
+        "20MB de almacenamiento",
         "Soporte básico"
       ]
     },
@@ -34,10 +35,11 @@
       "description": "Para usuarios avanzados",
       "period": "/mes",
       "features": [
-        "5GB de almacenamiento",
-        "50 llamadas IA al mes",
-        "Soporte prioritario",
-        "Exportación de datos"
+        "links ilimitados",
+        "Categorías ilimitadas",
+        "2GB de almacenamiento",
+        "200 llamadas IA al mes",
+        "Soporte prioritario"
       ]
     },
     "enterprise": {
@@ -45,11 +47,11 @@
       "description": "Para equipos y empresas",
       "period": "/mes",
       "features": [
-        "50GB de almacenamiento",
-        "Llamadas IA ilimitadas",
-        "Soporte dedicado 24/7",
-        "API personalizada",
-        "Onboarding asistido"
+        "links ilimitados",
+        "Categorías ilimitadas",
+        "5GB de almacenamiento",
+        "500 llamadas IA al mes",
+        "Soporte dedicado 24/7"
       ]
     }
   }

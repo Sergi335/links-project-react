@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { PLANS } from '../../lib/stripe'
 import { createCheckoutSession } from '../../services/dbQueries'
 import { useSessionStore } from '../../store/session'
-import styles from './PricingPage.module.css'
 import { HomeFooter, HomeNav } from './HomePage'
+import styles from './PricingPage.module.css'
 
 export function PricingTable ({ style = {} }) {
   const { t } = useTranslation('pricing')
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isPricingPage = pathname === '/pricing'
   const user = useSessionStore(state => state.user)
   const [loadingPlan, setLoadingPlan] = useState(null)
   const rootPath = import.meta.env.VITE_ROOT_PATH
@@ -100,12 +102,16 @@ export function PricingTable ({ style = {} }) {
         ))}
       </div>
 
-      <footer className={styles.footer}>
-        <p>{t('footer.questions')} <a href="mailto:support@zenmarks.com">{t('footer.contact')}</a></p>
-        <p className={styles.disclaimer}>
-          {t('footer.disclaimer')}
-        </p>
-      </footer>
+      {
+        isPricingPage && (
+          <footer className={styles.footer}>
+            <p>{t('footer.questions')} <a href="mailto:support@zenmarks.com">{t('footer.contact')}</a></p>
+            <p className={styles.disclaimer}>
+              {t('footer.disclaimer')}
+            </p>
+          </footer>
+        )
+      }
     </div>
   )
 }

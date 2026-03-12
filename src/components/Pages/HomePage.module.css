@@ -49,6 +49,12 @@
     width: 100%;
 }
 
+.home .section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 0;
+}
+
 .home video {
     width: 90vw;
     height: 678px;
@@ -328,7 +334,7 @@
     position: relative;
 
     & a {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 500;
 
         &:hover {
@@ -451,9 +457,13 @@
     border: var(--firstBorder);
 }
 
+.start:active {
+    transform: scale(.98);
+}
+
 .start:hover {
-    background-color: var(--homePageAccentColor);
-    color: #ffffff;
+    background-color: var(--color-primary);
+    color: var(--homePageAccentColor);
 }
 
 .start.try {
@@ -468,6 +478,7 @@
     /* width: 46ch; */
     flex-grow: 1;
     justify-content: center;
+    position: relative;
 }
 
 .textColumn p {

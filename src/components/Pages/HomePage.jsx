@@ -55,7 +55,7 @@ export function HomeFooter () {
 }
 
 export default function HomePage () {
-  const { t } = useTranslation('home')
+  const { t } = useTranslation('home', 'common')
 
   useTitle({ title: 'ZenMarks - Home' })
 
@@ -146,7 +146,7 @@ export default function HomePage () {
         <section className={styles.section}>
           <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '50px' }}>
             <div className={styles.textColumn}>
-              {/* <h2>{t('section.title')}</h2> */}
+              <h2>{t('common:brand')}</h2>
               <p>{t('section.text1')}<strong>{t('section.text2a')}</strong> {t('section.text2b')}</p>
               {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
                 <YouTube />
