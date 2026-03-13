@@ -126,3 +126,8 @@ div.yoo-action-menu-bg-\[\#FFFFFF\] {
     background-color: var(--color-secondary);
     border: var(--firstBorder);
 }
+
+.yoopta-paragraph,
+.yoopta-bulleted-list {
+    color: var(--text-color-secondary);
+}
