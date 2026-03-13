@@ -99,21 +99,110 @@ export default function Editor ({ data }) {
     setValue(value)
   }
 
+  const getCurrentEditorValue = () => {
+    return editor.getEditorValue?.() || value
+  }
+
   const getRenderedEditorRoot = () => {
     if (!editorContainerRef.current) return null
 
-    return (
-      editorContainerRef.current.querySelector('[contenteditable="true"]') ||
-      editorContainerRef.current.querySelector('.yoopta-editor') ||
-      editorContainerRef.current
-    )
+    return editorContainerRef.current.querySelector('.yoopta-editor') || editorContainerRef.current
+  }
+
+  const getRenderedBlocks = () => {
+    const editorRoot = getRenderedEditorRoot()
+    if (!editorRoot) return []
+
+    return Array.from(editorRoot.querySelectorAll('[data-yoopta-block-id]'))
+  }
+
+  const getSanitizedEditorClone = () => {
+    const editorRoot = getRenderedEditorRoot()
+    if (!editorRoot) return null
+
+    const clone = editorRoot.cloneNode(true)
+
+    clone.querySelectorAll('.yoopta-block-actions, .yoopta-extended-block-actions, [contenteditable="false"], [role="toolbar"], [data-radix-popper-content-wrapper]').forEach((element) => {
+      element.remove()
+    })
+
+    clone.querySelectorAll('[contenteditable="true"]').forEach((element) => {
+      element.removeAttribute('contenteditable')
+      element.removeAttribute('spellcheck')
+      element.removeAttribute('role')
+    })
+
+    return clone
+  }
+
+  const getCleanBlockText = (block) => {
+    const clone = block.cloneNode(true)
+
+    clone.querySelectorAll('.yoopta-block-actions, .yoopta-extended-block-actions, [contenteditable="false"], [role="toolbar"], [data-radix-popper-content-wrapper]').forEach((element) => {
+      element.remove()
+    })
+
+    const text = clone.innerText?.trim() || clone.textContent?.trim() || ''
+
+    return text
+      .replace(/To pick up a draggable item,[\s\S]*?cancel\./gi, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
   }
 
   const getNotesPlainText = () => {
-    const renderedEditor = getRenderedEditorRoot()
-    const plainText = renderedEditor?.innerText || renderedEditor?.textContent || ''
+    const renderedBlocks = getRenderedBlocks()
 
-    return plainText.trim()
+    if (renderedBlocks.length > 0) {
+      const plainText = renderedBlocks
+        .map((block) => getCleanBlockText(block))
+        .filter(Boolean)
+        .join('\n\n')
+        .trim()
+
+      if (plainText) return plainText
+    }
+
+    const sanitizedClone = getSanitizedEditorClone()
+    const renderedPlainText = sanitizedClone?.innerText?.trim() || sanitizedClone?.textContent?.trim() || ''
+
+    if (renderedPlainText) return renderedPlainText
+
+    const currentValue = getCurrentEditorValue()
+    const serializedPlainText = editor.getPlainText?.(currentValue)?.trim()
+
+    if (serializedPlainText) return serializedPlainText
+
+    return ''
+  }
+
+  const getPrintableNotesHtml = () => {
+    const sanitizedClone = getSanitizedEditorClone()
+    const renderedHtml = sanitizedClone?.innerHTML?.trim()
+
+    if (renderedHtml) return renderedHtml
+
+    const currentValue = getCurrentEditorValue()
+    const serializedHtml = editor.getHTML?.(currentValue)?.trim()
+
+    if (serializedHtml) return serializedHtml
+
+    const renderedBlocks = getRenderedBlocks()
+
+    if (renderedBlocks.length === 0) return ''
+
+    return renderedBlocks
+      .map((block) => {
+        const clone = block.cloneNode(true)
+
+        clone.querySelectorAll('.yoopta-block-actions, .yoopta-extended-block-actions, [contenteditable="false"]').forEach((element) => {
+          element.remove()
+        })
+
+        return clone.outerHTML
+      })
+      .join('')
+      .trim()
   }
 
   const handleSaveNotes = async () => {
@@ -171,8 +260,7 @@ export default function Editor ({ data }) {
       return
     }
 
-    const renderedEditor = getRenderedEditorRoot()
-    const notesHtml = renderedEditor?.innerHTML?.trim()
+    const notesHtml = getPrintableNotesHtml()
 
     if (!notesHtml) {
       toast.error('No se pudieron preparar las notas para imprimir')
@@ -199,6 +287,11 @@ export default function Editor ({ data }) {
             }
             ul, ol {
               padding-left: 1.5rem;
+              list-style-position: outside;
+            }
+            li {
+              display: list-item;
+              margin-bottom: 0.35rem;
             }
             table {
               width: 100%;
