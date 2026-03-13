@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
 import { chatWithVideo, deleteAIChat, deleteAISummary, generateSummary, getLinkById } from '../../services/dbQueries'
@@ -7,6 +7,7 @@ import styles from './LinkDetailsTabs.module.css'
 
 export default function LinkDetailsSummary ({ data }) {
   const [loading, setLoading] = useState(false)
+  const summaryContentRef = useRef(null)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const [chatMessage, setChatMessage] = useState('')
@@ -118,6 +119,84 @@ export default function LinkDetailsSummary ({ data }) {
     }
   }
 
+  const getSummaryPlainText = (content) => {
+    if (!content) return ''
+
+    return content
+      .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, ''))
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/^>\s?/gm, '')
+      .replace(/^#{1,6}\s*/gm, '')
+      .replace(/^\s*[-*+]\s+/gm, '- ')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/\*([^*]+)\*/g, '$1')
+      .replace(/_{1,2}([^_]+)_{1,2}/g, '$1')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+  }
+
+  const handleCopySummary = async () => {
+    if (!summary) return
+
+    try {
+      await navigator.clipboard.writeText(getSummaryPlainText(summary))
+      toast.success('Resumen copiado al portapapeles')
+    } catch (error) {
+      console.error(error)
+      toast.error('No se pudo copiar el resumen')
+    }
+  }
+
+  const handlePrintSummary = () => {
+    if (!summaryContentRef.current) return
+
+    const printWindow = window.open('', '_blank', 'width=900,height=700')
+
+    if (!printWindow) {
+      toast.error('No se pudo abrir la ventana de impresión')
+      return
+    }
+
+    const summaryHtml = summaryContentRef.current.innerHTML
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Resumen del Video</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 32px;
+              color: #111827;
+              line-height: 1.5;
+            }
+            h1, h2, h3, h4, h5, h6 {
+              margin-top: 1.5rem;
+              margin-bottom: 0.75rem;
+            }
+            p, ul, ol {
+              margin-bottom: 1rem;
+            }
+            ul, ol {
+              padding-left: 1.5rem;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Resumen del Video</h1>
+          ${summaryHtml}
+        </body>
+      </html>
+    `)
+
+    printWindow.document.close()
+    printWindow.focus()
+    printWindow.print()
+    printWindow.close()
+  }
+
   const handleDeleteChat = async () => {
     if (!window.confirm('¿Estás seguro de que quieres borrar el historial del chat?')) return
 
@@ -222,20 +301,41 @@ export default function LinkDetailsSummary ({ data }) {
             {summary && (
               <>
                 <h3>Resumen del Video</h3>
-                <button
-                  className={styles.deleteButton}
-                  onClick={handleDeleteSummary}
-                  disabled={loading}
-                  title="Borrar resumen"
-                >
-                  Borrar
-                </button>
+                <div className={styles.summaryActions}>
+                  <button
+                    className={styles.secondaryActionButton}
+                    onClick={handleCopySummary}
+                    disabled={loading}
+                    title="Copiar resumen"
+                    type="button"
+                  >
+                    Copiar
+                  </button>
+                  <button
+                    className={styles.secondaryActionButton}
+                    onClick={handlePrintSummary}
+                    disabled={loading}
+                    title="Imprimir resumen"
+                    type="button"
+                  >
+                    Imprimir
+                  </button>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={handleDeleteSummary}
+                    disabled={loading}
+                    title="Borrar resumen"
+                    type="button"
+                  >
+                    Borrar
+                  </button>
+                </div>
               </>
             )}
           </div>
           {summary
             ? (
-            <div className={styles.markdownContent}>
+            <div ref={summaryContentRef} className={styles.markdownContent}>
               <ReactMarkdown>{summary}</ReactMarkdown>
             </div>
               )
