@@ -17,7 +17,7 @@ import Paragraph from '@yoopta/paragraph'
 import Table from '@yoopta/table'
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar'
 import Video from '@yoopta/video'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { fetchImage, updateLink } from '../../services/dbQueries'
 import { handleResponseErrors } from '../../services/functions'
@@ -79,6 +79,7 @@ const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight]
 export default function Editor ({ data }) {
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
+  const editorContainerRef = useRef(null)
   const linkId = data?._id
   const notesValue = useMemo(() => data?.notes || {}, [data?.notes])
   const [value, setValue] = useState(notesValue)
@@ -96,6 +97,23 @@ export default function Editor ({ data }) {
 
   const onChange = (value) => {
     setValue(value)
+  }
+
+  const getRenderedEditorRoot = () => {
+    if (!editorContainerRef.current) return null
+
+    return (
+      editorContainerRef.current.querySelector('[contenteditable="true"]') ||
+      editorContainerRef.current.querySelector('.yoopta-editor') ||
+      editorContainerRef.current
+    )
+  }
+
+  const getNotesPlainText = () => {
+    const renderedEditor = getRenderedEditorRoot()
+    const plainText = renderedEditor?.innerText || renderedEditor?.textContent || ''
+
+    return plainText.trim()
   }
 
   const handleSaveNotes = async () => {
@@ -121,11 +139,100 @@ export default function Editor ({ data }) {
     }
   }
 
+  const handleCopyNotes = async () => {
+    const plainText = getNotesPlainText()
+
+    if (!plainText) {
+      toast.error('No hay notas para copiar')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(plainText)
+      toast.success('Notas copiadas al portapapeles')
+    } catch (error) {
+      console.error(error)
+      toast.error('No se pudieron copiar las notas')
+    }
+  }
+
+  const handlePrintNotes = () => {
+    const plainText = getNotesPlainText()
+
+    if (!plainText) {
+      toast.error('No hay notas para imprimir')
+      return
+    }
+
+    const printWindow = window.open('', '_blank', 'width=900,height=700')
+
+    if (!printWindow) {
+      toast.error('No se pudo abrir la ventana de impresión')
+      return
+    }
+
+    const renderedEditor = getRenderedEditorRoot()
+    const notesHtml = renderedEditor?.innerHTML?.trim()
+
+    if (!notesHtml) {
+      toast.error('No se pudieron preparar las notas para imprimir')
+      return
+    }
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Notas</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 32px;
+              color: #111827;
+              line-height: 1.5;
+            }
+            h1, h2, h3, h4, h5, h6 {
+              margin-top: 1.5rem;
+              margin-bottom: 0.75rem;
+            }
+            p, ul, ol, blockquote, pre, table {
+              margin-bottom: 1rem;
+            }
+            ul, ol {
+              padding-left: 1.5rem;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            th, td {
+              border: 1px solid #d1d5db;
+              padding: 8px;
+              text-align: left;
+            }
+            img, video {
+              max-width: 100%;
+              height: auto;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Notas</h1>
+          ${notesHtml}
+        </body>
+      </html>
+    `)
+
+    printWindow.document.close()
+    printWindow.focus()
+    printWindow.print()
+    printWindow.close()
+  }
+
   if (!isReady) return null
 
   return (
     <>
-      <div className={styles.editor_container}>
+      <div ref={editorContainerRef} className={styles.editor_container}>
         <YooptaEditor
           key={linkId}
           editor={editor}
@@ -139,7 +246,11 @@ export default function Editor ({ data }) {
           width="100%"
         />
       </div>
-      <button style={{ marginTop: '16px', maxWidth: 'fit-content' }} onClick={handleSaveNotes}>Save</button>
+      <div className={styles.actions_row}>
+        <button className={styles.secondary_action_button} type="button" onClick={handleCopyNotes}>Copy</button>
+        <button className={styles.secondary_action_button} type="button" onClick={handlePrintNotes}>Print</button>
+        <button className={styles.primary_action_button} type="button" onClick={handleSaveNotes}>Save</button>
+      </div>
     </>
   )
 }

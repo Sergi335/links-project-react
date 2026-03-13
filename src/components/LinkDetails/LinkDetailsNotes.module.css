@@ -22,3 +22,27 @@
     border: var(--scrollbar-border-thickness) solid var(--scrollbar-border-color);
     border-radius: var(--scrollbar-border-radius);
 }
+
+.actions_row {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.secondary_action_button {
+    background-color: var(--color-medium);
+    color: var(--text-color-primary);
+    border: 1px solid var(--firstBorderColor);
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.secondary_action_button:hover {
+    background-color: var(--color-secondary);
+}
+
+.primary_action_button {
+    max-width: fit-content;
+}
