@@ -109,6 +109,34 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.summaryActions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.secondaryActionButton {
+    background-color: var(--color-medium);
+    color: var(--text-color-primary);
+    border: 1px solid var(--firstBorderColor);
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.secondaryActionButton:hover {
+    background-color: var(--color-secondary);
+}
+
+.secondaryActionButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .deleteButton {
