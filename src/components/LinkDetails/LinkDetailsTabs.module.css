@@ -190,6 +190,7 @@
     border-top: 1px solid var(--color-medium);
     padding-top: 1rem;
     margin-bottom: 1rem;
+    width: -webkit-fill-available;
 }
 
 .chatHistory {

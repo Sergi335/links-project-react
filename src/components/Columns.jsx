@@ -91,8 +91,8 @@ export default function Columns ({
   if (!loading && (!filteredColumns || filteredColumns.length === 0)) {
     return (
       <div className={wrapperClass}>
+        <p>No hay Categorías, crea una</p>
         <div className={contentClass} style={contentStyle}>
-          <p>No hay Categorías, crea una</p>
         </div>
       </div>
     )
