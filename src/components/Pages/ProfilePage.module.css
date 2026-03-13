@@ -255,7 +255,7 @@
 }
 
 .upFile {
-    /* width: 173px; */
+    width: 173px;
     position: relative;
     font-size: 13px;
     margin-top: 15px;
@@ -998,5 +998,64 @@ tr:nth-child(odd) {
     &:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+    }
+}
+
+.subscriptionSkeleton {
+    width: 100%;
+}
+
+.skeletonBlock {
+    position: relative;
+    /* width: 380px; */
+    overflow: hidden;
+    display: inline-flex;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+            color-mix(in srgb, var(--color-primary) 82%, transparent) 0%,
+            color-mix(in srgb, var(--color-secondary) 92%, white 8%) 50%,
+            color-mix(in srgb, var(--color-primary) 82%, transparent) 100%);
+    background-size: 200% 100%;
+    animation: subscriptionSkeletonShimmer 1.35s ease-in-out infinite;
+}
+
+.skeletonLabel {
+    width: 200px;
+    height: 14px;
+}
+
+.skeletonBadge {
+    width: 74px;
+    height: 28px;
+}
+
+.skeletonStatus {
+    width: 92px;
+    height: 14px;
+}
+
+.skeletonLine {
+    width: min(100%, 320px);
+    height: 13px;
+}
+
+.skeletonLineShort {
+    width: min(70%, 220px);
+    height: 13px;
+}
+
+.skeletonButton {
+    width: 100%;
+    height: 46px;
+    border-radius: 8px;
+}
+
+@keyframes subscriptionSkeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
     }
 }

@@ -30,7 +30,7 @@ export const PLANS = [
   {
     id: 'pro',
     title: 'Pro',
-    price: '10€',
+    price: '3€',
     period: '/mes',
     description: 'Para usuarios avanzados',
     features: [
@@ -46,7 +46,7 @@ export const PLANS = [
   {
     id: 'enterprise',
     title: 'Enterprise',
-    price: '50€',
+    price: '10€',
     period: '/mes',
     description: 'Para equipos y empresas',
     features: [

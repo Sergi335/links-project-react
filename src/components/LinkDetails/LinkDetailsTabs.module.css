@@ -217,6 +217,7 @@
 .summaryBlock p,
 .summaryBlock li {
     color: var(--text-color-secondary);
+    line-height: 1.6;
 }
 
 .summaryBlock strong {

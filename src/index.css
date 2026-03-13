@@ -399,9 +399,9 @@ a.active,
   flex-wrap: nowrap;
 }
 
-.selectMode .column h2 {
-  margin-left: 0;
-}
+/* .selectMode .column h2 {
+  margin-left: 10px;
+} */
 
 h1 {
   font-size: 3.2em;
@@ -641,6 +641,11 @@ favopt1 {
 
   .root {
     margin: .5rem;
+  }
+
+  section p,
+  section li {
+    color: var(--text-color-secondary);
   }
 
   /* .pinned {

@@ -273,13 +273,37 @@ export function UserSubscription ({ user }) {
     }
   }
 
+  const SubscriptionSkeleton = () => (
+    <>
+      <div className={`${styles.subscriptionInfo} ${styles.subscriptionSkeleton}`} aria-hidden="true">
+        <div className={styles.planRow}>
+          <span className={`${styles.skeletonBlock} ${styles.skeletonLabel}`}></span>
+          <span className={`${styles.skeletonBlock} ${styles.skeletonBadge}`}></span>
+        </div>
+        <div className={styles.planRow}>
+          <span className={`${styles.skeletonBlock} ${styles.skeletonLabel}`}></span>
+          <span className={`${styles.skeletonBlock} ${styles.skeletonStatus}`}></span>
+        </div>
+        <div className={styles.limitsInfo}>
+          <p><span className={`${styles.skeletonBlock} ${styles.skeletonLine}`}></span></p>
+          <p><span className={`${styles.skeletonBlock} ${styles.skeletonLine}`}></span></p>
+          <p><span className={`${styles.skeletonBlock} ${styles.skeletonLineShort}`}></span></p>
+        </div>
+      </div>
+
+      <div className={styles.subscriptionActions} aria-hidden="true">
+        <span className={`${styles.skeletonBlock} ${styles.skeletonButton}`}></span>
+      </div>
+    </>
+  )
+
   return (
     <>
       <h3>{t('subscription.title')}</h3>
       <div className={styles.subscriptionSection}>
         {isLoading
           ? (
-          <p>{t('common.loading')}</p>
+          <SubscriptionSkeleton />
             )
           : (
           <>

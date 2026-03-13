@@ -241,7 +241,7 @@ export default function Columna ({ data, children, childCount, context, getFirst
 
               return (
                 <div className={styles.column_header} onContextMenu={(e) => handleContextMenu(e) }>
-                  {!isHeaderLoading && columnSelectModeId.includes(columna._id) && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange}/>}
+                  {!isHeaderLoading && columnSelectModeId.includes(columna._id) && <input type='checkbox' className={styles.selectCheckbox} onChange={handleSelectChange} style={{ marginRight: '10px' }}/>}
                   <h2 onClick={() => setEditMode(true) } ref={headRef} style={isHeaderLoading ? { flexGrow: 0, marginRight: '15px' } : {}}>
                     {columna.name}
                     {childCount > 7 && <span ref={spanCountRef} className='linkCount'>{`+${childCount - 7}`}</span>}

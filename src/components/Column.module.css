@@ -73,7 +73,7 @@
 
 .scPage .column h2 {
     font-size: 13.333px;
-    margin-left: 5px;
+    margin-left: 0px !important;
     padding: 8px;
     line-height: normal;
 }
