@@ -27,21 +27,11 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalLoading = useGlobalStore(state => state.setGlobalLoading)
-  // const setAddDeskFormVisible = useFormsStore(state => state.setAddDeskFormVisible)
-  // const addDeskFormVisible = useFormsStore(state => state.addDeskFormVisible)
-  // const setDeleteConfFormVisible = useFormsStore(state => state.setDeleteConfFormVisible)
-  // const deleteConfFormVisible = useFormsStore(state => state.deleteConfFormVisible)
-  // const globalLoading = useGlobalStore(state => state.globalLoading)
-  // const desktop = topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || 'null'
-  // console.log('🚀 ~ CustomizeDesktopPanel ~ desktop:', desktop)
   const accentColors = Object.keys(constants.ACCENT_COLORS)
-  // const sideInfoStyles = Object.keys(constants.SIDE_INFO_STYLES)
-  // const themeVariants = Object.keys(constants.THEME_VARIANTS)
   const visibleClassName = customizePanelVisible ? styles.slideIn : ''
   const setCustomizePanelVisible = useFormsStore(state => state.setCustomizePanelVisible)
   useHideForms({ form: formRef.current, setFormVisible: setCustomizePanelVisible })
 
-  // Debería estar montado y ocultarlo y mostrarlo mediante clases css
   const handleSubmit = async (event) => {
     event.preventDefault()
     setGlobalLoading(true)
@@ -166,19 +156,6 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     window.localStorage.setItem('bodyBackground', null)
     window.localStorage.setItem('backgroundMiniature', JSON.stringify(event.target.id))
   }
-  // const handleChangePanelStyles = (event) => {
-  //   event.target.classList.add(`${styles.optionSelected}`)
-  //   const options = document.getElementById('infoColor')
-  //   options.childNodes.forEach(option => {
-  //     if (option !== event.target) {
-  //       option.classList.remove(`${styles.optionSelected}`)
-  //     }
-  //   })
-  //   const currentStyle = event?.target.id
-  //   const panel = document.getElementById('sidebar')
-  //   constants.SIDE_INFO_STYLES[currentStyle].applyStyles(panel)
-  //   window.localStorage.setItem('sideInfoStyles', JSON.stringify(currentStyle))
-  // }
   const handleChangeAccentColor = (event) => {
     event.target.classList.add(`${styles.optionSelected}`)
     const options = document.getElementById('accentColor')
@@ -190,27 +167,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     const color = event.target.id
     constants.ACCENT_COLORS[color].applyStyles()
   }
-  // const handleChangeThemeVariant = (event) => {
-  //   event.target.classList.add(`${styles.optionSelected}`)
-  //   const style = event.target.id
-  //   const element = document.documentElement
-  //   const options = document.getElementById('themeVariant')
-  //   options.childNodes.forEach(option => {
-  //     if (option !== event.target) {
-  //       option.classList.remove(`${styles.optionSelected}`)
-  //     }
-  //   })
-  //   // element.classList.add('transparent')
-  //   constants.THEME_VARIANTS[style].applyStyles(element)
-  //   const currentStyle = event?.target.id
-  //   constants.THEME_VARIANTS[currentStyle].applyStyles(element)
-  //   window.localStorage.setItem('themeVariant', JSON.stringify(currentStyle))
-  // }
   const handleHideDesktops = async (event) => {
     const select = event.target
     const selectedOption = select.options[select.selectedIndex]
     const id = selectedOption.dataset.id
-    // console.log(id)
     const items = [{ id, hidden: true }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -231,7 +191,6 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
     const id = event.target.dataset.id
-    // console.log('🚀 ~ handleRestoreDesktop ~ id:', id)
     const items = [{ id, hidden: false }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -247,34 +206,16 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     newGlobalState[globalDeskIndex].hidden = false
     setTopLevelCategoriesStore(newTopLevelState)
     setGlobalColumns(newGlobalState)
-    // const newHiddenState = hiddenDesktops.filter(desktop => desktop !== event.target.innerText)
-    // setHiddenDesktops(newHiddenState)
   }
-  // const handleShowAddDesktop = (e) => {
-  //   // e.preventDefault()
-  //   e.stopPropagation() // 1. Evita que el click se propague a hooks de cierre u otros listeners
-  //   setAddDeskFormVisible(!addDeskFormVisible)
-  // }
-  // const handleShowDeleteDesktop = (e) => {
-  //   e.stopPropagation()
-  //   setDeleteConfFormVisible(!deleteConfFormVisible)
-  // }
-  // Useeffect para aplicar las opciones marcadas en el panel de personalización
-  useEffect(() => {
-    // const themeVariant = JSON.parse(window.localStorage.getItem('themeVariant')) ?? themeVariants[0]
-    // const optionsContainer = document.getElementById('themeVariant')
-    // optionsContainer.querySelector(`#${themeVariant}`).classList.add(`${styles.optionSelected}`)
 
+  useEffect(() => {
     const accentColor = JSON.parse(window.localStorage.getItem('accentColorName')) ?? accentColors[0]
     const colorOptions = document.getElementById('accentColor')
     colorOptions.querySelector(`#${accentColor}`).classList.add(`${styles.optionSelected}`)
 
     const background = JSON.parse(window.localStorage.getItem('backgroundMiniature')) ?? 'color'
-    // //console.log('🚀 ~ useEffect ~ background:', background)
     const backgroundOptions = Array.from(document.getElementById('bgMiniatures').childNodes)
-    // //console.log('🚀 ~ useEffect ~ backgroundOptions:', backgroundOptions)
     backgroundOptions.forEach(option => {
-      // //console.log(option.src)
       if (option.src && option.src === background) {
         option.classList.add(`${styles.optionSelected}`)
       } else if (option.id && option.id === background) {
@@ -282,6 +223,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
       }
     })
   }, [miniatures])
+
   useEffect(() => {
     getBackgroundMiniatures()
       .then(response => {
@@ -296,6 +238,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
         toast({ error })
       })
   }, [])
+
   useEffect(() => {
     setDesktop(topLevelCategoriesStore?.filter(desk => desk.slug === desktopName) || [])
   }, [desktopName, topLevelCategoriesStore])
@@ -338,37 +281,9 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                           </datalist>
                       </div>
                       </div>
-                    {/* <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
-                      <div className={styles.rowGroup}>
-                        <h3 style={{ margin: '0 auto' }}>Añadir Nuevo Escritorio</h3>
-                        <button
-                          // eslint-disable-next-line react/no-unknown-property
-                          popovertarget='add-desktop-form'
-                          className={styles.collapse_btn}
-                          onClick={handleShowAddDesktop}
-                          title="Añadir escritorio"
-                        >
-                          <AddDesktopIcon className={styles.collapse_icon} />
-                        </button>
-                      </div>
-                      <div className={styles.rowGroup}>
-                        <h3 style={{ margin: '0 auto' }}>Eliminar Escritorio Actual</h3>
-                        <button
-                          // eslint-disable-next-line react/no-unknown-property
-                          popovertarget='delete-desktop-confirm-form'
-                          className={styles.collapse_btn}
-                          onClick={handleShowDeleteDesktop}
-                          title="Eliminar escritorio"
-                        >
-                          <TrashIcon className={styles.collapse_icon} />
-                        </button>
-                        </div>
-                    </div> */}
-
                       <h3>Ocultar Escritorios</h3>
                       <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                          <div className={styles.rowGroup}>
-                         {/* <label htmlFor="" style={{ marginBottom: '10px', textAlign: 'left', width: '100%' }}>Seleccionar:</label> */}
                           <select name="" id="" onChange={handleHideDesktops}>
                             <option value='seleccionar' disabled selected>Seleccionar</option>
                           {
@@ -396,30 +311,12 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                   <h3>Fondos</h3>
                   <div id='bgMiniatures' className={styles.selectBackground}>
                       {
-                        miniatures
-                          ? miniatures.map(img => {
-                            return <img key={img.nombre} src={img.url} alt={img.nombre} onClick={handleChangeBackgroundImage}/>
-                          })
-                          : <div>Cargando ...</div>
+                        miniatures && miniatures.map(img => {
+                          return <img key={img.nombre} src={img.url} alt={img.nombre} onClick={handleChangeBackgroundImage}/>
+                        })
                       }
                       <div id='color' className={styles.removeBackground} onClick={handleRemoveBackgroundImage}></div>
                   </div>
-                  {/* <h3>Estilo del tema</h3>
-                  <div id='themeVariant' className={styles.selectThemeVariant}>
-                      {
-                        themeVariants && themeVariants.map(style => {
-                          return <div key={style} className="themeVariants" onClick={handleChangeThemeVariant} id={style} style={{ background: constants.THEME_VARIANTS[style].background }}></div>
-                        })
-                      }
-                  </div> */}
-                  {/* <h3>Estilo del Panel</h3>
-                  <div id='infoColor' className={styles.selectInfoColor}>
-                      {
-                        sideInfoStyles && sideInfoStyles.map(style => {
-                          return <div key={style} className="infoColors" onClick={handleChangePanelStyles} id={style} style={{ background: constants.SIDE_INFO_STYLES[style].background }}></div>
-                        })
-                      }
-                  </div> */}
                   <h3>Color de Acento</h3>
                   <div id='accentColor' className={styles.selectAccentColor}>
                       {

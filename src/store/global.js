@@ -54,6 +54,10 @@ export const useGlobalStore = create(
       sidebarCollapseSignal: 0,
       triggerSidebarCollapse: () => {
         set(state => ({ sidebarCollapseSignal: state.sidebarCollapseSignal + 1 }))
+      },
+      globalTheme: window.localStorage.getItem('theme') || 'light',
+      setGlobalTheme: (globalTheme) => {
+        set({ globalTheme })
       }
     }
   }

@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react'
 import { useStyles } from '../../hooks/useStyles'
 import { MoonIcon, SunIcon } from '../Icons/icons'
 import styles from './Header.module.css'
+import { useGlobalStore } from '../../store/global'
 
 export default function ThemeSwitcher () {
   const [darkTheme, setDarkTheme] = useState(false)
   const { theme: initialTheme } = useStyles()
+  const setGlobalTheme = useGlobalStore(state => state.setGlobalTheme)
   useEffect(() => {
     setDarkTheme(initialTheme === 'dark')
+    setGlobalTheme(initialTheme)
   }, [])
   // //console.log(darkTheme)
 
@@ -32,6 +35,7 @@ export default function ThemeSwitcher () {
       window.localStorage.setItem('theme', JSON.stringify('dark'))
     }
     setDarkTheme(!darkTheme)
+    setGlobalTheme(!darkTheme ? 'dark' : 'light')
   }
   return (
         <div className={`${styles.divider_right} ${styles.flex_center}`}>

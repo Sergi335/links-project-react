@@ -35,6 +35,8 @@ function App () {
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
   const globalArticles = useGlobalStore(state => state.globalArticles)
+  const globalTheme = useGlobalStore(state => state.globalTheme)
+  console.log(globalTheme)
   const [article, setArticle] = useState()
 
   useEffect(() => {
@@ -217,7 +219,7 @@ function App () {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light" // o usar la variable de tema
+        theme={globalTheme}
         transition={Zoom}
       />
     </>

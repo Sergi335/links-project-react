@@ -146,8 +146,9 @@
 .preferences {
     display: flex;
     justify-content: space-around;
-    align-items: start;
     gap: 100px;
+    align-items: center;
+    flex: 1;
 }
 
 .importSection {
@@ -160,6 +161,7 @@
     width: fit-content;
     margin-bottom: 15px;
     border-radius: var(--border-radius);
+    align-items: center;
 }
 
 .closeAccount {
@@ -511,9 +513,17 @@ tr:nth-child(odd) {
     border-radius: var(--border-radius);
 }
 
+.backup form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .securityWrapper {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    flex: 1;
 }
 
 .flexForm {
@@ -981,24 +991,17 @@ tr:nth-child(odd) {
 .manageBtn {
     flex: 1;
     padding: 12px 20px;
-    background: transparent;
-    color: var(--text-color-primary);
-    border: 1px solid var(--firstBorderColor);
-    border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
 
-    &:hover {
+    /* &:hover {
         background: var(--color-primary);
         border-color: var(--accentColor);
-    }
+    } */
 
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+    /* &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        } */
 }
 
 .subscriptionSkeleton {

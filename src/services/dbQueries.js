@@ -1,4 +1,4 @@
-import { apiFetch } from './api'
+import { apiFetch, apiStream } from './api'
 import { constants } from './constants'
 
 /* ------------ LINKS ------------------- */
@@ -513,13 +513,21 @@ export const sendLogoutSignal = async ({ idToken, csrfToken }) => {
 
 /* --------------- AI -------------------- */
 
-export async function generateSummary ({ linkId }) {
+export async function generateSummary ({ linkId, onChunk }) {
   try {
-    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
+    const data = await apiStream(`${constants.BASE_API_URL}/links/${linkId}/ai/summary`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS
+    }, {
+      onChunk
     })
-    return { success: true, data: data.data }
+    return {
+      success: true,
+      data: {
+        ...data.data,
+        summary: data.data?.summary || data.data?.text || data.data?.content || ''
+      }
+    }
   } catch (error) {
     console.error('Error generating summary:', error)
     return { success: false, hasError: true, message: error.message || 'Error generating summary' }
@@ -539,14 +547,22 @@ export async function deleteAISummary (linkId) {
   }
 }
 
-export async function chatWithVideo ({ linkId, message }) {
+export async function chatWithVideo ({ linkId, message, onChunk }) {
   try {
-    const data = await apiFetch(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
+    const data = await apiStream(`${constants.BASE_API_URL}/links/${linkId}/ai/chat`, {
       method: 'POST',
       ...constants.FETCH_OPTIONS,
       body: JSON.stringify({ message })
+    }, {
+      onChunk
     })
-    return { success: true, data: data.data }
+    return {
+      success: true,
+      data: {
+        ...data.data,
+        answer: data.data?.answer || data.data?.text || data.data?.content || ''
+      }
+    }
   } catch (error) {
     console.error('Error communicating with AI:', error)
     return { success: false, hasError: true, message: error.message || 'Error communicating with AI' }

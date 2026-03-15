@@ -63,6 +63,7 @@
 
 .contentBody p {
     margin-bottom: 1.5em;
+    color: var(--text-color-secondary);
 }
 
 .contentBody h2 {

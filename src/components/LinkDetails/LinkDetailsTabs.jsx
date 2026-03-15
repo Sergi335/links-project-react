@@ -95,7 +95,7 @@ export default function LinkDetailsTabs ({ data }) {
                 }
                 {
                     activeSection === 'summary' && (
-                        <div>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             <LinkDetailsSummary data={data} />
                         </div>
                     )

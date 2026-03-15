@@ -208,7 +208,7 @@ export function UserPreferences ({ user, setUser }) {
 }
 
 export function UserSubscription ({ user }) {
-  const { t, i18n } = useTranslation('profile')
+  const { t } = useTranslation('profile')
   const navigate = useNavigate()
   const rootPath = import.meta.env.VITE_ROOT_PATH
   const basePath = import.meta.env.VITE_BASE_PATH
@@ -247,7 +247,7 @@ export function UserSubscription ({ user }) {
     } catch (error) {
       toast.error(t('toasts.billingPortalError'))
     } finally {
-      setPortalLoading(false)
+      // setPortalLoading(false)
     }
   }
 
@@ -322,7 +322,7 @@ export function UserSubscription ({ user }) {
                 <div className={styles.limitsInfo}>
                   <p><strong>{t('subscription.storage')}</strong> {t('subscription.storageUsage', { used: (subscription.limits.storageMB - subscription.remainingQuota).toFixed(2), total: subscription.limits.storageMB })}</p>
                   <p><strong>{t('subscription.aiCalls')}</strong> {subscription.limits.llmCallsPerMonth === -1 ? t('subscription.aiCallsUnlimited') : t('subscription.aiCallsUsage', { used: subscription.llmCallsThisMonth, total: subscription.limits.llmCallsPerMonth })}</p>
-                  <p><strong>{t('subscription.lastRenewal')}</strong> {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString(i18n.language) : ''}</p>
+                  {/* <p><strong>{t('subscription.lastRenewal')}</strong> {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString(i18n.language) : ''}</p> */}
                 </div>
               )}
             </div>
@@ -338,7 +338,7 @@ export function UserSubscription ({ user }) {
                 <button
                   className={styles.manageBtn}
                   onClick={handleManageSubscription}
-                  disabled={portalLoading}
+                  // disabled={portalLoading}
                 >
                   {portalLoading ? 'Abriendo...' : 'Gestionar suscripción'}
                 </button>
@@ -634,18 +634,20 @@ export function UserSecurity ({ user, setUser }) {
         </div>)
       }
       <div className={styles.backup}>
-        <h3>{t('security.backup.title')}</h3>
-        <div className={styles.backupControls}>
-          <button id="backup" onClick={handleCreateBackup}>{t('security.backup.create')}</button>
+        <div>
+          <h3>{t('security.backup.title')}</h3>
+          <div className={styles.backupControls}>
+            <button id="backup" onClick={handleCreateBackup}>{t('security.backup.create')}</button>
+            {
+              user.lastBackupUrl && <button id="download" onClick={handleDownloadBackup}>{t('common.download')}</button>
+            }
+          </div>
           {
-            user.lastBackupUrl && <button id="download" onClick={handleDownloadBackup}>{t('common.download')}</button>
+            backupLoading && (<span className={styles.loader}></span>)
           }
+          <p id="errorMessage"> </p>
+          <p id="successMessage"></p>
         </div>
-        {
-          backupLoading && (<span className={styles.loader}></span>)
-        }
-        <p id="errorMessage"> </p>
-        <p id="successMessage"></p>
         <form onChange={handleUploadBackup}>
           <p>{t('security.backup.restore')}</p>
           <button className={styles.upFile}>

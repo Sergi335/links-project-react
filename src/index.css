@@ -429,6 +429,7 @@ button,
   color: var(--text-color-inverse);
   background-color: var(--btn-bg-color);
   border-radius: var(--button-radius);
+  font-size: 14px;
 }
 
 .button_small {
