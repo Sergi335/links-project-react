@@ -186,11 +186,8 @@ export async function getUrlStatus (url) {
   }
 }
 export function handleResponseErrors (response) {
-  console.log(response.message)
   if (response.success !== true) {
-    console.log(response)
     if (response.error === 'No hay cookie de sesión') {
-      console.log('No hay cookie de sesión')
       useSessionStore.getState().setUser(null)
       useSessionStore.getState().setCsfrtoken('')
       window.location.href = '/'

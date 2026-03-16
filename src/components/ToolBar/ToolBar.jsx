@@ -11,10 +11,8 @@ import { AddColumnIcon, ExpandHeightIcon, HidePanels, PinPanelIcon } from '../Ic
 import styles from './Toolbar.module.css'
 
 export default function ToolBar () {
-  const { desktopName, slug, id } = useParams()
-  console.log('🚀 ~ ToolBar ~ desktopName, slug, id:', desktopName, slug, id)
+  const { desktopName, slug } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
-  // console.log('🚀 ~ ToolBar ~ globalColumns:', globalColumns)
   const actualDesktop = globalColumns?.find(column => column.slug === desktopName && column.level === 0)
   const desktopColumns = globalColumns?.filter(column => column.parentId === actualDesktop?._id).toSorted((a, b) => a.orden - b.orden)
   // const customizePanelVisible = useFormsStore(state => state.customizePanelVisible)

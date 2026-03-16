@@ -20,7 +20,6 @@ export function usePasteLink ({ params, desktopName, activeLocalStorage }) {
       return globalLinks?.filter(link => link.categoryId === params?._id).length ?? 0
     }
   }
-  console.log(getAddedLinkOrder())
   const getDestinyId = () => {
     if (String(params?._id).startsWith('virtual-')) {
       return String(params._id).split('virtual-')[1]

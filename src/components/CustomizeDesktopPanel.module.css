@@ -237,6 +237,16 @@
   color: var(--text-color-primary);
   padding: 0 11px;
   border: 5px solid var(--inputBackgroundColor);
+  color-scheme: light;
+}
+
+.formControl select option {
+  background-color: var(--inputBackgroundColor);
+  color: var(--text-color-primary);
+}
+
+.formControl select option:disabled {
+  color: var(--text-color-secondary);
 }
 
 /* input[type=range]:after {

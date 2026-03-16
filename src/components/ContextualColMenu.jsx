@@ -13,14 +13,10 @@ import { ArrowDown } from './Icons/icons'
 
 export default function ContextualColMenu ({ visible, points, setPoints, params, desktops }) {
   const { t } = useTranslation('common')
-  console.log('🚀 ~ ContextualColMenu ~ params:', params)
   const { desktopName } = useParams()
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const setGlobalColumns = useGlobalStore(state => state.setGlobalColumns)
-  // const globalLinks = useGlobalStore(state => state.globalLinks)
-  // const setGlobalLinks = useGlobalStore(state => state.setGlobalLinks)
   const activeLocalStorage = usePreferencesStore(state => state.activeLocalStorage)
-  // const setDeleteColFormVisible = useFormsStore(state => state.setDeleteColFormVisible)
   const { pasteLink } = usePasteLink({ params, desktopName, activeLocalStorage })
   const menuRef = useRef(null)
   const subMenuRef = useRef(null)

@@ -15,6 +15,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   const [miniatures, setMiniatures] = useState()
   const [desktop, setDesktop] = useState([])
   const [desktopNameInput, setDesktopNameInput] = useState(desktop[0]?.name || '')
+  const [hiddenDesktopSelection, setHiddenDesktopSelection] = useState('seleccionar')
   const navigate = useNavigate()
   const inputRef = useRef()
   const formRef = useRef()
@@ -169,8 +170,10 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
   }
   const handleHideDesktops = async (event) => {
     const select = event.target
+    setHiddenDesktopSelection(select.value)
     const selectedOption = select.options[select.selectedIndex]
     const id = selectedOption.dataset.id
+    if (!id) return
     const items = [{ id, hidden: true }]
     const response = await updateCategory({ items })
     const { hasError, message } = handleResponseErrors(response)
@@ -186,7 +189,7 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
     newGlobalState[globalDeskIndex].hidden = true
     setTopLevelCategoriesStore(newTopLevelState)
     setGlobalColumns(newGlobalState)
-    select.selectedIndex = 0
+    setHiddenDesktopSelection('seleccionar')
   }
   const handleRestoreDesktop = async (event) => {
     event.preventDefault()
@@ -284,25 +287,25 @@ export default function CustomizeDesktopPanel ({ customizePanelVisible }) {
                       <h3>Ocultar Escritorios</h3>
                       <div className={`${styles.formControl} ${styles.hasRowGroup}`}>
                          <div className={styles.rowGroup}>
-                          <select name="" id="" onChange={handleHideDesktops}>
-                            <option value='seleccionar' disabled selected>Seleccionar</option>
+                          <select name="" id="" value={hiddenDesktopSelection} onChange={handleHideDesktops}>
+                            <option value='seleccionar' disabled>Seleccionar</option>
                           {
                               topLevelCategoriesStore?.map(desktop => {
                                 if (!desktop.hidden) {
                                   return <option key={desktop._id} data-id={desktop._id} value={desktop.name}>{desktop.name}</option>
                                 }
-                                return null // Add this line to return null if the condition is not met
+                                return null
                               })
                           }
                           </select>
                          </div>
-                        <div className={styles.rowGroup} style={{ border: '1px dashed var(--firstBorderColor)', backgroundColor: 'var(--inputBackgroundColor)' }}>
+                        <div className={styles.rowGroup} style={{ border: '1px dashed var(--firstBorderColor)' }}>
                         {
                           topLevelCategoriesStore?.map(desktop => {
                             if (desktop.hidden) {
                               return <button onClick={handleRestoreDesktop} data-id={desktop._id} key={desktop._id} className={styles.hiddenDesktops}>{desktop.name}</button>
                             }
-                            return null // Add this line to return null if the condition is not met
+                            return null
                           })
                         }
                         </div>

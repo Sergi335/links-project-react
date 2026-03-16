@@ -35,8 +35,6 @@ export const useSessionStore = create(
             })
             const data = await response.json()
             if (data.csrfToken) {
-              console.log(data.csrfToken)
-
               set({ csfrtoken: data.csrfToken, isTokenReady: true })
               localStorage.setItem('csrfToken', JSON.stringify(data.csrfToken))
               return data.csrfToken

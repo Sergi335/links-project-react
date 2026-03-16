@@ -1,19 +1,19 @@
 import ContentLoader from 'react-content-loader'
 
 export default function BookmarkLoader (props) {
-  const width = '25px'
+  // const width = '18'
   return (
     <ContentLoader // No se adapta
         speed={2}
-        width={width}
-        height={25}
-        viewBox={`0 0 ${width} 460`}
+        width={20}
+        height={20}
+        viewBox={'0 0 20 20'}
         backgroundColor="var(--secondColor)"
         foregroundColor="var(--thirdColor)"
         //  className={styles.columnsLoader}
         {...props}
         >
-        <rect x="0" y="0" rx="5" ry="5" width="100%" height="35" />
+        <rect x="3" y="3" rx="4" ry="4" width="20" height="20" />
     </ContentLoader>
   )
 }

@@ -36,7 +36,6 @@ function App () {
   const basePath = import.meta.env.VITE_BASE_PATH
   const globalArticles = useGlobalStore(state => state.globalArticles)
   const globalTheme = useGlobalStore(state => state.globalTheme)
-  console.log(globalTheme)
   const [article, setArticle] = useState()
 
   useEffect(() => {
@@ -197,7 +196,7 @@ function App () {
     defer: true,
     options: {
       scrollbars: {
-        theme: 'os-theme-light' // o usar la variable de tema cuando esté disponible
+        theme: globalTheme === 'dark' ? 'os-theme-dark' : 'os-theme-light ' // o usar la variable de tema cuando esté disponible
       }
     }
   })

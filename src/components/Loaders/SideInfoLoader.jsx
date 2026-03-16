@@ -1,7 +1,7 @@
 import ContentLoader from 'react-content-loader'
 
 export default function SideInfoLoader (props) {
-  const width = '226px'
+  const width = '226'
   return (
     <ContentLoader // No se adapta
         speed={2}

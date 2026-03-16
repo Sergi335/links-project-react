@@ -4,7 +4,7 @@ import ContentLoader from 'react-content-loader'
 
 const ImagesLoader = (props) => {
   const styles = {
-    width: '100%',
+    width: '100',
     height: 'auto'
   }
   return (

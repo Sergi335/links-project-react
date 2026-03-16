@@ -48,7 +48,6 @@ export default function ListOfLinks () {
 
   const columnLoaderTarget = useLinksStore(state => state.columnLoaderTarget)
   const numberOfPastedLinks = useLinksStore(state => state.numberOfPastedLinks)
-  console.log(numberOfPastedLinks)
   const linkLoader = useLinksStore(state => state.linkLoader)
   const numberOfLinkLoaders = Array(Number(numberOfPastedLinks)).fill(null)
 
