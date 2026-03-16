@@ -9,8 +9,10 @@ export default function LinkDetailsHeader ({ data, context }) {
   // Checa el estado de la url en cada cambio de link
   useEffect(() => {
     const checkUrlStatus = async (url) => {
-      if (url === undefined || url === '') return
+      // if (url === undefined || url === '') return
       const response = await getUrlStatus(url)
+
+      console.log('🚀 ~ checkUrlStatus ~ message:', response)
 
       if (response) {
         setUrlStatus(<CheckIcon className={styles.badgeIcon}/>)

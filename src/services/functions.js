@@ -159,6 +159,7 @@ export function formatDate (date) {
 }
 export async function getUrlStatus (url) {
   try {
+    if (url === undefined || url === '') return true
     const res = await apiFetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(url)}`, {
       method: 'GET',
       ...constants.FETCH_OPTIONS
