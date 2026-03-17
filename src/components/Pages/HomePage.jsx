@@ -1,13 +1,23 @@
-import PhotoSwipeLightbox from 'photoswipe/lightbox'
-import 'photoswipe/style.css'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Masonry from 'react-layout-masonry'
 import { Link } from 'react-router-dom'
 import { useTitle } from '../../hooks/useTitle'
 import { BraveBrowser, Chrome, Edge, Opera } from '../Icons/icons'
 import styles from './HomePage.module.css'
-import { PricingTable } from './PricingPage'
+
+const LazyPricingTable = lazy(async () => {
+  const module = await import('./PricingPage')
+  return { default: module.PricingTable }
+})
+
+const galleryImages = [
+  { src: 'img/img8.webp', width: 984, height: 486, alt: 'Zenmarks interface overview' },
+  { src: 'img/img9.webp', width: 984, height: 486, alt: 'Zenmarks dashboard with organized links' },
+  { src: 'img/img3.webp', width: 984, height: 486, alt: 'Zenmarks visual bookmarks view' },
+  { src: 'img/img4.webp', width: 984, height: 486, alt: 'Zenmarks categorized resources screen' },
+  { src: 'img/img5.webp', width: 984, height: 486, alt: 'Zenmarks browsing and organization panel' },
+  { src: 'img/img6.webp', width: 984, height: 486, alt: 'Zenmarks collection management interface' }
+]
 
 export function HomeNav () {
   const { t } = useTranslation('common')
@@ -56,31 +66,54 @@ export function HomeFooter () {
 
 export default function HomePage () {
   const { t } = useTranslation('home', 'common')
+  const pricingSectionRef = useRef(null)
+  const [pricingVisible, setPricingVisible] = useState(false)
 
   useTitle({ title: 'ZenMarks - Home' })
 
   useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: '#my-gallery',
-      children: 'a',
-      pswpModule: () => import('photoswipe')
-    })
-    lightbox.init()
+    let lightboxInstance
+    let isMounted = true
 
-    const lightbox2 = new PhotoSwipeLightbox({
-      gallery: '#my-gallery2',
-      children: 'a',
-      pswpModule: () => import('photoswipe')
-    })
-    lightbox2.init()
+    const setupLightbox = async () => {
+      await import('photoswipe/style.css')
+      const { default: PhotoSwipeLightbox } = await import('photoswipe/lightbox')
 
-    const lightbox3 = new PhotoSwipeLightbox({
-      gallery: '#my-gallery3',
-      children: 'a',
-      pswpModule: () => import('photoswipe')
-    })
-    lightbox3.init()
-  })
+      if (!isMounted) return
+
+      lightboxInstance = new PhotoSwipeLightbox({
+        gallery: '#my-gallery',
+        children: 'a',
+        pswpModule: () => import('photoswipe')
+      })
+      lightboxInstance.init()
+    }
+
+    setupLightbox()
+
+    return () => {
+      isMounted = false
+      lightboxInstance?.destroy()
+    }
+  }, [])
+
+  useEffect(() => {
+    const section = pricingSectionRef.current
+    if (!section || pricingVisible) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setPricingVisible(true)
+        observer.disconnect()
+      },
+      { rootMargin: '200px 0px' }
+    )
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [pricingVisible])
 
   return (
     <div className={styles.home}>
@@ -103,7 +136,13 @@ export default function HomePage () {
               <span>{t('cards.chromeCtaPrefix')} <b>{t('cards.chromeCtaStore')}</b></span>
             </a>
           </div>
-          <img src="img/heroImage.webp" alt="hero" />
+          <img
+            src="img/heroImage.webp"
+            alt="Zenmarks home interface preview"
+            width="920"
+            height="470"
+            decoding="async"
+          />
         </div>
       </header>
       <main className={styles.main}>
@@ -159,23 +198,36 @@ export default function HomePage () {
               </div> */}
             </div>
             <div className={styles.mediaColumn} id="my-gallery">
-              <Masonry
-                id="gallery"
-                columns={{ 640: 1, 768: 1, 1024: 2, 1280: 2 }}
-                gap={8}
-              >
-                <a href="img/img8.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img8.webp" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img9.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img9.webp" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img3.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img3.webp" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img4.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img4.webp" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img5.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img5.webp" width="984" height="486" alt="zenmarks interface" /></a>
-                <a href="img/img6.webp" data-pswp-width="984" data-pswp-height="486" target="_blank" rel="noreferrer"><img src="img/img6.webp" width="984" height="486" alt="zenmarks interface" /></a>
-              </Masonry>
+              {galleryImages.map((image) => (
+                <a
+                  key={image.src}
+                  href={image.src}
+                  data-pswp-width={image.width}
+                  data-pswp-height={image.height}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={image.src}
+                    width={image.width}
+                    height={image.height}
+                    alt={image.alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              ))}
             </div>
           </div>
         </section>
-        <section className={styles.pricingSection} id="pricing">
-          <PricingTable style={{ minHeight: 'auto' }} />
+        <section ref={pricingSectionRef} className={styles.pricingSection} id="pricing">
+          {pricingVisible
+            ? (
+            <Suspense fallback={<div className={styles.pricingPlaceholder} aria-hidden="true"></div>}>
+              <LazyPricingTable style={{ minHeight: 'auto' }} />
+            </Suspense>
+              )
+            : <div className={styles.pricingPlaceholder} aria-hidden="true"></div>}
         </section>
       </main>
       <HomeFooter />

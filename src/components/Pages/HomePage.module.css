@@ -435,9 +435,8 @@
     grid-row-start: 7;
 } */
 .mediaColumn {
-    background-color: var(--color-primary);
-    border: 7px solid var(--color-primary);
-    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .strong {
@@ -446,15 +445,13 @@
 
 .mediaColumn a {
     display: block;
+    border: var(--firstBorder);
 }
 
 .mediaColumn img {
     max-width: 100%;
-    height: auto;
-    /* border-radius: 5px;
-    border: var(--firstBorder); */
-    /* aspect-ratio: 16/9;
-    object-fit: cover; */
+    height: 100%;
+    object-fit: cover;
 }
 
 .footer {
@@ -517,6 +514,11 @@
         text-align: center;
         font-size: 3rem;
     }
+}
+
+.pricingPlaceholder {
+    width: min(100%, 1200px);
+    min-height: 720px;
 }
 
 .pricingContainer {
