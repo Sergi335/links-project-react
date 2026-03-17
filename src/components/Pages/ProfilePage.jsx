@@ -7,6 +7,7 @@ import { useTitle } from '../../hooks/useTitle'
 import { constants } from '../../services/constants'
 import { createPortalSession, deleteAccount, editUserAditionalInfo, findDuplicateLinks, getAllLinks, getSignedUrl, getSubscriptionStatus, uploadProfileImg } from '../../services/dbQueries'
 import { formatDate, handleResponseErrors } from '../../services/functions'
+import { useBrokenLinksCheckStore } from '../../store/brokenLinksCheck'
 import { useGlobalStore } from '../../store/global'
 import { useSessionStore } from '../../store/session'
 import { useTopLevelCategoriesStore } from '../../store/useTopLevelCategoriesStore'
@@ -677,127 +678,46 @@ export function UserSecurity ({ user, setUser }) {
     </div>
   )
 }
-export function PieChart ({ links, setLinks, getCategoryName }) {
+export function PieChart ({ getCategoryName }) {
   const { t } = useTranslation('profile')
-  const [brokenLinks, setBrokenLinks] = useState([])
-  const [isChecking, setIsChecking] = useState(false)
-  const chartRef = useRef()
-  const chartFillRef = useRef()
-  const chartPercentRef = useRef()
-  const abortControllerRef = useRef(null)
+  const brokenLinks = useBrokenLinksCheckStore(state => state.brokenLinks)
+  const isChecking = useBrokenLinksCheckStore(state => state.status === 'checking')
+  const progress = useBrokenLinksCheckStore(state => state.progress)
+  const currentLinkName = useBrokenLinksCheckStore(state => state.currentLinkName)
+  const cancelScan = useBrokenLinksCheckStore(state => state.cancelScan)
+  const clearBrokenLinks = useBrokenLinksCheckStore(state => state.clearBrokenLinks)
+  const normalizedProgress = parseInt(progress, 10) || 0
+  const progressDegrees = 360 * normalizedProgress / 100
 
   const handleCancel = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
-      setIsChecking(false)
-      setLinks([])
-      toast(t('toasts.operationCanceled'))
-    }
-  }
-
-  useEffect(() => {
-    const abortController = new AbortController()
-    abortControllerRef.current = abortController
-    const $currentLink = document.getElementById('currentLink')
-    const createChart = async () => {
-      // const counter = document.getElementById('counter')
-      const $ppc = chartRef.current
-      const $fill = chartFillRef.current
-      const result = chartPercentRef.current
-
-      // counter.innerHTML = 'Broken Links:' // -> estado?
-      if ($ppc) {
-        setIsChecking(true)
-        // Reseteamos el circulo
-        if ($ppc?.classList.contains(`${styles.gt50}}`)) {
-          $ppc.classList.remove(`${styles.gt50}}`)
-        }
-        $ppc.dataset.percent = 0
-        $fill.style.transform = 'rotate(0deg)'
-        result.innerHTML = 0 + '%'
-
-        const newLinks = [...links].slice(0, 500)
-
-        const porcentajePorPaso = 100 / newLinks.length
-        let count = 0
-        const downLinks = []
-
-        // Procesar secuencialmente para ver el progreso
-        for (const link of newLinks) {
-          if (abortController.signal.aborted) break
-
-          try {
-            const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${link.URL}`, {
-              method: 'GET',
-              signal: abortController.signal,
-              ...constants.FETCH_OPTIONS
-            })
-            const data = await response.json()
-
-            $currentLink.textContent = t('toasts.checkingLink', { name: link.name })
-            count += porcentajePorPaso
-            $ppc.dataset.percent = Math.round(count)
-
-            if (data.status !== 'success') {
-              downLinks.push({ data, link })
-            }
-
-            // Actualizar UI y dar tiempo al navegador para repintar
-            progressCircle()
-            await new Promise(resolve => requestAnimationFrame(resolve))
-          } catch (error) {
-            if (error.name === 'AbortError') break
-            console.error('Error checking link:', error)
-          }
-        }
-
-        setIsChecking(false)
-        if (!abortController.signal.aborted) {
-          if (downLinks.length === 0) {
-            toast.success(t('toasts.noBrokenLinks'))
-          }
-          setBrokenLinks(downLinks)
-        }
-        // counter.innerHTML = `Broken Links: ${filteredLinks.length}`
-        setLinks([])
-      }
-    }
-    createChart()
-    return () => {
-      abortController.abort()
-    }
-  }, [links])
-
-  function progressCircle () {
-    const result = chartPercentRef.current
-    const $ppc = chartRef.current
-    const $fill = chartFillRef.current
-    const percent = parseInt($ppc.dataset.percent)
-    const deg = 360 * percent / 100
-
-    if (percent > 50) {
-      $ppc.classList.add(`${styles.gt50}`)
-    }
-    $fill.style.transform = `rotate(${deg}deg)`
-    result.textContent = percent + '%'
+    cancelScan()
+    toast(t('toasts.operationCanceled'))
   }
   return (
     <>
     {
-    links.length > 0
+    (isChecking || normalizedProgress > 0)
       ? (
       <>
-      <div ref={chartRef} className={styles.progressPieChart} data-percent="0">
+      <div
+        className={`${styles.progressPieChart} ${normalizedProgress > 50 ? styles.gt50 : ''}`}
+        data-percent={normalizedProgress}
+      >
         <div className={styles.ppcProgress}>
-          <div ref={chartFillRef} className={styles.ppcProgressFill}></div>
+          <div
+            className={styles.ppcProgressFill}
+            style={{ transform: `rotate(${progressDegrees}deg)` }}
+          ></div>
         </div>
         <div className={styles.ppcPercents}>
           <div className={styles.pccPercentsWrapper}>
-            <span ref={chartPercentRef}>0%</span>
+            <span>{normalizedProgress}%</span>
           </div>
         </div>
       </div>
-      <p id='currentLink' className={styles.currentLink}></p>
+      <p id='currentLink' className={styles.currentLink}>
+        {currentLinkName ? t('toasts.checkingLink', { name: currentLinkName }) : ''}
+      </p>
       {isChecking && (
         <button onClick={handleCancel} className={styles.cancelButton}>
           {t('common.cancel')}
@@ -809,7 +729,7 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
       {
         brokenLinks.length > 0 && (<div className={styles.resultsHeader}>
                         <p id="counter"><span className={styles.bold}>{t('stats.brokenLinksCount')}</span> {brokenLinks.length}</p>
-                        <button onClick={() => setBrokenLinks([])}><CloseIcon/></button>
+                        <button onClick={clearBrokenLinks}><CloseIcon/></button>
                         </div>)
       }
       <div id="brokenLinksResult" className={styles.brokenLinksResult}>
@@ -834,8 +754,9 @@ export function PieChart ({ links, setLinks, getCategoryName }) {
 export function UserStats ({ user }) {
   const { t } = useTranslation('profile')
   const [duplicates, setDuplicates] = useState([])
-  const [links, setLinks] = useState([])
   const [duplicatesLoading, setDuplicatesLoading] = useState(false)
+  const brokenLinksStatus = useBrokenLinksCheckStore(state => state.status)
+  const startBrokenLinksScan = useBrokenLinksCheckStore(state => state.startScan)
   const globalLinks = useGlobalStore(state => state.globalLinks)
   const globalColumns = useGlobalStore(state => state.globalColumns)
   const topLevelCategoriesStore = useTopLevelCategoriesStore(state => state.topLevelCategoriesStore)
@@ -855,6 +776,8 @@ export function UserStats ({ user }) {
     setDuplicatesLoading(false)
   }
   const handleFindBrokenLinks = async (e) => {
+    if (brokenLinksStatus === 'checking') return
+
     const response = await getAllLinks()
     const { hasError, message } = handleResponseErrors(response)
     if (hasError) {
@@ -862,7 +785,10 @@ export function UserStats ({ user }) {
       return
     }
     const { data } = response
-    setLinks(data)
+    const result = await startBrokenLinksScan(data)
+    if (result.completed && result.brokenLinks.length === 0) {
+      toast.success(t('toasts.noBrokenLinks'))
+    }
   }
 
   return (
@@ -894,7 +820,7 @@ export function UserStats ({ user }) {
             </div>
             <div className={styles.groupControl}>
               <h3>{t('stats.findBrokenLinks')}</h3>
-              <button id="brokenLinks" onClick={handleFindBrokenLinks}>
+              <button id="brokenLinks" onClick={handleFindBrokenLinks} disabled={brokenLinksStatus === 'checking'}>
                 <BrokenLinksIcon />
                 {t('common.search')}
               </button>
@@ -909,7 +835,7 @@ export function UserStats ({ user }) {
               )
             }
 
-            <PieChart links={links} setLinks={setLinks} getCategoryName={getCategoryName}/>
+            <PieChart getCategoryName={getCategoryName}/>
             {
 
               duplicatesLoading && (<span className={styles.loader}></span>)

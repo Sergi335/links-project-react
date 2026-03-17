@@ -762,7 +762,7 @@ tr:nth-child(odd) {
     height: 200px;
     clip: rect(0, 100px, 200px, 0);
     background: var(--accentColor);
-    transform: rotate(60deg);
+    transform: rotate(0deg);
 }
 
 /* transformación mediante gt50?*/
