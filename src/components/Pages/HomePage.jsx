@@ -103,7 +103,7 @@ export default function HomePage () {
               <span>{t('cards.chromeCtaPrefix')} <b>{t('cards.chromeCtaStore')}</b></span>
             </a>
           </div>
-          <img src="img/heroImage.png" alt="hero" />
+          <img src="img/heroImage.webp" alt="hero" />
         </div>
       </header>
       <main className={styles.main}>

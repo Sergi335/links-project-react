@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-overlayscrollbars-initialize style="background-color: var(--color-primary)">
+<html lang="es" data-overlayscrollbars-initialize style="background-color: var(--color-primary)">
 
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Zenmarks te ayuda a guardar, organizar y encontrar enlaces, recursos y contenido web en colecciones visuales, con búsqueda, categorización y herramientas inteligentes." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="Zenmarks" />
+  <meta name="application-name" content="Zenmarks" />
+  <meta name="apple-mobile-web-app-title" content="Zenmarks" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <script>
       try {
         //console.log('inline dark script ejecutado');
@@ -12,10 +22,51 @@
         }
       } catch (e) {}
   </script>
+  <script>
+      try {
+        const canonicalHref = `${window.location.origin}${window.location.pathname}`;
+        const canonicalLink = document.createElement('link');
+        canonicalLink.setAttribute('rel', 'canonical');
+        canonicalLink.setAttribute('href', canonicalHref);
+        document.head.appendChild(canonicalLink);
+
+        const ogUrlMeta = document.createElement('meta');
+        ogUrlMeta.setAttribute('property', 'og:url');
+        ogUrlMeta.setAttribute('content', canonicalHref);
+        document.head.appendChild(ogUrlMeta);
+      } catch (e) {}
+  </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zenmarks</title>
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Zenmarks" />
+  <meta property="og:title" content="Zenmarks | Organiza tus enlaces y recursos web" />
+  <meta property="og:description" content="Guarda, clasifica y recupera enlaces de forma visual con Zenmarks. Centraliza tus recursos, descubre duplicados y mantén tu biblioteca ordenada." />
+  <meta property="og:image" content="/img/heroImage.png" />
+  <meta property="og:image:alt" content="Interfaz principal de Zenmarks" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Zenmarks | Organiza tus enlaces y recursos web" />
+  <meta name="twitter:description" content="Una app para guardar, organizar y encontrar enlaces, recursos y contenido web desde una interfaz visual." />
+  <meta name="twitter:image" content="/img/heroImage.png" />
+  <title>Zenmarks | Organiza tus enlaces y recursos web</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Zenmarks",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "image": "/img/heroImage.png",
+      "description": "Aplicación web para guardar, organizar y encontrar enlaces, recursos y contenido web en una biblioteca visual.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
+    }
+  </script>
 </head>
 
 <body data-overlayscrollbars-initialize>
