@@ -180,14 +180,40 @@
 .cards h2 {
     font-size: 3rem;
 
-    & span {
+    /* & span {
         color: var(--homePageAccentColor);
-    }
+    } */
 }
 
 .logo {
     font-size: 1rem;
 }
+
+/* .brandTitle::before {
+    content: '';
+    width: 12%;
+    height: 1px;
+    background-color: var(--firstBorderColor);
+    position: absolute;
+    top: -104px;
+    left: 510px;
+    z-index: 0;
+    border-radius: 5px;
+    transform: rotate(90deg);
+}
+
+.brandTitle::after {
+    content: '';
+    width: 4%;
+    height: 1px;
+    background-color: var(--firstBorderColor);
+    position: absolute;
+    top: 198px;
+    left: 555px;
+    z-index: 0;
+    border-radius: 5px;
+    transform: rotate(90deg);
+} */
 
 .heroSection .subtitle {
     margin: 0;

@@ -130,7 +130,7 @@ export default function HomePage () {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', flex: '1' }}>
               <div className={styles.card} style={{ borderLeft: '0', borderBottom: '0' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-ai"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 16v-6a2 2 0 1 1 4 0v6" /><path d="M8 13h4" /><path d="M16 8v8" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-file-ai"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M10 21h-3a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v4" /><path d="M14 21v-4a2 2 0 1 1 4 0v4" /><path d="M14 19h4" /><path d="M21 15v6" /></svg>
                 <h3>{t('cards.items.1.title')}</h3>
                 <p>{t('cards.items.1.detail')}</p>
               </div>
@@ -151,7 +151,7 @@ export default function HomePage () {
         <section className={styles.section}>
           <div style={{ maxWidth: '60%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '50px' }}>
             <div className={styles.textColumn}>
-              <h2>{t('common:brand')}</h2>
+              <h2 className={styles.brandTitle}>{t('common:brand')}</h2>
               <p>{t('section.text1')}<strong>{t('section.text2a')}</strong> {t('section.text2b')}</p>
               {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
                 <YouTube />

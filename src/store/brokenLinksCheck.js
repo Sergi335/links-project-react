@@ -4,6 +4,7 @@ import { constants } from '../services/constants'
 let abortController = null
 let activeScanId = 0
 let closeChartTimeout = null
+const MAX_CONCURRENT_REQUESTS = 8
 
 const initialState = {
   status: 'idle',
@@ -71,8 +72,10 @@ export const useBrokenLinksCheckStore = create(
       abortController = new AbortController()
       activeScanId += 1
       const scanId = activeScanId
-      const newLinks = [...links].slice(0, 500)
+      const newLinks = [...links]
       const downLinks = []
+      let nextIndex = 0
+      let processedCount = 0
 
       set({
         status: 'checking',
@@ -84,50 +87,58 @@ export const useBrokenLinksCheckStore = create(
         lastCompletedAt: null
       })
 
-      for (let index = 0; index < newLinks.length; index++) {
-        const link = newLinks[index]
+      const runWorker = async () => {
+        while (nextIndex < newLinks.length) {
+          const currentIndex = nextIndex
+          nextIndex += 1
 
-        if (abortController.signal.aborted || scanId !== activeScanId) {
-          return { completed: false, brokenLinks: downLinks }
-        }
+          const link = newLinks[currentIndex]
 
-        const linkUrl = link.URL || link.url || ''
-        const linkName = link.name || linkUrl
+          if (abortController.signal.aborted || scanId !== activeScanId) {
+            return
+          }
 
-        set({
-          currentLinkName: linkName,
-          processedCount: index
-        })
+          const linkUrl = link.URL || link.url || ''
+          const linkName = link.name || linkUrl
 
-        try {
-          const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(linkUrl)}`, {
-            method: 'GET',
-            signal: abortController.signal,
-            ...constants.FETCH_OPTIONS
+          set({
+            currentLinkName: linkName
           })
-          const { data } = await response.json()
-          // console.log(data)
-          if (data.status !== 'success' && data.status !== 'clientErr') {
-            downLinks.push({ data, link })
+
+          try {
+            const response = await fetch(`${constants.BASE_API_URL}/links/status?url=${encodeURIComponent(linkUrl)}`, {
+              method: 'GET',
+              signal: abortController.signal,
+              ...constants.FETCH_OPTIONS
+            })
+            const { data } = await response.json()
+            if (data.status !== 'success' && data.status !== 'clientErr') {
+              downLinks.push({ data, link })
+            }
+          } catch (error) {
+            if (error.name === 'AbortError') {
+              return
+            }
+            console.error('Error checking link:', error)
           }
-        } catch (error) {
-          if (error.name === 'AbortError') {
-            return { completed: false, brokenLinks: downLinks }
+
+          if (abortController.signal.aborted || scanId !== activeScanId) {
+            return
           }
-          console.error('Error checking link:', error)
+
+          processedCount += 1
+          set({
+            progress: Math.round((processedCount / newLinks.length) * 100),
+            processedCount
+          })
         }
+      }
 
-        if (scanId !== activeScanId) {
-          return { completed: false, brokenLinks: downLinks }
-        }
+      const workerCount = Math.min(MAX_CONCURRENT_REQUESTS, newLinks.length)
+      await Promise.all(Array.from({ length: workerCount }, () => runWorker()))
 
-        const processedCount = index + 1
-        set({
-          progress: Math.round((processedCount / newLinks.length) * 100),
-          processedCount
-        })
-
-        await new Promise(resolve => requestAnimationFrame(resolve))
+      if (abortController.signal.aborted || scanId !== activeScanId) {
+        return { completed: false, brokenLinks: downLinks }
       }
 
       if (scanId === activeScanId) {
