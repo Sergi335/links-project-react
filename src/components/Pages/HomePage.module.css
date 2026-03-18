@@ -21,6 +21,10 @@
     }
 }
 
+strong {
+    color: var(--text-color-primary);
+}
+
 .home>header {
     min-height: 50vh;
     background: radial-gradient(circle, rgba(42, 123, 155, 0.01) 0%, var(--color-primary) 140%);
@@ -112,7 +116,7 @@
     background-color: black;
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 5px;
     border: 1px solid #333;
     transition: all 0.2s ease;
     width: fit-content;
@@ -148,10 +152,6 @@
 
 
 .cards {
-    /* background-image: url('img/backgrounds/bg-footer-dark-800w.jpg');
-    background-size: contain;
-    background-attachment: fixed; */
-    padding-bottom: 60px;
     background-color: var(--color-primary);
 }
 
@@ -187,6 +187,7 @@
 
 .logo {
     font-size: 1rem;
+    color: var(--text-color-primary);
 }
 
 /* .brandTitle::before {
@@ -258,14 +259,15 @@
     color: var(--text-color-secondary);
     margin-top: 10px;
     margin-bottom: 0;
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
     text-transform: uppercase;
     letter-spacing: 1.5px;
     text-wrap-style: pretty;
 }
 
 .heroSection p:first-of-type {
-    margin-top: 40px;
+    margin-block: 40px;
+    color: var(--text-color-primary);
 }
 
 .background {
@@ -301,7 +303,7 @@
 .section {
     display: flex;
     justify-content: center;
-    padding: 85px 0;
+    padding: 0;
     gap: 50px;
     background-color: var(--color-primary);
     /* border-block: var(--firstBorder); */
