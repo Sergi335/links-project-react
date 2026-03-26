@@ -111,7 +111,7 @@ html.dark {
   --color-medium: hsl(220deg 16.07% 7.85%);
   --color-secondary: var(--color-slate-900);
   --text-color-primary: var(--color-neutral-300);
-  --text-color-secondary: hsl(0deg 0% 48.18%);
+  --text-color-secondary: hsl(0deg 0% 65.5%);
   --text-color-inverse: var(--color-neutral-900);
   --btn-bg-color: var(--color-slate-100);
   --column-background: hsl(220deg 18% 10% / 44%);
